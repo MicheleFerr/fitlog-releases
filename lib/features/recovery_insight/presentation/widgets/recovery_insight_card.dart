@@ -23,10 +23,37 @@ import 'package:gymbro_flutter_new/features/recovery_insight/presentation/provid
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+
+BoxDecoration _recoverySurfaceCardDecoration(
+  BuildContext context, {
+  Color? borderColor,
+  double borderOpacity = 0.18,
+  List<BoxShadow>? boxShadow,
+}) {
+  final resolvedBorderColor = borderColor ?? context.colors.outline;
+
+  return BoxDecoration(
+    color: context.colors.surfaceContainerLow,
+    borderRadius: AppBorderRadius.xlRadius,
+    border: Border.all(
+      color: resolvedBorderColor.withValues(alpha: borderOpacity),
+      width: 1.5,
+    ),
+    boxShadow: boxShadow,
+  );
+}
+
+Color _foregroundForAccent(Color color) {
+  return ThemeData.estimateBrightnessForColor(color) == Brightness.dark
+      ? Colors.white
+      : Colors.black;
+}
 
 /// Recovery Insight Card widget for home screen
 class RecoveryInsightCard extends ConsumerStatefulWidget {
@@ -100,20 +127,10 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
   }
 
   Widget _buildLoadingState(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.15),
-          width: 1.5,
-        ),
-      ),
+      decoration: _recoverySurfaceCardDecoration(context, borderOpacity: 0.15),
       child: const Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(AppSpacing.lg),
         child: Center(child: LoadingIndicator()),
       ),
     );
@@ -212,37 +229,32 @@ class _RecoveryInsightCardContent extends StatelessWidget {
     final categoryColor = _getCategoryColor(insight.category, context);
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: categoryColor.withValues(alpha: 0.25),
-          width: 1.5,
-        ),
+      decoration: _recoverySurfaceCardDecoration(
+        context,
+        borderColor: categoryColor,
+        borderOpacity: 0.25,
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
-            spreadRadius: 0,
           ),
           BoxShadow(
             color: colorScheme.shadow.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
-            spreadRadius: 0,
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: AppBorderRadius.xlRadius,
         child: Material(
           color: context.colors.surface.withValues(alpha: 0),
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: AppBorderRadius.xlRadius,
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -255,7 +267,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                         height: 44,
                         decoration: BoxDecoration(
                           color: categoryColor.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: AppBorderRadius.xlRadius,
                         ),
                         child: Icon(
                           AppIcons.bedtime,
@@ -288,24 +300,24 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                       // Score badge
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
+                          horizontal: AppSpacing.sm,
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
                           color: categoryColor,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: AppBorderRadius.mdRadius,
                         ),
                         child: Text(
                           '${insight.score}',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            color: colorScheme.surface,
+                            color: _foregroundForAccent(categoryColor),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
 
                   // Progress dots (5 dots showing category)
                   _buildProgressDots(context, categoryColor),
@@ -313,15 +325,15 @@ class _RecoveryInsightCardContent extends StatelessWidget {
 
                   // Recommendation text
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
                       color: categoryColor.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: AppBorderRadius.smRadius,
                     ),
                     child: Row(
                       children: [
                         Icon(AppIcons.tip, color: categoryColor, size: 18),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.xs),
                         Expanded(
                           child: Text(
                             insight.recommendation.localizedRecommendation(
@@ -340,7 +352,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
 
                   // Sleep metrics row
                   Row(
@@ -370,7 +382,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
 
                   // View details hint
                   Row(
@@ -382,7 +394,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                           color: colorScheme.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSpacing.xxs),
                       SemanticIcon(
                         icon: AppIcons.forward,
                         semanticLabel: 'View details',
@@ -409,7 +421,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
       children: List.generate(5, (index) {
         final isFilled = index < filledDots;
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4),
+          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
           width: 12,
           height: 12,
           decoration: BoxDecoration(
@@ -443,14 +455,14 @@ class _RecoveryInsightCardContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, size: 18, color: color),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xxs),
         Text(
           value,
           style: theme.textTheme.titleMedium?.copyWith(
@@ -493,21 +505,21 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
             colorScheme.tertiaryContainer.withValues(alpha: 0.3),
           ],
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: AppBorderRadius.xlRadius,
         border: Border.all(
           color: colorScheme.primary.withValues(alpha: 0.2),
           width: 1.5,
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: AppBorderRadius.xlRadius,
         child: Material(
           color: context.colors.surface.withValues(alpha: 0),
           child: InkWell(
             onTap: onConnect,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: AppBorderRadius.xlRadius,
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -532,7 +544,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
                       size: 32,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
 
                   // Title
                   Text(
@@ -542,7 +554,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
                       color: colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.xs),
 
                   // Description
                   Text(
@@ -552,7 +564,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Connect button
                   FilledButton.icon(
@@ -564,12 +576,12 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
                     label: Text(l10n.connectAppleHealth),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+                        horizontal: AppSpacing.xl,
+                        vertical: AppSpacing.sm,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.sm),
 
                   // Benefits row
                   Row(
@@ -580,13 +592,13 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
                         icon: AppIcons.nightlight,
                         label: l10n.sleepData,
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: AppSpacing.md),
                       _buildBenefit(
                         context,
                         icon: AppIcons.trendUp,
                         label: l10n.recoveryScore,
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: AppSpacing.md),
                       _buildBenefit(
                         context,
                         icon: AppIcons.tip,
@@ -615,7 +627,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 20, color: colorScheme.primary.withValues(alpha: 0.8)),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xxs),
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
@@ -641,16 +653,9 @@ class _RecoveryInsightNoDataCard extends StatelessWidget {
     final l10n = context.l10n;
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-          width: 1.5,
-        ),
-      ),
+      decoration: _recoverySurfaceCardDecoration(context, borderOpacity: 0.2),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -668,7 +673,7 @@ class _RecoveryInsightNoDataCard extends StatelessWidget {
                 size: 28,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
 
             // Title
             Text(
@@ -678,7 +683,7 @@ class _RecoveryInsightNoDataCard extends StatelessWidget {
                 color: colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xs),
 
             // Description - HealthKit connected but no data
             Text(
@@ -688,19 +693,19 @@ class _RecoveryInsightNoDataCard extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
 
             // Tip
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
                 color: colorScheme.tertiary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: AppBorderRadius.smRadius,
               ),
               child: Row(
                 children: [
                   Icon(AppIcons.tip, color: colorScheme.tertiary, size: 18),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(
                       l10n.trackSleepHint,
@@ -712,7 +717,7 @@ class _RecoveryInsightNoDataCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
 
             // Refresh button
             TextButton.icon(
@@ -740,16 +745,9 @@ class _RecoveryInsightPlatformCard extends StatelessWidget {
     final l10n = context.l10n;
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-          width: 1.5,
-        ),
-      ),
+      decoration: _recoverySurfaceCardDecoration(context, borderOpacity: 0.2),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -767,7 +765,7 @@ class _RecoveryInsightPlatformCard extends StatelessWidget {
                 size: 28,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
 
             // Title
             Text(
@@ -777,7 +775,7 @@ class _RecoveryInsightPlatformCard extends StatelessWidget {
                 color: colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xs),
 
             // Description
             Text(
@@ -807,16 +805,13 @@ class _RecoveryInsightSyncErrorCard extends StatelessWidget {
     final l10n = context.l10n;
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.error.withValues(alpha: 0.2),
-          width: 1.5,
-        ),
+      decoration: _recoverySurfaceCardDecoration(
+        context,
+        borderColor: colorScheme.error,
+        borderOpacity: 0.2,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -830,7 +825,7 @@ class _RecoveryInsightSyncErrorCard extends StatelessWidget {
               ),
               child: Icon(AppIcons.wifiOff, color: colorScheme.error, size: 28),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
 
             // Title
             Text(
@@ -840,7 +835,7 @@ class _RecoveryInsightSyncErrorCard extends StatelessWidget {
                 color: colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xs),
 
             // Description
             Text(
@@ -850,7 +845,7 @@ class _RecoveryInsightSyncErrorCard extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
 
             // Retry button
             FilledButton.icon(

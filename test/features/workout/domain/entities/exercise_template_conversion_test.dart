@@ -29,6 +29,8 @@ void main() {
 
         final dropset = exercise as DropSetExercise;
         expect(dropset.name, 'Bicep Curl - Drop Set');
+        expect(dropset.id, isNot(template.exerciseId));
+        expect(dropset.databaseExerciseId, template.exerciseId);
         expect(dropset.category, ExerciseCategory.arms);
         expect(dropset.type, ExerciseType.dropset);
         expect(dropset.stages.length, 3);
@@ -91,6 +93,8 @@ void main() {
 
         final restPause = exercise as RestPauseExercise;
         expect(restPause.name, 'Bench Press - Rest-Pause');
+        expect(restPause.id, isNot(template.exerciseId));
+        expect(restPause.databaseExerciseId, template.exerciseId);
         expect(restPause.category, ExerciseCategory.chest);
         expect(restPause.type, ExerciseType.restPause);
         expect(restPause.weight, 80);
@@ -218,6 +222,8 @@ void main() {
 
         expect(exercise, isA<Exercise>());
         expect(exercise, isNot(isA<DropSetExercise>()));
+        expect(exercise.id, isNot(template.exerciseId));
+        expect(exercise.databaseExerciseId, template.exerciseId);
         expect(exercise, isNot(isA<RestPauseExercise>()));
         expect(exercise.type, ExerciseType.single);
         expect(exercise.sets.length, 3);

@@ -30,6 +30,9 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       noteTecniche: fields[10] as String?,
       mobilitaPre: fields[11] as String?,
       attivazionePre: fields[12] as String?,
+      warmupSets: fields[13] as String?,
+      prevenzioneInfortuni: fields[14] as String?,
+      cooldownConsigliato: fields[15] as String?,
       aliases: fields[21] == null
           ? const []
           : (fields[21] as List).cast<String>(),
@@ -46,7 +49,7 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
   @override
   void write(BinaryWriter writer, ExerciseDefinition obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(22)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -73,6 +76,12 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       ..write(obj.mobilitaPre)
       ..writeByte(12)
       ..write(obj.attivazionePre)
+      ..writeByte(13)
+      ..write(obj.warmupSets)
+      ..writeByte(14)
+      ..write(obj.prevenzioneInfortuni)
+      ..writeByte(15)
+      ..write(obj.cooldownConsigliato)
       ..writeByte(21)
       ..write(obj.aliases)
       ..writeByte(22)

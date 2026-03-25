@@ -21,6 +21,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/tab_bar_safe_area.dart';
 
 // Export ColorScheme extensions so they're available to all files using context.colors
@@ -160,7 +161,7 @@ extension BuildContextExtensions on BuildContext {
 extension SemanticColors on BuildContext {
   /// Colore per indicare successo/completamento (verde)
   /// WCAG AA compliant - contrast ratio ≥ 4.5:1
-  Color get successColor => colors.tertiary;
+  Color get successColor => colors.success;
 
   /// Colore per indicare errore/fallimento (rosso)
   /// WCAG AA compliant - contrast ratio ≥ 4.5:1
@@ -168,20 +169,20 @@ extension SemanticColors on BuildContext {
 
   /// Colore per indicare attenzione/warning (arancione)
   /// WCAG AA compliant - contrast ratio ≥ 4.5:1
-  Color get warningColor => const Color(0xFFFB8C00); // Material Orange 600
+  Color get warningColor => colors.warning;
 
   /// Colore per indicare informazione/neutro (blu)
   /// WCAG AA compliant - contrast ratio ≥ 4.5:1
   Color get infoColor => colors.primary;
 
   /// Testo su sfondo success (white on green = WCAG AAA contrast)
-  Color get textOnSuccess => colors.surface;
+  Color get textOnSuccess => colors.onSuccess;
 
   /// Testo su sfondo error (garantito contrasto)
   Color get textOnError => colors.onError;
 
   /// Testo su sfondo warning (garantito contrasto)
-  Color get textOnWarning => colors.surface;
+  Color get textOnWarning => colors.onWarning;
 
   /// Testo su sfondo info (garantito contrasto)
   Color get textOnInfo => colors.onPrimary;
@@ -189,13 +190,13 @@ extension SemanticColors on BuildContext {
   /// Container per success messages (auto-adapts to light/dark mode)
   /// Light mode: light green tint
   /// Dark mode: darker green for contrast
-  Color get successContainer => colors.tertiaryContainer.withValues(alpha: 0.3);
+  Color get successContainer => colors.successContainer;
 
   /// Container per error messages (alpha layer sicuro)
   Color get errorContainer => colors.errorContainer;
 
   /// Container per warning messages (alpha layer sicuro)
-  Color get warningContainer => warningColor.withValues(alpha: 0.2);
+  Color get warningContainer => colors.warningContainer;
 
   /// Container per info messages (alpha layer sicuro)
   Color get infoContainer => colors.primaryContainer;

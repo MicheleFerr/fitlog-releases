@@ -76,6 +76,18 @@ class HintRegistry {
     autoTimeout: Duration(seconds: 6),
   );
 
+  /// Discover that the center + button can start a blank workout
+  static const plusEmptyWorkoutDiscovery = HintConfig(
+    hintId: 'plus_empty_workout_discovery',
+    type: HintType.microTip,
+    priority: HintPriority.p0,
+    messageKey: 'hint_plus_empty_workout',
+    gestureType: GestureHintType.tap,
+    requiredWorkouts: 0,
+    permanent: true,
+    autoTimeout: Duration(seconds: 7),
+  );
+
   /// AI Coach discovery from home screen
   static const homeAiCoachDiscovery = HintConfig(
     hintId: 'home_ai_coach_discovery',
@@ -490,6 +502,7 @@ class HintRegistry {
     swipeExerciseActions,
     historySwipeWorkoutCard,
     templatesDiscoverTab,
+    plusEmptyWorkoutDiscovery,
     homeAiCoachDiscovery,
     settingsImportData,
     analyticsLongPressCorrection,

@@ -6,22 +6,13 @@ final class FeatureFlags {
     // MARK: - Flag Keys
     
     private enum FlagKey: String, CaseIterable {
-        case useNewAudioManager = "com.gymbro.feature.newAudioManager"
         case useNewBackgroundTaskManager = "com.gymbro.feature.newBackgroundTaskManager"
         case useEnhancedLogging = "com.gymbro.feature.enhancedLogging"
         case useErrorRecovery = "com.gymbro.feature.errorRecovery"
         case showDebugInfo = "com.gymbro.feature.showDebugInfo"
-        // REMOVED: useOptimizedTimer - optimization is now always active
         
         var defaultValue: Bool {
             switch self {
-            case .useNewAudioManager:
-                // ✅ ENABLED: OSStatus -50 errors fixed by:
-                // 1. Removed .allowAirPlay from SilentAudioLoopManager
-                // 2. Added .mixWithOthers when using .duckOthers
-                // 3. Centralized audio session management
-                return true
-                
             case .useNewBackgroundTaskManager:
                 #if DEBUG
                 return true
@@ -50,8 +41,6 @@ final class FeatureFlags {
         
         var description: String {
             switch self {
-            case .useNewAudioManager:
-                return "New Audio Session Manager"
             case .useNewBackgroundTaskManager:
                 return "New Background Task Manager"
             case .useEnhancedLogging:
@@ -84,10 +73,6 @@ final class FeatureFlags {
     
     // MARK: - Public Accessors
     
-    static var useNewAudioManager: Bool {
-        return shared.isEnabled(.useNewAudioManager)
-    }
-    
     static var useNewBackgroundTaskManager: Bool {
         return shared.isEnabled(.useNewBackgroundTaskManager)
     }
@@ -103,9 +88,6 @@ final class FeatureFlags {
     static var showDebugInfo: Bool {
         return shared.isEnabled(.showDebugInfo)
     }
-
-    // REMOVED: useOptimizedTimer accessor - feature is now permanently enabled
-
     // MARK: - Flag Management
     
     private func isEnabled(_ flag: FlagKey) -> Bool {

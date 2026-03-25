@@ -22,7 +22,6 @@
     "src/**/__tests__/**",
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
-    "src/notifications/**",
     "src/exercise_patches/**"
   ]
 }

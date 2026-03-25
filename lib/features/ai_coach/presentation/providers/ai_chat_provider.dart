@@ -35,9 +35,8 @@ import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/h
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart'
-    show userProfileProvider;
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -92,7 +91,7 @@ AICoachServiceImpl aiCoachService(Ref ref) {
   final locale = ref.watch(localeProvider);
   final healthRepo = ref.watch(healthRepositoryProvider);
   final onboardingState = ref.watch(onboardingStateProvider);
-  final userProfile = ref.watch(userProfileProvider).value;
+  final effectiveAccountTier = ref.watch(effectiveAccountTierProvider);
   final appConfig = ref.watch(appConfigProvider);
   final appConfigNotifier = ref.watch(appConfigProvider.notifier);
 
@@ -111,7 +110,7 @@ AICoachServiceImpl aiCoachService(Ref ref) {
     healthRepo: healthRepo,
     healthKitDatasource: HealthKitDatasource(),
     onboardingState: onboardingState,
-    accountTier: userProfile?.accountTier.name ?? 'free',
+    accountTier: effectiveAccountTier.name,
     getWorkoutPreferences: () async => {
       'defaultExerciseSets': appConfig.defaultExerciseSets,
       'defaultExerciseReps': appConfig.defaultExerciseReps,
@@ -158,7 +157,7 @@ AICoachServiceImpl aiCoachService(Ref ref) {
     streakRepo: streakRepo,
     measurementRepo: measurementRepo,
     onboardingState: onboardingState,
-    accountTier: userProfile?.accountTier.name ?? 'free',
+    accountTier: effectiveAccountTier.name,
   );
 
   return AICoachServiceImpl(

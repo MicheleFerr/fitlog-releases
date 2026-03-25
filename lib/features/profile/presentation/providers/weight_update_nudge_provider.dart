@@ -12,6 +12,8 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 
 /// Configuration for weight update nudge
 class WeightUpdateNudgeConfig {
@@ -22,6 +24,33 @@ class WeightUpdateNudgeConfig {
 
   /// Minimum days before showing first nudge after dismissal
   static const int dismissalCooldownDays = 7;
+}
+
+/// Pure helpers for combining manual and synced weight updates.
+class WeightUpdateNudgeLogic {
+  const WeightUpdateNudgeLogic._();
+
+  /// Returns the most recent known update date across manual and synced data.
+  static DateTime? resolveLatestUpdateDate({
+    DateTime? manualUpdateDate,
+    DateTime? syncedWeightDate,
+  }) {
+    if (manualUpdateDate == null) return syncedWeightDate;
+    if (syncedWeightDate == null) return manualUpdateDate;
+
+    return syncedWeightDate.isAfter(manualUpdateDate)
+        ? syncedWeightDate
+        : manualUpdateDate;
+  }
+
+  /// Returns how many whole days have passed since the last known update.
+  static int daysSinceLastUpdate({
+    required DateTime now,
+    DateTime? lastUpdateDate,
+  }) {
+    if (lastUpdateDate == null) return 0;
+    return now.difference(lastUpdateDate).inDays;
+  }
 }
 
 /// State for weight update nudge
@@ -91,24 +120,24 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
   Future<WeightNudgeState> _calculateNudgeState() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Get last weight update timestamp
+    // Get last manual profile weight update timestamp
     final lastUpdateMillis = prefs.getInt(_keyLastWeightUpdate);
     final lastDismissedMillis = prefs.getInt(_keyLastDismissed);
+    final latestSyncedWeightDate = await _getLatestSyncedWeightDate();
 
     final now = DateTime.now();
-    DateTime? lastUpdateDate;
-    int daysSinceLastUpdate = 0;
+    final manualUpdateDate = lastUpdateMillis != null
+        ? DateTime.fromMillisecondsSinceEpoch(lastUpdateMillis)
+        : null;
+    final lastUpdateDate = WeightUpdateNudgeLogic.resolveLatestUpdateDate(
+      manualUpdateDate: manualUpdateDate,
+      syncedWeightDate: latestSyncedWeightDate,
+    );
+    final daysSinceLastUpdate = WeightUpdateNudgeLogic.daysSinceLastUpdate(
+      now: now,
+      lastUpdateDate: lastUpdateDate,
+    );
     bool isDismissed = false;
-
-    // Calculate days since last update
-    if (lastUpdateMillis != null) {
-      lastUpdateDate = DateTime.fromMillisecondsSinceEpoch(lastUpdateMillis);
-      daysSinceLastUpdate = now.difference(lastUpdateDate).inDays;
-    } else {
-      // Never updated - assume it was set during onboarding (today)
-      // Will start nudging after reminderIntervalDays
-      daysSinceLastUpdate = 0;
-    }
 
     // Check if recently dismissed
     if (lastDismissedMillis != null) {
@@ -131,6 +160,19 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
       lastUpdateDate: lastUpdateDate,
       isDismissed: isDismissed,
     );
+  }
+
+  Future<DateTime?> _getLatestSyncedWeightDate() async {
+    try {
+      final datasource = ref.read(healthLocalDatasourceProvider);
+      final latestWeight = await datasource.getLatestMeasurement(
+        HealthDataType.bodyWeight,
+      );
+      return latestWeight?.recordedAt;
+    } catch (_) {
+      // Health sync cache is optional for this nudge.
+      return null;
+    }
   }
 
   /// Mark weight as updated (call when user saves weight in profile)

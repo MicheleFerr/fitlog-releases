@@ -1,4 +1,3 @@
-import BackgroundTasks
 import UIKit
 
 /// Protocol for testability
@@ -10,364 +9,53 @@ protocol BackgroundTaskManaging {
     func isBackgroundRefreshAvailable() -> Bool
 }
 
-/// Manages BGTaskScheduler with retry logic and health checks
+/// The rest timer no longer relies on BGTaskScheduler.
+/// This manager remains as a lightweight compatibility surface for other code.
 final class BackgroundTaskManager: BackgroundTaskManaging {
-    
-    // MARK: - Constants
-    
-    private enum TaskIdentifier {
-        static let appRefresh = "com.gymbro.timer.refresh"
-        static let processing = "com.gymbro.timer.processing"
-    }
-    
-    private enum Configuration {
-        static let maxRetryAttempts = 3
-        static let retryDelay: TimeInterval = 2.0
-        static let appRefreshInterval: TimeInterval = 60.0  // 1 minute
-        static let processingInterval: TimeInterval = 300.0 // 5 minutes
-    }
-    
-    // MARK: - Properties
-    
+
     static let shared = BackgroundTaskManager()
-    
-    private var registrationAttempts = 0
-    private var lastScheduleAttempt: Date?
-    private let scheduler = BGTaskScheduler.shared
-    private let queue = DispatchQueue(label: "com.gymbro.background.tasks", qos: .background)
-    
-    // Health monitoring
-    private var successfulTaskCompletions = 0
-    private var failedTaskAttempts = 0
-    
-    // MARK: - Initialization
-    
+
     private init() {
         Logger.shared.log(.info, "BackgroundTaskManager initialized")
     }
-    
-    // MARK: - Public Methods
-    
+
     func registerTasks() {
-        // P1-6 FIX: BGTaskScheduler.register() MUST be called unconditionally before
-        // applicationDidFinishLaunching returns (Apple requirement). Availability is
-        // checked at scheduling time (scheduleAppRefresh / scheduleProcessingTask), not here.
-        if !isBackgroundRefreshAvailable() {
-            Logger.shared.log(.warning, "Background refresh not available — tasks registered but won't be scheduled")
-            PermissionManager.shared.requestBackgroundRefreshIfNeeded()
-        }
-
-        registerAppRefreshTask()
-        registerProcessingTask()
+        Logger.shared.log(
+            .info,
+            "Background task registration skipped: timer-specific BGTask usage has been removed",
+            category: .backgroundTask
+        )
     }
-    
+
     func scheduleAppRefresh() {
-        queue.async { [weak self] in
-            self?.scheduleTaskWithRetry(
-                identifier: TaskIdentifier.appRefresh,
-                interval: Configuration.appRefreshInterval,
-                taskType: .appRefresh
-            )
-        }
+        Logger.shared.log(
+            .debug,
+            "App refresh scheduling skipped: rest timer uses local notifications instead of BGTaskScheduler",
+            category: .backgroundTask
+        )
     }
-    
+
     func scheduleProcessingTask() {
-        queue.async { [weak self] in
-            self?.scheduleTaskWithRetry(
-                identifier: TaskIdentifier.processing,
-                interval: Configuration.processingInterval,
-                taskType: .processing
-            )
-        }
+        Logger.shared.log(
+            .debug,
+            "Processing task scheduling skipped: rest timer uses local notifications instead of BGTaskScheduler",
+            category: .backgroundTask
+        )
     }
-    
+
     func cancelAllTasks() {
-        scheduler.cancelAllTaskRequests()
-        Logger.shared.log(.info, "All background tasks cancelled")
+        Logger.shared.log(.debug, "No timer-specific background tasks to cancel", category: .backgroundTask)
     }
-    
+
     func isBackgroundRefreshAvailable() -> Bool {
-        let status = UIApplication.shared.backgroundRefreshStatus
-        
-        switch status {
-        case .available:
-            return true
-        case .denied, .restricted:
-            return false
-        @unknown default:
-            return false
-        }
-    }
-    
-    // MARK: - Private Methods - Registration
-    
-    private func registerAppRefreshTask() {
-        let success = scheduler.register(
-            forTaskWithIdentifier: TaskIdentifier.appRefresh,
-            using: nil
-        ) { [weak self] task in
-            guard let refreshTask = task as? BGAppRefreshTask else {
-                Logger.shared.log(.error, "❌ Invalid task type for app refresh")
-                task.setTaskCompleted(success: false)
-                return
-            }
-            self?.handleAppRefreshTask(refreshTask)
-        }
-
-        Logger.shared.log(
-            success ? .info : .error,
-            "App refresh task registration: \(success ? "✅ Success" : "❌ Failed")"
-        )
+        UIApplication.shared.backgroundRefreshStatus == .available
     }
 
-    private func registerProcessingTask() {
-        let success = scheduler.register(
-            forTaskWithIdentifier: TaskIdentifier.processing,
-            using: nil
-        ) { [weak self] task in
-            guard let processingTask = task as? BGProcessingTask else {
-                Logger.shared.log(.error, "❌ Invalid task type for processing")
-                task.setTaskCompleted(success: false)
-                return
-            }
-            self?.handleProcessingTask(processingTask)
-        }
-
-        Logger.shared.log(
-            success ? .info : .error,
-            "Processing task registration: \(success ? "✅ Success" : "❌ Failed")"
-        )
-    }
-    
-    // MARK: - Private Methods - Task Handlers
-    
-    private func handleAppRefreshTask(_ task: BGAppRefreshTask) {
-        Logger.shared.log(.info, "🔄 Executing app refresh task")
-        
-        // Set expiration handler
-        task.expirationHandler = { [weak self] in
-            Logger.shared.log(.warning, "App refresh task expired")
-            self?.failedTaskAttempts += 1
-            task.setTaskCompleted(success: false)
-        }
-        
-        // Schedule next refresh
-        scheduleAppRefresh()
-        
-        // Perform work
-        queue.async { [weak self] in
-            // Reactivate audio session if needed
-            AudioSessionManager.shared.reactivate()
-            
-            // ENHANCED: Check and restart silent loop if needed for active timers
-            self?.maintainSilentLoopIfNeeded()
-            
-            // Mark completion
-            self?.successfulTaskCompletions += 1
-            task.setTaskCompleted(success: true)
-            
-            Logger.shared.log(.info, "✅ App refresh task completed successfully")
-        }
-    }
-    
-    private func handleProcessingTask(_ task: BGProcessingTask) {
-        Logger.shared.log(.info, "🔄 Executing background processing task")
-        
-        // Set expiration handler
-        task.expirationHandler = { [weak self] in
-            Logger.shared.log(.warning, "Processing task expired")
-            self?.failedTaskAttempts += 1
-            task.setTaskCompleted(success: false)
-        }
-        
-        // Schedule next processing
-        scheduleProcessingTask()
-        
-        // Perform work
-        queue.async { [weak self] in
-            // Configure audio for background if needed
-            AudioSessionManager.shared.transitionToBackground()
-            
-            // ENHANCED: Ensure silent loop system is operational
-            self?.ensureSilentLoopSystem()
-            
-            // Validate configuration
-            let isValid = AudioSessionManager.shared.validateConfiguration()
-            
-            // Mark completion
-            if isValid {
-                self?.successfulTaskCompletions += 1
-                task.setTaskCompleted(success: true)
-                Logger.shared.log(.info, "✅ Processing task completed successfully")
-            } else {
-                self?.failedTaskAttempts += 1
-                task.setTaskCompleted(success: false)
-                Logger.shared.log(.error, "❌ Processing task failed validation")
-            }
-        }
-    }
-    
-    // MARK: - Private Methods - Scheduling with Retry
-    
-    private enum TaskType {
-        case appRefresh
-        case processing
-    }
-    
-    private func scheduleTaskWithRetry(
-        identifier: String,
-        interval: TimeInterval,
-        taskType: TaskType,
-        attemptNumber: Int = 1
-    ) {
-        // Rate limiting
-        if let lastAttempt = lastScheduleAttempt,
-           Date().timeIntervalSince(lastAttempt) < 1.0 {
-            Logger.shared.log(.debug, "Rate limiting task scheduling")
-            return
-        }
-        
-        lastScheduleAttempt = Date()
-        
-        // Create request based on type
-        let request: BGTaskRequest
-        
-        switch taskType {
-        case .appRefresh:
-            request = BGAppRefreshTaskRequest(identifier: identifier)
-        case .processing:
-            request = BGProcessingTaskRequest(identifier: identifier)
-        }
-        
-        request.earliestBeginDate = Date(timeIntervalSinceNow: interval)
-        
-        do {
-            try scheduler.submit(request)
-            Logger.shared.log(.info, "✅ Task scheduled: \(identifier) for \(interval)s from now")
-            
-        } catch let error as NSError {
-            handleSchedulingError(
-                error,
-                identifier: identifier,
-                interval: interval,
-                taskType: taskType,
-                attemptNumber: attemptNumber
-            )
-        }
-    }
-    
-    private func handleSchedulingError(
-        _ error: NSError,
-        identifier: String,
-        interval: TimeInterval,
-        taskType: TaskType,
-        attemptNumber: Int
-    ) {
-        Logger.shared.log(.error, """
-            ❌ Task scheduling failed:
-            - Identifier: \(identifier)
-            - Error code: \(error.code)
-            - Description: \(error.localizedDescription)
-            - Attempt: \(attemptNumber)/\(Configuration.maxRetryAttempts)
-            """)
-        
-        // Handle specific error codes
-        switch error.code {
-        case 3: // BGTaskSchedulerErrorCodeUnavailable
-            Logger.shared.log(.warning, "Background App Refresh disabled by user")
-            PermissionManager.shared.requestBackgroundRefreshIfNeeded()
-            
-        case 1: // BGTaskSchedulerErrorCodeNotPermitted
-            Logger.shared.log(.error, "Task identifier not in Info.plist")
-            
-        case 2: // BGTaskSchedulerErrorCodeTooManyPendingTaskRequests
-            Logger.shared.log(.warning, "Too many pending tasks, clearing queue")
-            cancelAllTasks()
-            // Retry after clearing
-            if attemptNumber <= Configuration.maxRetryAttempts {
-                retryScheduling(
-                    identifier: identifier,
-                    interval: interval,
-                    taskType: taskType,
-                    attemptNumber: attemptNumber + 1
-                )
-            }
-            
-        default:
-            // Generic retry for unknown errors
-            if attemptNumber <= Configuration.maxRetryAttempts {
-                retryScheduling(
-                    identifier: identifier,
-                    interval: interval,
-                    taskType: taskType,
-                    attemptNumber: attemptNumber + 1
-                )
-            } else {
-                failedTaskAttempts += 1
-                ErrorRecoveryManager.shared.handle(
-                    error,
-                    context: .backgroundTask,
-                    strategy: .alert(message: "Background tasks unavailable. Timer may not work in background.")
-                )
-            }
-        }
-    }
-    
-    private func retryScheduling(
-        identifier: String,
-        interval: TimeInterval,
-        taskType: TaskType,
-        attemptNumber: Int
-    ) {
-        let delay = Configuration.retryDelay * Double(attemptNumber)
-        
-        Logger.shared.log(.info, "Retrying task scheduling in \(delay)s...")
-        
-        queue.asyncAfter(deadline: .now() + delay) { [weak self] in
-            self?.scheduleTaskWithRetry(
-                identifier: identifier,
-                interval: interval,
-                taskType: taskType,
-                attemptNumber: attemptNumber
-            )
-        }
-    }
-    
-    // MARK: - Debug & Monitoring
-    
     func getHealthMetrics() -> [String: Any] {
-        return [
+        [
             "backgroundRefreshAvailable": isBackgroundRefreshAvailable(),
-            "successfulCompletions": successfulTaskCompletions,
-            "failedAttempts": failedTaskAttempts,
-            "successRate": successfulTaskCompletions > 0 ?
-                Double(successfulTaskCompletions) / Double(successfulTaskCompletions + failedTaskAttempts) : 0.0,
-            "silentLoopActive": BackgroundAudioManager.shared.isSilentLoopActive(),
-            "audioSessionValid": AudioSessionManager.shared.validateConfiguration()
+            "scheduledTasksEnabled": false,
+            "mode": "notification_owned_timer_completion"
         ]
     }
-    
-    // MARK: - Silent Loop Integration
-    
-    /// Maintains silent loop for active timers during background refresh
-    private func maintainSilentLoopIfNeeded() {
-        // Check if there are active timers that need silent loop
-        // This would typically check with a timer manager or state
-        Logger.shared.log(.debug, "Checking silent loop maintenance needs")
-        
-        // For now, we'll let BackgroundAudioManager handle its own state
-        // In a full implementation, you'd check timer state here
-    }
-    
-    /// Ensures silent loop system is ready for background processing
-    private func ensureSilentLoopSystem() {
-        do {
-            // Configure audio session for silent loop if needed
-            try AudioSessionManager.shared.configureSilentLoopSession()
-            Logger.shared.log(.info, "Silent loop system ensured during processing task")
-        } catch {
-            Logger.shared.log(.error, "Failed to ensure silent loop system: \(error)")
-        }
-    }
 }
-

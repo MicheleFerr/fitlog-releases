@@ -22,7 +22,7 @@ abstract class WorkoutAnalyticsRepository {
   /// Get historical workouts for comparison
   Future<List<Workout>> getHistoricalWorkouts(
     String userId, {
-    int limit = 50,
+    int? limit = 50,
     DateTime? since,
   });
 

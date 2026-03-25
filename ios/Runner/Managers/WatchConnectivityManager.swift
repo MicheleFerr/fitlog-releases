@@ -1,6 +1,7 @@
 import Foundation
 import WatchConnectivity
 import Flutter
+import UserNotifications
 
 /// Manages bidirectional communication between iPhone and Apple Watch
 /// Handles template sync, workout data transfer, and real-time state updates
@@ -13,10 +14,14 @@ final class WatchConnectivityManager: NSObject {
     private var session: WCSession?
     private var methodChannel: FlutterMethodChannel?
     private let channelName = "com.gymbro/watch_connectivity"
+    static let watchWorkoutRescueCategory = "WATCH_WORKOUT_RESCUE"
+    static let notificationPayloadUserInfoKey = "payload"
+    private static let rescueNotifiedWorkoutIdKey = "WatchConnectivity_RescueNotifiedWorkoutId"
 
     // State tracking
     private var isSessionActivated = false
     private let stateQueue = DispatchQueue(label: "com.gymbro.watch.state", attributes: .concurrent)
+    private var pendingReachabilityRefreshWorkItem: DispatchWorkItem?
 
     // ✅ FIX: Pending critical commands queue for background handling
     // When Flutter is in background, critical commands are saved here and processed on resume
@@ -37,6 +42,16 @@ final class WatchConnectivityManager: NSObject {
     // Using computed properties with backing stores for proper persistence
     private var _currentWorkoutStateStorage: [String: Any]?
     private var _currentRestTimerStateStorage: [String: Any]?
+    private var rescueNotifiedWorkoutId: String? {
+        get { UserDefaults.standard.string(forKey: Self.rescueNotifiedWorkoutIdKey) }
+        set {
+            if let newValue, !newValue.isEmpty {
+                UserDefaults.standard.set(newValue, forKey: Self.rescueNotifiedWorkoutIdKey)
+            } else {
+                UserDefaults.standard.removeObject(forKey: Self.rescueNotifiedWorkoutIdKey)
+            }
+        }
+    }
 
     private var currentWorkoutState: [String: Any]? {
         get { _currentWorkoutStateStorage }
@@ -107,6 +122,51 @@ final class WatchConnectivityManager: NSObject {
         return result
     }
 
+    private func normalizedWorkoutId(from value: Any?) -> String? {
+        guard let rawValue = value as? String else { return nil }
+        let trimmed = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+
+    private func syncRescueTracking(with workoutId: String?) {
+        guard let workoutId else { return }
+        if let sentWorkoutId = rescueNotifiedWorkoutId, sentWorkoutId != workoutId {
+            rescueNotifiedWorkoutId = nil
+        }
+    }
+
+    /// Pushes the current watch state back to Flutter.
+    /// `forceReachable` lets us degrade the UI immediately when transport fails
+    /// even if WCSession has not emitted a reachability callback yet.
+    private func notifyFlutterWithCurrentWatchState(forceReachable: Bool? = nil) {
+        guard let session = session else { return }
+
+        notifyFlutter(event: "onWatchStateChanged", data: [
+            "isPaired": session.isPaired,
+            "isWatchAppInstalled": session.isWatchAppInstalled,
+            "isReachable": forceReachable ?? session.isReachable,
+            "activationState": session.activationState.rawValue,
+        ])
+    }
+
+    /// When outbound traffic fails while the session still looked reachable,
+    /// treat the channel as degraded and force a state refresh back to Flutter.
+    private func handleOutboundTransportFailure(_ error: Error, context: String) {
+        let nsError = error as NSError
+        Logger.shared.log(.warning, "⌚ Transport failure during \(context): \(error.localizedDescription) [code=\(nsError.code)]", category: .general)
+
+        guard nsError.code == 7003 || nsError.code == 7005 else { return }
+
+        notifyFlutterWithCurrentWatchState(forceReachable: false)
+
+        pendingReachabilityRefreshWorkItem?.cancel()
+        let refreshWorkItem = DispatchWorkItem { [weak self] in
+            self?.notifyFlutterWithCurrentWatchState()
+        }
+        pendingReachabilityRefreshWorkItem = refreshWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: refreshWorkItem)
+    }
+
     // MARK: - Initialization
     private override init() {
         super.init()
@@ -156,6 +216,13 @@ final class WatchConnectivityManager: NSObject {
                     UserDefaults.standard.removeObject(forKey: "WatchConnectivity_RestTimerState")
                 }
             }
+        }
+
+        let activeWorkoutId = normalizedWorkoutId(from: _currentWorkoutStateStorage?["workoutId"])
+        if let activeWorkoutId {
+            syncRescueTracking(with: activeWorkoutId)
+        } else {
+            rescueNotifiedWorkoutId = nil
         }
     }
 
@@ -449,6 +516,7 @@ final class WatchConnectivityManager: NSObject {
             result(response)
         }, errorHandler: { error in
             Logger.shared.log(.error, "❌ Watch message failed: \(error)", category: .general)
+            self.handleOutboundTransportFailure(error, context: "sendMessage")
             result(FlutterError(
                 code: "SEND_ERROR",
                 message: error.localizedDescription,
@@ -523,6 +591,9 @@ final class WatchConnectivityManager: NSObject {
         if message["tut"] == nil { message["tut"] = "" }
         if message["workoutType"] == nil { message["workoutType"] = "strength" }
         if message["allSets"] == nil { message["allSets"] = [] as [[String: Any]] }
+        if message["workoutId"] == nil, let existingWorkoutId = currentWorkoutState?["workoutId"] {
+            message["workoutId"] = existingWorkoutId
+        }
 
         // 🔄 Exercise navigation support for Watch
         if message["exerciseNames"] == nil { message["exerciseNames"] = [] as [String] }
@@ -562,6 +633,7 @@ final class WatchConnectivityManager: NSObject {
 
         // Cache workout state for Watch requests
         currentWorkoutState = message
+        syncRescueTracking(with: normalizedWorkoutId(from: message["workoutId"]))
 
         // ============================================================
         // STRATEGY: Use BOTH methods for maximum reliability
@@ -587,6 +659,7 @@ final class WatchConnectivityManager: NSObject {
             }) { error in
                 // Expected if Watch app is in background - context update will deliver it
                 Logger.shared.log(.debug, "⌚ sendMessage failed (Watch may be in background): \(error.localizedDescription)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "notifyWorkoutStarted")
             }
         }
 
@@ -601,6 +674,7 @@ final class WatchConnectivityManager: NSObject {
         // ✅ Clear cached workout state
         currentWorkoutState = nil
         currentRestTimerState = nil
+        rescueNotifiedWorkoutId = nil
 
         // ✅ FIX: Extract save parameter (default true for backwards compatibility)
         let args = arguments as? [String: Any]
@@ -635,6 +709,7 @@ final class WatchConnectivityManager: NSObject {
         if session.isReachable {
             session.sendMessage(message, replyHandler: nil) { error in
                 Logger.shared.log(.error, "❌ Failed to notify Watch: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "notifyWorkoutEnded")
             }
         }
 
@@ -652,14 +727,11 @@ final class WatchConnectivityManager: NSObject {
         // ✅ REFACTOR: Use centralized message builder to avoid field duplication
         let message = buildWorkoutMessage(from: data, type: "workoutUpdate")
 
-        // Update cached workout state for Watch requests
-        // Merge new data into existing state to keep full context
-        if var existingState = currentWorkoutState {
-            existingState.merge(message) { _, new in new }
-            currentWorkoutState = existingState
-        } else {
-            currentWorkoutState = message
-        }
+        // Replace the cached workout snapshot with the latest payload from Flutter.
+        // Merging keeps stale nullable fields like minReps/maxReps when the next set
+        // switches back to fixed reps and omits them from the payload.
+        currentWorkoutState = message
+        syncRescueTracking(with: normalizedWorkoutId(from: currentWorkoutState?["workoutId"]))
 
         guard let session = session else {
             result(true)
@@ -679,10 +751,105 @@ final class WatchConnectivityManager: NSObject {
         if session.isReachable {
             session.sendMessage(message, replyHandler: nil) { error in
                 Logger.shared.log(.debug, "Watch update failed: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "sendWorkoutUpdate")
             }
         }
 
         result(true)
+    }
+
+    private func handleWatchWaitingForWorkoutBootstrap(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                replyHandler(["success": false])
+                return
+            }
+
+            self.sendWatchWorkoutRescueNotificationIfNeeded(for: message) { notified, reason in
+                var response: [String: Any] = ["success": true, "notified": notified]
+                if let reason {
+                    response["reason"] = reason
+                }
+                replyHandler(response)
+            }
+        }
+    }
+
+    private func sendWatchWorkoutRescueNotificationIfNeeded(
+        for message: [String: Any],
+        completion: @escaping (Bool, String?) -> Void
+    ) {
+        guard let workoutState = currentWorkoutState,
+              workoutState["isActive"] as? Bool == true,
+              let workoutId = normalizedWorkoutId(from: workoutState["workoutId"]) else {
+            Logger.shared.log(.info, "⌚ Rescue bootstrap skipped: no active cached workout", category: .general)
+            completion(false, "noActiveWorkout")
+            return
+        }
+
+        if let requestedWorkoutId = normalizedWorkoutId(from: message["workoutId"]),
+           requestedWorkoutId != workoutId {
+            Logger.shared.log(.info, "⌚ Rescue bootstrap skipped: watch workoutId mismatch", category: .general)
+            completion(false, "workoutMismatch")
+            return
+        }
+
+        if rescueNotifiedWorkoutId == workoutId {
+            Logger.shared.log(.info, "⌚ Rescue bootstrap skipped: already notified for workout \(workoutId)", category: .general)
+            completion(false, "alreadyNotified")
+            return
+        }
+
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { [weak self] settings in
+            guard let self = self else {
+                completion(false, "managerReleased")
+                return
+            }
+
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                let payload = "watch_workout_rescue:\(workoutId):/workout"
+                let content = UNMutableNotificationContent()
+                content.title = "Workout attivo su iPhone"
+                content.body = "Hai aperto FitLog Watch. Vuoi continuare l'allenamento?"
+                content.categoryIdentifier = Self.watchWorkoutRescueCategory
+                content.userInfo = [Self.notificationPayloadUserInfoKey: payload]
+
+                let request = UNNotificationRequest(
+                    identifier: "watch-workout-rescue-\(workoutId)",
+                    content: content,
+                    trigger: nil
+                )
+
+                center.add(request) { error in
+                    if let error {
+                        Logger.shared.log(.error, "⌚ Failed to send rescue notification: \(error)", category: .general)
+                        completion(false, "scheduleFailed")
+                        return
+                    }
+
+                    self.rescueNotifiedWorkoutId = workoutId
+                    Logger.shared.log(.info, "⌚ Sent watch workout rescue notification for \(workoutId)", category: .general)
+                    completion(true, nil)
+                }
+
+            case .denied:
+                Logger.shared.log(.warning, "⌚ Rescue bootstrap skipped: notifications denied", category: .general)
+                completion(false, "permissionDenied")
+
+            case .notDetermined:
+                Logger.shared.log(.warning, "⌚ Rescue bootstrap skipped: notification permission not determined", category: .general)
+                completion(false, "permissionNotDetermined")
+
+            @unknown default:
+                Logger.shared.log(.warning, "⌚ Rescue bootstrap skipped: unknown notification permission state", category: .general)
+                completion(false, "unknownPermissionState")
+            }
+        }
     }
 
     /// Notify Watch that rest timer started
@@ -726,6 +893,7 @@ final class WatchConnectivityManager: NSObject {
         if session.isReachable {
             session.sendMessage(message, replyHandler: nil) { error in
                 Logger.shared.log(.debug, "Rest timer sendMessage failed: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "sendRestTimerStarted")
             }
         }
 
@@ -759,7 +927,10 @@ final class WatchConnectivityManager: NSObject {
                 "type": "restTimerSkipped",
                 "timestamp": Date().timeIntervalSince1970
             ]
-            session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+            session.sendMessage(message, replyHandler: nil) { error in
+                Logger.shared.log(.debug, "Rest timer skipped sendMessage failed: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "sendRestTimerSkipped")
+            }
         }
 
         result(true)
@@ -807,7 +978,10 @@ final class WatchConnectivityManager: NSObject {
 
         // Also send immediate message if reachable
         if session.isReachable {
-            session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+            session.sendMessage(message, replyHandler: nil) { error in
+                Logger.shared.log(.debug, "Rest timer paused sendMessage failed: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "sendRestTimerPaused")
+            }
         }
 
         Logger.shared.log(.info, "⏸️ Sent rest timer paused to Watch: \(remainingTime)s remaining (dual delivery)", category: .general)
@@ -861,7 +1035,10 @@ final class WatchConnectivityManager: NSObject {
 
         // Also send immediate message if reachable
         if session.isReachable {
-            session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+            session.sendMessage(message, replyHandler: nil) { error in
+                Logger.shared.log(.debug, "Rest timer resumed sendMessage failed: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "sendRestTimerResumed")
+            }
         }
 
         Logger.shared.log(.info, "▶️ Sent rest timer resumed to Watch: \(remainingTime)s remaining (dual delivery)", category: .general)
@@ -945,6 +1122,7 @@ final class WatchConnectivityManager: NSObject {
         if session.isReachable {
             session.sendMessage(message, replyHandler: nil) { error in
                 Logger.shared.log(.debug, "Rest timer extended sendMessage failed: \(error)", category: .general)
+                self.handleOutboundTransportFailure(error, context: "sendRestTimerExtended")
             }
         }
 
@@ -972,6 +1150,7 @@ final class WatchConnectivityManager: NSObject {
             Logger.shared.log(.info, "⌚ Snapshot request sent to Watch", category: .general)
         }) { error in
             Logger.shared.log(.error, "⌚ Failed to send snapshot request: \(error)", category: .general)
+            self.handleOutboundTransportFailure(error, context: "requestWatchWorkoutSnapshot")
         }
 
         // Return true = request sent (response comes as separate message)
@@ -1177,6 +1356,10 @@ extension WatchConnectivityManager: WCSessionDelegate {
             notifyFlutter(event: "onFullWorkoutSnapshotFromWatch", data: message)
             replyHandler(["success": true])
 
+        case "watchWaitingForWorkoutBootstrap":
+            Logger.shared.log(.info, "⌚ Watch waiting for workout bootstrap", category: .general)
+            handleWatchWaitingForWorkoutBootstrap(message, replyHandler: replyHandler)
+
         default:
             Logger.shared.log(.warning, "⚠️ Unknown message type: \(type)", category: .general)
             replyHandler(["error": "Unknown message type"])
@@ -1206,6 +1389,14 @@ extension WatchConnectivityManager: WCSessionDelegate {
         didReceiveUserInfo userInfo: [String : Any] = [:]
     ) {
         Logger.shared.log(.info, "📦 Received background transfer from Watch", category: .general)
+
+        if let type = userInfo["type"] as? String,
+           type == "watchWaitingForWorkoutBootstrap" {
+            DispatchQueue.main.async { [weak self] in
+                self?.sendWatchWorkoutRescueNotificationIfNeeded(for: userInfo) { _, _ in }
+            }
+            return
+        }
 
         // Forward to Flutter
         notifyFlutter(event: "onBackgroundDataReceived", data: userInfo)
@@ -1411,6 +1602,7 @@ extension WatchConnectivityManager: WCSessionDelegate {
         DispatchQueue.main.async { [weak self] in
             self?.currentWorkoutState = nil
             self?.currentRestTimerState = nil
+            self?.rescueNotifiedWorkoutId = nil
         }
 
         replyHandler(["success": true])

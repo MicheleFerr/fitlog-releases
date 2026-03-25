@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/photo_reminder.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_notifications_bootstrap.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_timezone_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Service for scheduling progress photo reminder notifications
@@ -13,12 +15,12 @@ import 'package:timezone/timezone.dart' as tz;
 /// - Anti-spam: auto-disable after consecutive ignores
 /// - Recommended frequency: 4-5 weeks (Hevy research)
 class PhotoReminderNotificationService {
-
   PhotoReminderNotificationService({
     FlutterLocalNotificationsPlugin? notificationsPlugin,
   }) : _notificationsPlugin =
            notificationsPlugin ?? FlutterLocalNotificationsPlugin();
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
+  Future<void>? _initializeFuture;
 
   /// Notification channel ID for photo reminders
   static const String channelId = 'progress_photo_reminders';
@@ -64,7 +66,13 @@ class PhotoReminderNotificationService {
   ];
 
   /// Initialize the notification channel (call on app startup)
-  Future<void> initialize() async {
+  Future<void> initialize() {
+    return _initializeFuture ??= _initializeInternal();
+  }
+
+  Future<void> _initializeInternal() async {
+    await LocalTimezoneService.ensureInitialized();
+
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
@@ -79,7 +87,10 @@ class PhotoReminderNotificationService {
       iOS: iosSettings,
     );
 
-    await _notificationsPlugin.initialize(initSettings);
+    await LocalNotificationsBootstrap.ensureInitialized(
+      plugin: _notificationsPlugin,
+      settings: initSettings,
+    );
 
     // Create Android notification channel
     final androidPlugin = _notificationsPlugin
@@ -139,6 +150,8 @@ class PhotoReminderNotificationService {
     required PhotoReminderSettings settings,
     int? messageVariation,
   }) async {
+    await initialize();
+
     if (!settings.isEnabled) {
       if (kDebugMode) {
         debugPrint('[PhotoReminder] Reminders disabled, skipping schedule');
@@ -216,6 +229,8 @@ class PhotoReminderNotificationService {
 
   /// Cancel any scheduled photo reminder
   Future<void> cancelReminder() async {
+    await initialize();
+
     // Cancel all possible variations
     for (var i = 0; i < _messageVariations.length; i++) {
       await _notificationsPlugin.cancel(_baseNotificationId + i);

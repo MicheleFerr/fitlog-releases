@@ -6,11 +6,13 @@ import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     as exercise_db;
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_round_config_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -43,7 +45,8 @@ class SupersetLinkModal extends ConsumerStatefulWidget {
     required Exercise currentExercise,
     required List<Exercise> workoutExercises,
   }) {
-    return ModalService.showSheet<SupersetConfiguration>(context,
+    return ModalService.showSheet<SupersetConfiguration>(
+      context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -529,7 +532,12 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
         return _buildExerciseTile(
           id: exercise.id,
           name: exercise.name,
-          subtitle: exercise.category.name,
+          subtitle: Text(
+            exercise.category.name,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
           isSelected: isSelected,
           theme: theme,
         );
@@ -591,7 +599,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                     return _buildExerciseTile(
                       id: exercise.id,
                       name: exercise.nome,
-                      subtitle: exercise.focus.take(2).join(', '),
+                      subtitle: _buildDatabaseExerciseMetadata(exercise, theme),
                       isSelected: isSelected,
                       isLocked: isCurrentExercise,
                       theme: theme,
@@ -606,7 +614,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
   Widget _buildExerciseTile({
     required String id,
     required String name,
-    required String subtitle,
+    Widget? subtitle,
     required bool isSelected,
     required ThemeData theme,
     bool isLocked = false,
@@ -674,15 +682,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                               : theme.colorScheme.onSurface,
                         ),
                       ),
-                      if (subtitle.isNotEmpty)
-                        Text(
-                          subtitle,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.6,
-                            ),
-                          ),
-                        ),
+                      if (subtitle != null) subtitle,
                     ],
                   ),
                 ),
@@ -690,6 +690,55 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDatabaseExerciseMetadata(
+    exercise_db.Exercise exercise,
+    ThemeData theme,
+  ) {
+    final hasMuscleData =
+        exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasMuscleData)
+            ExerciseTargetMuscleMap(
+              primaryMuscles: exercise.focus,
+              secondaryMuscles: exercise.muscoliSecondari,
+              previewWidth: 78,
+              previewHeight: 58,
+              enableFullscreen: false,
+            ),
+          if (hasMuscleData && exercise.attrezzatura.isNotEmpty)
+            const SizedBox(height: 6),
+          if (exercise.attrezzatura.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  EquipmentIconBadge(
+                    equipment: exercise.attrezzatura,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(exercise.attrezzatura, style: theme.textTheme.bodySmall),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

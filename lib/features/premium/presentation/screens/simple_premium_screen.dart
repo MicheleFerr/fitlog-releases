@@ -1,19 +1,26 @@
 library;
 
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, debugPrint, defaultTargetPlatform, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/premium/domain/entities/purchase_result.dart';
 import 'package:gymbro_flutter_new/features/premium/domain/entities/subscription_plan.dart';
 import 'package:gymbro_flutter_new/features/premium/domain/entities/subscription_status.dart';
+import 'package:gymbro_flutter_new/features/premium/domain/services/purchase_service.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/purchase_action_provider.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/purchase_providers.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/widgets/plan_card.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/widgets/purchase_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,21 +34,63 @@ class SimplePremiumScreen extends ConsumerStatefulWidget {
 }
 
 class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
+  late final PageController _benefitsController;
   SubscriptionPlan? _selectedPlan;
+  String? _lastPurchaseViewDebugState;
+  int _activeBenefitIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _benefitsController = PageController(viewportFraction: 0.9);
+  }
+
+  @override
+  void dispose() {
+    _benefitsController.dispose();
+    super.dispose();
+  }
+
+  Gradient _heroGradient(BuildContext context) {
+    return LinearGradient(
+      colors: [
+        context.colors.primary,
+        context.colors.primary.withValues(alpha: 0.78),
+        context.colors.secondary,
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+  }
+
+  List<BoxShadow> _heroShadows(BuildContext context) {
+    return [
+      BoxShadow(
+        color: context.colors.shadow.withValues(alpha: 0.16),
+        blurRadius: 20,
+        offset: const Offset(0, 8),
+      ),
+    ];
+  }
+
+  Color _heroForeground(BuildContext context) => context.colors.onPrimary;
+
+  Color _heroOverlay(BuildContext context, {double alpha = 0.18}) {
+    return _heroForeground(context).withValues(alpha: alpha);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final subscriptionStatus = ref.watch(subscriptionStatusProvider);
+    final premiumAccess = ref.watch(effectivePremiumAccessProvider);
+    final effectiveStatus = premiumAccess.subscriptionStatus;
 
     return Scaffold(
       backgroundColor: context.colors.surface,
-      body: subscriptionStatus.when(
-        data: (status) => status.isActive
-            ? _buildActiveView(context, status)
-            : _buildPurchaseView(context),
-        loading: () => const Center(child: LoadingIndicator()),
-        error: (_, __) => _buildPurchaseView(context),
-      ),
+      body: premiumAccess.isActive
+          ? _buildActiveView(context, effectiveStatus)
+          : ref.watch(subscriptionStatusProvider).isLoading
+          ? const Center(child: LoadingIndicator())
+          : _buildPurchaseView(context),
     );
   }
 
@@ -55,18 +104,19 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
         _buildSliverAppBar(context),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.screenMarginHorizontal,
+            ),
             child: Column(
               children: [
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.xs),
                 _buildActiveHero(context, status),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.xxl),
                 _buildFeatureGrid(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 if (status.managementUrl != null)
                   TextButton(
-                    onPressed: () =>
-                        _openManagementUrl(status.managementUrl!),
+                    onPressed: () => _openManagementUrl(status.managementUrl!),
                     child: Text(context.l10n.manageSubscription),
                   ),
                 const SizedBox(height: 40),
@@ -79,69 +129,43 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
   }
 
   Widget _buildActiveHero(BuildContext context, SubscriptionStatus status) {
+    final heroForeground = _heroForeground(context);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+      padding: const EdgeInsets.symmetric(
+        vertical: 40,
+        horizontal: AppSpacing.xl,
+      ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            context.colors.primary,
-            context.colors.primary.withValues(alpha: 0.7),
-            context.colors.secondary,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.primary.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        gradient: _heroGradient(context),
+        borderRadius: AppBorderRadius.xlRadius,
+        boxShadow: _heroShadows(context),
       ),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: const SemanticIcon(
-              icon: AppIcons.diamond,
-              semanticLabel: 'Premium',
-              size: AppIconSize.xlarge,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 20),
           Text(
             context.l10n.gymbroPremium,
             style: context.textTheme.headlineMedium?.copyWith(
-              color: Colors.white,
+              color: heroForeground,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: 6,
+            ),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
+              color: _heroOverlay(context, alpha: 0.16),
+              borderRadius: AppBorderRadius.lgRadius,
             ),
             child: Text(
-              status.isLifetime
-                  ? context.l10n.subscriptionLifetime
-                  : status.expirationDate != null
-                      ? context.l10n.subscriptionActiveUntil(
-                          _formatDate(status.expirationDate!),
-                        )
-                      : context.l10n.subscriptionLifetime,
+              _buildStatusLabel(context, status),
               style: context.textTheme.bodyMedium?.copyWith(
-                color: Colors.white,
+                color: heroForeground,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -158,7 +182,12 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
   Widget _buildPurchaseView(BuildContext context) {
     final plansAsync = ref.watch(availablePlansProvider);
     final actionState = ref.watch(purchaseActionProvider);
+    final isRevenueCatConfigured = ref.watch(revenueCatConfiguredProvider);
     final hasPlans = plansAsync.value?.isNotEmpty ?? false;
+    final bottomInset = context.tabBarInset > 0
+        ? context.tabBarInset
+        : MediaQuery.of(context).padding.bottom;
+    _debugLogPurchaseViewState(plansAsync, isRevenueCatConfigured);
 
     return Stack(
       children: [
@@ -167,41 +196,41 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
             _buildSliverAppBar(context),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.screenMarginHorizontal,
+                ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.xs),
                     _buildPurchaseHero(context),
                     const SizedBox(height: 28),
 
                     // Plans section
                     plansAsync.when(
                       data: (plans) {
-                        if (plans.isEmpty) return _buildBetaFallback(context);
-                        return _buildPlansList(context, plans);
+                        if (plans.isEmpty) {
+                          return isRevenueCatConfigured
+                              ? _buildStoreUnavailableFallback(context)
+                              : _buildBetaFallback(context);
+                        }
+                        return Column(
+                          children: [
+                            _buildPlansList(context, plans),
+                            const SizedBox(height: AppSpacing.lg),
+                            _buildPurchaseDisclosureCard(context),
+                          ],
+                        );
                       },
                       loading: () => const Padding(
                         padding: EdgeInsets.all(32),
                         child: LoadingIndicator(),
                       ),
-                      error: (_, __) => _buildBetaFallback(context),
+                      error: (_, __) => isRevenueCatConfigured
+                          ? _buildStoreUnavailableFallback(context)
+                          : _buildBetaFallback(context),
                     ),
 
                     const SizedBox(height: 28),
-
-                    // Feature grid
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        context.l10n.everythingInFree,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureGrid(context),
 
                     const SizedBox(height: 24),
 
@@ -226,11 +255,7 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
                     ),
 
                     // Extra bottom padding for sticky button + tab bar
-                    SizedBox(
-                      height: (hasPlans ? 100 : 16) +
-                          MediaQuery.of(context).padding.bottom +
-                          kBottomNavigationBarHeight,
-                    ),
+                    SizedBox(height: (hasPlans ? 92 : 16) + bottomInset),
                   ],
                 ),
               ),
@@ -246,32 +271,27 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
             bottom: 0,
             child: Container(
               padding: EdgeInsets.fromLTRB(
-                20,
-                12,
-                20,
-                MediaQuery.of(context).padding.bottom +
-                    kBottomNavigationBarHeight +
-                    12,
+                AppSpacing.screenMarginHorizontal,
+                AppSpacing.sm,
+                AppSpacing.screenMarginHorizontal,
+                bottomInset + AppSpacing.xs,
               ),
               decoration: BoxDecoration(
                 color: context.colors.surface,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: context.colors.shadow.withValues(alpha: 0.12),
                     blurRadius: 10,
                     offset: const Offset(0, -4),
                   ),
                 ],
               ),
               child: PurchaseButton(
-                label: context.l10n.continueWithPremium,
+                label: _purchaseButtonLabel(context, _selectedPlan!),
                 isLoading: actionState.isPurchasing,
                 onPressed: () => _handlePurchase(context),
               ),
-            )
-                .animate()
-                .fadeIn(duration: 200.ms)
-                .slideY(begin: 0.3, end: 0),
+            ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.3, end: 0),
           ),
       ],
     );
@@ -288,64 +308,55 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
   }
 
   Widget _buildPurchaseHero(BuildContext context) {
+    final heroForeground = _heroForeground(context);
+    final features = _premiumFeatures(context);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
+      padding: const EdgeInsets.symmetric(
+        vertical: 36,
+        horizontal: AppSpacing.xl,
+      ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            context.colors.primary,
-            context.colors.primary.withValues(alpha: 0.7),
-            context.colors.secondary,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.primary.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        gradient: _heroGradient(context),
+        borderRadius: AppBorderRadius.xlRadius,
+        boxShadow: _heroShadows(context),
       ),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
+          SizedBox(
+            height: 190,
+            child: PageView.builder(
+              controller: _benefitsController,
+              itemCount: features.length,
+              onPageChanged: (index) {
+                if (!mounted) return;
+                setState(() => _activeBenefitIndex = index);
+              },
+              itemBuilder: (context, index) {
+                final feature = features[index];
+                return _buildHeroBenefitSlide(context, feature, heroForeground);
+              },
             ),
-            child: const SemanticIcon(
-              icon: AppIcons.diamond,
-              semanticLabel: 'Premium',
-              size: AppIconSize.large,
-              color: Colors.white,
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 100.ms, duration: 400.ms)
-              .scale(begin: const Offset(0.5, 0.5), end: const Offset(1, 1)),
-          const SizedBox(height: 20),
-          Text(
-            context.l10n.unlockYourFullPotential,
-            style: context.textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.3,
-            ),
-            textAlign: TextAlign.center,
           ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
-          const SizedBox(height: 8),
-          Text(
-            context.l10n.premiumHeroSubtitle,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
-              height: 1.4,
-            ),
-            textAlign: TextAlign.center,
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (var i = 0; i < features.length; i++)
+                AnimatedContainer(
+                  duration: 200.ms,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  height: 8,
+                  width: i == _activeBenefitIndex ? 22 : 8,
+                  decoration: BoxDecoration(
+                    color: i == _activeBenefitIndex
+                        ? heroForeground
+                        : heroForeground.withValues(alpha: 0.28),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+            ],
           ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
         ],
       ),
@@ -357,95 +368,256 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
       children: [
         for (var i = 0; i < plans.length; i++)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: PlanCard(
-              plan: plans[i],
-              isSelected: _selectedPlan?.id == plans[i].id,
-              onTap: () => setState(() => _selectedPlan = plans[i]),
-              savingsLabel: plans[i].period == SubscriptionPeriod.yearly
-                  ? context.l10n.savingsPercent
-                  : null,
-            )
-                .animate()
-                .fadeIn(delay: (400 + i * 100).ms, duration: 300.ms)
-                .slideX(begin: 0.05, end: 0),
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child:
+                PlanCard(
+                      plan: plans[i],
+                      isSelected: _selectedPlan?.id == plans[i].id,
+                      onTap: () => setState(() => _selectedPlan = plans[i]),
+                      savingsLabel: plans[i].period == SubscriptionPeriod.yearly
+                          ? context.l10n.savingsPercent
+                          : null,
+                    )
+                    .animate()
+                    .fadeIn(delay: (400 + i * 100).ms, duration: 300.ms)
+                    .slideX(begin: 0.05, end: 0),
           ),
       ],
     );
   }
 
-  Widget _buildBetaFallback(BuildContext context) {
+  Widget _buildPurchaseDisclosureCard(BuildContext context) {
+    final storeTerms = _storeTermsText(context);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            context.colors.primary.withValues(alpha: 0.15),
-            context.colors.secondary.withValues(alpha: 0.10),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: context.colors.primary.withValues(alpha: 0.25),
-          width: 1.5,
-        ),
+        color: context.colors.surfaceContainerHigh,
+        borderRadius: AppBorderRadius.xlRadius,
+        border: Border.all(color: context.colors.outlineVariant),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: context.colors.primary.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: SemanticIcon(
-              icon: AppIcons.celebration,
-              semanticLabel: 'Celebration',
-              size: AppIconSize.large,
-              color: context.colors.primary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            context.l10n.betaEarlyAdopterTitle,
-            style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            context.l10n.youHaveAccessToAllFeatures,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-              height: 1.4,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: context.colors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              context.l10n.allFeaturesFreeInBeta,
-              style: context.textTheme.labelLarge?.copyWith(
+          Row(
+            children: [
+              Icon(
+                AppIcons.document,
+                size: AppIconSize.medium,
                 color: context.colors.primary,
-                fontWeight: FontWeight.w600,
               ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  context.l10n.gymbroPremium,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            storeTerms,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              height: 1.45,
             ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              TextButton.icon(
+                onPressed: () => LegalDocumentScreen.showPrivacyPolicy(context),
+                icon: SemanticIcon(
+                  icon: AppIcons.privacyTipRounded,
+                  semanticLabel: context.l10n.privacyPolicy,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
+                label: Text(
+                  context.l10n.privacyPolicy,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () =>
+                    LegalDocumentScreen.showAppleStandardEula(context),
+                icon: SemanticIcon(
+                  icon: AppIcons.document,
+                  semanticLabel: context.l10n.termsOfUseEula,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
+                label: Text(
+                  context.l10n.termsOfUseEula,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () =>
+                    LegalDocumentScreen.showTermsOfService(context),
+                icon: SemanticIcon(
+                  icon: AppIcons.document,
+                  semanticLabel: context.l10n.serviceTerms,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
+                label: Text(
+                  context.l10n.serviceTerms,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 400.ms, duration: 400.ms).scale(
-          begin: const Offset(0.95, 0.95),
-          end: const Offset(1, 1),
-        );
+    );
+  }
+
+  Widget _buildBetaFallback(BuildContext context) {
+    return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+            vertical: 28,
+            horizontal: AppSpacing.xl,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                context.colors.primary.withValues(alpha: 0.15),
+                context.colors.secondary.withValues(alpha: 0.10),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: AppBorderRadius.xlRadius,
+            border: Border.all(
+              color: context.colors.primary.withValues(alpha: 0.25),
+              width: 1.5,
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: SemanticIcon(
+                  icon: AppIcons.celebration,
+                  semanticLabel: 'Celebration',
+                  size: AppIconSize.large,
+                  color: context.colors.primary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                context.l10n.betaEarlyAdopterTitle,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                context.l10n.youHaveAccessToAllFeatures,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: AppBorderRadius.lgRadius,
+                ),
+                child: Text(
+                  context.l10n.allFeaturesFreeInBeta,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+        .animate()
+        .fadeIn(delay: 400.ms, duration: 400.ms)
+        .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1));
+  }
+
+  Widget _buildStoreUnavailableFallback(BuildContext context) {
+    return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+            vertical: 28,
+            horizontal: AppSpacing.xl,
+          ),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHigh,
+            borderRadius: AppBorderRadius.xlRadius,
+            border: Border.all(color: context.colors.outlineVariant),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: context.colors.errorContainer,
+                  shape: BoxShape.circle,
+                ),
+                child: SemanticIcon(
+                  icon: AppIcons.warning,
+                  semanticLabel: 'Store unavailable',
+                  size: AppIconSize.large,
+                  color: context.colors.onErrorContainer,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                context.l10n.gymbroPremium,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                context.l10n.storeNotAvailable,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        )
+        .animate()
+        .fadeIn(delay: 400.ms, duration: 400.ms)
+        .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1));
   }
 
   // ══════════════════════════════════════════════════════════════════
@@ -453,7 +625,18 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
   // ══════════════════════════════════════════════════════════════════
 
   Widget _buildFeatureGrid(BuildContext context) {
-    final features = [
+    final features = _premiumFeatures(context);
+
+    return Column(
+      children: [
+        for (var i = 0; i < features.length; i++)
+          _buildFeatureRow(context, features[i], i),
+      ],
+    );
+  }
+
+  List<_FeatureData> _premiumFeatures(BuildContext context) {
+    return [
       _FeatureData(
         AppIcons.history,
         context.l10n.unlimitedHistory,
@@ -480,17 +663,55 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
         context.l10n.premiumCloudBackupDesc,
       ),
       _FeatureData(
-        AppIcons.edit,
-        context.l10n.editAllWorkouts,
-        context.l10n.editAllWorkoutsDescription,
+        AppIcons.template,
+        context.l10n.unlimitedTemplates,
+        context.l10n.unlimitedTemplatesDescription,
       ),
     ];
+  }
 
-    return Column(
-      children: [
-        for (var i = 0; i < features.length; i++)
-          _buildFeatureRow(context, features[i], i),
-      ],
+  Widget _buildHeroBenefitSlide(
+    BuildContext context,
+    _FeatureData feature,
+    Color heroForeground,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: _heroOverlay(context, alpha: 0.16),
+              borderRadius: AppBorderRadius.lgRadius,
+            ),
+            child: Icon(feature.icon, color: heroForeground, size: 30),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            feature.title,
+            style: context.textTheme.headlineSmall?.copyWith(
+              color: heroForeground,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.2,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            feature.description,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: heroForeground.withValues(alpha: 0.9),
+              height: 1.45,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
@@ -500,52 +721,52 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
     int index,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: context.colors.primaryContainer,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(
-              feature.icon,
-              color: context.colors.primary,
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  feature.title,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer,
+                  borderRadius: AppBorderRadius.smRadius,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  feature.description,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                    height: 1.3,
-                  ),
+                child: Icon(
+                  feature.icon,
+                  color: context.colors.primary,
+                  size: 22,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      feature.title,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      feature.description,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SemanticIcon(
+                icon: AppIcons.complete,
+                semanticLabel: 'Included',
+                size: AppIconSize.small,
+                color: context.colors.primary,
+              ),
+            ],
           ),
-          SemanticIcon(
-            icon: AppIcons.complete,
-            semanticLabel: 'Included',
-            size: AppIconSize.small,
-            color: context.colors.primary,
-          ),
-        ],
-      ),
-    )
+        )
         .animate()
         .fadeIn(delay: (500 + index * 80).ms, duration: 300.ms)
         .slideX(begin: 0.03, end: 0);
@@ -573,6 +794,10 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
         final displayMsg = switch (message) {
           'RevenueCat not configured' => context.l10n.storeNotAvailable,
           'Package not found' => context.l10n.storeNotAvailable,
+          'premiumActivationFailed' => context.l10n.errorUnexpected,
+          PurchaseService.premiumSyncFailedMessage =>
+            context.l10n.errorUnexpected,
+          'User not authenticated' => context.l10n.errorAuthenticationRequired,
           _ => message,
         };
         SnackBarService.showError(context, displayMsg);
@@ -586,7 +811,10 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
 
     switch (result) {
       case PurchaseSuccess():
-        SnackBarService.showSuccess(context, context.l10n.purchaseSuccessful);
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.premiumRestoredSuccess,
+        );
       case PurchaseCancelled():
         break;
       case PurchaseError(:final message):
@@ -594,6 +822,10 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
           'noPurchasesToRestore' => context.l10n.noPurchasesToRestore,
           'RevenueCat not configured' => context.l10n.storeNotAvailable,
           'Package not found' => context.l10n.storeNotAvailable,
+          'premiumActivationFailed' => context.l10n.errorUnexpected,
+          PurchaseService.premiumSyncFailedMessage =>
+            context.l10n.errorUnexpected,
+          'User not authenticated' => context.l10n.errorAuthenticationRequired,
           _ => message,
         };
         SnackBarService.showError(context, displayMsg);
@@ -609,6 +841,77 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
+  }
+
+  String _buildStatusLabel(BuildContext context, SubscriptionStatus status) {
+    if (status.isLifetime) return context.l10n.subscriptionLifetime;
+    if (status.expirationDate != null) {
+      return context.l10n.subscriptionActiveUntil(
+        _formatDate(status.expirationDate!),
+      );
+    }
+    return context.l10n.premiumMembership;
+  }
+
+  String _purchaseButtonLabel(BuildContext context, SubscriptionPlan plan) {
+    final productName = context.l10n.gymbroPremium;
+    return switch (plan.period) {
+      SubscriptionPeriod.monthly => context.l10n.continueWithPremiumMonthlyPlan(
+        productName,
+      ),
+      SubscriptionPeriod.yearly => context.l10n.continueWithPremiumYearlyPlan(
+        productName,
+      ),
+      SubscriptionPeriod.lifetime =>
+        context.l10n.continueWithPremiumLifetimePlan(productName),
+    };
+  }
+
+  String _storeTermsText(BuildContext context) {
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.iOS => context.l10n.cancelAnytimeAppStore,
+      _ => context.l10n.cancelAnytimeGooglePlay,
+    };
+  }
+
+  void _debugLogPurchaseViewState(
+    AsyncValue<List<SubscriptionPlan>> plansAsync,
+    bool isRevenueCatConfigured,
+  ) {
+    if (!kDebugMode) return;
+
+    final state = plansAsync.when(
+      data: (plans) =>
+          'data:${plans.length}:rcConfigured=$isRevenueCatConfigured',
+      error: (error, _) => 'error:$error:rcConfigured=$isRevenueCatConfigured',
+      loading: () => 'loading:rcConfigured=$isRevenueCatConfigured',
+    );
+
+    if (_lastPurchaseViewDebugState == state) return;
+    _lastPurchaseViewDebugState = state;
+
+    debugPrint('[SimplePremiumScreen] purchase view state -> $state');
+
+    plansAsync.whenOrNull(
+      data: (plans) {
+        if (plans.isEmpty) {
+          debugPrint(
+            '[SimplePremiumScreen] No plans available. '
+            'Fallback=${isRevenueCatConfigured ? 'storeUnavailable' : 'beta'}',
+          );
+        } else {
+          debugPrint(
+            '[SimplePremiumScreen] Plans shown: '
+            '${plans.map((plan) => '${plan.id}/${plan.period.name}@${plan.priceString}').toList()}',
+          );
+        }
+      },
+      error: (error, stackTrace) {
+        debugPrint(
+          '[SimplePremiumScreen] availablePlansProvider error: $error',
+        );
+      },
+    );
   }
 }
 

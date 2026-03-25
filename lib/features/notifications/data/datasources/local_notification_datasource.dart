@@ -12,9 +12,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_config.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_notifications_bootstrap.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_timezone_service.dart';
 
 /// Callback type for when a notification is tapped
 typedef NotificationTapCallback = void Function(String? payload);
@@ -30,8 +31,7 @@ class LocalNotificationDatasource {
   Future<void> initialize({NotificationTapCallback? onNotificationTap}) async {
     _onNotificationTap = onNotificationTap;
 
-    // Initialize timezone
-    tz_data.initializeTimeZones();
+    await LocalTimezoneService.ensureInitialized();
 
     // Android settings
     const androidSettings = AndroidInitializationSettings(
@@ -50,8 +50,9 @@ class LocalNotificationDatasource {
       iOS: iosSettings,
     );
 
-    await _plugin.initialize(
-      initSettings,
+    await LocalNotificationsBootstrap.ensureInitialized(
+      plugin: _plugin,
+      settings: initSettings,
       onDidReceiveNotificationResponse: _onNotificationResponse,
     );
 
@@ -231,6 +232,19 @@ class LocalNotificationDatasource {
     return pending.map((n) => n.id).toList();
   }
 
+  /// Get pending notifications together with their payloads.
+  Future<List<PendingLocalNotification>> getPendingNotifications() async {
+    final pending = await _plugin.pendingNotificationRequests();
+    return pending
+        .map(
+          (request) => PendingLocalNotification(
+            id: request.id,
+            payload: request.payload,
+          ),
+        )
+        .toList(growable: false);
+  }
+
   /// Generate a unique notification ID for a type
   int generateNotificationId(NotificationType type) {
     final startId = _getIdRangeStart(type);
@@ -275,4 +289,12 @@ class LocalNotificationDatasource {
     }
     _onNotificationTap?.call(response.payload);
   }
+}
+
+@immutable
+class PendingLocalNotification {
+  const PendingLocalNotification({required this.id, this.payload});
+
+  final int id;
+  final String? payload;
 }

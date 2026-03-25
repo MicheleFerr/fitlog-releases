@@ -45,7 +45,7 @@ abstract class IHealthRepository {
   /// result.fold(
   ///   (failure) => print('Error: ${failure.message}'),
   ///   (status) {
-  ///     if (status.canSync(HealthDataType.workout)) {
+  ///     if (status.canAttemptSync(HealthDataType.workout)) {
   ///       print('Workout sync authorized');
   ///     }
   ///   },

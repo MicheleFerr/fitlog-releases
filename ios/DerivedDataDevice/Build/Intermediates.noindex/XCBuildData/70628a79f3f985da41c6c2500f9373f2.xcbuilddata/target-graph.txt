@@ -1,0 +1,6 @@
+Target dependency graph (3 targets)
+Target 'Runner' in project 'Runner'
+➜ Explicit dependency on target 'GymBroTimerWidgetExtension' in project 'Runner'
+➜ Explicit dependency on target 'FitLogWatch Watch App' in project 'Runner'
+Target 'FitLogWatch Watch App' in project 'Runner' (no dependencies)
+Target 'GymBroTimerWidgetExtension' in project 'Runner' (no dependencies)

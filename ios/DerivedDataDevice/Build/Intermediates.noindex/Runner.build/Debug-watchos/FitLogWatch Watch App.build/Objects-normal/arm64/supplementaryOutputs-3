@@ -1,0 +1,23 @@
+{
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Models/PayloadParsing.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/PayloadParsing.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/PayloadParsing.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/PayloadParsing.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/PayloadParsing.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/PayloadParsing.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Models/WatchLogger.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchLogger.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchLogger.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchLogger.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchLogger.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchLogger.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Models/WatchMessageType.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchMessageType.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchMessageType.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchMessageType.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchMessageType.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchMessageType.swiftdeps"
+  }
+}

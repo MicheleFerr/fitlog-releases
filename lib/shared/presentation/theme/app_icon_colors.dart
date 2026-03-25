@@ -156,7 +156,7 @@ class AppIconColors {
   // Semantic colors (Material Design 3 defaults)
   static const Color success = Color(0xFF4CAF50); // Green
   static const Color error = Color(0xFFE53935); // Red
-  static const Color warning = Color(0xFFFB8C00); // Orange
+  static const Color warning = Color(0xFFFFB300); // Amber
   static const Color info = Color(0xFF2196F3); // Blue
 
   // Grayscale

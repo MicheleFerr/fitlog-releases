@@ -2,8 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_sync_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/repositories/health_repository.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/providers/weight_update_nudge_provider.dart';
 
 // ============================================================
 // SYNC STATUS PROVIDERS
@@ -218,7 +220,10 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     state = result.fold(
       (failure) =>
           AsyncValue.error(Exception(failure.toString()), StackTrace.current),
-      (_) => const AsyncValue.data(null),
+      (_) {
+        ref.invalidate(weightUpdateNudgeProvider);
+        return const AsyncValue.data(null);
+      },
     );
   }
 
@@ -336,22 +341,38 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      // Sync workouts (last 30 days)
-      await syncWorkouts();
+      final permissionStatus = await ref.read(
+        healthPermissionStatusProvider.future,
+      );
+      final failures = <String>[];
 
-      // Sync body weight (last 90 days)
-      await syncBodyWeight();
+      if (permissionStatus.canAttemptSync(HealthDataType.workout)) {
+        final workoutResult = await _repository.syncWorkouts(
+          startDate: DateTime.now().subtract(const Duration(days: 30)),
+          endDate: DateTime.now(),
+        );
+        workoutResult.fold((failure) => failures.add(failure.message), (_) {});
+      }
 
-      // TODO: Add other data types when implemented
-      // - Body fat %
-      // - Lean mass
-      // - Heart rate
-      // - Sleep
-      // - Nutrition
+      if (permissionStatus.canAttemptSync(HealthDataType.bodyWeight)) {
+        final weightResult = await _repository.syncBodyWeight(
+          startDate: DateTime.now().subtract(const Duration(days: 90)),
+          endDate: DateTime.now(),
+        );
+        weightResult.fold(
+          (failure) => failures.add(failure.message),
+          (_) => ref.invalidate(weightUpdateNudgeProvider),
+        );
+      }
+
+      if (failures.isNotEmpty) {
+        throw Exception(failures.join('\n'));
+      }
 
       state = const AsyncValue.data(null);
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
+      rethrow;
     }
   }
 }

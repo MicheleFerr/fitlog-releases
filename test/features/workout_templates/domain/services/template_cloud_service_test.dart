@@ -25,15 +25,15 @@ void main() {
         expect(quota.privateMax, equals(4));
         expect(quota.privateRemaining, equals(4));
         expect(quota.publicUsed, equals(0));
-        expect(quota.publicMax, equals(2));
-        expect(quota.publicRemaining, equals(2));
+        expect(quota.publicMax, equals(999));
+        expect(quota.publicRemaining, equals(999));
       });
 
       test('canCreatePrivate is true when remaining > 0', () {
         expect(TemplateQuotaInfo.empty().canCreatePrivate, isTrue);
       });
 
-      test('canCreatePublic is true when remaining > 0', () {
+      test('canCreatePublic is always true because distribution is free', () {
         expect(TemplateQuotaInfo.empty().canCreatePublic, isTrue);
       });
 
@@ -86,7 +86,7 @@ void main() {
         final quota = TemplateQuotaInfo.fromResponse({});
         expect(quota.accountTier, equals('free'));
         expect(quota.privateMax, equals(4));
-        expect(quota.publicMax, equals(2));
+        expect(quota.publicMax, equals(999));
       });
     });
 
@@ -94,51 +94,54 @@ void main() {
       test('canCreatePrivate is false when remaining == 0', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'free',
-          privateUsed: 4,
-          privateMax: 4,
-          privateRemaining: 0,
-          publicUsed: 0,
-          publicMax: 2,
-          publicRemaining: 2,
+          libraryUsed: 4,
+          libraryMax: 4,
+          libraryRemaining: 0,
+          distributionUsed: 0,
+          distributionMax: 999,
+          distributionRemaining: 999,
         );
         expect(quota.canCreatePrivate, isFalse);
       });
 
-      test('canCreatePublic is false when remaining == 0', () {
-        const quota = TemplateQuotaInfo(
-          accountTier: 'free',
-          privateUsed: 0,
-          privateMax: 4,
-          privateRemaining: 4,
-          publicUsed: 2,
-          publicMax: 2,
-          publicRemaining: 0,
-        );
-        expect(quota.canCreatePublic, isFalse);
-      });
+      test(
+        'canCreatePublic stays true even when distribution remaining == 0',
+        () {
+          const quota = TemplateQuotaInfo(
+            accountTier: 'free',
+            libraryUsed: 0,
+            libraryMax: 4,
+            libraryRemaining: 4,
+            distributionUsed: 999,
+            distributionMax: 999,
+            distributionRemaining: 0,
+          );
+          expect(quota.canCreatePublic, isTrue);
+        },
+      );
 
-      test('isAtLimit true when both private and public are 0', () {
+      test('isAtLimit true when library remaining is 0', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'free',
-          privateUsed: 4,
-          privateMax: 4,
-          privateRemaining: 0,
-          publicUsed: 2,
-          publicMax: 2,
-          publicRemaining: 0,
+          libraryUsed: 4,
+          libraryMax: 4,
+          libraryRemaining: 0,
+          distributionUsed: 0,
+          distributionMax: 999,
+          distributionRemaining: 999,
         );
         expect(quota.isAtLimit, isTrue);
       });
 
-      test('isAtLimit false when only private is full', () {
+      test('isAtLimit false when only distribution is full', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'free',
-          privateUsed: 4,
-          privateMax: 4,
-          privateRemaining: 0,
-          publicUsed: 0,
-          publicMax: 2,
-          publicRemaining: 2,
+          libraryUsed: 3,
+          libraryMax: 4,
+          libraryRemaining: 1,
+          distributionUsed: 999,
+          distributionMax: 999,
+          distributionRemaining: 0,
         );
         expect(quota.isAtLimit, isFalse);
       });
@@ -146,12 +149,12 @@ void main() {
       test('isNearPrivateLimit true when remaining == 1', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'free',
-          privateUsed: 3,
-          privateMax: 4,
-          privateRemaining: 1,
-          publicUsed: 0,
-          publicMax: 2,
-          publicRemaining: 2,
+          libraryUsed: 3,
+          libraryMax: 4,
+          libraryRemaining: 1,
+          distributionUsed: 0,
+          distributionMax: 999,
+          distributionRemaining: 999,
         );
         expect(quota.isNearPrivateLimit, isTrue);
       });
@@ -159,12 +162,12 @@ void main() {
       test('isNearPrivateLimit true when remaining == 2', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'free',
-          privateUsed: 2,
-          privateMax: 4,
-          privateRemaining: 2,
-          publicUsed: 0,
-          publicMax: 2,
-          publicRemaining: 2,
+          libraryUsed: 2,
+          libraryMax: 4,
+          libraryRemaining: 2,
+          distributionUsed: 0,
+          distributionMax: 999,
+          distributionRemaining: 999,
         );
         expect(quota.isNearPrivateLimit, isTrue);
       });
@@ -172,12 +175,12 @@ void main() {
       test('isNearPrivateLimit false when remaining == 3', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'premium',
-          privateUsed: 17,
-          privateMax: 20,
-          privateRemaining: 3,
-          publicUsed: 0,
-          publicMax: 10,
-          publicRemaining: 10,
+          libraryUsed: 17,
+          libraryMax: 20,
+          libraryRemaining: 3,
+          distributionUsed: 0,
+          distributionMax: 999,
+          distributionRemaining: 999,
         );
         expect(quota.isNearPrivateLimit, isFalse);
       });
@@ -185,12 +188,12 @@ void main() {
       test('isNearPrivateLimit false when remaining == 0', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'free',
-          privateUsed: 4,
-          privateMax: 4,
-          privateRemaining: 0,
-          publicUsed: 0,
-          publicMax: 2,
-          publicRemaining: 2,
+          libraryUsed: 4,
+          libraryMax: 4,
+          libraryRemaining: 0,
+          distributionUsed: 0,
+          distributionMax: 999,
+          distributionRemaining: 999,
         );
         // 0 remaining -> already over limit, not "near" limit
         expect(quota.isNearPrivateLimit, isFalse);
@@ -261,10 +264,7 @@ void main() {
       });
 
       test('uses empty templateName when template key missing', () {
-        final data = <String, dynamic>{
-          'success': true,
-          'templateId': 'id1',
-        };
+        final data = <String, dynamic>{'success': true, 'templateId': 'id1'};
         final result = CreateTemplateResult.fromResponse(data);
         expect(result.templateName, isEmpty);
       });
@@ -280,12 +280,12 @@ void main() {
       test('preserves all fields', () {
         const quota = TemplateQuotaInfo(
           accountTier: 'premium',
-          privateUsed: 5,
-          privateMax: 20,
-          privateRemaining: 15,
-          publicUsed: 2,
-          publicMax: 10,
-          publicRemaining: 8,
+          libraryUsed: 5,
+          libraryMax: 20,
+          libraryRemaining: 15,
+          distributionUsed: 2,
+          distributionMax: 999,
+          distributionRemaining: 997,
         );
         const result = CreateTemplateResult(
           success: true,
@@ -356,10 +356,7 @@ void main() {
     }
 
     test('non-timestamp createdAt passes through', () {
-      final data = {
-        'createdAt': '2024-01-15T10:00:00.000',
-        'name': 'Test',
-      };
+      final data = {'createdAt': '2024-01-15T10:00:00.000', 'name': 'Test'};
       final result = normalize(data);
       expect(result['createdAt'], equals('2024-01-15T10:00:00.000'));
       expect(result['name'], equals('Test'));
@@ -416,10 +413,7 @@ void main() {
     });
 
     test('limit message contains count and limit info', () {
-      const count = 4;
-      const limit = 4;
-      final message =
-          'Template limit reached: $count/$limit private templates.';
+      const message = 'Template limit reached: 4/4 Library templates.';
       expect(message, contains('4/4'));
       expect(message, contains('Template limit reached'));
     });

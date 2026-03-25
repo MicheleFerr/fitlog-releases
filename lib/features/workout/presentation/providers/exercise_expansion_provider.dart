@@ -10,6 +10,7 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 /// State for exercise expansion
 class ExerciseExpansionState {
@@ -43,22 +44,29 @@ class ExerciseExpansionNotifier extends Notifier<ExerciseExpansionState> {
 
   @override
   ExerciseExpansionState build() {
-    return const ExerciseExpansionState();
+    // Keep expansion state alive for the whole app session so temporary widget
+    // disposal (for example after background/resume) does not reopen cards.
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    final isCompleted =
+        currentWorkout?.exercises.any(
+          (exercise) => exercise.id == exerciseId && exercise.isCompleted,
+        ) ??
+        false;
+
+    return ExerciseExpansionState(
+      isExpanded: !isCompleted,
+      hasAutoCollapsed: isCompleted,
+    );
   }
 
   /// Expand the exercise card
   void expand() {
-    state = state.copyWith(
-      isExpanded: true,
-      userManuallyExpanded: true,
-    );
+    state = state.copyWith(isExpanded: true, userManuallyExpanded: true);
   }
 
   /// Collapse the exercise card
   void collapse() {
-    state = state.copyWith(
-      isExpanded: false,
-    );
+    state = state.copyWith(isExpanded: false);
   }
 
   /// Auto-collapse triggered by system (after completing all sets)
@@ -66,10 +74,7 @@ class ExerciseExpansionNotifier extends Notifier<ExerciseExpansionState> {
     // Don't auto-collapse if user manually expanded
     if (state.userManuallyExpanded) return;
 
-    state = state.copyWith(
-      isExpanded: false,
-      hasAutoCollapsed: true,
-    );
+    state = state.copyWith(isExpanded: false, hasAutoCollapsed: true);
   }
 
   /// Toggle expansion state
@@ -85,11 +90,22 @@ class ExerciseExpansionNotifier extends Notifier<ExerciseExpansionState> {
   void reset() {
     state = const ExerciseExpansionState();
   }
+
+  /// Re-open the card when the exercise becomes incomplete again.
+  void resetForIncomplete() {
+    state = const ExerciseExpansionState(
+      isExpanded: true,
+      hasAutoCollapsed: false,
+      userManuallyExpanded: false,
+    );
+  }
 }
 
 /// Provider for exercise expansion state with notifier
-/// ✅ Riverpod 3.x syntax with family and autoDispose
-final exerciseExpansionProvider = NotifierProvider.family
-    .autoDispose<ExerciseExpansionNotifier, ExerciseExpansionState, String>(
-  ExerciseExpansionNotifier.new,
-);
+/// ✅ Riverpod 3.x syntax with family
+final exerciseExpansionProvider =
+    NotifierProvider.family<
+      ExerciseExpansionNotifier,
+      ExerciseExpansionState,
+      String
+    >(ExerciseExpansionNotifier.new);

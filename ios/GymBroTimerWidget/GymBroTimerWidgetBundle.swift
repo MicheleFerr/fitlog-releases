@@ -6,8 +6,6 @@ import SwiftUI
       var body: some Widget {
           GymBroTimerWidget()
           if #available(iOS 16.1, *) {
-              GymBroTimerLiveActivity()
-              GymBroRPELiveActivity()       // ✅ Widget RPE
               GymBroScheduleLiveActivity()  // ✅ Widget Schedule Countdown
           }
           // Unified Workout Session Live Activity (iOS 17+)

@@ -96,7 +96,12 @@ void main() {
 
       test('does not mutate original', () {
         const original = ParsedSet(reps: 8, weight: 60.0, durationSeconds: 30);
-        original.copyWith(reps: 20, weight: 100.0, durationSeconds: 60);
+        final copy = original.copyWith(
+          reps: 20,
+          weight: 100.0,
+          durationSeconds: 60,
+        );
+        expect(copy.reps, 20);
         expect(original.reps, 8);
         expect(original.weight, 60.0);
         expect(original.durationSeconds, 30);
@@ -277,7 +282,10 @@ void main() {
       });
 
       test('sets list is unmodifiable', () {
-        final exercise = ParsedExerciseLine(rawName: 'Push-up', sets: sampleSets);
+        final exercise = ParsedExerciseLine(
+          rawName: 'Push-up',
+          sets: sampleSets,
+        );
         expect(
           () => (exercise.sets as dynamic).add(const ParsedSet(reps: 5)),
           throwsUnsupportedError,
@@ -351,15 +359,18 @@ void main() {
         expect(exercise.matchLevel, MatchLevel.suggested);
       });
 
-      test('returns none when confidence is 0.49 (below suggested threshold)', () {
-        final exercise = ParsedExerciseLine(
-          rawName: 'Bench',
-          sets: [],
-          matchedExerciseId: 'bench_001',
-          matchConfidence: 0.49,
-        );
-        expect(exercise.matchLevel, MatchLevel.none);
-      });
+      test(
+        'returns none when confidence is 0.49 (below suggested threshold)',
+        () {
+          final exercise = ParsedExerciseLine(
+            rawName: 'Bench',
+            sets: [],
+            matchedExerciseId: 'bench_001',
+            matchConfidence: 0.49,
+          );
+          expect(exercise.matchLevel, MatchLevel.none);
+        },
+      );
 
       test('returns none when confidence is 0.0', () {
         final exercise = ParsedExerciseLine(
@@ -371,15 +382,18 @@ void main() {
         expect(exercise.matchLevel, MatchLevel.none);
       });
 
-      test('returns none when matchedExerciseId is null but confidence is high', () {
-        final exercise = ParsedExerciseLine(
-          rawName: 'Bench',
-          sets: [],
-          matchedExerciseId: null,
-          matchConfidence: 0.95,
-        );
-        expect(exercise.matchLevel, MatchLevel.none);
-      });
+      test(
+        'returns none when matchedExerciseId is null but confidence is high',
+        () {
+          final exercise = ParsedExerciseLine(
+            rawName: 'Bench',
+            sets: [],
+            matchedExerciseId: null,
+            matchConfidence: 0.95,
+          );
+          expect(exercise.matchLevel, MatchLevel.none);
+        },
+      );
     });
 
     group('copyWith', () {
@@ -418,7 +432,11 @@ void main() {
           sets: sampleSets,
           matchedExerciseId: null,
         );
-        original.copyWith(rawName: 'Overhead Press', matchedExerciseId: 'ohp_001');
+        final copy = original.copyWith(
+          rawName: 'Overhead Press',
+          matchedExerciseId: 'ohp_001',
+        );
+        expect(copy.rawName, 'Overhead Press');
         expect(original.rawName, 'OHP');
         expect(original.matchedExerciseId, isNull);
       });
@@ -499,10 +517,7 @@ void main() {
       });
 
       test('fromJson handles minimal JSON (only required fields)', () {
-        final json = {
-          'rawName': 'Push-up',
-          'sets': <dynamic>[],
-        };
+        final json = {'rawName': 'Push-up', 'sets': <dynamic>[]};
         final exercise = ParsedExerciseLine.fromJson(json);
         expect(exercise.rawName, 'Push-up');
         expect(exercise.sets, isEmpty);
@@ -590,7 +605,8 @@ void main() {
 
       test('does not mutate original', () {
         final original = ParsedDay(name: 'Day A', exercises: sampleExercises);
-        original.copyWith(name: 'Day B', exercises: []);
+        final copy = original.copyWith(name: 'Day B', exercises: []);
+        expect(copy.name, 'Day B');
         expect(original.name, 'Day A');
         expect(original.exercises, hasLength(2));
       });
@@ -618,10 +634,7 @@ void main() {
 
     group('JSON serialization', () {
       test('toJson produces correct structure', () {
-        final day = ParsedDay(
-          name: 'Push Day',
-          exercises: sampleExercises,
-        );
+        final day = ParsedDay(name: 'Push Day', exercises: sampleExercises);
         final json = day.toJson();
         expect(json['name'], 'Push Day');
         expect(json['exercises'], isA<List>());
@@ -730,11 +743,12 @@ void main() {
           rawText: 'original',
           hasMultipleDays: false,
         );
-        original.copyWith(
+        final copy = original.copyWith(
           rawText: 'modified',
           hasMultipleDays: true,
           days: [],
         );
+        expect(copy.rawText, 'modified');
         expect(original.rawText, 'original');
         expect(original.hasMultipleDays, false);
         expect(original.days, hasLength(1));

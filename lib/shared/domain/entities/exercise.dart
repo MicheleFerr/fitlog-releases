@@ -110,6 +110,7 @@ class Exercise {
 
   Exercise({
     String? id,
+    this.databaseExerciseId,
     required this.name,
     required this.type,
     required this.category,
@@ -164,6 +165,9 @@ class Exercise {
     return Exercise(
       // Support both 'id' (workout format) and 'exerciseId' (template format)
       id: json['id'] ?? json['exerciseId'],
+      databaseExerciseId:
+          (json['databaseExerciseId'] ?? json['exerciseId'] ?? json['id'])
+              as String?,
       // Support both 'name' (workout format) and 'exerciseName' (template format)
       name: json['name'] ?? json['exerciseName'] ?? 'Unknown Exercise',
       type: ExerciseType.values.firstWhere(
@@ -226,6 +230,7 @@ class Exercise {
     );
   }
   final String id;
+  final String? databaseExerciseId;
   final String name;
   final ExerciseType type;
   final ExerciseCategory category;
@@ -268,6 +273,12 @@ class Exercise {
   final MovementType?
   movementType; // null = not classified yet (backward compat)
 
+  /// Stable exercise identity used for catalog lookups and persisted preferences.
+  ///
+  /// - `id` identifies the workout slot / exercise instance.
+  /// - `databaseExerciseId` points to the underlying catalog exercise when known.
+  String get stableExerciseId => databaseExerciseId ?? id;
+
   /// Creates a copy of this exercise with the given fields replaced.
   ///
   /// Use [clearRestTime] = true to explicitly set restTime to null.
@@ -275,6 +286,7 @@ class Exercise {
   /// between "not provided" and "explicitly set to null".
   Exercise copyWith({
     String? id, // ✅ FIX: Added id parameter
+    String? databaseExerciseId,
     String? name,
     ExerciseType? type,
     ExerciseCategory? category,
@@ -301,6 +313,7 @@ class Exercise {
   }) {
     return Exercise(
       id: id ?? this.id, // ✅ FIX: Preserve id if not provided
+      databaseExerciseId: databaseExerciseId ?? this.databaseExerciseId,
       name: name ?? this.name,
       type: type ?? this.type,
       category: category ?? this.category,
@@ -332,6 +345,7 @@ class Exercise {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'databaseExerciseId': databaseExerciseId,
       'name': name,
       'type': type.name,
       'category': category.name,
@@ -411,8 +425,14 @@ class ExerciseSet {
       setNumber: json['setNumber'],
       weight: json['weight']?.toDouble(),
       reps: json['reps'],
-      minReps: _normalizeMinReps(json['minReps'] as int?, json['maxReps'] as int?),
-      maxReps: _normalizeMaxReps(json['minReps'] as int?, json['maxReps'] as int?),
+      minReps: _normalizeMinReps(
+        json['minReps'] as int?,
+        json['maxReps'] as int?,
+      ),
+      maxReps: _normalizeMaxReps(
+        json['minReps'] as int?,
+        json['maxReps'] as int?,
+      ),
       actualReps: json['actualReps'], // ✅ Nuovo
       rpe: json['rpe'], // ✅ Nuovo
       seconds: json['seconds'],
@@ -522,9 +542,67 @@ class ExerciseSet {
       isWarmup: isWarmup ?? this.isWarmup, // ✅ Nuovo
       // ✅ Rest Timer Tracking
       restTimerSkipped: restTimerSkipped ?? this.restTimerSkipped,
-      restTimerSecondsRemaining: restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,
-      restTimerSecondsAdded: restTimerSecondsAdded ?? this.restTimerSecondsAdded,
+      restTimerSecondsRemaining:
+          restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,
+      restTimerSecondsAdded:
+          restTimerSecondsAdded ?? this.restTimerSecondsAdded,
       actualRestSeconds: actualRestSeconds ?? this.actualRestSeconds,
+    );
+  }
+
+  /// Replace this set's rep target with an exact reps value.
+  /// Clears any existing rep range to avoid stale min/max values.
+  ExerciseSet copyWithExactTarget({double? weight, required int reps}) {
+    return ExerciseSet(
+      id: id,
+      setNumber: setNumber,
+      weight: weight ?? this.weight,
+      reps: reps,
+      minReps: null,
+      maxReps: null,
+      actualReps: actualReps,
+      rpe: rpe,
+      restTime: restTime,
+      seconds: seconds,
+      distance: distance,
+      isCompleted: isCompleted,
+      notes: notes,
+      completedAt: completedAt,
+      setDurationMillis: setDurationMillis,
+      setStartedAt: setStartedAt,
+      isWarmup: isWarmup,
+      restTimerSkipped: restTimerSkipped,
+      restTimerSecondsRemaining: restTimerSecondsRemaining,
+      restTimerSecondsAdded: restTimerSecondsAdded,
+      actualRestSeconds: actualRestSeconds,
+    );
+  }
+
+  /// Copy the previous set's weight and rep target structure.
+  /// This preserves exact targets and rep ranges without leaking stale values.
+  ExerciseSet copyWeightAndRepTargetFrom(ExerciseSet source) {
+    return ExerciseSet(
+      id: id,
+      setNumber: setNumber,
+      weight: source.weight ?? weight,
+      reps: source.reps,
+      minReps: source.minReps,
+      maxReps: source.maxReps,
+      actualReps: actualReps,
+      rpe: rpe,
+      restTime: restTime,
+      seconds: seconds,
+      distance: distance,
+      isCompleted: isCompleted,
+      notes: notes,
+      completedAt: completedAt,
+      setDurationMillis: setDurationMillis,
+      setStartedAt: setStartedAt,
+      isWarmup: isWarmup,
+      restTimerSkipped: restTimerSkipped,
+      restTimerSecondsRemaining: restTimerSecondsRemaining,
+      restTimerSecondsAdded: restTimerSecondsAdded,
+      actualRestSeconds: actualRestSeconds,
     );
   }
 
@@ -549,8 +627,10 @@ class ExerciseSet {
       if (restTime != null) 'restTime': restTime, // ✅ Rest time in seconds
       // ✅ Rest Timer Tracking
       'restTimerSkipped': restTimerSkipped,
-      if (restTimerSecondsRemaining != null) 'restTimerSecondsRemaining': restTimerSecondsRemaining,
-      if (restTimerSecondsAdded != null) 'restTimerSecondsAdded': restTimerSecondsAdded,
+      if (restTimerSecondsRemaining != null)
+        'restTimerSecondsRemaining': restTimerSecondsRemaining,
+      if (restTimerSecondsAdded != null)
+        'restTimerSecondsAdded': restTimerSecondsAdded,
       if (actualRestSeconds != null) 'actualRestSeconds': actualRestSeconds,
     };
   }
@@ -595,7 +675,8 @@ class ExerciseSet {
   // ========== REP RANGE HELPERS ==========
 
   /// True se il set ha un range di ripetizioni (min != max, entrambi definiti)
-  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
+  bool get hasRepRange =>
+      minReps != null && maxReps != null && minReps != maxReps;
 
   /// Display string per le reps target: "8-12" per range, "10" per singolo
   String get repsDisplay {
@@ -752,7 +833,10 @@ class SupersetExerciseData {
   final String? notes;
 
   /// True se ha un range di ripetizioni target
-  bool get hasRepRange => targetMinReps != null && targetMaxReps != null && targetMinReps != targetMaxReps;
+  bool get hasRepRange =>
+      targetMinReps != null &&
+      targetMaxReps != null &&
+      targetMinReps != targetMaxReps;
 
   /// Display string per le reps target
   String get repsDisplay {
@@ -904,6 +988,7 @@ class SupersetExercise extends Exercise {
 
   SupersetExercise({
     super.id,
+    super.databaseExerciseId,
     required super.name,
     required List<Exercise> exercises,
     List<SupersetSet>? supersetSets,
@@ -911,6 +996,8 @@ class SupersetExercise extends Exercise {
     super.restTime,
     super.restAfterExercise,
     super.tut,
+    super.createdAt,
+    super.updatedAt,
     // Advanced fields from base Exercise
     super.autoAdjustmentType,
     super.calculated1RM,
@@ -951,6 +1038,9 @@ class SupersetExercise extends Exercise {
 
     return SupersetExercise(
       id: json['id'] ?? json['exerciseId'],
+      databaseExerciseId:
+          (json['databaseExerciseId'] ?? json['exerciseId'] ?? json['id'])
+              as String?,
       name: json['name'] ?? json['exerciseName'] ?? 'Superset',
       exercises: exercises,
       supersetSets: supersetSets,
@@ -960,6 +1050,13 @@ class SupersetExercise extends Exercise {
           : null,
       restAfterExercise: json['restAfterExercise'] is num
           ? (json['restAfterExercise'] as num).toInt()
+          : null,
+      tut: json['tut'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'] as String)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'] as String)
           : null,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
@@ -1001,6 +1098,7 @@ class SupersetExercise extends Exercise {
   @override
   SupersetExercise copyWith({
     String? id, // ✅ FIX: Added id parameter
+    String? databaseExerciseId,
     String? name,
     ExerciseType? type,
     ExerciseCategory? category,
@@ -1030,6 +1128,7 @@ class SupersetExercise extends Exercise {
   }) {
     return SupersetExercise(
       id: id ?? this.id,
+      databaseExerciseId: databaseExerciseId ?? this.databaseExerciseId,
       name: name ?? this.name,
       exercises: exercises ?? this.exercises,
       supersetSets: supersetSets ?? this.supersetSets,
@@ -1038,6 +1137,9 @@ class SupersetExercise extends Exercise {
       restAfterExercise: clearRestAfterExercise
           ? null
           : (restAfterExercise ?? this.restAfterExercise),
+      tut: tut ?? this.tut,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
       calculated1RM: calculated1RM ?? this.calculated1RM,
       calculated3RM: calculated3RM ?? this.calculated3RM,
@@ -1153,6 +1255,7 @@ class SupersetExercise extends Exercise {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'databaseExerciseId': databaseExerciseId,
       'name': name,
       'type': type.name,
       'category': category.name,
@@ -1186,6 +1289,7 @@ class SupersetExercise extends Exercise {
 class DropSetExercise extends Exercise {
   DropSetExercise({
     super.id,
+    super.databaseExerciseId,
     required super.name,
     required super.category,
     required List<DropSetStage> stages,
@@ -1193,6 +1297,8 @@ class DropSetExercise extends Exercise {
     super.restTime,
     super.restAfterExercise,
     super.tut,
+    super.createdAt,
+    super.updatedAt,
     // Advanced fields from base Exercise
     super.autoAdjustmentType,
     super.calculated1RM,
@@ -1218,6 +1324,9 @@ class DropSetExercise extends Exercise {
 
     return DropSetExercise(
       id: json['id'] ?? json['exerciseId'],
+      databaseExerciseId:
+          (json['databaseExerciseId'] ?? json['exerciseId'] ?? json['id'])
+              as String?,
       name: json['name'] ?? json['exerciseName'] ?? 'Drop Set',
       category: ExerciseCategory.values.firstWhere(
         (e) => e.name == json['category'],
@@ -1232,6 +1341,12 @@ class DropSetExercise extends Exercise {
           ? (json['restAfterExercise'] as num).toInt()
           : null,
       tut: json['tut'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'] as String)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'] as String)
+          : null,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
           ? AutoAdjustmentType.values.firstWhere(
@@ -1267,6 +1382,7 @@ class DropSetExercise extends Exercise {
   @override
   DropSetExercise copyWith({
     String? id,
+    String? databaseExerciseId,
     String? name,
     ExerciseType? type,
     ExerciseCategory? category,
@@ -1295,6 +1411,7 @@ class DropSetExercise extends Exercise {
   }) {
     return DropSetExercise(
       id: id ?? this.id,
+      databaseExerciseId: databaseExerciseId ?? this.databaseExerciseId,
       name: name ?? this.name,
       category: category ?? this.category,
       stages: stages ?? this.stages,
@@ -1304,6 +1421,8 @@ class DropSetExercise extends Exercise {
           ? null
           : (restAfterExercise ?? this.restAfterExercise),
       tut: tut ?? this.tut,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
       calculated1RM: calculated1RM ?? this.calculated1RM,
       calculated3RM: calculated3RM ?? this.calculated3RM,
@@ -1347,6 +1466,7 @@ class DropSetExercise extends Exercise {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'databaseExerciseId': databaseExerciseId,
       'name': name,
       'type': type.name,
       'category': category.name,
@@ -1430,7 +1550,8 @@ class DropSetStage {
   int get effectiveReps => actualReps ?? reps;
 
   /// True se ha un range di ripetizioni
-  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
+  bool get hasRepRange =>
+      minReps != null && maxReps != null && minReps != maxReps;
 
   DropSetStage copyWith({
     double? weight,
@@ -1472,6 +1593,7 @@ class DropSetStage {
 class RestPauseExercise extends Exercise {
   RestPauseExercise({
     super.id,
+    super.databaseExerciseId,
     required super.name,
     required super.category,
     required this.weight,
@@ -1483,6 +1605,8 @@ class RestPauseExercise extends Exercise {
     super.restTime,
     super.restAfterExercise,
     super.tut,
+    super.createdAt,
+    super.updatedAt,
     // Advanced fields from base Exercise
     super.autoAdjustmentType,
     super.calculated1RM,
@@ -1507,6 +1631,9 @@ class RestPauseExercise extends Exercise {
 
     return RestPauseExercise(
       id: json['id'] ?? json['exerciseId'],
+      databaseExerciseId:
+          (json['databaseExerciseId'] ?? json['exerciseId'] ?? json['id'])
+              as String?,
       name: json['name'] ?? json['exerciseName'] ?? 'Rest-Pause',
       category: ExerciseCategory.values.firstWhere(
         (e) => e.name == json['category'],
@@ -1525,6 +1652,12 @@ class RestPauseExercise extends Exercise {
           ? (json['restAfterExercise'] as num).toInt()
           : null,
       tut: json['tut'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'] as String)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'] as String)
+          : null,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
           ? AutoAdjustmentType.values.firstWhere(
@@ -1562,11 +1695,15 @@ class RestPauseExercise extends Exercise {
   final List<RestPauseSet> restPauseSets;
 
   /// True se ha un range di ripetizioni target
-  bool get hasRepRange => targetMinReps != null && targetMaxReps != null && targetMinReps != targetMaxReps;
+  bool get hasRepRange =>
+      targetMinReps != null &&
+      targetMaxReps != null &&
+      targetMinReps != targetMaxReps;
 
   @override
   RestPauseExercise copyWith({
     String? id,
+    String? databaseExerciseId,
     String? name,
     ExerciseType? type,
     ExerciseCategory? category,
@@ -1599,6 +1736,7 @@ class RestPauseExercise extends Exercise {
   }) {
     return RestPauseExercise(
       id: id ?? this.id,
+      databaseExerciseId: databaseExerciseId ?? this.databaseExerciseId,
       name: name ?? this.name,
       category: category ?? this.category,
       weight: weight ?? this.weight,
@@ -1612,6 +1750,8 @@ class RestPauseExercise extends Exercise {
           ? null
           : (restAfterExercise ?? this.restAfterExercise),
       tut: tut ?? this.tut,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
       calculated1RM: calculated1RM ?? this.calculated1RM,
       calculated3RM: calculated3RM ?? this.calculated3RM,
@@ -1655,6 +1795,7 @@ class RestPauseExercise extends Exercise {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'databaseExerciseId': databaseExerciseId,
       'name': name,
       'type': type.name,
       'category': category.name,
@@ -1742,7 +1883,8 @@ class RestPauseSet {
   int get effectiveReps => actualReps ?? reps;
 
   /// True se ha un range di ripetizioni
-  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
+  bool get hasRepRange =>
+      minReps != null && maxReps != null && minReps != maxReps;
 
   RestPauseSet copyWith({
     int? reps,

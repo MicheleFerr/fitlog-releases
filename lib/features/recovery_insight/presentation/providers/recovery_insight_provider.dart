@@ -13,16 +13,15 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health/health.dart' show NumericHealthValue;
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/healthkit_datasource.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
-import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
-import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
-import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_bodyweight_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_workout_correlation.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/services/sleep_workout_correlation_service.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 // ==========================================
 // SERVICE PROVIDERS
@@ -94,6 +93,8 @@ final sleepAnalyticsProvider = FutureProvider.autoDispose<Map<String, dynamic>>(
 final sleepRecordsProvider = FutureProvider.autoDispose<List<SleepRecord>>((
   ref,
 ) async {
+  ref.keepAlive();
+
   if (kDebugMode) {
     debugPrint('');
     debugPrint('╔══════════════════════════════════════════════════════════╗');
@@ -333,12 +334,17 @@ final sleepRecordsProvider = FutureProvider.autoDispose<List<SleepRecord>>((
 final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
   ref,
 ) async {
+  ref.keepAlive();
+
   final service = ref.watch(sleepWorkoutCorrelationServiceProvider);
+  final isPro = ref.watch(hasEffectivePremiumAccessProvider);
+  final sleepRecordsFuture = ref.watch(sleepRecordsProvider.future);
+  final workoutHistoryFuture = ref.watch(workoutHistoryProvider.future);
+  final userBodyweightFuture = ref.watch(userBodyweightProvider.future);
+
   List<SleepRecord> sleepRecords;
   try {
-    sleepRecords = await ref
-        .watch(sleepRecordsProvider.future)
-        .timeout(const Duration(seconds: 8));
+    sleepRecords = await sleepRecordsFuture.timeout(const Duration(seconds: 8));
   } on TimeoutException {
     if (kDebugMode) {
       debugPrint('[RecoveryInsight] Timeout fetching sleep records');
@@ -350,14 +356,13 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
     }
     sleepRecords = [];
   }
-  final isPro = ref.watch(isPremiumUserProvider);
 
   // Get workout history
-  List workoutHistory;
+  List<Workout> workoutHistory;
   try {
-    final historyDetails = await ref
-        .watch(workoutHistoryProvider.future)
-        .timeout(const Duration(seconds: 6));
+    final historyDetails = await workoutHistoryFuture.timeout(
+      const Duration(seconds: 6),
+    );
     workoutHistory = historyDetails.map((h) => h.toWorkout()).toList();
   } on TimeoutException {
     if (kDebugMode) {
@@ -374,23 +379,14 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
   // Get user's body weight for bodyweight exercise volume calculation
   double? userBodyWeightKg;
   try {
-    final weightMeasurements = await ref
-        .watch(bodyMeasurementsProvider(HealthDataType.bodyWeight).future)
-        .timeout(const Duration(seconds: 4));
-    if (weightMeasurements.isNotEmpty) {
-      // Get most recent measurement
-      final latestWeight = weightMeasurements.first;
-      // Convert to kg if needed
-      userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
-          ? latestWeight.value *
-                0.453592 // lbs to kg
-          : latestWeight.value;
+    userBodyWeightKg = await userBodyweightFuture.timeout(
+      const Duration(seconds: 4),
+    );
 
-      if (kDebugMode) {
-        debugPrint(
-          '[RecoveryInsight] User body weight: ${userBodyWeightKg.toStringAsFixed(1)}kg',
-        );
-      }
+    if (userBodyWeightKg != null && kDebugMode) {
+      debugPrint(
+        '[RecoveryInsight] User body weight: ${userBodyWeightKg.toStringAsFixed(1)}kg',
+      );
     }
   } catch (e) {
     if (kDebugMode) {
@@ -409,7 +405,7 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
   if (isPro && workoutHistory.isNotEmpty) {
     correlation = service.calculateCorrelation(
       sleepHistory: sleepRecords,
-      workoutHistory: workoutHistory.cast(),
+      workoutHistory: workoutHistory,
       periodDays: 30,
       userBodyWeightKg: userBodyWeightKg,
     );
@@ -418,7 +414,7 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
   // Calculate recovery insight
   return service.calculateRecovery(
     sleepHistory: sleepRecords,
-    workoutHistory: workoutHistory.cast(),
+    workoutHistory: workoutHistory,
     correlation: correlation,
   );
 });
@@ -428,7 +424,7 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
 /// Returns null for free users
 final sleepCorrelationProvider =
     FutureProvider.autoDispose<SleepWorkoutCorrelation?>((ref) async {
-      final isPro = ref.watch(isPremiumUserProvider);
+      final isPro = ref.watch(hasEffectivePremiumAccessProvider);
       if (!isPro) return null;
 
       final insight = await ref.watch(recoveryInsightProvider.future);

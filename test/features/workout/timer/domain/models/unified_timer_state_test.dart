@@ -16,10 +16,7 @@ void main() {
       });
 
       test('uses provided id', () {
-        final state = UnifiedTimerState(
-          id: 'my-id',
-          totalDurationSeconds: 60,
-        );
+        final state = UnifiedTimerState(id: 'my-id', totalDurationSeconds: 60);
         expect(state.id, 'my-id');
       });
 
@@ -53,7 +50,10 @@ void main() {
 
       test('defaults boolean flags to false', () {
         final state = UnifiedTimerState(totalDurationSeconds: 60);
-        expect(state.notificationScheduled, false);
+        expect(
+          state.completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
         expect(state.audioPlayed, false);
         expect(state.skipped, false);
         expect(state.liveActivityActive, false);
@@ -210,10 +210,7 @@ void main() {
           ).isActive,
           false,
         );
-        expect(
-          UnifiedTimerState(totalDurationSeconds: 60).isActive,
-          false,
-        );
+        expect(UnifiedTimerState(totalDurationSeconds: 60).isActive, false);
       });
 
       test('isPaused is true only when paused', () {
@@ -255,17 +252,11 @@ void main() {
       });
 
       test('isCompleted is false when idle with remaining > 0', () {
-        expect(
-          UnifiedTimerState(totalDurationSeconds: 60).isCompleted,
-          false,
-        );
+        expect(UnifiedTimerState(totalDurationSeconds: 60).isCompleted, false);
       });
 
       test('isIdle is true only when idle', () {
-        expect(
-          UnifiedTimerState(totalDurationSeconds: 60).isIdle,
-          true,
-        );
+        expect(UnifiedTimerState(totalDurationSeconds: 60).isIdle, true);
         expect(
           UnifiedTimerState(
             totalDurationSeconds: 60,
@@ -582,13 +573,17 @@ void main() {
           status: TimerStatus.completed,
           audioPlayed: true,
           skipped: true,
-          notificationScheduled: true,
+          completionDeliveryStrategy:
+              TimerCompletionDeliveryStrategy.notificationOwned,
           liveActivityActive: true,
         );
         final resetState = state.reset();
         expect(resetState.audioPlayed, false);
         expect(resetState.skipped, false);
-        expect(resetState.notificationScheduled, false);
+        expect(
+          resetState.completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
         expect(resetState.liveActivityActive, false);
       });
 
@@ -693,11 +688,45 @@ void main() {
       });
     });
 
-    group('scheduleNotification', () {
-      test('sets notificationScheduled to true', () {
+    group('completion delivery strategy', () {
+      test('can switch to notificationOwned', () {
         final state = UnifiedTimerState(totalDurationSeconds: 60);
-        expect(state.notificationScheduled, false);
-        expect(state.scheduleNotification().notificationScheduled, true);
+        expect(
+          state.completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
+        expect(
+          state.withNotificationOwnedCompletion().completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.notificationOwned,
+        );
+      });
+
+      test('complete and skip restore foregroundAudio ownership', () {
+        final notificationOwned = UnifiedTimerState(
+          totalDurationSeconds: 60,
+          completionDeliveryStrategy:
+              TimerCompletionDeliveryStrategy.notificationOwned,
+        );
+
+        expect(
+          notificationOwned.complete().completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
+        expect(
+          notificationOwned.skip().completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
+      });
+
+      test('withForegroundAudioCompletion preserves foreground ownership', () {
+        final state = UnifiedTimerState(totalDurationSeconds: 60);
+        final notificationOwned = state.withNotificationOwnedCompletion();
+        expect(
+          notificationOwned
+              .withForegroundAudioCompletion()
+              .completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
       });
     });
 
@@ -774,10 +803,7 @@ void main() {
 
     group('copyWith', () {
       test('preserves id by default', () {
-        final state = UnifiedTimerState(
-          id: 'keep',
-          totalDurationSeconds: 60,
-        );
+        final state = UnifiedTimerState(id: 'keep', totalDurationSeconds: 60);
         final copy = state.copyWith(totalDurationSeconds: 120);
         expect(copy.id, 'keep');
       });
@@ -844,7 +870,9 @@ void main() {
           workoutId: 'w-abc',
           audioEnabled: false,
           customSoundName: 'bell',
-          notificationScheduled: true,
+          completionDeliveryStrategy:
+              TimerCompletionDeliveryStrategy.notificationOwned,
+          completionSoundName: 'bell.caf',
           audioPlayed: true,
           skipped: true,
           liveActivityActive: true,
@@ -870,7 +898,11 @@ void main() {
         expect(restored.workoutId, state.workoutId);
         expect(restored.audioEnabled, state.audioEnabled);
         expect(restored.customSoundName, state.customSoundName);
-        expect(restored.notificationScheduled, state.notificationScheduled);
+        expect(
+          restored.completionDeliveryStrategy,
+          state.completionDeliveryStrategy,
+        );
+        expect(restored.completionSoundName, state.completionSoundName);
         expect(restored.audioPlayed, state.audioPlayed);
         expect(restored.skipped, state.skipped);
         expect(restored.liveActivityActive, state.liveActivityActive);
@@ -892,7 +924,11 @@ void main() {
 
         final state = UnifiedTimerState.fromJson(json);
         expect(state.audioEnabled, true);
-        expect(state.notificationScheduled, false);
+        expect(
+          state.completionDeliveryStrategy,
+          TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
+        expect(state.completionSoundName, isNull);
         expect(state.audioPlayed, false);
         expect(state.skipped, false);
         expect(state.liveActivityActive, false);
@@ -922,6 +958,8 @@ void main() {
         expect(json.containsKey('status'), true);
         expect(json.containsKey('audioEnabled'), true);
         expect(json.containsKey('audioPlayed'), true);
+        expect(json.containsKey('completionDeliveryStrategy'), true);
+        expect(json.containsKey('completionSoundName'), true);
         expect(json.containsKey('skipped'), true);
         expect(json.containsKey('liveActivityActive'), true);
         expect(json.containsKey('createdAt'), true);
@@ -995,10 +1033,7 @@ void main() {
       });
 
       test('same id but different audioPlayed are NOT equal', () {
-        final s1 = UnifiedTimerState(
-          id: 'eq-test',
-          totalDurationSeconds: 60,
-        );
+        final s1 = UnifiedTimerState(id: 'eq-test', totalDurationSeconds: 60);
         final s2 = UnifiedTimerState(
           id: 'eq-test',
           totalDurationSeconds: 60,
@@ -1008,10 +1043,7 @@ void main() {
       });
 
       test('same id but different liveActivityActive are NOT equal', () {
-        final s1 = UnifiedTimerState(
-          id: 'eq-test',
-          totalDurationSeconds: 60,
-        );
+        final s1 = UnifiedTimerState(id: 'eq-test', totalDurationSeconds: 60);
         final s2 = UnifiedTimerState(
           id: 'eq-test',
           totalDurationSeconds: 60,
@@ -1021,26 +1053,14 @@ void main() {
       });
 
       test('same id but different totalDurationSeconds are NOT equal', () {
-        final s1 = UnifiedTimerState(
-          id: 'eq-test',
-          totalDurationSeconds: 60,
-        );
-        final s2 = UnifiedTimerState(
-          id: 'eq-test',
-          totalDurationSeconds: 90,
-        );
+        final s1 = UnifiedTimerState(id: 'eq-test', totalDurationSeconds: 60);
+        final s2 = UnifiedTimerState(id: 'eq-test', totalDurationSeconds: 90);
         expect(s1, isNot(equals(s2)));
       });
 
       test('different ids are NOT equal', () {
-        final s1 = UnifiedTimerState(
-          id: 'id-1',
-          totalDurationSeconds: 60,
-        );
-        final s2 = UnifiedTimerState(
-          id: 'id-2',
-          totalDurationSeconds: 60,
-        );
+        final s1 = UnifiedTimerState(id: 'id-1', totalDurationSeconds: 60);
+        final s2 = UnifiedTimerState(id: 'id-2', totalDurationSeconds: 60);
         expect(s1, isNot(equals(s2)));
       });
 

@@ -112,11 +112,25 @@ class ProfessionalBodyHeatmap extends StatefulWidget {
   const ProfessionalBodyHeatmap({
     required this.heatValues,
     this.onMuscleTap,
+    this.enableSelection = true,
+    this.showSelectionInfo = true,
+    this.showLegend = true,
+    this.svgSourceLoader,
+    this.lowHeatColor = const Color(0xFF2196F3),
+    this.mediumHeatColor = const Color(0xFFFFC107),
+    this.highHeatColor = const Color(0xFFF44336),
     super.key,
   });
 
   final MuscleHeatValues heatValues;
   final void Function(String muscleGroup, double heatValue)? onMuscleTap;
+  final bool enableSelection;
+  final bool showSelectionInfo;
+  final bool showLegend;
+  final Future<String> Function()? svgSourceLoader;
+  final Color lowHeatColor;
+  final Color mediumHeatColor;
+  final Color highHeatColor;
 
   @override
   State<ProfessionalBodyHeatmap> createState() =>
@@ -176,9 +190,8 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
 
   Future<void> _loadSvgInternal() async {
     try {
-      final svgString = await rootBundle.loadString(
-        'packages/muscle_selector/assets/maps/human_body.svg',
-      );
+      final svgString =
+          await (widget.svgSourceLoader?.call() ?? _loadSvgSource());
 
       final muscles = <_MuscleData>[];
       final regExp = RegExp(
@@ -240,6 +253,23 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
     }
   }
 
+  Future<String> _loadSvgSource() async {
+    try {
+      return await rootBundle.loadString('assets/images/human_body.svg');
+    } catch (_) {
+      // Fallback to the package asset if the bundled local copy is unavailable.
+    }
+
+    try {
+      return await rootBundle.loadString(
+        'packages/muscle_selector/assets/maps/human_body.svg',
+      );
+    } catch (_) {
+      // Final fallback retries the local asset.
+      return rootBundle.loadString('assets/images/human_body.svg');
+    }
+  }
+
   String? _getMuscleGroup(String muscleId) {
     for (final entry in _muscleGroups.entries) {
       if (entry.value.contains(muscleId)) {
@@ -250,6 +280,8 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
   }
 
   void _handleTap(TapUpDetails details, Size size) {
+    if (!widget.enableSelection) return;
+
     final tapPos = details.localPosition;
 
     // Calculate scale
@@ -282,6 +314,7 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final selectedMuscleGroup = _selectedMuscleGroup;
 
     if (_isLoading) {
       return const Center(child: LoadingIndicator());
@@ -298,58 +331,91 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
       );
     }
 
-    return Column(
+    return Stack(
       children: [
-        // Body diagram
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Calculate size maintaining aspect ratio
-              final aspectRatio = _svgSize.width / _svgSize.height;
-              final maxWidth = constraints.maxWidth;
-              final maxHeight = constraints.maxHeight;
+        Column(
+          children: [
+            // Body diagram
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate size maintaining aspect ratio
+                  final aspectRatio = _svgSize.width / _svgSize.height;
+                  final maxWidth = constraints.maxWidth;
+                  final maxHeight = constraints.maxHeight;
 
-              double width, height;
-              if (maxWidth / maxHeight > aspectRatio) {
-                height = maxHeight;
-                width = height * aspectRatio;
-              } else {
-                width = maxWidth;
-                height = width / aspectRatio;
-              }
+                  double width, height;
+                  if (maxWidth / maxHeight > aspectRatio) {
+                    height = maxHeight;
+                    width = height * aspectRatio;
+                  } else {
+                    width = maxWidth;
+                    height = width / aspectRatio;
+                  }
 
-              return Center(
-                child: GestureDetector(
-                  onTapUp: (details) =>
-                      _handleTap(details, Size(width, height)),
-                  child: CustomPaint(
-                    size: Size(width, height),
-                    painter: _BodyHeatmapPainter(
-                      muscles: _muscles,
-                      heatValues: widget.heatValues,
-                      selectedMuscleGroup: _selectedMuscleGroup,
-                      colorScheme: colorScheme,
-                      svgSize: _svgSize,
+                  return Center(
+                    child: GestureDetector(
+                      onTapUp: (details) =>
+                          _handleTap(details, Size(width, height)),
+                      child: CustomPaint(
+                        size: Size(width, height),
+                        painter: _BodyHeatmapPainter(
+                          muscles: _muscles,
+                          heatValues: widget.heatValues,
+                          selectedMuscleGroup: selectedMuscleGroup,
+                          colorScheme: colorScheme,
+                          svgSize: _svgSize,
+                          lowHeatColor: widget.lowHeatColor,
+                          mediumHeatColor: widget.mediumHeatColor,
+                          highHeatColor: widget.highHeatColor,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            ),
+
+            // Heat legend
+            if (widget.showLegend) ...[
+              const SizedBox(height: 12),
+              _HeatLegend(
+                lowHeatColor: widget.lowHeatColor,
+                mediumHeatColor: widget.mediumHeatColor,
+                highHeatColor: widget.highHeatColor,
+              ),
+            ],
+          ],
         ),
 
-        // Selected muscle details
-        if (_selectedMuscleGroup != null) ...[
-          const SizedBox(height: 12),
-          _MuscleInfoCard(
-            muscleGroup: _selectedMuscleGroup!,
-            heatValue: widget.heatValues.getHeat(_selectedMuscleGroup!),
+        if (widget.showSelectionInfo)
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IgnorePointer(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  child: selectedMuscleGroup == null
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          key: ValueKey(selectedMuscleGroup),
+                          padding: const EdgeInsets.only(top: 12, right: 12),
+                          child: _MuscleInfoBadge(
+                            muscleGroup: selectedMuscleGroup,
+                            heatValue: widget.heatValues.getHeat(
+                              selectedMuscleGroup,
+                            ),
+                            lowHeatColor: widget.lowHeatColor,
+                            mediumHeatColor: widget.mediumHeatColor,
+                            highHeatColor: widget.highHeatColor,
+                          ),
+                        ),
+                ),
+              ),
+            ),
           ),
-        ],
-
-        // Heat legend
-        const SizedBox(height: 12),
-        _HeatLegend(),
       ],
     );
   }
@@ -362,6 +428,9 @@ class _BodyHeatmapPainter extends CustomPainter {
     required this.heatValues,
     required this.colorScheme,
     required this.svgSize,
+    required this.lowHeatColor,
+    required this.mediumHeatColor,
+    required this.highHeatColor,
     this.selectedMuscleGroup,
   });
 
@@ -369,6 +438,9 @@ class _BodyHeatmapPainter extends CustomPainter {
   final MuscleHeatValues heatValues;
   final ColorScheme colorScheme;
   final Size svgSize;
+  final Color lowHeatColor;
+  final Color mediumHeatColor;
+  final Color highHeatColor;
   final String? selectedMuscleGroup;
 
   @override
@@ -428,140 +500,161 @@ class _BodyHeatmapPainter extends CustomPainter {
   }
 
   Color _getHeatColor(double heat) {
-    // Cold (blue) -> Medium (yellow) -> Hot (red)
-    const blue = Color(0xFF2196F3);
-    const amber = Color(0xFFFFC107);
-    const red = Color(0xFFF44336);
-
     if (heat < 0.5) {
-      return Color.lerp(blue, amber, heat * 2)!;
+      return Color.lerp(lowHeatColor, mediumHeatColor, heat * 2)!;
     } else {
-      return Color.lerp(amber, red, (heat - 0.5) * 2)!;
+      return Color.lerp(mediumHeatColor, highHeatColor, (heat - 0.5) * 2)!;
     }
   }
 
   @override
   bool shouldRepaint(_BodyHeatmapPainter oldDelegate) {
     return oldDelegate.selectedMuscleGroup != selectedMuscleGroup ||
-        oldDelegate.heatValues != heatValues;
+        oldDelegate.heatValues != heatValues ||
+        oldDelegate.lowHeatColor != lowHeatColor ||
+        oldDelegate.mediumHeatColor != mediumHeatColor ||
+        oldDelegate.highHeatColor != highHeatColor;
   }
 }
 
-/// Muscle info card
-class _MuscleInfoCard extends StatelessWidget {
-  const _MuscleInfoCard({required this.muscleGroup, required this.heatValue});
+/// Compact selection badge shown in the top-right corner.
+class _MuscleInfoBadge extends StatelessWidget {
+  const _MuscleInfoBadge({
+    required this.muscleGroup,
+    required this.heatValue,
+    required this.lowHeatColor,
+    required this.mediumHeatColor,
+    required this.highHeatColor,
+  });
 
   final String muscleGroup;
   final double heatValue;
+  final Color lowHeatColor;
+  final Color mediumHeatColor;
+  final Color highHeatColor;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final l10n = context.l10n;
     final heatColor = _getHeatColor(heatValue);
     final percentage = (heatValue * 100).toInt();
+    final displayName = _getDisplayName(context, muscleGroup);
 
-    // Get localized name
-    final displayName = _getDisplayName(muscleGroup);
-    final intensityLabel = _getIntensityLabel(heatValue, l10n);
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(12),
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: heatColor.withValues(alpha: 0.5), width: 2),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.94),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: heatColor.withValues(alpha: 0.35)),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Row(
-        children: [
-          // Heat indicator
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(color: heatColor, shape: BoxShape.circle),
-            child: Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: heatColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 8),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 96),
               child: Text(
-                '$percentage%',
+                displayName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: context.textTheme.labelMedium?.copyWith(
-                  color: context.colors.onPrimary,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          // Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  displayName,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: heatColor.withValues(alpha: 0.16),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                '$percentage%',
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: heatColor,
+                  fontWeight: FontWeight.w800,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  intensityLabel,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  String _getDisplayName(String group) {
-    const names = {
-      'chest': 'Chest',
-      'shoulders': 'Shoulders',
-      'obliques': 'Obliques',
-      'abs': 'Abs',
-      'abductors': 'Abductors',
-      'biceps': 'Biceps',
-      'calves': 'Calves',
-      'forearms': 'Forearms',
-      'glutes': 'Glutes',
-      'hamstrings': 'Hamstrings',
-      'lats': 'Lats',
-      'upper_back': 'Upper Back',
-      'quadriceps': 'Quadriceps',
-      'trapezius': 'Trapezius',
-      'triceps': 'Triceps',
-      'adductors': 'Adductors',
-      'lower_back': 'Lower Back',
-      'neck': 'Neck',
-    };
-    return names[group] ?? group;
-  }
+  String _getDisplayName(BuildContext context, String group) {
+    final l10n = context.l10n;
+    final isItalian = Localizations.localeOf(
+      context,
+    ).languageCode.toLowerCase().startsWith('it');
 
-  String _getIntensityLabel(double heat, dynamic l10n) {
-    if (heat < 0.33) return l10n.intensityLow;
-    if (heat < 0.66) return l10n.intensityMedium;
-    return l10n.intensityHigh;
+    return switch (group) {
+      'chest' => l10n.musclePectorals,
+      'shoulders' => l10n.muscleDeltoids,
+      'obliques' => l10n.muscleObliques,
+      'abs' => l10n.muscleAbs,
+      'abductors' => MuscleAbbreviationMapper.codeToDisplayName(
+        'ABDU',
+        italian: isItalian,
+      ),
+      'biceps' => l10n.muscleBiceps,
+      'calves' => l10n.muscleCalves,
+      'forearms' => l10n.muscleForearms,
+      'glutes' => l10n.muscleGlutes,
+      'hamstrings' => l10n.muscleHamstrings,
+      'lats' => l10n.muscleLats,
+      'upper_back' => l10n.muscleRhomboids,
+      'quadriceps' => l10n.muscleQuads,
+      'trapezius' => l10n.muscleTrapezius,
+      'triceps' => l10n.muscleTriceps,
+      'adductors' => l10n.muscleAdductors,
+      'lower_back' => l10n.muscleLowerBack,
+      'neck' => MuscleAbbreviationMapper.codeToDisplayName(
+        'COLL',
+        italian: isItalian,
+      ),
+      _ => group,
+    };
   }
 
   Color _getHeatColor(double heat) {
-    const blue = Color(0xFF2196F3);
-    const amber = Color(0xFFFFC107);
-    const red = Color(0xFFF44336);
-
     if (heat < 0.5) {
-      return Color.lerp(blue, amber, heat * 2)!;
+      return Color.lerp(lowHeatColor, mediumHeatColor, heat * 2)!;
     } else {
-      return Color.lerp(amber, red, (heat - 0.5) * 2)!;
+      return Color.lerp(mediumHeatColor, highHeatColor, (heat - 0.5) * 2)!;
     }
   }
 }
 
 /// Heat legend widget
 class _HeatLegend extends StatelessWidget {
+  const _HeatLegend({
+    required this.lowHeatColor,
+    required this.mediumHeatColor,
+    required this.highHeatColor,
+  });
+
+  final Color lowHeatColor;
+  final Color mediumHeatColor;
+  final Color highHeatColor;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -571,17 +664,11 @@ class _HeatLegend extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _LegendItem(color: const Color(0xFF2196F3), label: l10n.intensityLow),
+          _LegendItem(color: lowHeatColor, label: l10n.intensityLow),
           const SizedBox(width: 16),
-          _LegendItem(
-            color: const Color(0xFFFFC107),
-            label: l10n.intensityMedium,
-          ),
+          _LegendItem(color: mediumHeatColor, label: l10n.intensityMedium),
           const SizedBox(width: 16),
-          _LegendItem(
-            color: const Color(0xFFF44336),
-            label: l10n.intensityHigh,
-          ),
+          _LegendItem(color: highHeatColor, label: l10n.intensityHigh),
         ],
       ),
     );

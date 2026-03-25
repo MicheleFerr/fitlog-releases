@@ -2,6 +2,8 @@
 /**
  * GymBro Enterprise Notification System - Cloud Functions
  * Comprehensive notification processing with enterprise features
+ *
+ * Migrated to Firebase Functions v2 API (2025-12-27)
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -19,20 +21,33 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSystemAnalytics = exports.sendMarketingCampaign = exports.deleteUserNotificationData = exports.exportUserNotificationData = exports.monitorSystemHealth = exports.cleanupOldData = exports.generateDailyAnalytics = exports.sendWeekendMotivation = exports.sendWorkoutReminders = exports.processNotificationQueue = exports.onStreakMilestone = exports.onPersonalRecord = exports.onWorkoutCompleted = void 0;
-const functions = __importStar(require("firebase-functions"));
 const admin = __importStar(require("firebase-admin"));
+const firebase_functions_1 = require("firebase-functions");
+const firestore_1 = require("firebase-functions/v2/firestore");
+const scheduler_1 = require("firebase-functions/v2/scheduler");
+const https_1 = require("firebase-functions/v2/https");
 const NotificationQueue_1 = require("./queue/NotificationQueue");
 const NotificationAnalytics_1 = require("./analytics/NotificationAnalytics");
 const NotificationPersonalization_1 = require("./personalization/NotificationPersonalization");
@@ -43,20 +58,20 @@ const SystemMonitor_1 = require("./monitoring/SystemMonitor");
  * Triggers when a workout is completed
  * Generates achievement and progress notifications
  */
-exports.onWorkoutCompleted = functions.firestore
-    .document('sessionWorkouts/{workoutId}')
-    .onCreate(async (snapshot, context) => {
+exports.onWorkoutCompleted = (0, firestore_1.onDocumentCreated)('users/{userId}/workouts/{workoutId}', async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) {
+        firebase_functions_1.logger.warn('No data in workout created event');
+        return;
+    }
     try {
         const workoutData = snapshot.data();
-        const userId = workoutData.userId || workoutData.uid;
+        const { userId, workoutId } = event.params;
         if (!userId) {
-            functions.logger.warn('Workout completed without userId', { workoutId: context.params.workoutId });
+            firebase_functions_1.logger.warn('Workout completed without userId', { workoutId });
             return;
         }
-        functions.logger.info('Processing workout completion', {
-            userId,
-            workoutId: context.params.workoutId
-        });
+        firebase_functions_1.logger.info('Processing workout completion', { userId, workoutId });
         // Queue achievement check notification
         await NotificationQueue_1.NotificationQueue.enqueue({
             type: 'achievement_check',
@@ -64,7 +79,7 @@ exports.onWorkoutCompleted = functions.firestore
             title: 'Checking for new achievements...',
             message: 'We\'re analyzing your workout for new milestones!',
             data: {
-                workoutId: context.params.workoutId,
+                workoutId,
                 completedAt: workoutData.completedAt || admin.firestore.Timestamp.now(),
                 exercises: workoutData.exercises || [],
                 duration: workoutData.duration || 0
@@ -79,23 +94,22 @@ exports.onWorkoutCompleted = functions.firestore
             title: 'Progress Update',
             message: 'Your fitness journey continues! Check out your latest progress.',
             data: {
-                workoutId: context.params.workoutId,
+                workoutId,
                 workoutType: workoutData.type || 'strength',
-                volume: workoutData.totalVolume || 0
+                volume: workoutData.totalVolume || workoutData.volume || 0
             },
             priority: 'low',
             source: 'system',
             scheduleFor: new Date(Date.now() + 300000) // 5 minutes delay
         });
         // Record analytics
-        await NotificationAnalytics_1.NotificationAnalytics.recordTrigger('workout_completed', userId, {
-            workoutId: context.params.workoutId
-        });
+        await NotificationAnalytics_1.NotificationAnalytics.recordTrigger('workout_completed', userId, { workoutId });
     }
     catch (error) {
-        functions.logger.error('Error processing workout completion', {
-            error: error.message,
-            workoutId: context.params.workoutId
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error processing workout completion', {
+            error: errorMessage,
+            workoutId: event.params.workoutId
         });
         throw error;
     }
@@ -104,39 +118,55 @@ exports.onWorkoutCompleted = functions.firestore
  * Triggers when a personal record is achieved
  * Sends high-priority achievement notification
  */
-exports.onPersonalRecord = functions.firestore
-    .document('users/{userId}/personalRecords/{recordId}')
-    .onCreate(async (snapshot, context) => {
+exports.onPersonalRecord = (0, firestore_1.onDocumentCreated)('personalRecords/{recordId}', async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) {
+        firebase_functions_1.logger.warn('No data in personal record created event');
+        return;
+    }
+    const recordData = snapshot.data();
+    const { recordId } = event.params;
+    const userId = recordData.userId;
     try {
-        const recordData = snapshot.data();
-        const userId = context.params.userId;
-        functions.logger.info('Processing personal record', { userId, recordId: context.params.recordId });
+        if (!userId) {
+            firebase_functions_1.logger.warn('Personal record created without userId', { recordId });
+            return;
+        }
+        const currentValue = Number(recordData.value || 0);
+        const previousValue = Number(recordData.previousValue || 0);
+        const formattedValue = recordData.type === 'weight' || recordData.type === 'oneRM'
+            ? `${currentValue}kg`
+            : `${currentValue}`;
+        firebase_functions_1.logger.info('Processing personal record', { userId, recordId });
         await NotificationQueue_1.NotificationQueue.enqueue({
             type: 'personal_record',
             userId,
             title: '🏆 New Personal Record!',
-            message: `Amazing! You just hit a new PR: ${recordData.weight}kg on ${recordData.exerciseName}!`,
+            message: `Amazing! You just hit a new PR: ${formattedValue} on ${recordData.exerciseName}!`,
             data: {
                 exercise: recordData.exerciseName,
-                weight: recordData.weight,
-                previousRecord: recordData.previousWeight || 0,
-                improvement: recordData.weight - (recordData.previousWeight || 0)
+                value: currentValue,
+                previousRecord: previousValue,
+                improvement: currentValue - previousValue,
+                type: recordData.type || 'weight'
             },
             priority: 'high',
             source: 'system'
         });
         // Record analytics with high importance
         await NotificationAnalytics_1.NotificationAnalytics.recordTrigger('personal_record', userId, {
-            recordId: context.params.recordId,
+            recordId,
             exercise: recordData.exerciseName,
-            weight: recordData.weight
+            value: currentValue,
+            type: recordData.type || 'weight'
         });
     }
     catch (error) {
-        functions.logger.error('Error processing personal record', {
-            error: error.message,
-            userId: context.params.userId,
-            recordId: context.params.recordId
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error processing personal record', {
+            error: errorMessage,
+            userId,
+            recordId
         });
         throw error;
     }
@@ -145,24 +175,25 @@ exports.onPersonalRecord = functions.firestore
  * Triggers when user achieves a workout streak
  * Sends motivational notifications
  */
-exports.onStreakMilestone = functions.firestore
-    .document('users/{userId}')
-    .onUpdate(async (change, context) => {
+exports.onStreakMilestone = (0, firestore_1.onDocumentUpdated)('users/{userId}', async (event) => {
+    if (!event.data) {
+        firebase_functions_1.logger.warn('No data in user updated event');
+        return;
+    }
     try {
-        const beforeData = change.before.data();
-        const afterData = change.after.data();
-        const userId = context.params.userId;
+        const beforeData = event.data.before.data();
+        const afterData = event.data.after.data();
+        const userId = event.params.userId;
         // Check if streak changed
         const beforeStreak = beforeData.currentStreak || 0;
         const afterStreak = afterData.currentStreak || 0;
         if (afterStreak > beforeStreak && afterStreak > 0) {
-            functions.logger.info('Processing streak milestone', {
-                userId,
-                streak: afterStreak
-            });
+            firebase_functions_1.logger.info('Processing streak milestone', { userId, streak: afterStreak });
             let notificationData = {
                 type: 'streak_milestone',
                 userId,
+                title: '',
+                message: '',
                 data: {
                     streak: afterStreak,
                     previousStreak: beforeStreak
@@ -207,9 +238,10 @@ exports.onStreakMilestone = functions.firestore
         }
     }
     catch (error) {
-        functions.logger.error('Error processing streak milestone', {
-            error: error.message,
-            userId: context.params.userId
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error processing streak milestone', {
+            error: errorMessage,
+            userId: event.params.userId
         });
     }
 });
@@ -218,21 +250,18 @@ exports.onStreakMilestone = functions.firestore
  * Process notification queue every minute
  * High-frequency processing for real-time notifications
  */
-exports.processNotificationQueue = functions
-    .runWith({
+exports.processNotificationQueue = (0, scheduler_1.onSchedule)({
+    schedule: 'every 1 minutes',
     timeoutSeconds: 540,
-    memory: '1GB'
-})
-    .pubsub
-    .schedule('every 1 minutes')
-    .onRun(async (context) => {
+    memory: '1GiB',
+}, async () => {
     try {
         const batchSize = 100;
         const processed = await NotificationQueue_1.NotificationQueue.processBatch(batchSize);
-        functions.logger.info(`Processed notification batch`, {
+        firebase_functions_1.logger.info('Processed notification batch', {
             processed: processed.length,
-            successful: processed.filter(p => p.status === 'sent').length,
-            failed: processed.filter(p => p.status === 'failed').length
+            successful: processed.filter((p) => p.status === 'sent').length,
+            failed: processed.filter((p) => p.status === 'failed').length
         });
         // Update system health metrics
         await SystemMonitor_1.SystemMonitor.recordProcessingMetrics({
@@ -241,11 +270,12 @@ exports.processNotificationQueue = functions
         });
     }
     catch (error) {
-        functions.logger.error('Error processing notification queue', { error: error.message });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error processing notification queue', { error: errorMessage });
         // Alert admin on critical errors
         await SystemMonitor_1.SystemMonitor.triggerAlert({
             type: 'queue_processing_error',
-            message: error.message,
+            message: errorMessage,
             severity: 'high'
         });
     }
@@ -254,24 +284,18 @@ exports.processNotificationQueue = functions
  * Send personalized workout reminders
  * Runs twice daily at optimal times
  */
-exports.sendWorkoutReminders = functions
-    .runWith({
+exports.sendWorkoutReminders = (0, scheduler_1.onSchedule)({
+    schedule: '0 9,18 * * *',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 300,
-    memory: '512MB'
-})
-    .pubsub
-    .schedule('0 9,18 * * *') // 9 AM and 6 PM
-    .timeZone('Europe/Rome')
-    .onRun(async (context) => {
+    memory: '512MiB',
+}, async () => {
     try {
         const hour = new Date().getHours();
         const timeOfDay = hour === 9 ? 'morning' : 'evening';
-        functions.logger.info(`Sending ${timeOfDay} workout reminders`);
+        firebase_functions_1.logger.info(`Sending ${timeOfDay} workout reminders`);
         const remindersSent = await NotificationPersonalization_1.NotificationPersonalization.sendTimedReminders(timeOfDay);
-        functions.logger.info(`Sent workout reminders`, {
-            timeOfDay,
-            count: remindersSent
-        });
+        firebase_functions_1.logger.info('Sent workout reminders', { timeOfDay, count: remindersSent });
         // Record analytics
         await NotificationAnalytics_1.NotificationAnalytics.recordScheduledCampaign('workout_reminders', {
             timeOfDay,
@@ -279,52 +303,48 @@ exports.sendWorkoutReminders = functions
         });
     }
     catch (error) {
-        functions.logger.error('Error sending workout reminders', { error: error.message });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error sending workout reminders', { error: errorMessage });
     }
 });
 /**
  * Send weekend motivation notifications
  * Encourages users to stay active on weekends
  */
-exports.sendWeekendMotivation = functions
-    .runWith({
+exports.sendWeekendMotivation = (0, scheduler_1.onSchedule)({
+    schedule: '0 10 * * 6,0',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 300,
-    memory: '512MB'
-})
-    .pubsub
-    .schedule('0 10 * * 6,0') // 10 AM on weekends
-    .timeZone('Europe/Rome')
-    .onRun(async (context) => {
+    memory: '512MiB',
+}, async () => {
     try {
-        functions.logger.info('Sending weekend motivation notifications');
+        firebase_functions_1.logger.info('Sending weekend motivation notifications');
         const motivationsSent = await NotificationPersonalization_1.NotificationPersonalization.sendWeekendMotivation();
-        functions.logger.info('Sent weekend motivations', { count: motivationsSent });
+        firebase_functions_1.logger.info('Sent weekend motivations', { count: motivationsSent });
         // Record analytics
         await NotificationAnalytics_1.NotificationAnalytics.recordScheduledCampaign('weekend_motivation', {
             sent: motivationsSent
         });
     }
     catch (error) {
-        functions.logger.error('Error sending weekend motivation', { error: error.message });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error sending weekend motivation', { error: errorMessage });
     }
 });
 /**
  * Generate daily analytics report
  * Comprehensive analysis of notification performance
  */
-exports.generateDailyAnalytics = functions
-    .runWith({
+exports.generateDailyAnalytics = (0, scheduler_1.onSchedule)({
+    schedule: '0 2 * * *',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 540,
-    memory: '1GB'
-})
-    .pubsub
-    .schedule('0 2 * * *') // 2 AM daily
-    .timeZone('Europe/Rome')
-    .onRun(async (context) => {
+    memory: '1GiB',
+}, async () => {
     try {
-        functions.logger.info('Generating daily analytics report');
+        firebase_functions_1.logger.info('Generating daily analytics report');
         const report = await NotificationAnalytics_1.NotificationAnalytics.generateDailyReport();
-        functions.logger.info('Daily analytics generated', {
+        firebase_functions_1.logger.info('Daily analytics generated', {
             date: report.date,
             totalSent: report.metrics.sent,
             deliveryRate: report.metrics.deliveryRate,
@@ -334,58 +354,54 @@ exports.generateDailyAnalytics = functions
         if (report.metrics.deliveryRate < 0.95 || report.metrics.clickThroughRate < 0.05) {
             await SystemMonitor_1.SystemMonitor.triggerAlert({
                 type: 'poor_performance',
-                message: `Daily notification performance below threshold`,
+                message: 'Daily notification performance below threshold',
                 data: report.metrics,
                 severity: 'medium'
             });
         }
     }
     catch (error) {
-        functions.logger.error('Error generating daily analytics', { error: error.message });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error generating daily analytics', { error: errorMessage });
     }
 });
 /**
  * Clean up old notifications and analytics data
  * Maintains optimal database performance
  */
-exports.cleanupOldData = functions
-    .runWith({
+exports.cleanupOldData = (0, scheduler_1.onSchedule)({
+    schedule: '0 3 * * 0',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 540,
-    memory: '512MB'
-})
-    .pubsub
-    .schedule('0 3 * * 0') // 3 AM every Sunday
-    .timeZone('Europe/Rome')
-    .onRun(async (context) => {
+    memory: '512MiB',
+}, async () => {
     try {
-        functions.logger.info('Starting data cleanup');
+        firebase_functions_1.logger.info('Starting data cleanup');
         const cleanup = await NotificationAnalytics_1.NotificationAnalytics.cleanupOldData();
-        functions.logger.info('Data cleanup completed', {
+        firebase_functions_1.logger.info('Data cleanup completed', {
             notificationsDeleted: cleanup.notifications,
             analyticsDeleted: cleanup.analytics,
             queueItemsDeleted: cleanup.queueItems
         });
     }
     catch (error) {
-        functions.logger.error('Error during data cleanup', { error: error.message });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error during data cleanup', { error: errorMessage });
     }
 });
 /**
  * System health monitoring
  * Runs every 5 minutes to ensure system stability
  */
-exports.monitorSystemHealth = functions
-    .runWith({
+exports.monitorSystemHealth = (0, scheduler_1.onSchedule)({
+    schedule: 'every 5 minutes',
     timeoutSeconds: 120,
-    memory: '256MB'
-})
-    .pubsub
-    .schedule('every 5 minutes')
-    .onRun(async (context) => {
+    memory: '256MiB',
+}, async () => {
     try {
         const healthReport = await SystemMonitor_1.SystemMonitor.checkSystemHealth();
         if (healthReport.status === 'critical' || healthReport.status === 'warning') {
-            functions.logger.warn('System health issue detected', healthReport);
+            firebase_functions_1.logger.warn('System health issue detected', healthReport);
             if (healthReport.status === 'critical') {
                 await SystemMonitor_1.SystemMonitor.triggerAlert({
                     type: 'system_health',
@@ -397,11 +413,12 @@ exports.monitorSystemHealth = functions
         }
     }
     catch (error) {
-        functions.logger.error('Error monitoring system health', { error: error.message });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error monitoring system health', { error: errorMessage });
         // This is critical - if monitoring fails, we need immediate attention
         await SystemMonitor_1.SystemMonitor.triggerAlert({
             type: 'monitoring_failure',
-            message: `System monitoring failed: ${error.message}`,
+            message: `System monitoring failed: ${errorMessage}`,
             severity: 'critical'
         });
     }
@@ -411,109 +428,101 @@ exports.monitorSystemHealth = functions
  * Handle user data export requests
  * GDPR Article 15 - Right of access
  */
-exports.exportUserNotificationData = functions
-    .runWith({
+exports.exportUserNotificationData = (0, https_1.onCall)({
+    enforceAppCheck: true,
     timeoutSeconds: 300,
-    memory: '512MB'
-})
-    .https
-    .onCall(async (data, context) => {
+    memory: '512MiB',
+}, async (request) => {
     var _a, _b;
     try {
         // Authenticate user
-        if (!((_a = context.auth) === null || _a === void 0 ? void 0 : _a.uid)) {
-            throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+        if (!((_a = request.auth) === null || _a === void 0 ? void 0 : _a.uid)) {
+            throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
         }
-        const userId = context.auth.uid;
-        functions.logger.info('Processing data export request', { userId });
+        const userId = request.auth.uid;
+        firebase_functions_1.logger.info('Processing data export request', { userId });
         const exportData = await NotificationPrivacy_1.NotificationPrivacy.exportUserData(userId);
         // Log compliance action
         await NotificationPrivacy_1.NotificationPrivacy.logComplianceAction(userId, 'data_exported', {
             requestTimestamp: admin.firestore.Timestamp.now(),
             dataTypes: ['notifications', 'preferences', 'analytics']
         });
-        functions.logger.info('Data export completed', {
+        firebase_functions_1.logger.info('Data export completed', {
             userId,
             notificationCount: exportData.notifications.length
         });
         return exportData;
     }
     catch (error) {
-        functions.logger.error('Error exporting user data', {
-            error: error.message,
-            userId: (_b = context.auth) === null || _b === void 0 ? void 0 : _b.uid
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error exporting user data', {
+            error: errorMessage,
+            userId: (_b = request.auth) === null || _b === void 0 ? void 0 : _b.uid
         });
-        throw new functions.https.HttpsError('internal', 'Failed to export user data');
+        if (error instanceof https_1.HttpsError)
+            throw error;
+        throw new https_1.HttpsError('internal', 'Failed to export user data');
     }
 });
 /**
  * Handle user data deletion requests
  * GDPR Article 17 - Right to erasure
  */
-exports.deleteUserNotificationData = functions
-    .runWith({
+exports.deleteUserNotificationData = (0, https_1.onCall)({
+    enforceAppCheck: true,
     timeoutSeconds: 300,
-    memory: '512MB'
-})
-    .https
-    .onCall(async (data, context) => {
+    memory: '512MiB',
+}, async (request) => {
     var _a, _b;
     try {
         // Authenticate user
-        if (!((_a = context.auth) === null || _a === void 0 ? void 0 : _a.uid)) {
-            throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+        if (!((_a = request.auth) === null || _a === void 0 ? void 0 : _a.uid)) {
+            throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
         }
-        const userId = context.auth.uid;
-        functions.logger.info('Processing data deletion request', { userId });
+        const userId = request.auth.uid;
+        firebase_functions_1.logger.info('Processing data deletion request', { userId });
         const deletionResult = await NotificationPrivacy_1.NotificationPrivacy.deleteUserData(userId);
         // Log compliance action
         await NotificationPrivacy_1.NotificationPrivacy.logComplianceAction(userId, 'data_deleted', {
             requestTimestamp: admin.firestore.Timestamp.now(),
             deletionResult
         });
-        functions.logger.info('Data deletion completed', {
-            userId,
-            result: deletionResult
-        });
+        firebase_functions_1.logger.info('Data deletion completed', { userId, result: deletionResult });
         return { success: true, deletionResult };
     }
     catch (error) {
-        functions.logger.error('Error deleting user data', {
-            error: error.message,
-            userId: (_b = context.auth) === null || _b === void 0 ? void 0 : _b.uid
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error deleting user data', {
+            error: errorMessage,
+            userId: (_b = request.auth) === null || _b === void 0 ? void 0 : _b.uid
         });
-        throw new functions.https.HttpsError('internal', 'Failed to delete user data');
+        if (error instanceof https_1.HttpsError)
+            throw error;
+        throw new https_1.HttpsError('internal', 'Failed to delete user data');
     }
 });
-// ============= ADMIN FUNCTIONS =============
 /**
  * Send marketing campaign
  * Admin-only function for sending targeted campaigns
  */
-exports.sendMarketingCampaign = functions
-    .runWith({
+exports.sendMarketingCampaign = (0, https_1.onCall)({
+    enforceAppCheck: true,
     timeoutSeconds: 540,
-    memory: '1GB'
-})
-    .https
-    .onCall(async (data, context) => {
+    memory: '1GiB',
+}, async (request) => {
     var _a, _b;
     try {
         // Check admin authorization
-        if (!((_b = (_a = context.auth) === null || _a === void 0 ? void 0 : _a.token) === null || _b === void 0 ? void 0 : _b.admin)) {
-            throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+        if (!((_b = (_a = request.auth) === null || _a === void 0 ? void 0 : _a.token) === null || _b === void 0 ? void 0 : _b.admin)) {
+            throw new https_1.HttpsError('permission-denied', 'Admin access required');
         }
-        const { campaignId, targetSegment, templateId } = data;
+        const { campaignId, targetSegment, templateId } = request.data;
         if (!campaignId || !targetSegment || !templateId) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing required parameters');
+            throw new https_1.HttpsError('invalid-argument', 'Missing required parameters');
         }
-        functions.logger.info('Starting marketing campaign', {
-            campaignId,
-            targetSegment,
-            templateId
-        });
+        firebase_functions_1.logger.info('Starting marketing campaign', { campaignId, targetSegment, templateId });
         const campaignResult = await NotificationPersonalization_1.NotificationPersonalization.sendMarketingCampaign(campaignId, targetSegment, templateId);
-        functions.logger.info('Marketing campaign completed', {
+        firebase_functions_1.logger.info('Marketing campaign completed', {
             campaignId,
             sent: campaignResult.sent,
             failed: campaignResult.failed
@@ -521,49 +530,48 @@ exports.sendMarketingCampaign = functions
         return campaignResult;
     }
     catch (error) {
-        functions.logger.error('Error sending marketing campaign', {
-            error: error.message,
-            data
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error sending marketing campaign', {
+            error: errorMessage,
+            data: request.data
         });
-        throw new functions.https.HttpsError('internal', 'Failed to send marketing campaign');
+        if (error instanceof https_1.HttpsError)
+            throw error;
+        throw new https_1.HttpsError('internal', 'Failed to send marketing campaign');
     }
 });
 /**
  * Get system analytics dashboard
  * Admin-only function for monitoring system performance
  */
-exports.getSystemAnalytics = functions
-    .runWith({
+exports.getSystemAnalytics = (0, https_1.onCall)({
+    enforceAppCheck: true,
     timeoutSeconds: 120,
-    memory: '512MB'
-})
-    .https
-    .onCall(async (data, context) => {
+    memory: '512MiB',
+}, async (request) => {
     var _a, _b;
     try {
         // Check admin authorization
-        if (!((_b = (_a = context.auth) === null || _a === void 0 ? void 0 : _a.token) === null || _b === void 0 ? void 0 : _b.admin)) {
-            throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+        if (!((_b = (_a = request.auth) === null || _a === void 0 ? void 0 : _a.token) === null || _b === void 0 ? void 0 : _b.admin)) {
+            throw new https_1.HttpsError('permission-denied', 'Admin access required');
         }
-        const { startDate, endDate, metrics } = data;
-        functions.logger.info('Generating system analytics', {
-            startDate,
-            endDate,
-            metrics
-        });
-        const analytics = await NotificationAnalytics_1.NotificationAnalytics.getSystemAnalytics(startDate ? new Date(startDate) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
-        endDate ? new Date(endDate) : new Date(), metrics || ['delivery', 'engagement', 'conversion']);
+        const { startDate, endDate, metrics } = request.data;
+        firebase_functions_1.logger.info('Generating system analytics', { startDate, endDate, metrics });
+        const analytics = await NotificationAnalytics_1.NotificationAnalytics.getSystemAnalytics(startDate ? new Date(startDate) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), endDate ? new Date(endDate) : new Date(), metrics || ['delivery', 'engagement', 'conversion']);
         return analytics;
     }
     catch (error) {
-        functions.logger.error('Error getting system analytics', {
-            error: error.message,
-            data
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        firebase_functions_1.logger.error('Error getting system analytics', {
+            error: errorMessage,
+            data: request.data
         });
-        throw new functions.https.HttpsError('internal', 'Failed to get system analytics');
+        if (error instanceof https_1.HttpsError)
+            throw error;
+        throw new https_1.HttpsError('internal', 'Failed to get system analytics');
     }
 });
-// Export all functions
+// Export helper modules
 __exportStar(require("./queue/NotificationQueue"), exports);
 __exportStar(require("./analytics/NotificationAnalytics"), exports);
 __exportStar(require("./personalization/NotificationPersonalization"), exports);

@@ -16,6 +16,24 @@
         {"fieldPath": "userId", "order": "ASCENDING"},
         {"fieldPath": "createdAt", "order": "DESCENDING"}
       ]
+    },
+    {
+      "collectionGroup": "workoutTemplates",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "visibility", "order": "ASCENDING"},
+        {"fieldPath": "distributionStatus", "order": "ASCENDING"},
+        {"fieldPath": "lineageType", "order": "ASCENDING"},
+        {"fieldPath": "downloadCount", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "user_entitlements",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "premiumActive", "order": "ASCENDING"},
+        {"fieldPath": "expiresAt", "order": "ASCENDING"}
+      ]
     }
   ]
 }

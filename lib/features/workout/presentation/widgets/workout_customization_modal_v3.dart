@@ -4,8 +4,7 @@
 /// - Tracciamento: RPE system with sub-options (collapsible)
 /// - Aspetto: Visual customization (collapsible)
 ///
-/// Note: Core behavior settings (auto rest timer, auto collapse, sound, custom timers)
-/// are always enabled and not configurable by the user.
+/// Core workout behavior can be adjusted per session from this modal.
 library;
 
 import 'package:flutter/cupertino.dart';
@@ -25,7 +24,8 @@ class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
   const WorkoutCustomizationModalV3({super.key});
 
   static Future<void> show(BuildContext context) {
-    return ModalService.showSheet(context,
+    return ModalService.showSheet(
+      context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -41,6 +41,9 @@ class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
 
 class _WorkoutCustomizationModalV3State
     extends ConsumerState<WorkoutCustomizationModalV3> {
+  // === COMPORTAMENTO ===
+  late bool _autoRestTimer;
+
   // === TRACCIAMENTO ===
   late bool _rpeTracking;
   late bool _autoAdjustWeightFromRpe;
@@ -56,6 +59,7 @@ class _WorkoutCustomizationModalV3State
   late InterfaceSize _interfaceSize;
 
   // ✅ Initial values for change tracking (feedback on close)
+  late bool _initialAutoRestTimer;
   late bool _initialRpeTracking;
   late bool _initialAutoAdjustWeightFromRpe;
   late bool _initialAutoAdjustRestFromRpe;
@@ -73,6 +77,9 @@ class _WorkoutCustomizationModalV3State
     final config = ref.read(appConfigProvider);
     final cardSettings = ref.read(exerciseCardSettingsProvider);
 
+    // Comportamento
+    _autoRestTimer = config.isAutoRestTimerEnabled;
+
     // Tracciamento
     _rpeTracking = config.rpeTracking ?? false;
     _autoAdjustWeightFromRpe = config.autoAdjustWeightFromRpe ?? false;
@@ -89,6 +96,7 @@ class _WorkoutCustomizationModalV3State
         config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 
     // ✅ Store initial values for change tracking
+    _initialAutoRestTimer = _autoRestTimer;
     _initialRpeTracking = _rpeTracking;
     _initialAutoAdjustWeightFromRpe = _autoAdjustWeightFromRpe;
     _initialAutoAdjustRestFromRpe = _autoAdjustRestFromRpe;
@@ -104,6 +112,7 @@ class _WorkoutCustomizationModalV3State
   /// ✅ Calculate number of changes made in this session
   int _countChanges() {
     int changes = 0;
+    if (_autoRestTimer != _initialAutoRestTimer) changes++;
     if (_rpeTracking != _initialRpeTracking) changes++;
     if (_autoAdjustWeightFromRpe != _initialAutoAdjustWeightFromRpe) changes++;
     if (_autoAdjustRestFromRpe != _initialAutoAdjustRestFromRpe) changes++;
@@ -195,6 +204,31 @@ class _WorkoutCustomizationModalV3State
                   children: [
                     const SizedBox(height: 8),
 
+                    // === COMPORTAMENTO ===
+                    _buildExpandableSection(
+                      context,
+                      icon: AppIcons.timer,
+                      title: context.l10n.behaviorSection,
+                      subtitle: context.l10n.autoRestTimerSubtitle,
+                      color: context.colors.primary,
+                      initiallyExpanded: false,
+                      children: [
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.timer,
+                          title: context.l10n.autoRestTimerTitle,
+                          subtitle: context.l10n.autoRestTimerDescription,
+                          value: _autoRestTimer,
+                          onChanged: (v) {
+                            setState(() => _autoRestTimer = v);
+                            _saveAll();
+                          },
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
                     // === TRACCIAMENTO AVANZATO ===
                     _buildExpandableSection(
                       context,
@@ -203,6 +237,7 @@ class _WorkoutCustomizationModalV3State
                       subtitle: context.l10n.advancedTrackingSubtitle,
                       color: context.colors.tertiary,
                       initiallyExpanded: _rpeTracking,
+                      onInfoPressed: () => _showAdvancedTrackingInfo(context),
                       children: [
                         _buildToggleRow(
                           context,
@@ -396,6 +431,7 @@ class _WorkoutCustomizationModalV3State
     required Color color,
     required bool initiallyExpanded,
     required List<Widget> children,
+    VoidCallback? onInfoPressed,
   }) {
     final theme = Theme.of(context);
 
@@ -423,11 +459,30 @@ class _WorkoutCustomizationModalV3State
             ),
             child: Icon(icon, color: color, size: 20),
           ),
-          title: Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              if (onInfoPressed != null)
+                IconButton(
+                  icon: Icon(
+                    AppIcons.infoOutline,
+                    size: 20,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: onInfoPressed,
+                  tooltip: _isItalian(context)
+                      ? 'Come funziona il tracciamento avanzato'
+                      : 'How advanced tracking works',
+                  visualDensity: VisualDensity.compact,
+                ),
+            ],
           ),
           subtitle: Text(
             subtitle,
@@ -500,7 +555,8 @@ class _WorkoutCustomizationModalV3State
   /// Interface Size Selector (unified font + layout) — Slider variant
   Widget _buildInterfaceSizeSelector(BuildContext context) {
     final theme = Theme.of(context);
-    const sizes = InterfaceSize.values; // [extraSmall, small, medium, mediumLarge, large]
+    const sizes =
+        InterfaceSize.values; // [extraSmall, small, medium, mediumLarge, large]
     final currentIndex = sizes.indexOf(_interfaceSize).toDouble();
 
     // Labels for each stop
@@ -550,9 +606,13 @@ class _WorkoutCustomizationModalV3State
                 SliderTheme(
                   data: SliderThemeData(
                     activeTrackColor: theme.colorScheme.primary,
-                    inactiveTrackColor: theme.colorScheme.primary.withValues(alpha: 0.15),
+                    inactiveTrackColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.15,
+                    ),
                     thumbColor: theme.colorScheme.primary,
-                    overlayColor: theme.colorScheme.primary.withValues(alpha: 0.12),
+                    overlayColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.12,
+                    ),
                     trackHeight: 4,
                   ),
                   child: Slider(
@@ -587,6 +647,149 @@ class _WorkoutCustomizationModalV3State
     );
   }
 
+  bool _isItalian(BuildContext context) => Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('it');
+
+  void _showAdvancedTrackingInfo(BuildContext context) {
+    final theme = Theme.of(context);
+    final isItalian = _isItalian(context);
+
+    final title = isItalian
+        ? 'Guida Tracciamento Avanzato'
+        : 'Advanced Tracking Guide';
+    final intro = isItalian
+        ? 'Queste opzioni rendono l’allenamento più intelligente: registrano la fatica reale e adattano suggerimenti in tempo reale.'
+        : 'These options make training smarter: they track real fatigue and adapt suggestions in real time.';
+    final howItWorksTitle = isItalian ? 'Funzionamenti' : 'How It Works';
+    final howItWorksItems = isItalian
+        ? const <String>[
+            'RPE: dopo ogni serie indichi lo sforzo percepito (1-10).',
+            'Suggerisci peso: usa l’RPE della serie precedente per proporti il carico successivo.',
+            'Regola riposo: aumenta o riduce il recupero in base alla fatica rilevata.',
+            'Durata esecuzione set: traccia il tempo sotto tensione (TUT).',
+            'Metronomo TUT: emette un tick per mantenere il ritmo del set.',
+          ]
+        : const <String>[
+            'RPE: after each set, you rate perceived effort (1-10).',
+            'Suggest weight: uses previous set RPE to propose your next load.',
+            'Adjust rest: increases or reduces recovery based on fatigue.',
+            'Set execution time: tracks time under tension (TUT).',
+            'TUT metronome: plays a tick to keep set tempo consistent.',
+          ];
+    final appearanceTitle = isItalian ? 'Come Appaiono' : 'How They Appear';
+    final appearanceText = isItalian
+        ? 'Le opzioni compaiono come toggle nella sezione Tracciamento Avanzato. Quando attivi RPE, si sbloccano automaticamente i controlli collegati (peso e riposo).'
+        : 'Options appear as toggles in the Advanced Tracking section. When you enable RPE, linked controls (weight and rest) automatically become available.';
+    final whyTitle = isItalian
+        ? 'Perché Sono State Inserite'
+        : 'Why They Were Added';
+    final whyText = isItalian
+        ? 'Per trasformare i dati della sessione in decisioni pratiche: carico più adatto, recupero più coerente, ritmo migliore e progressione più sostenibile.'
+        : 'To turn session data into practical decisions: better load selection, more consistent recovery, better tempo, and more sustainable progression.';
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                intro,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 18),
+              _buildInfoSection(
+                context,
+                title: howItWorksTitle,
+                icon: AppIcons.speed,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final item in howItWorksItems)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          '• $item',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildInfoSection(
+                context,
+                title: appearanceTitle,
+                icon: AppIcons.insights,
+                child: Text(appearanceText, style: theme.textTheme.bodyMedium),
+              ),
+              const SizedBox(height: 12),
+              _buildInfoSection(
+                context,
+                title: whyTitle,
+                icon: AppIcons.lightning,
+                child: Text(whyText, style: theme.textTheme.bodyMedium),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoSection(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18, color: theme.colorScheme.primary),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          child,
+        ],
+      ),
+    );
+  }
+
   // === SAVE ===
 
   void _saveAll() {
@@ -594,7 +797,7 @@ class _WorkoutCustomizationModalV3State
     ref
         .read(appConfigProvider.notifier)
         .updateWorkoutSettings(
-          autoRestTimer: true, // Always enabled
+          autoRestTimer: _autoRestTimer,
           autoCollapseCompleted: true, // Always enabled
           rpeTracking: _rpeTracking,
           autoAdjustWeightFromRpe: _autoAdjustWeightFromRpe,
@@ -614,4 +817,3 @@ class _WorkoutCustomizationModalV3State
     ref.read(appConfigProvider.notifier).setSoundEnabled(true);
   }
 }
-

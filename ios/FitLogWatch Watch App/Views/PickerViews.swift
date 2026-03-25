@@ -14,13 +14,13 @@ struct SetPickerSheetView: View {
     let totalSets: Int
     let currentSet: Int
     let locale: String
-    let allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool, minReps: Int?, maxReps: Int?)]
+    let allSetsTargets: [WatchSetTarget]
     let onSelect: (Int) -> Void
     let onCancel: () -> Void
 
     @State private var selectedSet: Int
 
-    init(totalSets: Int, currentSet: Int, locale: String, allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool, minReps: Int?, maxReps: Int?)] = [], onSelect: @escaping (Int) -> Void, onCancel: @escaping () -> Void) {
+    init(totalSets: Int, currentSet: Int, locale: String, allSetsTargets: [WatchSetTarget] = [], onSelect: @escaping (Int) -> Void, onCancel: @escaping () -> Void) {
         self.totalSets = totalSets
         self.currentSet = currentSet
         self.locale = locale

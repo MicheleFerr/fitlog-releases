@@ -3,6 +3,12 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
+enum TemplateVisibility { private, unlisted, public }
+
+enum TemplateLineageType { original, fork }
+
+enum TemplateDistributionStatus { active, superseded, hidden }
+
 /// Template per workout riutilizzabili
 class WorkoutTemplate {
   // 3, 6, o 10
@@ -20,9 +26,18 @@ class WorkoutTemplate {
     this.isCustom = true,
     this.usageCount = 0,
     this.isPublic = false,
+    this.visibility = TemplateVisibility.private,
+    this.lineageType = TemplateLineageType.original,
+    this.parentTemplateId,
+    this.rootTemplateId,
+    this.distributionStatus = TemplateDistributionStatus.active,
+    this.publishedAt,
+    this.versionNumber = 1,
     this.userId,
     this.authorName,
+    this.authorPhotoUrl,
     this.downloadCount = 0,
+    this.forkCount = 0,
     this.averageRating = 0.0,
     this.reviewCount = 0,
     this.difficulty,
@@ -32,6 +47,7 @@ class WorkoutTemplate {
     this.isAnonymous = false,
     this.forkedFromTemplateId,
     this.originalAuthorName,
+    this.supersededByTemplateId,
   }) : id = id ?? const Uuid().v4(),
        exercises = exercises ?? [],
        tags = tags ?? [],
@@ -71,6 +87,18 @@ class WorkoutTemplate {
       }
     }
 
+    final visibility = _parseVisibility(
+      json['visibility']?.toString(),
+      fallbackIsPublic: json['isPublic'] == true,
+    );
+    final lineageType = _parseLineageType(
+      json['lineageType']?.toString(),
+      fallbackForkedFromTemplateId: json['forkedFromTemplateId']?.toString(),
+    );
+    final distributionStatus = _parseDistributionStatus(
+      json['distributionStatus']?.toString(),
+    );
+
     return WorkoutTemplate(
       id: json['id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
@@ -83,18 +111,23 @@ class WorkoutTemplate {
       tags: json['tags'] is List
           ? List<String>.from(json['tags'].map((t) => t.toString()))
           : [],
-      createdAt: json['createdAt'] is String
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] is String
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
+      createdAt: _parseDateTime(json['createdAt']),
+      updatedAt: _parseDateTime(json['updatedAt']),
       isCustom: json['isCustom'] is bool ? json['isCustom'] : true,
       usageCount: json['usageCount'] is int ? json['usageCount'] : 0,
-      isPublic: json['isPublic'] is bool ? json['isPublic'] : false,
+      isPublic: visibility == TemplateVisibility.public,
+      visibility: visibility,
+      lineageType: lineageType,
+      parentTemplateId: json['parentTemplateId']?.toString(),
+      rootTemplateId: json['rootTemplateId']?.toString(),
+      distributionStatus: distributionStatus,
+      publishedAt: _parseNullableDateTime(json['publishedAt']),
+      versionNumber: json['versionNumber'] is int ? json['versionNumber'] : 1,
       userId: json['userId']?.toString(),
       authorName: json['authorName']?.toString(),
+      authorPhotoUrl: json['authorPhotoUrl']?.toString(),
       downloadCount: json['downloadCount'] is int ? json['downloadCount'] : 0,
+      forkCount: json['forkCount'] is int ? json['forkCount'] : 0,
       averageRating: json['averageRating'] is num
           ? json['averageRating'].toDouble()
           : 0.0,
@@ -108,6 +141,7 @@ class WorkoutTemplate {
       isAnonymous: json['isAnonymous'] is bool ? json['isAnonymous'] : false,
       forkedFromTemplateId: json['forkedFromTemplateId']?.toString(),
       originalAuthorName: json['originalAuthorName']?.toString(),
+      supersededByTemplateId: json['supersededByTemplateId']?.toString(),
     );
   }
   final String id;
@@ -124,9 +158,18 @@ class WorkoutTemplate {
 
   // Campi per condivisione pubblica
   final bool isPublic; // true se condiviso pubblicamente
+  final TemplateVisibility visibility;
+  final TemplateLineageType lineageType;
+  final String? parentTemplateId;
+  final String? rootTemplateId;
+  final TemplateDistributionStatus distributionStatus;
+  final DateTime? publishedAt;
+  final int versionNumber;
   final String? userId; // ID dell'utente creatore
   final String? authorName; // Nome dell'autore per template pubblici
+  final String? authorPhotoUrl;
   final int downloadCount; // Numero di download (per template pubblici)
+  final int forkCount; // Numero di fork del template
   final double averageRating; // Rating medio (1-5)
   final int reviewCount; // Numero di recensioni
   final String? difficulty; // beginner, intermediate, advanced, expert
@@ -143,6 +186,43 @@ class WorkoutTemplate {
   // Fork attribution
   final String? forkedFromTemplateId;
   final String? originalAuthorName;
+  final String? supersededByTemplateId;
+
+  bool get isShared => visibility != TemplateVisibility.private;
+
+  bool get isDistributedTemplate =>
+      visibility != TemplateVisibility.private && isActiveDistribution;
+
+  bool get isEditable => visibility == TemplateVisibility.private;
+
+  bool get isLibraryTemplate => isEditable;
+
+  bool get isOriginalTemplate => lineageType == TemplateLineageType.original;
+
+  bool get isForkTemplate => lineageType == TemplateLineageType.fork;
+
+  bool get isActiveDistribution =>
+      distributionStatus == TemplateDistributionStatus.active;
+
+  bool get isDiscoverablePublic =>
+      visibility == TemplateVisibility.public &&
+      lineageType == TemplateLineageType.original &&
+      distributionStatus == TemplateDistributionStatus.active;
+
+  bool get isStoreTemplate => isDiscoverablePublic;
+
+  bool get canPublishPublic =>
+      lineageType == TemplateLineageType.original &&
+      distributionStatus == TemplateDistributionStatus.active &&
+      visibility != TemplateVisibility.public;
+
+  bool get canShareUnlisted =>
+      distributionStatus == TemplateDistributionStatus.active &&
+      (visibility == TemplateVisibility.private ||
+          visibility == TemplateVisibility.unlisted);
+
+  String get effectiveRootTemplateId =>
+      rootTemplateId ?? forkedFromTemplateId ?? id;
 
   WorkoutTemplate copyWith({
     String? id,
@@ -156,9 +236,18 @@ class WorkoutTemplate {
     bool? isCustom,
     int? usageCount,
     bool? isPublic,
+    TemplateVisibility? visibility,
+    TemplateLineageType? lineageType,
+    String? parentTemplateId,
+    String? rootTemplateId,
+    TemplateDistributionStatus? distributionStatus,
+    DateTime? publishedAt,
+    int? versionNumber,
     String? userId,
     String? authorName,
+    String? authorPhotoUrl,
     int? downloadCount,
+    int? forkCount,
     double? averageRating,
     int? reviewCount,
     String? difficulty,
@@ -168,6 +257,7 @@ class WorkoutTemplate {
     bool? isAnonymous,
     String? forkedFromTemplateId,
     String? originalAuthorName,
+    String? supersededByTemplateId,
   }) {
     return WorkoutTemplate(
       id: id ?? this.id,
@@ -181,10 +271,21 @@ class WorkoutTemplate {
       updatedAt: updatedAt ?? DateTime.now(),
       isCustom: isCustom ?? this.isCustom,
       usageCount: usageCount ?? this.usageCount,
-      isPublic: isPublic ?? this.isPublic,
+      isPublic:
+          isPublic ??
+          ((visibility ?? this.visibility) == TemplateVisibility.public),
+      visibility: visibility ?? this.visibility,
+      lineageType: lineageType ?? this.lineageType,
+      parentTemplateId: parentTemplateId ?? this.parentTemplateId,
+      rootTemplateId: rootTemplateId ?? this.rootTemplateId,
+      distributionStatus: distributionStatus ?? this.distributionStatus,
+      publishedAt: publishedAt ?? this.publishedAt,
+      versionNumber: versionNumber ?? this.versionNumber,
       userId: userId ?? this.userId,
       authorName: authorName ?? this.authorName,
+      authorPhotoUrl: authorPhotoUrl ?? this.authorPhotoUrl,
       downloadCount: downloadCount ?? this.downloadCount,
+      forkCount: forkCount ?? this.forkCount,
       averageRating: averageRating ?? this.averageRating,
       reviewCount: reviewCount ?? this.reviewCount,
       difficulty: difficulty ?? this.difficulty,
@@ -195,6 +296,8 @@ class WorkoutTemplate {
       isAnonymous: isAnonymous ?? this.isAnonymous,
       forkedFromTemplateId: forkedFromTemplateId ?? this.forkedFromTemplateId,
       originalAuthorName: originalAuthorName ?? this.originalAuthorName,
+      supersededByTemplateId:
+          supersededByTemplateId ?? this.supersededByTemplateId,
     );
   }
 
@@ -217,9 +320,18 @@ class WorkoutTemplate {
       'isCustom': isCustom,
       'usageCount': usageCount,
       'isPublic': isPublic,
+      'visibility': visibility.name,
+      'lineageType': lineageType.name,
+      if (parentTemplateId != null) 'parentTemplateId': parentTemplateId,
+      'rootTemplateId': effectiveRootTemplateId,
+      'distributionStatus': distributionStatus.name,
+      if (publishedAt != null) 'publishedAt': publishedAt!.toIso8601String(),
+      'versionNumber': versionNumber,
       'userId': userId,
       'authorName': authorName,
+      'authorPhotoUrl': authorPhotoUrl,
       'downloadCount': downloadCount,
+      'forkCount': forkCount,
       'averageRating': averageRating,
       'reviewCount': reviewCount,
       'difficulty': difficulty,
@@ -227,8 +339,11 @@ class WorkoutTemplate {
       'defaultAutoAdjustmentType': defaultAutoAdjustmentType?.name,
       'defaultApreProtocol': defaultApreProtocol,
       'isAnonymous': isAnonymous,
-      if (forkedFromTemplateId != null) 'forkedFromTemplateId': forkedFromTemplateId,
+      if (forkedFromTemplateId != null)
+        'forkedFromTemplateId': forkedFromTemplateId,
       if (originalAuthorName != null) 'originalAuthorName': originalAuthorName,
+      if (supersededByTemplateId != null)
+        'supersededByTemplateId': supersededByTemplateId,
     };
   }
 
@@ -236,6 +351,71 @@ class WorkoutTemplate {
   List<Exercise> toWorkoutExercises() {
     return exercises.map((template) => template.toWorkoutExercise()).toList();
   }
+}
+
+TemplateVisibility _parseVisibility(
+  String? raw, {
+  required bool fallbackIsPublic,
+}) {
+  switch (raw) {
+    case 'public':
+      return TemplateVisibility.public;
+    case 'unlisted':
+      return TemplateVisibility.unlisted;
+    case 'private':
+      return TemplateVisibility.private;
+    default:
+      return fallbackIsPublic
+          ? TemplateVisibility.public
+          : TemplateVisibility.private;
+  }
+}
+
+TemplateLineageType _parseLineageType(
+  String? raw, {
+  required String? fallbackForkedFromTemplateId,
+}) {
+  switch (raw) {
+    case 'fork':
+      return TemplateLineageType.fork;
+    case 'original':
+      return TemplateLineageType.original;
+    default:
+      return fallbackForkedFromTemplateId != null
+          ? TemplateLineageType.fork
+          : TemplateLineageType.original;
+  }
+}
+
+TemplateDistributionStatus _parseDistributionStatus(String? raw) {
+  switch (raw) {
+    case 'superseded':
+      return TemplateDistributionStatus.superseded;
+    case 'hidden':
+      return TemplateDistributionStatus.hidden;
+    case 'active':
+    default:
+      return TemplateDistributionStatus.active;
+  }
+}
+
+DateTime _parseDateTime(dynamic value) {
+  return _parseNullableDateTime(value) ?? DateTime.now();
+}
+
+DateTime? _parseNullableDateTime(dynamic value) {
+  if (value == null) return null;
+  if (value is DateTime) return value;
+  if (value is String) return DateTime.tryParse(value);
+  try {
+    final parsed = value.toDate();
+    if (parsed is DateTime) {
+      return parsed;
+    }
+  } catch (_) {
+    // Ignore unsupported timestamp-like values.
+  }
+  return null;
 }
 
 /// Template per esercizio all'interno di un workout template
@@ -421,7 +601,7 @@ class ExerciseTemplate {
       }).toList();
 
       return ExerciseTemplate(
-        exerciseId: exercise.id,
+        exerciseId: exercise.stableExerciseId,
         exerciseName: exercise.name,
         category: exercise.category,
         type: exercise.type,
@@ -449,7 +629,7 @@ class ExerciseTemplate {
       }).toList();
 
       return ExerciseTemplate(
-        exerciseId: exercise.id,
+        exerciseId: exercise.stableExerciseId,
         exerciseName: exercise.name,
         category: exercise.category,
         type: exercise.type,
@@ -477,7 +657,7 @@ class ExerciseTemplate {
       }).toList();
 
       return ExerciseTemplate(
-        exerciseId: exercise.id,
+        exerciseId: exercise.stableExerciseId,
         exerciseName: exercise.name,
         category: exercise.category,
         type: exercise.type,
@@ -491,7 +671,7 @@ class ExerciseTemplate {
 
     // Standard exercise - use the regular sets
     return ExerciseTemplate(
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       category: exercise.category,
       type: exercise.type,
@@ -577,8 +757,7 @@ class ExerciseTemplate {
       final exercises = subExercises!
           .map(
             (subTemplate) => Exercise(
-              id: subTemplate
-                  .exerciseId, // ✅ Preserve database ID for strength standards lookup
+              databaseExerciseId: subTemplate.exerciseId,
               name: subTemplate.exerciseName,
               type: ExerciseType.single, // Sub-exercises are singles
               category: subTemplate.category,
@@ -628,8 +807,8 @@ class ExerciseTemplate {
       }
 
       return SupersetExercise(
-        id: exerciseId, // ✅ Preserve database ID for strength standards lookup
         name: exerciseName,
+        databaseExerciseId: null,
         exercises: exercises,
         supersetSets: supersetSets,
         notes: notes,
@@ -651,7 +830,7 @@ class ExerciseTemplate {
       }).toList();
 
       return DropSetExercise(
-        id: exerciseId, // ✅ Preserve database ID for strength standards lookup
+        databaseExerciseId: exerciseId,
         name: exerciseName,
         category: category,
         stages: stages,
@@ -682,7 +861,7 @@ class ExerciseTemplate {
       final targetMaxReps = sets.isNotEmpty ? sets.first.targetMaxReps : null;
 
       return RestPauseExercise(
-        id: exerciseId, // ✅ Preserve database ID for strength standards lookup
+        databaseExerciseId: exerciseId,
         name: exerciseName,
         category: category,
         weight: weight,
@@ -697,7 +876,7 @@ class ExerciseTemplate {
 
     // For normal exercises or superset without sub-exercises
     final exercise = Exercise(
-      id: exerciseId, // ✅ Preserve database ID for strength standards lookup
+      databaseExerciseId: exerciseId,
       name: exerciseName,
       type: type,
       category: category,
@@ -802,7 +981,10 @@ class SetTemplate {
   final String? notes;
 
   /// True se ha un range di ripetizioni target
-  bool get hasRepRange => targetMinReps != null && targetMaxReps != null && targetMinReps != targetMaxReps;
+  bool get hasRepRange =>
+      targetMinReps != null &&
+      targetMaxReps != null &&
+      targetMinReps != targetMaxReps;
 
   /// Display string per le reps target: "8-12" per range, "10" per singolo
   String get repsDisplay {

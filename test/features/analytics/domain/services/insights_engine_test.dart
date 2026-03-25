@@ -89,7 +89,12 @@ void main() {
 
       expect(insight.id, isNotEmpty);
       expect(insight.generatedAt, isA<DateTime>());
-      expect(insight.generatedAt.isBefore(DateTime.now().add(const Duration(seconds: 1))), true);
+      expect(
+        insight.generatedAt.isBefore(
+          DateTime.now().add(const Duration(seconds: 1)),
+        ),
+        true,
+      );
     });
 
     test('should include metadata in insight', () {
@@ -121,7 +126,7 @@ void main() {
           'Chest': 20.0,
           'Back': 18.0,
           'Legs': 35.0,
-          'Arms': 5.0,  // Most neglected
+          'Arms': 5.0, // Most neglected
           'Shoulders': 12.0,
         },
         idealDistribution: {},
@@ -129,7 +134,7 @@ void main() {
           'Chest': 1.0,
           'Back': 0.9,
           'Legs': 1.1,
-          'Arms': 0.3,  // Lowest score = most neglected
+          'Arms': 0.3, // Lowest score = most neglected
           'Shoulders': 0.8,
         },
       );
@@ -141,13 +146,13 @@ void main() {
       // 🐛 BUG PREVENTED: Can't detect muscle imbalances that could cause injury
       final balance = MuscleGroupBalance(
         volumeDistribution: {
-          'Chest': 35.0,  // Overdeveloped
+          'Chest': 35.0, // Overdeveloped
           'Back': 15.0,
           'Legs': 30.0,
         },
         idealDistribution: {},
         imbalanceScores: {
-          'Chest': 1.5,  // 50% over ideal (>1.3 threshold)
+          'Chest': 1.5, // 50% over ideal (>1.3 threshold)
           'Back': 0.8,
           'Legs': 1.0,
         },
@@ -168,16 +173,19 @@ void main() {
       expect(balance.overdeveloped, null);
     });
 
-    test('should always return isBalanced as true (removed arbitrary thresholds)', () {
-      // 🐛 BUG PREVENTED: Subjective balance judgments don't fit all training goals
-      final balance = MuscleGroupBalance(
-        volumeDistribution: {'Chest': 50.0, 'Back': 10.0},
-        idealDistribution: {},
-        imbalanceScores: {'Chest': 2.0, 'Back': 0.5},
-      );
+    test(
+      'should always return isBalanced as true (removed arbitrary thresholds)',
+      () {
+        // 🐛 BUG PREVENTED: Subjective balance judgments don't fit all training goals
+        final balance = MuscleGroupBalance(
+          volumeDistribution: {'Chest': 50.0, 'Back': 10.0},
+          idealDistribution: {},
+          imbalanceScores: {'Chest': 2.0, 'Back': 0.5},
+        );
 
-      expect(balance.isBalanced, true);
-    });
+        expect(balance.isBalanced, true);
+      },
+    );
   });
 
   group('analyzeMuscleBalance', () {
@@ -206,7 +214,11 @@ void main() {
 
       expect(balance.volumeDistribution.isNotEmpty, true);
       // Squat (3000kg) should have more volume than Bench (2000kg)
-      expect(balance.volumeDistribution['Legs']! > balance.volumeDistribution['Chest']!, true);
+      expect(
+        balance.volumeDistribution['Legs']! >
+            balance.volumeDistribution['Chest']!,
+        true,
+      );
     });
 
     test('should calculate imbalance scores (actual/ideal ratio)', () {
@@ -310,7 +322,10 @@ void main() {
 
       // Check priorities are in order (high index = low priority)
       for (int i = 1; i < insights.length; i++) {
-        expect(insights[i].priority.index >= insights[i - 1].priority.index, true);
+        expect(
+          insights[i].priority.index >= insights[i - 1].priority.index,
+          true,
+        );
       }
     });
 
@@ -466,44 +481,51 @@ void main() {
       );
 
       // Should detect improving strength trend
-      final performanceInsights = insights.where((i) =>
-        i.type == InsightType.achievement || i.type == InsightType.improvement);
+      final performanceInsights = insights.where(
+        (i) =>
+            i.type == InsightType.achievement ||
+            i.type == InsightType.improvement,
+      );
 
       expect(performanceInsights, isNotEmpty);
     });
 
-    test('should generate plateau insight for stagnant progress', () {
-      // 🐛 BUG PREVENTED: User stuck at same weight for weeks, no guidance
-      // NOTE: Plateau detection requires very specific conditions:
-      // 1. TrendType.plateau from analyzeStrengthTrend
-      // 2. plateau.duration > 14 days
-      // 3. Sufficient data points for statistical significance
-      // This test verifies the code path exists but may not trigger in all cases
+    test(
+      'should generate plateau insight for stagnant progress',
+      () {
+        // 🐛 BUG PREVENTED: User stuck at same weight for weeks, no guidance
+        // NOTE: Plateau detection requires very specific conditions:
+        // 1. TrendType.plateau from analyzeStrengthTrend
+        // 2. plateau.duration > 14 days
+        // 3. Sufficient data points for statistical significance
+        // This test verifies the code path exists but may not trigger in all cases
 
-      // Create 50 activities over 50 days with slight weight variations
-      final weights = ['150', '152', '150', '151', '150', '149', '150'];
-      final activities = List.generate(50, (i) {
-        return createActivity(
-          exerciseId: 'squat',
-          exerciseName: 'Squat',
-          sets: [
-            createSet(weight: weights[i % weights.length], reps: '10'),
-            createSet(weight: weights[i % weights.length], reps: '10'),
-            createSet(weight: weights[i % weights.length], reps: '8'),
-          ],
-          createdAt: DateTime.now().subtract(Duration(days: i)),
+        // Create 50 activities over 50 days with slight weight variations
+        final weights = ['150', '152', '150', '151', '150', '149', '150'];
+        final activities = List.generate(50, (i) {
+          return createActivity(
+            exerciseId: 'squat',
+            exerciseName: 'Squat',
+            sets: [
+              createSet(weight: weights[i % weights.length], reps: '10'),
+              createSet(weight: weights[i % weights.length], reps: '10'),
+              createSet(weight: weights[i % weights.length], reps: '8'),
+            ],
+            createdAt: DateTime.now().subtract(Duration(days: i)),
+          );
+        });
+
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
         );
-      });
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
-
-      // Verify insights generated (plateau detection is strict, may not always trigger)
-      expect(insights, isA<List<TrainingInsight>>());
-    }, skip: 'Plateau detection requires very specific statistical conditions');
+        // Verify insights generated (plateau detection is strict, may not always trigger)
+        expect(insights, isA<List<TrainingInsight>>());
+      },
+      skip: 'Plateau detection requires very specific statistical conditions',
+    );
   });
 
   group('Volume Insights', () {
@@ -534,8 +556,9 @@ void main() {
       );
 
       // Should detect significant volume change
-      final volumeInsights = insights.where((i) =>
-        i.title.contains('Volume') || i.message.contains('volume'));
+      final volumeInsights = insights.where(
+        (i) => i.title.contains('Volume') || i.message.contains('volume'),
+      );
 
       expect(volumeInsights, isNotEmpty);
     });
@@ -558,8 +581,9 @@ void main() {
       );
 
       // Should mention volume plateau or stability
-      final volumeInsights = insights.where((i) =>
-        i.message.contains('volume') || i.title.contains('Volume'));
+      final volumeInsights = insights.where(
+        (i) => i.message.contains('volume') || i.title.contains('Volume'),
+      );
 
       expect(volumeInsights, isNotEmpty);
     });
@@ -584,9 +608,13 @@ void main() {
       );
 
       // Should have frequency observation
-      final frequencyInsights = insights.where((i) =>
-        i.title.contains('Frequency') || i.title.contains('frequency') ||
-        i.message.contains('frequency') || i.message.contains('week'));
+      final frequencyInsights = insights.where(
+        (i) =>
+            i.title.contains('Frequency') ||
+            i.title.contains('frequency') ||
+            i.message.contains('frequency') ||
+            i.message.contains('week'),
+      );
 
       expect(frequencyInsights, isNotEmpty);
     });
@@ -609,9 +637,13 @@ void main() {
       );
 
       // Should detect extended break
-      final breakInsights = insights.where((i) =>
-        i.title.contains('Break') || i.title.contains('break') ||
-        i.message.contains('days') || i.message.contains('since'));
+      final breakInsights = insights.where(
+        (i) =>
+            i.title.contains('Break') ||
+            i.title.contains('break') ||
+            i.message.contains('days') ||
+            i.message.contains('since'),
+      );
 
       expect(breakInsights, isNotEmpty);
     });
@@ -637,8 +669,11 @@ void main() {
       );
 
       // Should have high-priority achievement insight
-      final prInsights = insights.where((i) =>
-        i.type == InsightType.achievement && i.priority == InsightPriority.high);
+      final prInsights = insights.where(
+        (i) =>
+            i.type == InsightType.achievement &&
+            i.priority == InsightPriority.high,
+      );
 
       expect(prInsights, isNotEmpty);
     });
@@ -673,9 +708,13 @@ void main() {
       );
 
       // Should mention PR history or time since last PR
-      final prInsights = insights.where((i) =>
-        i.message.contains('days') || i.message.contains('PR') ||
-        i.title.contains('History') || i.title.contains('history'));
+      final prInsights = insights.where(
+        (i) =>
+            i.message.contains('days') ||
+            i.message.contains('PR') ||
+            i.title.contains('History') ||
+            i.title.contains('history'),
+      );
 
       expect(prInsights, isNotEmpty);
     });
@@ -700,9 +739,13 @@ void main() {
       );
 
       // Should have streak achievement
-      final streakInsights = insights.where((i) =>
-        i.title.contains('Streak') || i.title.contains('streak') ||
-        i.message.contains('consecutive') || i.message.contains('streak'));
+      final streakInsights = insights.where(
+        (i) =>
+            i.title.contains('Streak') ||
+            i.title.contains('streak') ||
+            i.message.contains('consecutive') ||
+            i.message.contains('streak'),
+      );
 
       expect(streakInsights, isNotEmpty);
     });
@@ -725,9 +768,13 @@ void main() {
       );
 
       // Should have volume milestone achievement
-      final milestoneInsights = insights.where((i) =>
-        i.title.contains('Milestone') || i.title.contains('milestone') ||
-        i.message.contains('tons') || i.message.contains('volume'));
+      final milestoneInsights = insights.where(
+        (i) =>
+            i.title.contains('Milestone') ||
+            i.title.contains('milestone') ||
+            i.message.contains('tons') ||
+            i.message.contains('volume'),
+      );
 
       expect(milestoneInsights, isNotEmpty);
     });
@@ -750,9 +797,11 @@ void main() {
       );
 
       // Should mention multiple PRs
-      final multiPRInsights = insights.where((i) =>
-        i.message.contains('PR') &&
-        (i.metadata['totalPRs'] != null || i.message.contains('multiple')));
+      final multiPRInsights = insights.where(
+        (i) =>
+            i.message.contains('PR') &&
+            (i.metadata['totalPRs'] != null || i.message.contains('multiple')),
+      );
 
       expect(multiPRInsights, isNotEmpty);
     });
@@ -791,9 +840,11 @@ void main() {
       );
 
       // Day name should appear in metadata somewhere
-      final hasFrequencyData = insights.any((i) =>
-        i.metadata.containsKey('favoriteDay') ||
-        i.metadata.containsKey('totalDays'));
+      final hasFrequencyData = insights.any(
+        (i) =>
+            i.metadata.containsKey('favoriteDay') ||
+            i.metadata.containsKey('totalDays'),
+      );
 
       expect(hasFrequencyData, isA<bool>());
     });
@@ -806,19 +857,37 @@ void main() {
           exerciseId: 'morning-1',
           exerciseName: 'Morning Workout 1',
           sets: [createSet(weight: '100', reps: '10')],
-          createdAt: DateTime(now.year, now.month, now.day - 2, 8, 0), // 8 AM, 2 days ago
+          createdAt: DateTime(
+            now.year,
+            now.month,
+            now.day - 2,
+            8,
+            0,
+          ), // 8 AM, 2 days ago
         ),
         createActivity(
           exerciseId: 'morning-2',
           exerciseName: 'Morning Workout 2',
           sets: [createSet(weight: '100', reps: '10')],
-          createdAt: DateTime(now.year, now.month, now.day - 4, 9, 0), // 9 AM, 4 days ago
+          createdAt: DateTime(
+            now.year,
+            now.month,
+            now.day - 4,
+            9,
+            0,
+          ), // 9 AM, 4 days ago
         ),
         createActivity(
           exerciseId: 'morning-3',
           exerciseName: 'Morning Workout 3',
           sets: [createSet(weight: '100', reps: '10')],
-          createdAt: DateTime(now.year, now.month, now.day - 6, 7, 30), // 7:30 AM, 6 days ago
+          createdAt: DateTime(
+            now.year,
+            now.month,
+            now.day - 6,
+            7,
+            30,
+          ), // 7:30 AM, 6 days ago
         ),
       ];
 
@@ -829,8 +898,9 @@ void main() {
       );
 
       // Time pattern should appear in metadata
-      final hasTimeData = insights.any((i) =>
-        i.metadata.containsKey('mostCommonTime'));
+      final hasTimeData = insights.any(
+        (i) => i.metadata.containsKey('mostCommonTime'),
+      );
 
       expect(hasTimeData, isA<bool>());
     });
@@ -853,9 +923,11 @@ void main() {
       );
 
       // Streak data should be in metadata
-      final hasStreakData = insights.any((i) =>
-        i.metadata.containsKey('streak') ||
-        i.metadata.containsKey('consecutiveDays'));
+      final hasStreakData = insights.any(
+        (i) =>
+            i.metadata.containsKey('streak') ||
+            i.metadata.containsKey('consecutiveDays'),
+      );
 
       expect(hasStreakData, isA<bool>());
     });
@@ -1080,11 +1152,7 @@ void main() {
       final balance = MuscleGroupBalance(
         volumeDistribution: {'Chest': 15.0, 'Back': 20.0, 'Legs': 30.0},
         idealDistribution: {},
-        imbalanceScores: {
-          'Chest': 1.0,
-          'Back': 1.2,
-          'Legs': 1.1,
-        },
+        imbalanceScores: {'Chest': 1.0, 'Back': 1.2, 'Legs': 1.1},
       );
       expect(balance.overdeveloped, isNull);
     });
@@ -1176,46 +1244,49 @@ void main() {
       expect(observations.any((o) => o.contains('Stable')), true);
     });
 
-    test('should include last workout observation when activities non-empty', () {
-      final now = DateTime.now();
-      final activities = [
-        createActivity(
-          exerciseId: 'bench',
-          exerciseName: 'Bench Press',
-          sets: [createSet(weight: '100', reps: '10')],
-          createdAt: now.subtract(const Duration(days: 3)),
-        ),
-      ];
-      final balance = InsightsEngine.analyzeMuscleBalance(activities);
+    test(
+      'should include last workout observation when activities non-empty',
+      () {
+        final now = DateTime.now();
+        final activities = [
+          createActivity(
+            exerciseId: 'bench',
+            exerciseName: 'Bench Press',
+            sets: [createSet(weight: '100', reps: '10')],
+            createdAt: now.subtract(const Duration(days: 3)),
+          ),
+        ];
+        final balance = InsightsEngine.analyzeMuscleBalance(activities);
 
-      final volumeTrend = TrendAnalysis(
-        type: TrendType.plateau,
-        slope: 0.0,
-        correlation: 0.9,
-        currentValue: 4000,
-        predictedValue: 4000,
-        recommendation: 'Stable',
-      );
+        final volumeTrend = TrendAnalysis(
+          type: TrendType.plateau,
+          slope: 0.0,
+          correlation: 0.9,
+          currentValue: 4000,
+          predictedValue: 4000,
+          recommendation: 'Stable',
+        );
 
-      final frequencyTrend = TrendAnalysis(
-        type: TrendType.plateau,
-        slope: 0.0,
-        correlation: 0.9,
-        currentValue: 2.0,
-        predictedValue: 2.0,
-        recommendation: 'Stable',
-      );
+        final frequencyTrend = TrendAnalysis(
+          type: TrendType.plateau,
+          slope: 0.0,
+          correlation: 0.9,
+          currentValue: 2.0,
+          predictedValue: 2.0,
+          recommendation: 'Stable',
+        );
 
-      final observations = InsightsEngine.generateObservations(
-        activities: activities,
-        balance: balance,
-        volumeTrend: volumeTrend,
-        frequencyTrend: frequencyTrend,
-      );
+        final observations = InsightsEngine.generateObservations(
+          activities: activities,
+          balance: balance,
+          volumeTrend: volumeTrend,
+          frequencyTrend: frequencyTrend,
+        );
 
-      expect(observations.any((o) => o.contains('Last workout')), true);
-      expect(observations.any((o) => o.contains('3 days ago')), true);
-    });
+        expect(observations.any((o) => o.contains('Last workout')), true);
+        expect(observations.any((o) => o.contains('3 days ago')), true);
+      },
+    );
 
     test('should include most trained group when distribution non-empty', () {
       final activities = [
@@ -1260,42 +1331,45 @@ void main() {
       expect(observations.any((o) => o.contains('Most trained')), true);
     });
 
-    test('should not add volume trend observation for stable/inconsistent trend', () {
-      final balance = MuscleGroupBalance(
-        volumeDistribution: {},
-        idealDistribution: {},
-        imbalanceScores: {},
-      );
+    test(
+      'should not add volume trend observation for stable/inconsistent trend',
+      () {
+        final balance = MuscleGroupBalance(
+          volumeDistribution: {},
+          idealDistribution: {},
+          imbalanceScores: {},
+        );
 
-      final volumeTrend = TrendAnalysis(
-        type: TrendType.inconsistent,
-        slope: 0.0,
-        correlation: 0.0,
-        currentValue: 0,
-        predictedValue: 0,
-        recommendation: 'Need more data',
-      );
+        final volumeTrend = TrendAnalysis(
+          type: TrendType.inconsistent,
+          slope: 0.0,
+          correlation: 0.0,
+          currentValue: 0,
+          predictedValue: 0,
+          recommendation: 'Need more data',
+        );
 
-      final frequencyTrend = TrendAnalysis(
-        type: TrendType.plateau,
-        slope: 0.0,
-        correlation: 0.9,
-        currentValue: 2.0,
-        predictedValue: 2.0,
-        recommendation: 'Stable',
-      );
+        final frequencyTrend = TrendAnalysis(
+          type: TrendType.plateau,
+          slope: 0.0,
+          correlation: 0.9,
+          currentValue: 2.0,
+          predictedValue: 2.0,
+          recommendation: 'Stable',
+        );
 
-      final observations = InsightsEngine.generateObservations(
-        activities: [],
-        balance: balance,
-        volumeTrend: volumeTrend,
-        frequencyTrend: frequencyTrend,
-      );
+        final observations = InsightsEngine.generateObservations(
+          activities: [],
+          balance: balance,
+          volumeTrend: volumeTrend,
+          frequencyTrend: frequencyTrend,
+        );
 
-      // Should not crash and should still have frequency observation
-      expect(observations, isA<List<String>>());
-      expect(observations.any((o) => o.contains('frequency')), true);
-    });
+        // Should not crash and should still have frequency observation
+        expect(observations, isA<List<String>>());
+        expect(observations.any((o) => o.contains('frequency')), true);
+      },
+    );
   });
 
   group('Scientific Metrics Insights', () {
@@ -1336,72 +1410,76 @@ void main() {
       expect(insights.isNotEmpty, true);
     });
 
-    test('should generate excessive overload warning when volume increases >10%', () {
-      final now = DateTime.now();
-      // Current session has massively more volume than previous
-      final activities = [
-        createActivity(
-          exerciseId: 'squat',
-          exerciseName: 'Squat',
-          sets: List.generate(
-            10,
-            (_) => createSet(weight: '200', reps: '10'),
-          ), // very high volume
-          createdAt: now,
-        ),
-        createActivity(
-          exerciseId: 'squat',
-          exerciseName: 'Squat',
-          sets: [
-            createSet(weight: '100', reps: '5'),
-          ], // low volume
-          createdAt: now.subtract(const Duration(days: 3)),
-        ),
-      ];
+    test(
+      'should generate excessive overload warning when volume increases >10%',
+      () {
+        final now = DateTime.now();
+        // Current session has massively more volume than previous
+        final activities = [
+          createActivity(
+            exerciseId: 'squat',
+            exerciseName: 'Squat',
+            sets: List.generate(
+              10,
+              (_) => createSet(weight: '200', reps: '10'),
+            ), // very high volume
+            createdAt: now,
+          ),
+          createActivity(
+            exerciseId: 'squat',
+            exerciseName: 'Squat',
+            sets: [createSet(weight: '100', reps: '5')], // low volume
+            createdAt: now.subtract(const Duration(days: 3)),
+          ),
+        ];
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
+        );
 
-      expect(insights, isA<List<TrainingInsight>>());
-      expect(insights.isNotEmpty, true);
-    });
+        expect(insights, isA<List<TrainingInsight>>());
+        expect(insights.isNotEmpty, true);
+      },
+    );
 
-    test('should generate optimal overload achievement when 0-10% increase', () {
-      final now = DateTime.now();
-      // Current session has slightly more volume - exactly in optimal range
-      final activities = [
-        createActivity(
-          exerciseId: 'deadlift',
-          exerciseName: 'Deadlift',
-          sets: [
-            createSet(weight: '105', reps: '10'),
-            createSet(weight: '105', reps: '10'),
-          ],
-          createdAt: now,
-        ),
-        createActivity(
-          exerciseId: 'deadlift',
-          exerciseName: 'Deadlift',
-          sets: [
-            createSet(weight: '100', reps: '10'),
-            createSet(weight: '100', reps: '10'),
-          ],
-          createdAt: now.subtract(const Duration(days: 3)),
-        ),
-      ];
+    test(
+      'should generate optimal overload achievement when 0-10% increase',
+      () {
+        final now = DateTime.now();
+        // Current session has slightly more volume - exactly in optimal range
+        final activities = [
+          createActivity(
+            exerciseId: 'deadlift',
+            exerciseName: 'Deadlift',
+            sets: [
+              createSet(weight: '105', reps: '10'),
+              createSet(weight: '105', reps: '10'),
+            ],
+            createdAt: now,
+          ),
+          createActivity(
+            exerciseId: 'deadlift',
+            exerciseName: 'Deadlift',
+            sets: [
+              createSet(weight: '100', reps: '10'),
+              createSet(weight: '100', reps: '10'),
+            ],
+            createdAt: now.subtract(const Duration(days: 3)),
+          ),
+        ];
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
+        );
 
-      expect(insights, isA<List<TrainingInsight>>());
-      expect(insights.isNotEmpty, true);
-    });
+        expect(insights, isA<List<TrainingInsight>>());
+        expect(insights.isNotEmpty, true);
+      },
+    );
 
     test('should generate low volume insight when sets < 10 in last week', () {
       // Create just a few sets for one muscle group in the last 7 days
@@ -1428,27 +1506,30 @@ void main() {
       expect(insights, isA<List<TrainingInsight>>());
     });
 
-    test('should generate excessive volume warning when sets > 25 per muscle group in a week', () {
-      // Create 30 sets for one muscle group within 7 days
-      final now = DateTime.now();
-      final activities = List.generate(6, (i) {
-        return createActivity(
-          exerciseId: 'bench',
-          exerciseName: 'Bench Press',
-          sets: List.generate(5, (_) => createSet(weight: '100', reps: '10')),
-          createdAt: now.subtract(Duration(days: i)),
+    test(
+      'should generate excessive volume warning when sets > 25 per muscle group in a week',
+      () {
+        // Create 30 sets for one muscle group within 7 days
+        final now = DateTime.now();
+        final activities = List.generate(6, (i) {
+          return createActivity(
+            exerciseId: 'bench',
+            exerciseName: 'Bench Press',
+            sets: List.generate(5, (_) => createSet(weight: '100', reps: '10')),
+            createdAt: now.subtract(Duration(days: i)),
+          );
+        });
+
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
         );
-      });
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
-
-      expect(insights, isA<List<TrainingInsight>>());
-      expect(insights.isNotEmpty, true);
-    });
+        expect(insights, isA<List<TrainingInsight>>());
+        expect(insights.isNotEmpty, true);
+      },
+    );
 
     test('should generate low intensity insight when percentOf1RM < 67', () {
       // Very high reps with low weight -> low intensity
@@ -1474,134 +1555,145 @@ void main() {
       expect(insights, isA<List<TrainingInsight>>());
     });
 
-    test('should generate push-pull imbalance insight for chest-dominant training', () {
-      // Heavy chest/push focus with no back/pull work
-      final now = DateTime.now();
-      final activities = List.generate(5, (i) {
-        return createActivity(
-          exerciseId: 'bench-$i',
-          exerciseName: 'Bench Press',
-          sets: List.generate(4, (_) => createSet(weight: '100', reps: '10')),
-          createdAt: now.subtract(Duration(days: i)),
-          category: ExerciseCategory.chest,
+    test(
+      'should generate push-pull imbalance insight for chest-dominant training',
+      () {
+        // Heavy chest/push focus with no back/pull work
+        final now = DateTime.now();
+        final activities = List.generate(5, (i) {
+          return createActivity(
+            exerciseId: 'bench-$i',
+            exerciseName: 'Bench Press',
+            sets: List.generate(4, (_) => createSet(weight: '100', reps: '10')),
+            createdAt: now.subtract(Duration(days: i)),
+            category: ExerciseCategory.chest,
+          );
+        });
+
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
         );
-      });
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+        expect(insights, isA<List<TrainingInsight>>());
+        expect(insights.isNotEmpty, true);
+      },
+    );
 
-      expect(insights, isA<List<TrainingInsight>>());
-      expect(insights.isNotEmpty, true);
-    });
+    test(
+      'should generate quad-hamstring high risk insight for quad-dominant training',
+      () {
+        // Heavy quad/squat focus with no hamstring work
+        final now = DateTime.now();
+        // Create many squat activities (quad dominant) without hamstring work
+        final activities = List.generate(5, (i) {
+          return createActivity(
+            exerciseId: 'squat-$i',
+            exerciseName: 'Squat',
+            sets: List.generate(5, (_) => createSet(weight: '150', reps: '10')),
+            createdAt: now.subtract(Duration(days: i)),
+            category: ExerciseCategory.legs,
+          );
+        });
 
-    test('should generate quad-hamstring high risk insight for quad-dominant training', () {
-      // Heavy quad/squat focus with no hamstring work
-      final now = DateTime.now();
-      // Create many squat activities (quad dominant) without hamstring work
-      final activities = List.generate(5, (i) {
-        return createActivity(
-          exerciseId: 'squat-$i',
-          exerciseName: 'Squat',
-          sets: List.generate(5, (_) => createSet(weight: '150', reps: '10')),
-          createdAt: now.subtract(Duration(days: i)),
-          category: ExerciseCategory.legs,
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
         );
-      });
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
-
-      expect(insights, isA<List<TrainingInsight>>());
-      expect(insights.isNotEmpty, true);
-    });
+        expect(insights, isA<List<TrainingInsight>>());
+        expect(insights.isNotEmpty, true);
+      },
+    );
   });
 
   group('Recovery Insights', () {
-    test('should generate high activity insight when >6 workouts in last week', () {
-      final now = DateTime.now();
-      // 7 workouts in last 7 days
-      final activities = List.generate(7, (i) {
-        return createActivity(
-          exerciseId: 'exercise-$i',
-          exerciseName: 'Exercise $i',
-          sets: List.generate(3, (_) => createSet(weight: '100', reps: '10')),
-          createdAt: now.subtract(Duration(days: i)),
+    test(
+      'should generate high activity insight when >6 workouts in last week',
+      () {
+        final now = DateTime.now();
+        // 7 workouts in last 7 days
+        final activities = List.generate(7, (i) {
+          return createActivity(
+            exerciseId: 'exercise-$i',
+            exerciseName: 'Exercise $i',
+            sets: List.generate(3, (_) => createSet(weight: '100', reps: '10')),
+            createdAt: now.subtract(Duration(days: i)),
+          );
+        });
+
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
         );
-      });
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+        // Should have some insights
+        expect(insights.isNotEmpty, true);
+      },
+    );
 
-      final highActivityInsights = insights.where(
-        (i) => i.metadata.containsKey('workoutCount') ||
-               i.title.contains('Activity') ||
-               i.message.contains('workout'),
-      );
+    test(
+      'should generate recent activity insight for muscle groups trained <48h ago',
+      () {
+        final now = DateTime.now();
+        // Train chest very recently (within 48 hours)
+        final activities = [
+          createActivity(
+            exerciseId: 'bench-1',
+            exerciseName: 'Bench Press',
+            sets: List.generate(4, (_) => createSet(weight: '100', reps: '10')),
+            createdAt: now.subtract(const Duration(hours: 12)), // 12 hours ago
+          ),
+          createActivity(
+            exerciseId: 'bench-2',
+            exerciseName: 'Bench Press',
+            sets: List.generate(4, (_) => createSet(weight: '100', reps: '10')),
+            createdAt: now.subtract(const Duration(days: 3)),
+          ),
+        ];
 
-      // Should have some insights
-      expect(insights.isNotEmpty, true);
-    });
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
+        );
 
-    test('should generate recent activity insight for muscle groups trained <48h ago', () {
-      final now = DateTime.now();
-      // Train chest very recently (within 48 hours)
-      final activities = [
-        createActivity(
-          exerciseId: 'bench-1',
-          exerciseName: 'Bench Press',
-          sets: List.generate(4, (_) => createSet(weight: '100', reps: '10')),
-          createdAt: now.subtract(const Duration(hours: 12)), // 12 hours ago
-        ),
-        createActivity(
-          exerciseId: 'bench-2',
-          exerciseName: 'Bench Press',
-          sets: List.generate(4, (_) => createSet(weight: '100', reps: '10')),
-          createdAt: now.subtract(const Duration(days: 3)),
-        ),
-      ];
+        expect(insights, isA<List<TrainingInsight>>());
+        expect(insights.isNotEmpty, true);
+      },
+    );
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+    test(
+      'should not generate recovery insight for muscle groups trained >48h ago',
+      () {
+        final now = DateTime.now();
+        final activities = [
+          createActivity(
+            exerciseId: 'bench',
+            exerciseName: 'Bench Press',
+            sets: [createSet(weight: '100', reps: '10')],
+            createdAt: now.subtract(const Duration(days: 3)), // 72+ hours ago
+          ),
+        ];
 
-      expect(insights, isA<List<TrainingInsight>>());
-      expect(insights.isNotEmpty, true);
-    });
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
+        );
 
-    test('should not generate recovery insight for muscle groups trained >48h ago', () {
-      final now = DateTime.now();
-      final activities = [
-        createActivity(
-          exerciseId: 'bench',
-          exerciseName: 'Bench Press',
-          sets: [createSet(weight: '100', reps: '10')],
-          createdAt: now.subtract(const Duration(days: 3)), // 72+ hours ago
-        ),
-      ];
-
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
-
-      // Should generate insights but no recovery warning
-      final recoveryInsights = insights.where(
-        (i) => i.title.contains('Recent Activity') || i.metadata.containsKey('hoursSince'),
-      );
-      expect(recoveryInsights, isEmpty);
-    });
+        // Should generate insights but no recovery warning
+        final recoveryInsights = insights.where(
+          (i) =>
+              i.title.contains('Recent Activity') ||
+              i.metadata.containsKey('hoursSince'),
+        );
+        expect(recoveryInsights, isEmpty);
+      },
+    );
   });
 
   group('Motivational Insights - Monthly Summary', () {
@@ -1623,50 +1715,42 @@ void main() {
         userId: 'test-user',
       );
 
-      final summaryInsights = insights.where(
-        (i) => i.metadata.containsKey('workouts30Days') ||
-               i.metadata.containsKey('totalSets'),
-      );
-
       // Monthly summary should be generated (may be cut by top-10 limit)
       expect(insights.isNotEmpty, true);
     });
 
-    test('should NOT generate monthly summary when <8 activities in 30 days', () {
-      final now = DateTime.now();
-      final activities = List.generate(5, (i) {
-        return createActivity(
-          exerciseId: 'exercise-$i',
-          exerciseName: 'Exercise $i',
-          sets: [createSet(weight: '100', reps: '10')],
-          createdAt: now.subtract(Duration(days: i * 2)),
+    test(
+      'should NOT generate monthly summary when <8 activities in 30 days',
+      () {
+        final now = DateTime.now();
+        final activities = List.generate(5, (i) {
+          return createActivity(
+            exerciseId: 'exercise-$i',
+            exerciseName: 'Exercise $i',
+            sets: [createSet(weight: '100', reps: '10')],
+            createdAt: now.subtract(Duration(days: i * 2)),
+          );
+        });
+
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
         );
-      });
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+        final summaryInsights = insights.where(
+          (i) => i.metadata.containsKey('workouts30Days'),
+        );
 
-      final summaryInsights = insights.where(
-        (i) => i.metadata.containsKey('workouts30Days'),
-      );
-
-      expect(summaryInsights, isEmpty);
-    });
+        expect(summaryInsights, isEmpty);
+      },
+    );
   });
 
   group('Frequency Insights - Workout Time Categories', () {
     ExerciseActivity createActivityAtHour(int hour, int daysAgo, String id) {
       final now = DateTime.now();
-      final dt = DateTime(
-        now.year,
-        now.month,
-        now.day - daysAgo,
-        hour,
-        0,
-      );
+      final dt = DateTime(now.year, now.month, now.day - daysAgo, hour, 0);
       return createActivity(
         exerciseId: id,
         exerciseName: 'Workout',
@@ -1731,10 +1815,7 @@ void main() {
         ),
       );
 
-      expect(
-        frequencyInsight.metadata['mostCommonTime'],
-        equals('Morning'),
-      );
+      expect(frequencyInsight.metadata['mostCommonTime'], equals('Morning'));
     });
 
     test('should detect afternoon workouts (12pm-4pm)', () {
@@ -1762,10 +1843,7 @@ void main() {
         ),
       );
 
-      expect(
-        frequencyInsight.metadata['mostCommonTime'],
-        equals('Afternoon'),
-      );
+      expect(frequencyInsight.metadata['mostCommonTime'], equals('Afternoon'));
     });
 
     test('should detect evening workouts (5pm-8pm)', () {
@@ -1793,10 +1871,7 @@ void main() {
         ),
       );
 
-      expect(
-        frequencyInsight.metadata['mostCommonTime'],
-        equals('Evening'),
-      );
+      expect(frequencyInsight.metadata['mostCommonTime'], equals('Evening'));
     });
 
     test('should detect night workouts (9pm and later)', () {
@@ -1824,10 +1899,7 @@ void main() {
         ),
       );
 
-      expect(
-        frequencyInsight.metadata['mostCommonTime'],
-        equals('Night'),
-      );
+      expect(frequencyInsight.metadata['mostCommonTime'], equals('Night'));
     });
   });
 
@@ -1869,51 +1941,52 @@ void main() {
       expect(weight, isNot('N/A'));
     });
 
-    test('should show lastWeight as N/A when all done sets have non-positive weight', () {
-      // To avoid the source bug where empty volumeDistribution causes a crash
-      // in _generateMuscleBalanceInsights reduce() call, we need at least one
-      // done set to produce non-zero volume. So we test N/A indirectly:
-      // When there are done sets but all with weight '0', avgWeight stays 0
-      // and the branch returns 'N/A'. We pair with a separate activity that
-      // has non-zero weight to feed volume distribution.
-      //
-      // NOTE: The N/A branch is: avgWeight <= 0 after folding done sets.
-      // This verifies the branch exists and is reachable.
-      final activities = [
-        // This provides a non-empty volumeDistribution for muscle balance
-        createActivity(
-          exerciseId: 'bench',
-          exerciseName: 'Bench Press',
-          sets: [
-            createSet(weight: '100', reps: '10', done: true),
-          ],
-          createdAt: DateTime.now().subtract(const Duration(days: 10)),
-        ),
-      ];
+    test(
+      'should show lastWeight as N/A when all done sets have non-positive weight',
+      () {
+        // To avoid the source bug where empty volumeDistribution causes a crash
+        // in _generateMuscleBalanceInsights reduce() call, we need at least one
+        // done set to produce non-zero volume. So we test N/A indirectly:
+        // When there are done sets but all with weight '0', avgWeight stays 0
+        // and the branch returns 'N/A'. We pair with a separate activity that
+        // has non-zero weight to feed volume distribution.
+        //
+        // NOTE: The N/A branch is: avgWeight <= 0 after folding done sets.
+        // This verifies the branch exists and is reachable.
+        final activities = [
+          // This provides a non-empty volumeDistribution for muscle balance
+          createActivity(
+            exerciseId: 'bench',
+            exerciseName: 'Bench Press',
+            sets: [createSet(weight: '100', reps: '10', done: true)],
+            createdAt: DateTime.now().subtract(const Duration(days: 10)),
+          ),
+        ];
 
-      final insights = InsightsEngine.generateInsights(
-        activities: activities,
-        recentPRs: [],
-        userId: 'test-user',
-      );
+        final insights = InsightsEngine.generateInsights(
+          activities: activities,
+          recentPRs: [],
+          userId: 'test-user',
+        );
 
-      final breakInsight = insights.firstWhere(
-        (i) => i.metadata.containsKey('lastWeight'),
-        orElse: () => TrainingInsight(
-          type: InsightType.info,
-          priority: InsightPriority.low,
-          title: '',
-          message: '',
-          recommendation: '',
-          metadata: {'lastWeight': 'sentinel'},
-        ),
-      );
+        final breakInsight = insights.firstWhere(
+          (i) => i.metadata.containsKey('lastWeight'),
+          orElse: () => TrainingInsight(
+            type: InsightType.info,
+            priority: InsightPriority.low,
+            title: '',
+            message: '',
+            recommendation: '',
+            metadata: {'lastWeight': 'sentinel'},
+          ),
+        );
 
-      // The break insight exists and lastWeight is correctly populated
-      expect(breakInsight.metadata['lastWeight'], isNot('sentinel'));
-      // lastWeight should be '100.0' (the one done set)
-      expect(breakInsight.metadata['lastWeight'], isNot('N/A'));
-    });
+        // The break insight exists and lastWeight is correctly populated
+        expect(breakInsight.metadata['lastWeight'], isNot('sentinel'));
+        // lastWeight should be '100.0' (the one done set)
+        expect(breakInsight.metadata['lastWeight'], isNot('N/A'));
+      },
+    );
   });
 
   group('PR Insights - recent PR with null previousValue', () {
@@ -2029,11 +2102,6 @@ void main() {
       );
 
       // Should have balance insight
-      final balanceInsights = insights.where(
-        (i) => i.metadata.containsKey('topGroup') ||
-               i.metadata.containsKey('distribution'),
-      );
-
       expect(insights.isNotEmpty, true);
     });
   });
@@ -2070,7 +2138,9 @@ void main() {
       );
 
       final streakInsights = insights.where(
-        (i) => i.metadata.containsKey('streak') && i.metadata.containsKey('startDate'),
+        (i) =>
+            i.metadata.containsKey('streak') &&
+            i.metadata.containsKey('startDate'),
       );
 
       // Max streak is 2 (today and yesterday), so no streak insight
@@ -2134,38 +2204,39 @@ void main() {
       );
 
       // Volume surge/drop not expected for small change
-      final surgeDropInsights = insights.where(
-        (i) => i.metadata.containsKey('weeklyChange'),
-      );
-
       // Depending on the data, may or may not be present
       expect(insights, isA<List<TrainingInsight>>());
     });
   });
 
   group('PR insights - no PR drought when recent', () {
-    test('should NOT generate PR drought insight when last PR within 30 days', () {
-      final prs = [
-        createPR(
-          exerciseName: 'Bench Press',
-          type: PRType.weight,
-          value: 120.0,
-          achievedAt: DateTime.now().subtract(const Duration(days: 15)), // 15 days ago
-        ),
-      ];
+    test(
+      'should NOT generate PR drought insight when last PR within 30 days',
+      () {
+        final prs = [
+          createPR(
+            exerciseName: 'Bench Press',
+            type: PRType.weight,
+            value: 120.0,
+            achievedAt: DateTime.now().subtract(
+              const Duration(days: 15),
+            ), // 15 days ago
+          ),
+        ];
 
-      final insights = InsightsEngine.generateInsights(
-        activities: [],
-        recentPRs: prs,
-        userId: 'test-user',
-      );
+        final insights = InsightsEngine.generateInsights(
+          activities: [],
+          recentPRs: prs,
+          userId: 'test-user',
+        );
 
-      final droughtInsights = insights.where(
-        (i) => i.metadata.containsKey('lastPRExercise'),
-      );
+        final droughtInsights = insights.where(
+          (i) => i.metadata.containsKey('lastPRExercise'),
+        );
 
-      // No drought insight because last PR was < 30 days ago
-      expect(droughtInsights, isEmpty);
-    });
+        // No drought insight because last PR was < 30 days ago
+        expect(droughtInsights, isEmpty);
+      },
+    );
   });
 }

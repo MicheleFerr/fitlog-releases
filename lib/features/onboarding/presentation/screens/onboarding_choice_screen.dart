@@ -15,8 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
+import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -114,30 +121,89 @@ class OnboardingChoiceScreen extends ConsumerWidget {
   ) async {
     unawaited(HapticFeedback.mediumImpact());
 
-    final service = ref.read(onboardingChoiceServiceProvider);
-    await service?.setChoice(choice);
+    final guidedRoute = FeatureFlags.guidedTestModeEnabled
+        ? AppRoutes.workoutPath
+        : '${AppRoutes.templatesPath}?showTour=true';
+    final fallbackRoute = choice == OnboardingChoice.guided
+        ? guidedRoute
+        : AppRoutes.homePath;
 
-    if (!context.mounted) return;
+    try {
+      final service = await _resolveChoiceService(ref);
+      await service.setChoice(choice);
 
-    final homeTourNotifier = ref.read(homeTourProvider.notifier);
+      if (!context.mounted) return;
 
-    if (choice == OnboardingChoice.guided) {
-      // Ensure home tour is not active before starting guided templates flow.
-      homeTourNotifier.stopTour();
+      final homeTourNotifier = ref.read(homeTourProvider.notifier);
 
-      // Navigate to Templates screen with tour flag.
-      // The templates screen will show a tour and mark wizard completed after.
-      context.go('/templates?showTour=true');
-    } else {
-      // Start Home Tour only for "explore" path.
-      final homeTourState = ref.read(homeTourProvider);
-      if (!homeTourState.hasCompletedTour) {
-        homeTourNotifier.startTour();
+      if (choice == OnboardingChoice.guided) {
+        // Ensure home tour is not active before starting guided templates flow.
+        homeTourNotifier.stopTour();
+        await ref.read(workoutTutorialProvider.notifier).resetTutorial();
+        if (!context.mounted) return;
+
+        if (FeatureFlags.guidedTestModeEnabled) {
+          final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
+
+          // Create a fresh quick workout and bind it to guided test mode.
+          workoutNotifier.createWorkout('Quick Workout');
+          final workout = ref.read(currentWorkoutProvider);
+          if (workout != null) {
+            await service.startGuidedTestMode(workoutId: workout.id);
+            final analytics = ref.read(analyticsServiceProvider);
+            unawaited(
+              analytics.logEvent(
+                name: AnalyticsEvents.guidedTestStarted,
+                parameters: {
+                  AnalyticsParameters.workoutId: workout.id,
+                  AnalyticsParameters.source: 'onboarding_choice',
+                },
+              ),
+            );
+          } else {
+            debugPrint(
+              '⚠️ [OnboardingChoice] Quick workout not initialized before guided navigation',
+            );
+          }
+
+          try {
+            await workoutNotifier.startWorkout();
+          } catch (e, stackTrace) {
+            debugPrint(
+              '⚠️ [OnboardingChoice] startWorkout failed, continuing navigation: $e',
+            );
+            debugPrint('📍 [OnboardingChoice] Stack trace: $stackTrace');
+          }
+
+          if (!context.mounted) return;
+          context.go(AppRoutes.workoutPath);
+        } else {
+          // Legacy fallback: guided templates tour.
+          context.go(guidedRoute);
+        }
+      } else {
+        // Start Home Tour only for "explore" path.
+        final homeTourState = ref.read(homeTourProvider);
+        if (!homeTourState.hasCompletedTour) {
+          homeTourNotifier.startTour();
+        }
+
+        // Go to home - reminder card can show later if needed.
+        context.go(AppRoutes.homePath);
       }
-
-      // Go to home - reminder card can show later if needed.
-      context.go('/');
+    } catch (e, stackTrace) {
+      debugPrint('❌ [OnboardingChoice] Error handling "$choice": $e');
+      debugPrint('📍 [OnboardingChoice] Stack trace: $stackTrace');
+      if (!context.mounted) return;
+      context.go(fallbackRoute);
     }
+  }
+
+  Future<OnboardingChoiceService> _resolveChoiceService(WidgetRef ref) async {
+    final fromProvider = ref.read(onboardingChoiceServiceProvider);
+    if (fromProvider != null) return fromProvider;
+    final prefs = await SharedPreferences.getInstance();
+    return OnboardingChoiceService(prefs);
   }
 }
 

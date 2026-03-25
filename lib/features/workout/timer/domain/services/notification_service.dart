@@ -4,6 +4,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/core/utils/debug_logger.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_notifications_bootstrap.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_timezone_service.dart';
 
 /// Localization helper for notification strings (IT/EN)
 /// Used in domain layer where context.l10n is not available
@@ -121,6 +123,7 @@ class NotificationService {
 
     // MEMORY LEAK FIX: Initialize notifications plugin only for non-iOS platforms
     _notifications = FlutterLocalNotificationsPlugin();
+    await LocalTimezoneService.ensureInitialized();
 
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
@@ -137,7 +140,17 @@ class NotificationService {
       iOS: iOSSettings,
     );
 
-    await _notifications!.initialize(initSettings);
+    try {
+      await LocalNotificationsBootstrap.ensureInitialized(
+        plugin: _notifications!,
+        settings: initSettings,
+      );
+    } catch (e) {
+      DebugLogger.error('Notification plugin initialization unavailable', e);
+      _notifications = null;
+      _isInitialized = true;
+      return;
+    }
 
     // ✅ PRODUCTION FIX: Explicitly request permissions after initialization
     await _requestIOSPermissionsExplicitly();
@@ -266,13 +279,15 @@ class NotificationService {
         );
 
         // PERFORMANCE FIX: Add timeout to prevent hang on iOS init issues
-        await _nativeChannel.invokeMethod('sendNotification', {
-          'title': title,
-          'body': body,
-          'sound': customSoundFile ?? 'sound',
-          'categoryIdentifier': 'TIMER_COMPLETE',
-          'isBackground': _isAppInBackground,
-        }).timeout(const Duration(seconds: 5));
+        await _nativeChannel
+            .invokeMethod('sendNotification', {
+              'title': title,
+              'body': body,
+              'sound': customSoundFile ?? 'sound',
+              'categoryIdentifier': 'TIMER_COMPLETE',
+              'isBackground': _isAppInBackground,
+            })
+            .timeout(const Duration(seconds: 5));
 
         DebugLogger.log(
           LogCategory.notification,
@@ -509,14 +524,16 @@ class NotificationService {
           );
 
           // PERFORMANCE FIX: Add timeout to prevent hang on iOS init issues
-          await _nativeChannel.invokeMethod('scheduleNotification', {
-            'title': title,
-            'body': body,
-            'sound': customSoundFile ?? 'sound',
-            'delaySeconds': delay.inSeconds,
-            'categoryIdentifier': 'TIMER_COMPLETE',
-            'notificationId': 100,
-          }).timeout(const Duration(seconds: 5));
+          await _nativeChannel
+              .invokeMethod('scheduleNotification', {
+                'title': title,
+                'body': body,
+                'sound': customSoundFile ?? 'sound',
+                'delaySeconds': delay.inSeconds,
+                'categoryIdentifier': 'TIMER_COMPLETE',
+                'notificationId': 100,
+              })
+              .timeout(const Duration(seconds: 5));
 
           DebugLogger.log(
             LogCategory.notification,
@@ -594,9 +611,9 @@ class NotificationService {
       // Cancel via native channel for iOS
       if (Platform.isIOS) {
         try {
-          await _nativeChannel.invokeMethod('cancelNotification', {
-            'notificationId': 100,
-          }).timeout(const Duration(seconds: 5));
+          await _nativeChannel
+              .invokeMethod('cancelNotification', {'notificationId': 100})
+              .timeout(const Duration(seconds: 5));
           DebugLogger.log(
             LogCategory.notification,
             '✅ Native iOS scheduled notification cancelled',
@@ -633,10 +650,8 @@ class NotificationService {
 
     // Build custom sound filename with .caf extension (Apple's preferred format)
     String soundFile;
-    if (soundName.isNotEmpty &&
-        soundName != 'timer_complete' &&
-        soundName != 'sound') {
-      // Use custom sound (LightWeight, YehBuddie, etc.)
+    if (soundName.isNotEmpty && soundName != 'sound') {
+      // Use the explicitly selected sound, including timer_complete.caf.
       soundFile = soundName.endsWith('.caf') ? soundName : '$soundName.caf';
       DebugLogger.log(
         LogCategory.notification,
@@ -693,7 +708,7 @@ class NotificationService {
         presentSound: true,
         // ✅ No custom sound = iOS uses system default
         interruptionLevel: InterruptionLevel.timeSensitive,
-        categoryIdentifier: 'TIMER_COMPLETE_FALLBACK',
+        categoryIdentifier: 'TIMER_COMPLETE',
       );
 
       const notificationDetails = NotificationDetails(

@@ -194,6 +194,16 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     return await _boxManager.openBox<List<dynamic>>(_measurementsBoxName);
   }
 
+  String _measurementFingerprint(BodyMeasurement measurement) {
+    return [
+      measurement.dataType.name,
+      measurement.unit.name,
+      measurement.recordedAt.toIso8601String(),
+      measurement.value.toStringAsFixed(4),
+      measurement.source ?? '',
+    ].join('|');
+  }
+
   @override
   Future<void> init() async {
     // ✅ No-op: Boxes are opened lazily on-demand via HiveBoxManagerEnhanced.
@@ -269,6 +279,18 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
     final key = measurement.dataType.name;
     final existingList = box.get(key) ?? [];
+    final existingFingerprints = existingList
+        .map(
+          (json) => _measurementFingerprint(
+            BodyMeasurement.fromJson(Map<String, dynamic>.from(json as Map)),
+          ),
+        )
+        .toSet();
+    final fingerprint = _measurementFingerprint(measurement);
+
+    if (existingFingerprints.contains(fingerprint)) {
+      return;
+    }
 
     final updatedList = [...existingList, measurement.toJson()];
 
@@ -291,8 +313,24 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     for (final entry in groupedByType.entries) {
       final key = entry.key.name;
       final existingList = box.get(key) ?? [];
+      final seenFingerprints = existingList
+          .map(
+            (json) => _measurementFingerprint(
+              BodyMeasurement.fromJson(Map<String, dynamic>.from(json as Map)),
+            ),
+          )
+          .toSet();
+      final dedupedIncoming = <Map<String, dynamic>>[];
 
-      final updatedList = [...existingList, ...entry.value];
+      for (final json in entry.value) {
+        final measurement = BodyMeasurement.fromJson(json);
+        final fingerprint = _measurementFingerprint(measurement);
+        if (seenFingerprints.add(fingerprint)) {
+          dedupedIncoming.add(json);
+        }
+      }
+
+      final updatedList = [...existingList, ...dedupedIncoming];
 
       await box.put(key, updatedList);
     }

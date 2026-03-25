@@ -10,7 +10,6 @@ enum WorkoutSessionMode { exercise, rest, rpe }
 
 /// Represents the current state of a workout session
 class WorkoutSessionState {
-
   const WorkoutSessionState({
     required this.mode,
     required this.exerciseName,
@@ -63,7 +62,6 @@ class WorkoutSessionState {
 
 /// Event data from Live Activity interactions
 class WorkoutSessionEvent {
-
   const WorkoutSessionEvent({
     required this.eventType,
     required this.activityId,
@@ -252,9 +250,7 @@ class WorkoutSessionLAService {
       return result ?? false;
     } on PlatformException catch (e) {
       if (kDebugMode) {
-        debugPrint(
-          '[WorkoutSessionLA] Failed to update session: ${e.message}',
-        );
+        debugPrint('[WorkoutSessionLA] Failed to update session: ${e.message}');
       }
       return false;
     }
@@ -377,9 +373,7 @@ class WorkoutSessionLAService {
       // Catch ALL exceptions (PlatformException, MissingPluginException, etc.)
       // to prevent this from breaking the caller's flow
       if (kDebugMode) {
-        debugPrint(
-          '[WorkoutSessionLA] ⚠️ Failed to sync rest end time: $e',
-        );
+        debugPrint('[WorkoutSessionLA] ⚠️ Failed to sync rest end time: $e');
       }
       return false;
     }
@@ -515,18 +509,15 @@ class WorkoutSessionLAService {
     if (!Platform.isIOS) return false;
 
     try {
-      final result = await _channel.invokeMethod<bool>(
-        'setNextExerciseInfo',
-        {
-          'exerciseName': exerciseName,
-          'currentSet': currentSet,
-          'totalSets': totalSets,
-          'weight': weight,
-          'targetReps': targetReps,
-          'restDuration': restDuration,
-          'isLastSetOfExercise': isLastSetOfExercise,
-        },
-      );
+      final result = await _channel.invokeMethod<bool>('setNextExerciseInfo', {
+        'exerciseName': exerciseName,
+        'currentSet': currentSet,
+        'totalSets': totalSets,
+        'weight': weight,
+        'targetReps': targetReps,
+        'restDuration': restDuration,
+        'isLastSetOfExercise': isLastSetOfExercise,
+      });
       if (kDebugMode) {
         debugPrint(
           '[WorkoutSessionLA] Set next exercise info: $exerciseName set $currentSet/$totalSets',
@@ -622,7 +613,13 @@ class WorkoutSessionLAService {
       final result = await _channel.invokeMethod<bool>(
         'isWorkoutSessionActive',
       );
-      return result ?? false;
+      final isActive = result ?? false;
+      if (isActive && _currentActivityId == null) {
+        _currentActivityId = 'native-active';
+      } else if (!isActive) {
+        _currentActivityId = null;
+      }
+      return isActive;
     } on PlatformException catch (e) {
       if (kDebugMode) {
         debugPrint(
@@ -640,8 +637,10 @@ class WorkoutSessionLAService {
     try {
       final result = await _channel.invokeMethod<Map>('getWorkoutSessionState');
       if (result != null) {
+        _currentActivityId ??= 'native-active';
         return WorkoutSessionState.fromMap(result);
       }
+      _currentActivityId = null;
       return null;
     } on PlatformException catch (e) {
       if (kDebugMode) {
@@ -651,6 +650,10 @@ class WorkoutSessionLAService {
       }
       return null;
     }
+  }
+
+  void markSessionInactive() {
+    _currentActivityId = null;
   }
 
   /// Check for pending Live Activity events that weren't processed

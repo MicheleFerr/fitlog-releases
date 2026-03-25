@@ -1,5 +1,5 @@
-/// Extended UserProfile tests - covering toFirestore, fromFirestore,
-/// and edge cases not covered by user_profile_test.dart.
+// Extended UserProfile tests - covering toFirestore, fromFirestore,
+// and edge cases not covered by user_profile_test.dart.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,8 +24,8 @@ void main() {
         displayName: 'Test',
         accountTier: AccountTier.free,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -45,8 +45,8 @@ void main() {
         displayName: 'Test',
         accountTier: AccountTier.free,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -65,8 +65,8 @@ void main() {
         displayName: 'Test',
         accountTier: AccountTier.free,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -94,9 +94,9 @@ void main() {
         displayName: 'Test User',
         accountTier: AccountTier.free,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
-          usedPrivateTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
+          usedLibraryTemplates: 2,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -134,8 +134,8 @@ void main() {
         photoURL: 'https://example.com/photo.jpg',
         accountTier: AccountTier.premium,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 999,
-          maxPublicTemplates: 999,
+          maxLibraryTemplates: 999,
+          maxDistributionTemplates: 999,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -162,8 +162,8 @@ void main() {
         displayName: 'Premium User',
         accountTier: AccountTier.premium,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 999,
-          maxPublicTemplates: 999,
+          maxLibraryTemplates: 999,
+          maxDistributionTemplates: 999,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -223,35 +223,33 @@ void main() {
       expect(profile.debugXPOverride, 1500);
     });
 
-    test('parses profile without templateQuota using backward compat', () async {
-      final ref = fakeFirestore.collection('users').doc('u-2');
-      await ref.set({
-        'email': 'user2@example.com',
-        'displayName': 'User 2',
-        'accountTier': 'free',
-        'createdAt': Timestamp.fromDate(DateTime(2024, 1, 1)),
-        'lastLoginAt': Timestamp.fromDate(DateTime(2024, 6, 1)),
-        'stats': {
-          'privateTemplateCount': 3,
-          'publicTemplateCount': 1,
-        },
-        'isGuest': false,
-        'isAdmin': false,
-      });
+    test(
+      'parses profile without templateQuota using backward compat',
+      () async {
+        final ref = fakeFirestore.collection('users').doc('u-2');
+        await ref.set({
+          'email': 'user2@example.com',
+          'displayName': 'User 2',
+          'accountTier': 'free',
+          'createdAt': Timestamp.fromDate(DateTime(2024, 1, 1)),
+          'lastLoginAt': Timestamp.fromDate(DateTime(2024, 6, 1)),
+          'stats': {'privateTemplateCount': 3, 'publicTemplateCount': 1},
+          'isGuest': false,
+          'isAdmin': false,
+        });
 
-      final snap = await ref.get();
-      final profile = UserProfile.fromFirestore(snap);
+        final snap = await ref.get();
+        final profile = UserProfile.fromFirestore(snap);
 
-      // Should fall back to forTier with used counts from stats
-      expect(profile.templateQuota.usedPrivateTemplates, 3);
-      expect(profile.templateQuota.usedPublicTemplates, 1);
-    });
+        // Should fall back to forTier with used counts from stats
+        expect(profile.templateQuota.usedPrivateTemplates, 3);
+        expect(profile.templateQuota.usedPublicTemplates, 1);
+      },
+    );
 
     test('handles minimal document with all defaults', () async {
       final ref = fakeFirestore.collection('users').doc('u-3');
-      await ref.set({
-        'email': '',
-      });
+      await ref.set({'email': ''});
 
       final snap = await ref.get();
       final profile = UserProfile.fromFirestore(snap);
@@ -383,8 +381,8 @@ void main() {
         photoURL: 'https://example.com/photo.jpg',
         accountTier: AccountTier.premium,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 999,
-          maxPublicTemplates: 999,
+          maxLibraryTemplates: 999,
+          maxDistributionTemplates: 999,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -416,8 +414,8 @@ void main() {
         displayName: 'Old',
         accountTier: AccountTier.free,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -448,8 +446,8 @@ void main() {
         displayName: 'Test',
         accountTier: AccountTier.free,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
@@ -458,7 +456,9 @@ void main() {
     }
 
     test('updates cutoff hour and preserves other preferences', () {
-      final profile = makeProfile(preferences: {'theme': 'dark', 'dayCutoffHour': 4});
+      final profile = makeProfile(
+        preferences: {'theme': 'dark', 'dayCutoffHour': 4},
+      );
       final updated = profile.updateDayCutoffHour(6);
 
       expect(updated.dayCutoffHour, 6);
@@ -489,14 +489,13 @@ void main() {
       final quota = TemplateQuota.consolidated(
         userTier: UserTier.platinum,
         accountTier: AccountTier.free,
-        usedPrivate: 1,
-        usedPublic: 0,
+        usedLibrary: 1,
+        distributedCount: 0,
       );
 
-      // Platinum gives 7 templates, free gives 4 - platinum wins
-      expect(quota.maxPrivateTemplates, UserTier.platinum.maxTemplates); // 7
-      expect(quota.maxPublicTemplates, UserTier.platinum.maxPublicTemplates); // 5
-      expect(quota.usedPrivateTemplates, 1);
+      expect(quota.maxLibraryTemplates, UserTier.platinum.maxTemplates);
+      expect(quota.maxDistributionTemplates, 999);
+      expect(quota.usedLibraryTemplates, 1);
     });
 
     test('starter XP + premium account - premium wins on both limits', () {
@@ -505,8 +504,8 @@ void main() {
         accountTier: AccountTier.premium, // 999 private, 999 public
       );
 
-      expect(quota.maxPrivateTemplates, 999);
-      expect(quota.maxPublicTemplates, 999);
+      expect(quota.maxLibraryTemplates, 999);
+      expect(quota.maxDistributionTemplates, 999);
     });
 
     test('silver XP + free account - silver wins where higher', () {
@@ -515,10 +514,8 @@ void main() {
         accountTier: AccountTier.free, // 4 private, 2 public
       );
 
-      // Silver (5) > Free (4)
-      expect(quota.maxPrivateTemplates, UserTier.silver.maxTemplates); // 5
-      // Silver (3) > Free (2)
-      expect(quota.maxPublicTemplates, UserTier.silver.maxPublicTemplates); // 3
+      expect(quota.maxLibraryTemplates, UserTier.silver.maxTemplates);
+      expect(quota.maxDistributionTemplates, 999);
     });
   });
 }

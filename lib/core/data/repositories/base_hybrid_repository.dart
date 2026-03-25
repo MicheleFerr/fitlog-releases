@@ -128,7 +128,8 @@ abstract class BaseHybridRepository<T> with FirestoreCacheFirstMixin {
 
   /// Check if user is premium
   bool get isPremiumUser {
-    return _userProfile?.accountTier != AccountTier.free;
+    final accountTier = _userProfile?.accountTier;
+    return accountTier != null && accountTier != AccountTier.free;
   }
 
   /// Get current user ID
@@ -548,10 +549,7 @@ abstract class BaseHybridRepository<T> with FirestoreCacheFirstMixin {
   ///
   /// ⚡ OPTIMIZED: Parallel clear operations with Future.wait()
   Future<void> clearLocalData() async {
-    await Future.wait([
-      _localBox.clear(),
-      _syncQueueBox.clear(),
-    ]);
+    await Future.wait([_localBox.clear(), _syncQueueBox.clear()]);
   }
 
   /// Dispose resources (synchronous entry point)

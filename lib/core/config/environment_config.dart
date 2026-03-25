@@ -44,30 +44,45 @@ class EnvironmentConfig {
   // These are injected at build time and cannot be extracted from the binary
   // as easily as bundled asset files.
 
-  static const String _dartDefineApiKeyIOS =
-      String.fromEnvironment('FIREBASE_API_KEY_IOS');
-  static const String _dartDefineAppIdIOS =
-      String.fromEnvironment('FIREBASE_APP_ID_IOS');
-  static const String _dartDefineSenderIdIOS =
-      String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_IOS');
-  static const String _dartDefineProjectIdIOS =
-      String.fromEnvironment('FIREBASE_PROJECT_ID_IOS');
-  static const String _dartDefineStorageBucketIOS =
-      String.fromEnvironment('FIREBASE_STORAGE_BUCKET_IOS');
+  static const String _dartDefineApiKeyIOS = String.fromEnvironment(
+    'FIREBASE_API_KEY_IOS',
+  );
+  static const String _dartDefineAppIdIOS = String.fromEnvironment(
+    'FIREBASE_APP_ID_IOS',
+  );
+  static const String _dartDefineSenderIdIOS = String.fromEnvironment(
+    'FIREBASE_MESSAGING_SENDER_ID_IOS',
+  );
+  static const String _dartDefineProjectIdIOS = String.fromEnvironment(
+    'FIREBASE_PROJECT_ID_IOS',
+  );
+  static const String _dartDefineStorageBucketIOS = String.fromEnvironment(
+    'FIREBASE_STORAGE_BUCKET_IOS',
+  );
 
-  static const String _dartDefineApiKeyAndroid =
-      String.fromEnvironment('FIREBASE_API_KEY_ANDROID');
-  static const String _dartDefineAppIdAndroid =
-      String.fromEnvironment('FIREBASE_APP_ID_ANDROID');
-  static const String _dartDefineSenderIdAndroid =
-      String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_ANDROID');
-  static const String _dartDefineProjectIdAndroid =
-      String.fromEnvironment('FIREBASE_PROJECT_ID_ANDROID');
-  static const String _dartDefineStorageBucketAndroid =
-      String.fromEnvironment('FIREBASE_STORAGE_BUCKET_ANDROID');
+  static const String _dartDefineApiKeyAndroid = String.fromEnvironment(
+    'FIREBASE_API_KEY_ANDROID',
+  );
+  static const String _dartDefineAppIdAndroid = String.fromEnvironment(
+    'FIREBASE_APP_ID_ANDROID',
+  );
+  static const String _dartDefineSenderIdAndroid = String.fromEnvironment(
+    'FIREBASE_MESSAGING_SENDER_ID_ANDROID',
+  );
+  static const String _dartDefineProjectIdAndroid = String.fromEnvironment(
+    'FIREBASE_PROJECT_ID_ANDROID',
+  );
+  static const String _dartDefineStorageBucketAndroid = String.fromEnvironment(
+    'FIREBASE_STORAGE_BUCKET_ANDROID',
+  );
+  static const String _dartDefineGoogleServerClientId = String.fromEnvironment(
+    'GOOGLE_SERVER_CLIENT_ID',
+  );
 
-  static const String _dartDefineEnv =
-      String.fromEnvironment('ENV', defaultValue: 'development');
+  static const String _dartDefineEnv = String.fromEnvironment(
+    'ENV',
+    defaultValue: 'development',
+  );
 
   /// Load environment variables
   ///
@@ -107,7 +122,8 @@ class EnvironmentConfig {
     } catch (e) {
       // .env not found - this is expected in release builds
       // Firebase will use GoogleService-Info.plist / google-services.json instead
-      _dotenvLoaded = false; // dotenv NOT initialized - don't access dotenv.env!
+      _dotenvLoaded =
+          false; // dotenv NOT initialized - don't access dotenv.env!
       _isLoaded = true; // Mark as loaded to prevent retry
       if (kDebugMode) {
         debugPrint('⚠️ No .env file found (expected in Release builds)');
@@ -201,22 +217,42 @@ class EnvironmentConfig {
   static String get firebaseStorageBucketAndroid =>
       _get('FIREBASE_STORAGE_BUCKET_ANDROID', _dartDefineStorageBucketAndroid);
 
+  /// Google Sign-In server client ID.
+  ///
+  /// Despite the name used by the Flutter plugin, this must be the OAuth
+  /// client ID of the web application associated with the Firebase project.
+  static String? get googleServerClientId {
+    final value = _getOptional(
+      'GOOGLE_SERVER_CLIENT_ID',
+      _dartDefineGoogleServerClientId,
+    );
+    if (value == null) return null;
+    final normalized = value.trim();
+    return normalized.isEmpty ? null : normalized;
+  }
+
   // ════════════════════════════════════════════════════════════════════════
   // Firebase Configuration - Web (optional)
   // ════════════════════════════════════════════════════════════════════════
 
-  static const String _dartDefineApiKeyWeb =
-      String.fromEnvironment('FIREBASE_API_KEY_WEB');
-  static const String _dartDefineAppIdWeb =
-      String.fromEnvironment('FIREBASE_APP_ID_WEB');
-  static const String _dartDefineSenderIdWeb =
-      String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_WEB');
-  static const String _dartDefineProjectIdWeb =
-      String.fromEnvironment('FIREBASE_PROJECT_ID_WEB');
-  static const String _dartDefineStorageBucketWeb =
-      String.fromEnvironment('FIREBASE_STORAGE_BUCKET_WEB');
-  static const String _dartDefineMeasurementIdWeb =
-      String.fromEnvironment('FIREBASE_MEASUREMENT_ID_WEB');
+  static const String _dartDefineApiKeyWeb = String.fromEnvironment(
+    'FIREBASE_API_KEY_WEB',
+  );
+  static const String _dartDefineAppIdWeb = String.fromEnvironment(
+    'FIREBASE_APP_ID_WEB',
+  );
+  static const String _dartDefineSenderIdWeb = String.fromEnvironment(
+    'FIREBASE_MESSAGING_SENDER_ID_WEB',
+  );
+  static const String _dartDefineProjectIdWeb = String.fromEnvironment(
+    'FIREBASE_PROJECT_ID_WEB',
+  );
+  static const String _dartDefineStorageBucketWeb = String.fromEnvironment(
+    'FIREBASE_STORAGE_BUCKET_WEB',
+  );
+  static const String _dartDefineMeasurementIdWeb = String.fromEnvironment(
+    'FIREBASE_MEASUREMENT_ID_WEB',
+  );
 
   /// Firebase API Key (Web) - Optional
   static String? get firebaseApiKeyWeb =>
@@ -246,14 +282,18 @@ class EnvironmentConfig {
   // Third-party API Keys (Optional)
   // ════════════════════════════════════════════════════════════════════════
 
-  static const String _dartDefineOpenAIKey =
-      String.fromEnvironment('OPENAI_API_KEY');
-  static const String _dartDefineStripeKey =
-      String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
-  static const String _dartDefineOpenRouterKey =
-      String.fromEnvironment('OPENROUTER_API_KEY');
-  static const String _dartDefineRevenueCatKey =
-      String.fromEnvironment('REVENUECAT_API_KEY');
+  static const String _dartDefineOpenAIKey = String.fromEnvironment(
+    'OPENAI_API_KEY',
+  );
+  static const String _dartDefineStripeKey = String.fromEnvironment(
+    'STRIPE_PUBLISHABLE_KEY',
+  );
+  static const String _dartDefineOpenRouterKey = String.fromEnvironment(
+    'OPENROUTER_API_KEY',
+  );
+  static const String _dartDefineRevenueCatKey = String.fromEnvironment(
+    'REVENUECAT_API_KEY',
+  );
 
   /// OpenAI API Key - Optional
   static String? get openAIApiKey =>
@@ -331,7 +371,9 @@ class EnvironmentConfig {
     debugPrint('═════════════════════════════════════════════');
     debugPrint('ENV: $environment');
     debugPrint('Loaded: $_isLoaded');
-    debugPrint('Source: ${_dartDefineApiKeyIOS.isNotEmpty ? "compile-time" : ".env file"}');
+    debugPrint(
+      'Source: ${_dartDefineApiKeyIOS.isNotEmpty ? "compile-time" : ".env file"}',
+    );
     debugPrint('');
     debugPrint('Firebase iOS:');
     debugPrint('  API Key: ${_mask(firebaseApiKeyIOS)}');

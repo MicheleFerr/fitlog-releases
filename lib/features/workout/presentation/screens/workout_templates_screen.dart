@@ -19,9 +19,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/weight_recov
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:flutter/foundation.dart';
-// GDPR Consent Management
-import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/privacy/consent_dialog.dart';
 // Secure Logging
 import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -33,11 +30,11 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superse
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/superset_template_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
-import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/workout_import_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/all_templates_muscle_overview.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -74,27 +71,6 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         final analytics = ref.read(analyticsServiceProvider);
         final tracker = SupersetTemplateEventTracker(analytics);
         tracker.trackSupersetTabOpened(source: 'tab');
-      }
-    });
-
-    _checkAndShowConsentDialog();
-  }
-
-  /// Check if user needs to provide GDPR consent
-  /// Shows consent dialog if:
-  /// - User hasn't provided consent yet
-  /// - Privacy policy version changed
-  /// - Consent is older than 12 months
-  Future<void> _checkAndShowConsentDialog() async {
-    // Wait for first frame to avoid showing dialog during build
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final hasProvided = await PrivacyManager.hasProvidedConsent();
-      final needsUpdate = await PrivacyManager.needsConsentUpdate();
-
-      if (!hasProvided || needsUpdate) {
-        if (mounted) {
-          await showConsentDialog(context);
-        }
       }
     });
   }
@@ -150,8 +126,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                   firebaseTemplateNotifierProvider.select((s) => s.isSyncing),
                 );
                 final hasOfflineChanges = ref.watch(
-                  firebaseTemplateNotifierProvider
-                      .select((s) => s.hasOfflineChanges),
+                  firebaseTemplateNotifierProvider.select(
+                    (s) => s.hasOfflineChanges,
+                  ),
                 );
                 // syncStatusProvider returns a String with readable status
                 final syncStatus = ref.watch(syncStatusProvider);
@@ -231,10 +208,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             ),
             const Tab(
               text: 'Superset',
-              icon: SemanticIcon(
-                icon: AppIcons.link,
-                semanticLabel: 'Link',
-              ),
+              icon: SemanticIcon(icon: AppIcons.link, semanticLabel: 'Link'),
             ),
             Tab(
               text: l10n.popularTemplates,
@@ -710,20 +684,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
   void _duplicateTemplate(WorkoutTemplate template) async {
     try {
-      // Create a duplicate with "(Copia)" suffix and NEW ID
-      // BUG FIX: Without new ID, the original template would be overwritten
-      final duplicatedTemplate = template.copyWith(
-        id: const Uuid().v4(), // ✅ Generate new unique ID
-        name: '${template.name} (Copia)',
-        isCustom: true,
-        usageCount: 0, // Reset usage count for the copy
-        updatedAt: DateTime.now(),
-      );
-
-      // Save to legacy repository
-      await ref
+      final duplicatedTemplate = await ref
           .read(workoutTemplateNotifierProvider.notifier)
-          .saveTemplate(duplicatedTemplate);
+          .duplicateTemplate(template);
 
       // Invalidate providers to refresh list
       ref.invalidate(customWorkoutTemplatesProvider);
@@ -747,7 +710,8 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   }
 
   void _showCreateTemplateModal(BuildContext context) {
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -794,7 +758,8 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   }
 
   void _showCreateTemplateModalOriginal(BuildContext context) {
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -948,12 +913,34 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     }
   }
 
-  void _editTemplate(WorkoutTemplate template) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => EditTemplateScreen(template: template),
-      ),
-    );
+  Future<void> _editTemplate(WorkoutTemplate template) async {
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate = await repository.ensureEditableTemplate(
+        template,
+      );
+
+      if (!mounted) return;
+
+      if (editableTemplate.id != template.id) {
+        SnackBarService.showInfo(
+          context,
+          context.l10n.templatePrivateDraftCreated(template.name),
+        );
+      }
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => EditTemplateScreen(template: editableTemplate),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      SnackBarService.showError(
+        context,
+        localizeTemplateErrorMessage(context, e),
+      );
+    }
   }
 
   void _deleteTemplate(WorkoutTemplate template) {
@@ -982,97 +969,97 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             label: context.l10n.delete,
             button: true,
             child: FilledButton(
-            onPressed: () async {
-              // Chiudi il dialog di conferma
-              Navigator.of(dialogContext).pop();
+              onPressed: () async {
+                // Chiudi il dialog di conferma
+                Navigator.of(dialogContext).pop();
 
-              // Show loading indicator usando il rootNavigator
-              // ignore: unawaited_futures - dialog intenzionalmente non awaited
-              unawaited(
-                showDialog(
-                  context: rootContext,
-                  barrierDismissible: false,
-                  builder: (_) => const Center(child: LoadingIndicator()),
-                ),
-              );
-
-              try {
-                SecureLogger.info(
-                  'Starting template deletion',
-                  metadata: {
-                    'templateId': SecureLogger.partialRedact(template.id),
-                    'templateName': template.name,
-                  },
+                // Show loading indicator usando il rootNavigator
+                // ignore: unawaited_futures - dialog intenzionalmente non awaited
+                unawaited(
+                  showDialog(
+                    context: rootContext,
+                    barrierDismissible: false,
+                    builder: (_) => const Center(child: LoadingIndicator()),
+                  ),
                 );
 
-                // Delete using workoutTemplateNotifierProvider (handles all repositories)
-                await ref
-                    .read(workoutTemplateNotifierProvider.notifier)
-                    .deleteTemplate(template.id);
-                SecureLogger.success('Template deleted successfully');
-
-                // Invalidate providers to refresh UI
-                SecureLogger.info('Invalidating all template providers');
-                ref.invalidate(customWorkoutTemplatesProvider);
-                ref.invalidate(allWorkoutTemplatesProvider);
-                ref.invalidate(popularTemplatesProvider);
-                ref.invalidate(templateSearchResultsProvider);
-                ref.invalidate(filteredTemplatesProvider);
-
-                // Also invalidate the notifier provider to force reload
-                ref.invalidate(workoutTemplateNotifierProvider);
-
-                // Wait a moment for invalidation to propagate
-                await Future.delayed(const Duration(milliseconds: 100));
-
-                // Force refresh the providers
                 try {
-                  // ignore: unused_result
-                  await ref.refresh(customWorkoutTemplatesProvider.future);
+                  SecureLogger.info(
+                    'Starting template deletion',
+                    metadata: {
+                      'templateId': SecureLogger.partialRedact(template.id),
+                      'templateName': template.name,
+                    },
+                  );
+
+                  // Delete using workoutTemplateNotifierProvider (handles all repositories)
+                  await ref
+                      .read(workoutTemplateNotifierProvider.notifier)
+                      .deleteTemplate(template.id);
+                  SecureLogger.success('Template deleted successfully');
+
+                  // Invalidate providers to refresh UI
+                  SecureLogger.info('Invalidating all template providers');
+                  ref.invalidate(customWorkoutTemplatesProvider);
+                  ref.invalidate(allWorkoutTemplatesProvider);
+                  ref.invalidate(popularTemplatesProvider);
+                  ref.invalidate(templateSearchResultsProvider);
+                  ref.invalidate(filteredTemplatesProvider);
+
+                  // Also invalidate the notifier provider to force reload
+                  ref.invalidate(workoutTemplateNotifierProvider);
+
+                  // Wait a moment for invalidation to propagate
+                  await Future.delayed(const Duration(milliseconds: 100));
+
+                  // Force refresh the providers
+                  try {
+                    // ignore: unused_result
+                    await ref.refresh(customWorkoutTemplatesProvider.future);
+                  } catch (e) {
+                    SecureLogger.warning(
+                      'Error refreshing providers',
+                      metadata: {'error': e.toString()},
+                    );
+                  }
+
+                  SecureLogger.success(
+                    'Template deletion completed successfully',
+                  );
+
+                  // 🔧 FIX: Dismiss loading usando rootNavigator
+                  if (rootNavigator.canPop()) {
+                    rootNavigator.pop();
+                  }
+
+                  // Show success message
+                  if (rootContext.mounted) {
+                    SnackBarService.showSuccess(
+                      rootContext,
+                      '✅ Template "${template.name}" eliminato',
+                    );
+                  }
                 } catch (e) {
-                  SecureLogger.warning(
-                    'Error refreshing providers',
-                    metadata: {'error': e.toString()},
-                  );
-                }
+                  SecureLogger.error('Error deleting template', error: e);
 
-                SecureLogger.success(
-                  'Template deletion completed successfully',
-                );
+                  // 🔧 FIX: Dismiss loading usando rootNavigator
+                  if (rootNavigator.canPop()) {
+                    rootNavigator.pop();
+                  }
 
-                // 🔧 FIX: Dismiss loading usando rootNavigator
-                if (rootNavigator.canPop()) {
-                  rootNavigator.pop();
+                  // Show error message
+                  if (rootContext.mounted) {
+                    SnackBarService.showError(
+                      rootContext,
+                      'Errore nell\'eliminazione: $e',
+                    );
+                  }
                 }
-
-                // Show success message
-                if (rootContext.mounted) {
-                  SnackBarService.showSuccess(
-                    rootContext,
-                    '✅ Template "${template.name}" eliminato',
-                  );
-                }
-              } catch (e) {
-                SecureLogger.error('Error deleting template', error: e);
-
-                // 🔧 FIX: Dismiss loading usando rootNavigator
-                if (rootNavigator.canPop()) {
-                  rootNavigator.pop();
-                }
-
-                // Show error message
-                if (rootContext.mounted) {
-                  SnackBarService.showError(
-                    rootContext,
-                    'Errore nell\'eliminazione: $e',
-                  );
-                }
-              }
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: dialogContext.colors.error,
-            ),
-            child: Text(context.l10n.delete),
+              },
+              style: FilledButton.styleFrom(
+                backgroundColor: dialogContext.colors.error,
+              ),
+              child: Text(context.l10n.delete),
             ),
           ),
         ],

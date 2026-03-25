@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:gymbro_flutter_new/features/scheduling/presentation/models/scheduled_workout_notification_highlight.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 
 /// Read-only view screen for workout templates
 ///
@@ -24,14 +29,20 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// - FAB for starting workout
 /// - Edit action in AppBar menu
 class TemplateViewScreen extends ConsumerWidget {
-  const TemplateViewScreen({super.key, required this.templateId});
+  const TemplateViewScreen({
+    super.key,
+    required this.templateId,
+    this.scheduledWorkoutHighlight,
+  });
 
   final String templateId;
+  final ScheduledWorkoutNotificationHighlight? scheduledWorkoutHighlight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch all custom templates and find the one we need
-    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+    // Watch all templates so notification deep links work for both predefined
+    // and custom routines.
+    final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
 
     return templatesAsync.when(
       data: (templates) {
@@ -41,7 +52,10 @@ class TemplateViewScreen extends ConsumerWidget {
           return _buildNotFoundScreen(context);
         }
 
-        return _TemplateViewContent(template: template);
+        return _TemplateViewContent(
+          template: template,
+          scheduledWorkoutHighlight: scheduledWorkoutHighlight,
+        );
       },
       loading: () => Scaffold(
         appBar: AppBar(),
@@ -85,9 +99,13 @@ class TemplateViewScreen extends ConsumerWidget {
 }
 
 class _TemplateViewContent extends ConsumerWidget {
-  const _TemplateViewContent({required this.template});
+  const _TemplateViewContent({
+    required this.template,
+    this.scheduledWorkoutHighlight,
+  });
 
   final WorkoutTemplate template;
+  final ScheduledWorkoutNotificationHighlight? scheduledWorkoutHighlight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -102,7 +120,7 @@ class _TemplateViewContent extends ConsumerWidget {
               semanticLabel: context.l10n.menuOptions,
               size: AppIconSize.medium,
             ),
-            onPressed: () => _showActionsSheet(context),
+            onPressed: () => _showActionsSheet(context, ref),
           ),
         ],
       ),
@@ -111,8 +129,14 @@ class _TemplateViewContent extends ConsumerWidget {
           // Presentation mode banner
           _buildPresentationBanner(context),
 
+          if (scheduledWorkoutHighlight != null)
+            _buildScheduledReminderBanner(context, scheduledWorkoutHighlight!),
+
           // Template info header
           _buildTemplateHeader(context),
+
+          if (template.visibility == TemplateVisibility.unlisted)
+            _buildPrivateShareCodePanel(context),
 
           // Exercise list
           Expanded(
@@ -165,6 +189,10 @@ class _TemplateViewContent extends ConsumerWidget {
   }
 
   Widget _buildPresentationBanner(BuildContext context) {
+    final bannerText = template.isEditable
+        ? context.l10n.libraryEditableBanner
+        : context.l10n.templateReadOnlyStoreBanner;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -180,10 +208,69 @@ class _TemplateViewContent extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            context.l10n.templateViewMode,
+            bannerText,
             style: context.textTheme.labelLarge?.copyWith(
               color: context.colors.onPrimaryContainer,
               fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScheduledReminderBanner(
+    BuildContext context,
+    ScheduledWorkoutNotificationHighlight highlight,
+  ) {
+    final materialLocalizations = MaterialLocalizations.of(context);
+    final whenLabel = highlight.isToday
+        ? context.l10n.scheduledForToday
+        : highlight.isTomorrow
+        ? context.l10n.scheduledForTomorrow
+        : materialLocalizations.formatMediumDate(highlight.scheduledDate);
+    final reminderTimeLabel = materialLocalizations.formatTimeOfDay(
+      highlight.reminderTime,
+      alwaysUse24HourFormat: MediaQuery.of(context).alwaysUse24HourFormat,
+    );
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: context.colors.tertiaryContainer,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          SemanticIcon(
+            icon: AppIcons.schedule,
+            semanticLabel: context.l10n.workoutReminderTitle,
+            size: AppIconSize.medium,
+            color: context.colors.onTertiaryContainer,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.workoutReminderTitle,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colors.onTertiaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$whenLabel • ${context.l10n.reminderTime}: $reminderTimeLabel',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onTertiaryContainer.withValues(
+                      alpha: 0.85,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -209,25 +296,48 @@ class _TemplateViewContent extends ConsumerWidget {
           ],
 
           // Metadata row
-          Row(
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
             children: [
               _buildMetadataChip(
                 context,
                 icon: AppIcons.workout,
                 label: context.l10n.exerciseCount(template.exercises.length),
               ),
-              const SizedBox(width: 12),
               _buildMetadataChip(
                 context,
                 icon: AppIcons.timer,
                 label: '~${template.estimatedDuration} min',
               ),
-              if (template.difficulty != null) ...[
-                const SizedBox(width: 12),
+              if (template.difficulty != null)
                 _buildMetadataChip(
                   context,
                   icon: AppIcons.analytics,
                   label: template.difficulty!,
+                ),
+              if (template.isDistributedTemplate) ...[
+                _buildMetadataChip(
+                  context,
+                  icon: AppIcons.layers,
+                  label: 'V${template.versionNumber}',
+                ),
+                _buildMetadataChip(
+                  context,
+                  icon: template.isPublic ? AppIcons.public : AppIcons.lock,
+                  label: template.isPublic
+                      ? context.l10n.templatePublishedStatus
+                      : context.l10n.templatePrivateLinkStatus,
+                ),
+                _buildMetadataChip(
+                  context,
+                  icon: AppIcons.download,
+                  label: '${template.downloadCount}',
+                ),
+                _buildMetadataChip(
+                  context,
+                  icon: AppIcons.history,
+                  label: '${template.usageCount}',
                 ),
               ],
             ],
@@ -269,7 +379,110 @@ class _TemplateViewContent extends ConsumerWidget {
     );
   }
 
-  void _showActionsSheet(BuildContext context) {
+  Widget _buildPrivateShareCodePanel(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: context.colors.secondaryContainer.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.templatePrivateShareCodeTitle,
+            style: context.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            context.l10n.templatePrivateShareCodeDescription(template.name),
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 10),
+          SelectableText(
+            template.id,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: template.id));
+                  if (context.mounted) {
+                    SnackBarService.showSuccess(
+                      context,
+                      context.l10n.codeCopied,
+                    );
+                  }
+                },
+                icon: const Icon(AppIcons.copy, size: 18),
+                label: Text(context.l10n.copyCode),
+              ),
+              FilledButton.tonalIcon(
+                onPressed: () async {
+                  await SharePlus.instance.share(
+                    ShareParams(
+                      text:
+                          '${context.l10n.templatePrivateShareCodeMessage(template.name, template.id)}\n'
+                          '${context.l10n.templatePrivateShareCodeInstructions}',
+                    ),
+                  );
+                },
+                icon: const Icon(AppIcons.share, size: 18),
+                label: Text(context.l10n.shareCode),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  WorkoutTemplate? _findEditableSourceTemplate(
+    List<WorkoutTemplate> templates,
+  ) {
+    final matches =
+        templates.where((candidate) {
+          if (!candidate.isEditable) return false;
+          if (candidate.id == template.parentTemplateId) return true;
+          if (candidate.id == template.rootTemplateId) return true;
+          return candidate.effectiveRootTemplateId ==
+              template.effectiveRootTemplateId;
+        }).toList()..sort((a, b) {
+          int score(WorkoutTemplate item) {
+            var value = 0;
+            if (item.id == template.parentTemplateId) value += 6;
+            if (item.id == template.rootTemplateId) value += 4;
+            if (item.effectiveRootTemplateId ==
+                template.effectiveRootTemplateId) {
+              value += 2;
+            }
+            if (item.isOriginalTemplate == template.isOriginalTemplate) {
+              value += 1;
+            }
+            return value;
+          }
+
+          final compare = score(b).compareTo(score(a));
+          if (compare != 0) return compare;
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+
+    return matches.isEmpty ? null : matches.first;
+  }
+
+  void _showActionsSheet(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     showCupertinoModalPopup<void>(
       context: context,
@@ -278,7 +491,7 @@ class _TemplateViewContent extends ConsumerWidget {
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(sheetContext);
-              _navigateToEdit(context);
+              _navigateToEdit(context, ref);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -286,8 +499,13 @@ class _TemplateViewContent extends ConsumerWidget {
                 Icon(AppIcons.edit, color: colorScheme.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  context.l10n.edit,
-                  style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                  template.isEditable
+                      ? context.l10n.edit
+                      : context.l10n.customizeYourCopy,
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -302,19 +520,42 @@ class _TemplateViewContent extends ConsumerWidget {
     );
   }
 
-  void _navigateToEdit(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => EditTemplateScreen(template: template),
-      ),
-    );
+  Future<void> _navigateToEdit(BuildContext context, WidgetRef ref) async {
+    try {
+      final ownedTemplates =
+          ref.read(customWorkoutTemplatesProvider).value ?? [];
+      final existingSource = _findEditableSourceTemplate(ownedTemplates);
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate =
+          existingSource ?? await repository.ensureEditableTemplate(template);
+
+      if (!context.mounted) return;
+
+      if (existingSource == null && editableTemplate.id != template.id) {
+        SnackBarService.showInfo(
+          context,
+          context.l10n.templatePrivateDraftCreated(template.name),
+        );
+      }
+
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => EditTemplateScreen(template: editableTemplate),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      SnackBarService.showError(
+        context,
+        localizeTemplateErrorMessage(context, e),
+      );
+    }
   }
 
   void _startWorkout(BuildContext context, WidgetRef ref) {
     HapticFeedback.mediumImpact();
-    // Pop back and trigger workout start
-    // The parent screen handles the actual workout start logic
-    context.pop(template);
+    final encodedTemplateId = Uri.encodeComponent(template.id);
+    context.go('${AppRoutes.workoutPath}/start/$encodedTemplateId');
   }
 }
 
@@ -544,7 +785,10 @@ class _ExerciseViewTile extends StatelessWidget {
   ) {
     final weightStr = weight != null ? _formatWeight(weight) : '—';
     final repsStr = sets
-        .map((s) => s.hasRepRange ? s.repsDisplay : (s.targetReps?.toString() ?? '?'))
+        .map(
+          (s) =>
+              s.hasRepRange ? s.repsDisplay : (s.targetReps?.toString() ?? '?'),
+        )
         .join(' • ');
 
     return Container(

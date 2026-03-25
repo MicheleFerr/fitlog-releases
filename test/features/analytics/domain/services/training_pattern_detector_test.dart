@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/correlation_result.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_analytics_data.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/training_pattern.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific_metrics_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/training_pattern_detector.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 
@@ -40,27 +39,33 @@ void main() {
     final weightPoints = (weights ?? [100, 100, 100, 100, 100])
         .asMap()
         .entries
-        .map((e) => ChartDataPoint(
-              date: DateTime(2025, 1, 1 + e.key),
-              value: e.value,
-            ))
+        .map(
+          (e) => ChartDataPoint(
+            date: DateTime(2025, 1, 1 + e.key),
+            value: e.value,
+          ),
+        )
         .toList();
     final rpePoints = (rpes ?? [7, 7, 7, 7, 7])
         .asMap()
         .entries
-        .map((e) => ChartDataPoint(
-              date: DateTime(2025, 1, 1 + e.key),
-              value: e.value,
-              rpe: e.value.toInt(),
-            ))
+        .map(
+          (e) => ChartDataPoint(
+            date: DateTime(2025, 1, 1 + e.key),
+            value: e.value,
+            rpe: e.value.toInt(),
+          ),
+        )
         .toList();
     final volumePoints = (volumes ?? [3000, 3000, 3000, 3000, 3000])
         .asMap()
         .entries
-        .map((e) => ChartDataPoint(
-              date: DateTime(2025, 1, 1 + e.key),
-              value: e.value,
-            ))
+        .map(
+          (e) => ChartDataPoint(
+            date: DateTime(2025, 1, 1 + e.key),
+            value: e.value,
+          ),
+        )
         .toList();
 
     return ExerciseAnalyticsData(
@@ -78,7 +83,9 @@ void main() {
         recommendation: '',
       ),
       overload: ProgressiveOverloadData(
-        currentPercent: overloadStatus == OverloadStatus.aboveTarget ? 25.0 : 5.0,
+        currentPercent: overloadStatus == OverloadStatus.aboveTarget
+            ? 25.0
+            : 5.0,
         targetMin: 2.0,
         targetMax: 10.0,
         status: overloadStatus,

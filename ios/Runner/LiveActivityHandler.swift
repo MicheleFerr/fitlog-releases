@@ -2,26 +2,6 @@ import Foundation
 import ActivityKit
 import Flutter
 
-
-// MARK: - Timer Notification Localization
-/// Simple localization helper for timer notification strings
-/// Supports IT and EN (default)
-struct TimerNotificationStrings {
-    static var timerComplete: String {
-        if Locale.current.language.languageCode?.identifier == "it" {
-            return "⏰ Timer Completato!"
-        }
-        return "⏰ Timer Complete"
-    }
-
-    static var restTimerFinished: String {
-        if Locale.current.language.languageCode?.identifier == "it" {
-            return "Il tuo timer è terminato"
-        }
-        return "Your timer has finished"
-    }
-}
-
 @available(iOS 16.1, *)
 class LiveActivityHandler: NSObject {
     static let shared = LiveActivityHandler()
@@ -36,7 +16,6 @@ class LiveActivityHandler: NSObject {
 
     // CRITICAL FIX: Thread-safe state management
     private let activityQueue = DispatchQueue(label: "com.gymbro.liveactivity.state", qos: .userInitiated)
-    private var scheduledNotificationId: String?  // Track scheduled notification for cancellation
 
     // THREAD-SAFE: Protected state tracking - accessed via activityQueue
     private var _lastRunningState: Bool = false  // Track previous running state to detect resume
@@ -56,6 +35,14 @@ class LiveActivityHandler: NSObject {
     // WATCH-FIX: Reduced from 5s to 3s - Apple Watch may hide activities with infrequent updates
     private let updateThrottleInterval: TimeInterval = 3.0  // 3 seconds for timers >= 60s
 
+    private func mainThreadResult(_ result: @escaping FlutterResult) -> FlutterResult {
+        return { value in
+            DispatchQueue.main.async {
+                result(value)
+            }
+        }
+    }
+
     private override init() {
         super.init()
     }
@@ -64,14 +51,6 @@ class LiveActivityHandler: NSObject {
     deinit {
         // Cancel any pending work items
         completionLogWorkItem?.cancel()
-
-        // Cancel background audio
-        BackgroundAudioManager.shared.cancelScheduledAudio()
-
-        // Cancel any scheduled notifications
-        if let notificationId = scheduledNotificationId {
-            DirectNotificationManager.shared.cancelNotification(identifier: notificationId)
-        }
 
         Logger.shared.debug("🧹 LiveActivityHandler deallocated - cleaned up resources", category: .general)
     }
@@ -134,9 +113,6 @@ class LiveActivityHandler: NSObject {
             for activity in activities {
                 Logger.shared.debug("🏁 Ending GymBroTimer Live Activity: \(activity.id)", category: .general)
 
-                // Cancel background audio for this activity
-                BackgroundAudioManager.shared.cancelScheduledAudio()
-
                 // Create final content state
                 let finalContentState = GymBroTimerAttributes.ContentState(
                     remainingSeconds: 0,
@@ -172,6 +148,24 @@ class LiveActivityHandler: NSObject {
             Logger.shared.debug("✅ All Live Activities ended successfully", category: .general)
             await MainActor.run { result(true) }
         }
+    }
+
+    /// Best-effort cleanup used while the host app is terminating.
+    /// This prevents stale Dynamic Island entries from surviving briefly after
+    /// the process exits and trying to reopen a dead app instance.
+    func endAllActivitiesForAppTermination() async {
+        Logger.shared.debug("🛑 LiveActivityHandler: endAllActivitiesForAppTermination called", category: .general)
+
+        cleanupActivityState()
+        await endAllActivities(keepCurrent: false)
+
+        if #available(iOS 17.0, *) {
+            await WorkoutSessionManager.shared.endAllSessionsForCleanup()
+        }
+
+        currentActivity = nil
+        currentRPEActivity = nil
+        Logger.shared.debug("✅ LiveActivityHandler: app termination cleanup finished", category: .general)
     }
 
     /// Public method to get active Live Activities (called from UnifiedTimerCoordinator)
@@ -232,13 +226,14 @@ class LiveActivityHandler: NSObject {
     }
     
     private func startLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
-            result(FlutterError(code: "DISABLED", message: "Live Activities are disabled", details: nil))
+            safeResult(FlutterError(code: "DISABLED", message: "Live Activities are disabled", details: nil))
             return
         }
         
         guard let args = arguments else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing arguments", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing arguments", details: nil))
             return
         }
         
@@ -257,13 +252,11 @@ class LiveActivityHandler: NSObject {
             } catch {
                 // ASYNC FIX: Ensure result is ALWAYS called, even on error
                 Logger.shared.log(.error, "❌ Failed during Live Activity creation: \(error)", category: .general)
-                await MainActor.run {
-                    result(FlutterError(
-                        code: "ASYNC_ERROR",
-                        message: "Failed during Live Activity setup: \(error.localizedDescription)",
-                        details: nil
-                    ))
-                }
+                safeResult(FlutterError(
+                    code: "ASYNC_ERROR",
+                    message: "Failed during Live Activity setup: \(error.localizedDescription)",
+                    details: nil
+                ))
             }
         }
 
@@ -272,6 +265,7 @@ class LiveActivityHandler: NSObject {
     }
     
     private func createNewLiveActivity(_ args: [String: Any], result: @escaping FlutterResult) async {
+        let safeResult = mainThreadResult(result)
         // Extract parameters
         guard let exerciseName = args["exerciseName"] as? String,
               let timerType = args["timerType"] as? String,
@@ -281,7 +275,7 @@ class LiveActivityHandler: NSObject {
               let currentSet = args["currentSet"] as? Int,
               let totalSets = args["totalSets"] as? Int,
               let lastUpdated = args["lastUpdated"] as? Int64 else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required parameters", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required parameters", details: nil))
             return
         }
 
@@ -298,14 +292,14 @@ class LiveActivityHandler: NSObject {
 
         if let error = validationError {
             Logger.shared.log(.error, "❌ Timer state validation failed: \(error)", category: .general)
-            result(FlutterError(code: "INVALID_STATE", message: error, details: nil))
+            safeResult(FlutterError(code: "INVALID_STATE", message: error, details: nil))
             return
         }
 
         Logger.shared.debug( "✅ Timer state validation passed", category: .general)
         
         let workoutName = args["workoutName"] as? String
-        let soundName = args["soundName"] as? String ?? "sound"  // Get sound name from args
+        let soundName = args["soundName"] as? String ?? RestTimerNotificationSupport.defaultSoundName
         
         // Create activity attributes
         let attributes = GymBroTimerAttributes(
@@ -327,35 +321,24 @@ class LiveActivityHandler: NSObject {
         // Initialize state tracking for this new activity
         self.lastRunningState = isRunning
         
-        // 🔔 CRITICAL FIX: Schedule notification IMMEDIATELY when timer starts
-        // This ensures the notification will fire even if app is killed after 30 seconds
-        // ALWAYS schedule notification if timer is running, regardless of remaining time
+        // Timer completion ownership lives outside the Live Activity.
+        // This handler mirrors UI state only.
         if isRunning && remainingSeconds > 0 {
-            Logger.shared.debug("Scheduling notification for timer completion with \(remainingSeconds)s remaining", category: .general)
+            Logger.shared.debug("Tracking running Live Activity with \(remainingSeconds)s remaining", category: .general)
             
-            // APPLE WATCH FIX: Dual notification strategy
-            // 1. Watch display notification (NO SOUND) - for UI info only
-            // 2. Timer completion handled by BackgroundAudioManager for precise audio timing
-
-            let baseId = "gymbro_timer_\(Date().timeIntervalSince1970)"
-            let watchNotificationId = "watch_display_\(baseId)"
-
-            // CRITICAL FIX: Don't schedule Apple Watch notification that conflicts with completion notification
-            // The Apple Watch will receive the completion notification from Flutter
-            // This prevents the "rest in progress" message from appearing when timer finishes
+            // The rest-timer completion cue is owned by the shared scheduler.
+            // Live Activity stays UI-only and must not introduce a second alert path.
             Logger.shared.debug("""
                 ⏭️ [WATCH-FIX] SKIPPING Apple Watch notification to prevent conflicts:
                 - Would have shown: "Timer: \(remainingSeconds)s rest in progress..."
                 - This was causing incorrect notification at completion
-                - Apple Watch will receive proper completion notification from Flutter
+                - Completion remains owned by the shared rest timer scheduler
                 """, category: .general)
             
-            // No notification scheduled - clear ID to prevent confusion
-            self.scheduledNotificationId = nil
             Logger.shared.debug("""
                 ✅ [WATCH-FIX] Clean notification strategy implemented:
                 - No conflicting Apple Watch notification scheduled
-                - Timer completion handled by Flutter with proper localization
+                - Timer completion handled by the shared rest timer scheduler
                 - Prevents "rest in progress" message at completion
                 - Short timer warning: \(remainingSeconds <= 5 ? "YES - \(remainingSeconds)s" : "NO")
                 """, category: .general)
@@ -370,7 +353,7 @@ class LiveActivityHandler: NSObject {
 
                     Logger.shared.debug("""
                         ⏰ [TIMER-DEBUG] LIVE ACTIVITY TIMER SHOULD BE COMPLETE NOW:
-                        - Notification ID: \(watchNotificationId)
+                        - Notification owner: shared rest timer scheduler
                         - Expected sound: \(soundName)
                         - Time: \(Date())
                         - App State: \(UIApplication.shared.applicationState == .active ? "Active" : UIApplication.shared.applicationState == .background ? "Background" : "Inactive")
@@ -411,27 +394,16 @@ class LiveActivityHandler: NSObject {
             
             self.currentActivity = activity
             
-            // APPLE WATCH FIX: BackgroundAudioManager handles REAL timer completion with sound
             if isRunning {
-                // BackgroundAudioManager will handle the actual timer completion and audio playback
-                // This ensures audio plays at EXACTLY 00:00, not when Watch notification is dismissed
-                BackgroundAudioManager.shared.scheduleTimerAudio(
-                    duration: TimeInterval(remainingSeconds),
-                    soundName: soundName,
-                    skipNotification: false  // Let BackgroundAudioManager handle its own notification for audio
-                )
-
                 Logger.shared.debug("""
-                    🎵 [WATCH-FIX] BackgroundAudioManager handling timer completion:
+                    🎵 [TIMER-LA] Completion scheduling owned by UnifiedTimerCoordinator:
                     - Timer duration: \(remainingSeconds)s
                     - Sound: \(soundName)
-                    - Silent loop: ACTIVE (for timers > 30s)
-                    - Will trigger audio at EXACTLY 00:00 (not on Watch dismissal)
-                    - Watch notification is SILENT display only
+                    - Live Activity only mirrors timer UI
                     """, category: .audioSession)
             }
             
-            await MainActor.run { result(activity.id) }
+            safeResult(activity.id)
 
             Logger.shared.debug( "✅ Live Activity created successfully with ID: \(activity.id)", category: .general)
             
@@ -516,20 +488,7 @@ class LiveActivityHandler: NSObject {
                         self.currentActivity = retryActivity
                         Logger.shared.debug("✅ [VISIBILITY-RETRY] Retry SUCCEEDED! Activity ID: \(retryActivity.id)", category: .general)
 
-                        // Schedule audio for retry activity too
-                        let remainingSecs = args["remainingSeconds"] as? Int ?? 0
-                        let soundName = args["soundName"] as? String ?? "sound"
-                        if (args["isRunning"] as? Bool ?? false) && remainingSecs > 0 {
-                            BackgroundAudioManager.shared.scheduleTimerAudio(
-                                duration: TimeInterval(remainingSecs),
-                                soundName: soundName,
-                                skipNotification: false
-                            )
-                        }
-
-                        await MainActor.run {
-                            result(retryActivity.id)
-                        }
+                        safeResult(retryActivity.id)
                         return
                     } catch {
                         Logger.shared.log(.warning, "⚠️ [VISIBILITY-RETRY] Retry also failed: \(error.localizedDescription)", category: .general)
@@ -548,7 +507,7 @@ class LiveActivityHandler: NSObject {
                     """, category: .general)
             }
 
-            result(FlutterError(
+            safeResult(FlutterError(
                 code: errorCode,
                 message: errorMessage,
                 details: [
@@ -624,7 +583,6 @@ class LiveActivityHandler: NSObject {
                     // Clean up state
                     DispatchQueue.main.async {
                         self?.currentActivity = nil
-                        self?.scheduledNotificationId = nil
                         Logger.shared.debug( "✅ Live Activity ended due to timer completion", category: .general)
                         result(["status": "completed_and_ended"])
                     }
@@ -650,15 +608,15 @@ class LiveActivityHandler: NSObject {
             return
         }
         
-        let soundName = args["soundName"] as? String ?? "sound"
+        let soundName = args["soundName"] as? String ?? RestTimerNotificationSupport.defaultSoundName
         
         // Only log every 10 seconds to reduce spam
         if remainingSeconds % 10 == 0 || remainingSeconds <= 5 {
             Logger.shared.log(.debug, "🔄 Live Activity: \(remainingSeconds)s remaining", category: .general)
         }
         
-        // 🔔 CRITICAL FIX: Only reschedule notification if timer state changes (pause/resume)
-        // DO NOT reschedule on every update - this causes sound to not play on locked devices
+        // Notification ownership is managed outside Live Activity updates.
+        // Only UI state transitions are tracked here.
         
         // Detect state transitions
         let wasRunning = self.lastRunningState
@@ -668,115 +626,24 @@ class LiveActivityHandler: NSObject {
         // Update state tracker for next call
         self.lastRunningState = isRunning
 
-        // Handle pause transition - cancel audio scheduling
         if justPaused {
             Logger.shared.debug("""
                 ⏸️ [TIMER-DEBUG] Timer paused:
-                - Cancelling background audio
-                - Cancelling scheduled notifications
+                - Completion ownership remains outside Live Activity
                 """, category: .general)
-
-            // Cancel background audio when paused
-            BackgroundAudioManager.shared.cancelScheduledAudio()
-
-            // Cancel notification if exists
-            if let existingId = self.scheduledNotificationId {
-                DirectNotificationManager.shared.cancelNotification(identifier: existingId)
-                self.scheduledNotificationId = nil
-            }
         }
 
         if isRunning && remainingSeconds > 0 {
-            // Check if we need to schedule a new notification
-            // Only schedule if:
-            // 1. Timer was just resumed (transition from paused to running)
-            // 2. No notification is currently scheduled (first start or after cancellation)
-
-            let needsNewNotification = justResumed || self.scheduledNotificationId == nil
-
-            if needsNewNotification {
-                Logger.shared.debug("""
-                    🔔 [TIMER-DEBUG] Scheduling notification and audio:
-                    - Reason: \(justResumed ? "Timer resumed" : "First start (no existing notification)")
-                    - Remaining: \(remainingSeconds)s
-                    - Sound: \(soundName)
-                    - Previous notification: \(self.scheduledNotificationId != nil ? "Will be replaced" : "None")
-                    """, category: .general)
-
-                // If we have an existing notification, cancel it first
-                if let existingId = self.scheduledNotificationId {
-                    DirectNotificationManager.shared.cancelNotification(identifier: existingId)
-                    Logger.shared.debug( "🔄 Cancelled previous notification: \(existingId)", category: .general)
-                }
-
-                // CRITICAL FIX: Schedule audio through BackgroundAudioManager on FIRST START AND resume
-                // This starts the silent loop which keeps the app alive in background
-                // Without silent loop, iOS suspends the app and only notification plays (which respects mute!)
-                // With silent loop, AVAudioPlayer plays which BYPASSES mute switch!
-                if needsNewNotification {
-                    BackgroundAudioManager.shared.scheduleTimerAudio(
-                        duration: TimeInterval(remainingSeconds),
-                        soundName: soundName,
-                        skipNotification: true  // Skip notification here - we schedule it directly below with proper tracking
-                    )
-                    Logger.shared.debug("""
-                        🎵 [MUTE-BYPASS] BackgroundAudioManager started for mute switch bypass:
-                        - Reason: \(justResumed ? "Timer resumed" : "First start")
-                        - Remaining: \(remainingSeconds)s
-                        - Sound: \(soundName)
-                        - Silent loop: Will keep app alive in background
-                        - AVAudioPlayer: Will play sound (bypasses mute switch!)
-                        - Notification: Scheduled separately below (for visual + backup)
-                        """, category: .audioSession)
-                }
-
-                // FIX: Schedule iOS native notification for LOCKSCREEN AUDIO
-                // Flutter can't send notifications when app is suspended - iOS notification is REQUIRED!
-                Logger.shared.debug("""
-                    🔔 [NOTIFICATION-FIX] Scheduling iOS native completion notification:
-                    - This is REQUIRED for lockscreen audio when app is suspended
-                    - Flutter cannot send notifications from background
-                    - iOS notification sound plays even when device is locked
-                    """, category: .general)
-
-                // Schedule the notification with the timer sound
-                // ✅ FIX: This is now a BACKUP notification with sound
-                // Normal flow: Flutter cancels this and sends its own notification when timer completes
-                // Fallback: If Flutter fails/crashes, this notification will fire WITH SOUND
-                print("📢 [NOTIFICATION-SOURCE-B] 🔶 LiveActivityHandler BACKUP notification:")
-                print("   - Source: iOS native (scheduled at timer START)")
-                print("   - Fire in: \(remainingSeconds)s")
-                print("   - Sound: \(soundName)")
-                print("   - Timestamp: \(Date())")
-                print("   - ⚠️ This should be CANCELLED by Flutter before it fires!")
-                let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
-                    after: TimeInterval(remainingSeconds),
-                    soundName: soundName,
-                    title: TimerNotificationStrings.timerComplete,
-                    body: TimerNotificationStrings.restTimerFinished,
-                    silentLoopHandlesAudio: false  // Has sound - backup if Flutter fails
-                )
-                self.scheduledNotificationId = notificationId
-
-                Logger.shared.debug("""
-                    ✅ [TIMER-DEBUG] Notification scheduled for lockscreen audio:
-                    - Notification ID: \(notificationId)
-                    - Timer duration: \(remainingSeconds)s
-                    - Sound: \(soundName)
-                    - Completion expected at: \(Date().addingTimeInterval(TimeInterval(remainingSeconds)))
-                    """, category: .general)
-            } else {
-                // Notification already scheduled - DO NOT reschedule
-                // This prevents the issue where frequent updates cancel the sound
-                Logger.shared.log(.debug, """
-                    ⏸️ [TIMER-DEBUG] Keeping existing notification (no reschedule needed):
-                    - Existing ID: \(self.scheduledNotificationId ?? "unknown")
-                    - Timer still running, notification will fire as scheduled
-                    """, category: .general)
-            }
+            Logger.shared.debug("""
+                🔔 [TIMER-LA] Completion scheduling delegated to UnifiedTimerCoordinator:
+                - Reason: \(justResumed ? "Timer resumed" : "Timer running")
+                - Remaining: \(remainingSeconds)s
+                - Sound: \(soundName)
+                - Live Activity update stays UI-only
+                """, category: .general)
             
             if remainingSeconds <= 5 {
-                Logger.shared.debug( "   ⚠️ [TIMER-DEBUG] Short timer (\(remainingSeconds)s) - notification will fire soon", category: .general)
+                Logger.shared.debug( "   ⚠️ [TIMER-LA] Short timer (\(remainingSeconds)s) - UI update only", category: .general)
             }
             
             // Set up debug logging for when timer completes (only once, not every update)
@@ -789,7 +656,7 @@ class LiveActivityHandler: NSObject {
 
                 Logger.shared.debug("""
                     ⏰ [TIMER-DEBUG] LIVE ACTIVITY UPDATE - Timer should be complete NOW:
-                    - Notification ID: \(self.scheduledNotificationId ?? "none")
+                    - Notification owner: shared rest timer scheduler
                     - Expected sound: \(soundName)
                     - Time: \(Date())
                     - App State: \(UIApplication.shared.applicationState == .active ? "Active" : UIApplication.shared.applicationState == .background ? "Background" : "Inactive")
@@ -803,17 +670,6 @@ class LiveActivityHandler: NSObject {
 
             completionLogWorkItem = workItem
             DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(remainingSeconds), execute: workItem)
-            
-        } else if justPaused, let notificationId = self.scheduledNotificationId {
-            // Timer was just paused - cancel the notification
-            // SAFETY FIX: Using optional binding instead of force unwrap
-            Logger.shared.debug("""
-                ⏸️ [TIMER-DEBUG] Timer paused - cancelling notification:
-                - Cancelled ID: \(notificationId)
-                - Remaining seconds when paused: \(remainingSeconds)
-                """, category: .general)
-            DirectNotificationManager.shared.cancelNotification(identifier: notificationId)
-            self.scheduledNotificationId = nil
         } else if !isRunning {
             // Timer remains paused - no action needed
             Logger.shared.log(.debug, "⏸️ [TIMER-DEBUG] Timer remains paused - no notification changes", category: .general)
@@ -923,23 +779,6 @@ class LiveActivityHandler: NSObject {
         completionLogWorkItem = nil
 
         let dismissalPolicy = args["dismissalPolicy"] as? String ?? "immediate"
-        let cancelNotification = args["cancelNotification"] as? Bool ?? true  // Default to cancelling
-
-        // 🔔 CRITICAL: Cancel scheduled notification AND background audio if timer is stopped manually
-        // This prevents notification from firing if user stops timer before completion
-        if cancelNotification {
-            // Cancel notification
-            if let notificationId = self.scheduledNotificationId {
-                Logger.shared.debug( "🔕 Cancelling scheduled notification: \(notificationId)", category: .general)
-                DirectNotificationManager.shared.cancelNotification(identifier: notificationId)
-                self.scheduledNotificationId = nil
-            }
-
-            // CRITICAL FIX: Also cancel background audio
-            BackgroundAudioManager.shared.cancelScheduledAudio()
-            Logger.shared.debug( "🔕 Cancelled background audio for Live Activity", category: .general)
-        }
-        
         // Find the activity by ID
         let activity = Activity<GymBroTimerAttributes>.activities.first { $0.id == activityId }
 
@@ -1010,24 +849,9 @@ class LiveActivityHandler: NSObject {
         result(activityIds)
     }
     
-    // MARK: - Timer Completion Handler
-    /// Called when timer completes naturally (not stopped manually)
-    func handleTimerCompletion() {
-        // Clear the scheduled notification ID since it fired
-        if let notificationId = self.scheduledNotificationId {
-            Logger.shared.debug( "✅ Timer completed - notification \(notificationId) should have fired", category: .general)
-            self.scheduledNotificationId = nil
-        }
-    }
-    
     // MARK: - End All Activities (for single timer architecture)
     private func endAllActivities(keepCurrent: Bool = false) async {
         Logger.shared.debug( "🧹 Ending all existing Live Activities (keepCurrent: \(keepCurrent))", category: .general)
-
-        // CRITICAL FIX: Cancel background audio for ALL activities being ended
-        // This prevents audio from playing when a new timer starts
-        BackgroundAudioManager.shared.cancelScheduledAudio()
-        Logger.shared.debug( "🔕 Cancelled background audio for all ending activities", category: .general)
 
         // Get all timer activities
         let activities = Activity<GymBroTimerAttributes>.activities
@@ -1163,9 +987,10 @@ class LiveActivityHandler: NSObject {
     }
 
     private func updateRPEInterface(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard let args = arguments,
               let activityId = args["activityId"] as? String else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
             return
         }
         
@@ -1173,7 +998,7 @@ class LiveActivityHandler: NSObject {
         let activity = Activity<GymBroRPEAttributes>.activities.first { $0.id == activityId }
         
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "RPE Activity not found", details: nil))
+            safeResult(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "RPE Activity not found", details: nil))
             return
         }
         
@@ -1200,16 +1025,17 @@ class LiveActivityHandler: NSObject {
                     staleDate: nil as Date?
                 )
             )
-            result(true)
+            safeResult(true)
         }
     }
     
     private func confirmRPEAndCompleteSet(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard let args = arguments,
               let activityId = args["activityId"] as? String,
               let actualReps = args["actualReps"] as? Int,
               let rpe = args["rpe"] as? Int else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required confirmation parameters", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required confirmation parameters", details: nil))
             return
         }
         
@@ -1219,7 +1045,7 @@ class LiveActivityHandler: NSObject {
         let activity = Activity<GymBroRPEAttributes>.activities.first { $0.id == activityId }
         
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "RPE Activity not found", details: nil))
+            safeResult(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "RPE Activity not found", details: nil))
             return
         }
         
@@ -1270,14 +1096,15 @@ class LiveActivityHandler: NSObject {
                 }
             }
             
-            result(true)
+            safeResult(true)
         }
     }
     
     private func dismissRPEInterface(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard let args = arguments,
               let activityId = args["activityId"] as? String else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
             return
         }
         
@@ -1285,7 +1112,7 @@ class LiveActivityHandler: NSObject {
         let activity = Activity<GymBroRPEAttributes>.activities.first { $0.id == activityId }
         
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "RPE Activity not found", details: nil))
+            safeResult(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "RPE Activity not found", details: nil))
             return
         }
         
@@ -1310,7 +1137,7 @@ class LiveActivityHandler: NSObject {
                 self.currentRPEActivity = nil
             }
             
-            result(true)
+            safeResult(true)
         }
     }
 
@@ -1439,12 +1266,6 @@ class LiveActivityHandler: NSObject {
             completionLogWorkItem?.cancel()
             completionLogWorkItem = nil
 
-            // Clear notification tracking
-            if let notificationId = scheduledNotificationId {
-                DirectNotificationManager.shared.cancelNotification(identifier: notificationId)
-                scheduledNotificationId = nil
-            }
-
             // Reset state tracking (thread-safe via computed properties)
             _lastRunningState = false
             _lastUpdateTime = nil
@@ -1514,13 +1335,14 @@ class LiveActivityHandler: NSObject {
 
     /// Start a schedule countdown Live Activity
     func startScheduleLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
-            result(FlutterError(code: "DISABLED", message: "Live Activities are disabled", details: nil))
+            safeResult(FlutterError(code: "DISABLED", message: "Live Activities are disabled", details: nil))
             return
         }
 
         guard let args = arguments else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing arguments", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing arguments", details: nil))
             return
         }
 
@@ -1528,7 +1350,7 @@ class LiveActivityHandler: NSObject {
         guard let workoutName = args["workoutName"] as? String,
               let workoutId = args["workoutId"] as? String,
               let scheduledTimestamp = args["scheduledTimestamp"] as? Int64 else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required schedule parameters", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required schedule parameters", details: nil))
             return
         }
 
@@ -1587,7 +1409,7 @@ class LiveActivityHandler: NSObject {
 
                 self.currentScheduleActivity = activity
                 Logger.shared.debug("✅ Schedule Live Activity created: \(activity.id)", category: .general)
-                result(activity.id)
+                safeResult(activity.id)
 
             } catch {
                 // ✅ Enhanced error handling for Schedule Live Activity
@@ -1602,7 +1424,7 @@ class LiveActivityHandler: NSObject {
                     Logger.shared.log(.error, "❌ Failed to create Schedule Live Activity: \(errorDescription)", category: .general)
                 }
 
-                result(FlutterError(
+                safeResult(FlutterError(
                     code: errorCode,
                     message: "Failed to start Schedule Live Activity: \(errorDescription)",
                     details: [
@@ -1616,9 +1438,10 @@ class LiveActivityHandler: NSObject {
 
     /// Update a schedule countdown Live Activity
     func updateScheduleLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard let args = arguments,
               let activityId = args["activityId"] as? String else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
             return
         }
 
@@ -1626,13 +1449,13 @@ class LiveActivityHandler: NSObject {
         let activity = Activity<GymBroScheduleAttributes>.activities.first { $0.id == activityId }
 
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Schedule Activity not found", details: nil))
+            safeResult(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Schedule Activity not found", details: nil))
             return
         }
 
         // Extract update parameters
         guard let scheduledTimestamp = args["scheduledTimestamp"] as? Int64 else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing scheduledTimestamp", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing scheduledTimestamp", details: nil))
             return
         }
 
@@ -1657,15 +1480,16 @@ class LiveActivityHandler: NSObject {
             )
 
             Logger.shared.log(.debug, "✅ Schedule Live Activity updated: \(remainingMinutes)m remaining", category: .general)
-            result(true)
+            safeResult(true)
         }
     }
 
     /// End a schedule countdown Live Activity
     func endScheduleLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         guard let args = arguments,
               let activityId = args["activityId"] as? String else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
+            safeResult(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
             return
         }
 
@@ -1675,7 +1499,7 @@ class LiveActivityHandler: NSObject {
         let activity = Activity<GymBroScheduleAttributes>.activities.first { $0.id == activityId }
 
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Schedule Activity not found", details: nil))
+            safeResult(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Schedule Activity not found", details: nil))
             return
         }
 
@@ -1705,18 +1529,19 @@ class LiveActivityHandler: NSObject {
             }
 
             Logger.shared.debug("✅ Schedule Live Activity ended: \(activityId)", category: .general)
-            result(true)
+            safeResult(true)
         }
     }
 
     /// End all schedule Live Activities
     func endAllScheduleLiveActivities(result: @escaping FlutterResult) {
+        let safeResult = mainThreadResult(result)
         Task {
             let activities = Activity<GymBroScheduleAttributes>.activities
 
             if activities.isEmpty {
                 Logger.shared.debug("✅ No schedule Live Activities to end", category: .general)
-                result(true)
+                safeResult(true)
                 return
             }
 
@@ -1728,7 +1553,7 @@ class LiveActivityHandler: NSObject {
 
             currentScheduleActivity = nil
             Logger.shared.debug("✅ All schedule Live Activities ended", category: .general)
-            result(true)
+            safeResult(true)
         }
     }
 

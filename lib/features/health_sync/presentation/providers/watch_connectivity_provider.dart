@@ -245,12 +245,13 @@ typedef OnDropsetStageCompletedFromWatch =
 /// - actualReps: Actual reps performed on the last stage (from reps picker)
 /// - effort: Optional effort value for entire dropset
 /// - effortScale: "rpe" or "rir"
-typedef OnDropsetCompletedFromWatch = void Function({
-  required int totalStages,
-  int? actualReps,
-  int? effort,
-  String? effortScale,
-});
+typedef OnDropsetCompletedFromWatch =
+    void Function({
+      required int totalStages,
+      int? actualReps,
+      int? effort,
+      String? effortScale,
+    });
 
 /// 🔥 REST-PAUSE: Callback for when Watch completes a single rest-pause mini-set
 /// - setIndex: 0-indexed set number
@@ -275,16 +276,18 @@ typedef OnRestPauseSetCompletedFromWatch =
 /// - actualReps: Actual reps performed on the last mini-set (from reps picker)
 /// - effort: Optional effort value for entire rest-pause
 /// - effortScale: "rpe" or "rir"
-typedef OnRestPauseCompletedFromWatch = void Function({
-  required int totalSets,
-  required double weight,
-  int? actualReps,
-  int? effort,
-  String? effortScale,
-});
+typedef OnRestPauseCompletedFromWatch =
+    void Function({
+      required int totalSets,
+      required double weight,
+      int? actualReps,
+      int? effort,
+      String? effortScale,
+    });
 
 /// 📸 Recovery: Callback for full workout snapshot from Watch (crash recovery)
-typedef OnFullWorkoutSnapshotFromWatch = void Function(Map<String, dynamic> snapshot);
+typedef OnFullWorkoutSnapshotFromWatch =
+    void Function(Map<String, dynamic> snapshot);
 
 /// Notifier that manages Apple Watch connectivity
 class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
@@ -371,9 +374,15 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
             '⌚ [FLUTTER] ✅ Set completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort${actualReps != null ? ", actualReps: $actualReps" : ""}',
           );
         } else {
-          _watchLog('⌚ [FLUTTER] ✅ Set completed from Watch (no effort)${actualReps != null ? ", actualReps: $actualReps" : ""}');
+          _watchLog(
+            '⌚ [FLUTTER] ✅ Set completed from Watch (no effort)${actualReps != null ? ", actualReps: $actualReps" : ""}',
+          );
         }
-        onSetCompletedFromWatch?.call(effort: effort, effortScale: effortScale, actualReps: actualReps);
+        onSetCompletedFromWatch?.call(
+          effort: effort,
+          effortScale: effortScale,
+          actualReps: actualReps,
+        );
         return true;
 
       case 'onSkipRestFromWatch':
@@ -493,9 +502,7 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         if (args != null) {
           final setIndex =
               (args['setIndex'] as num?)?.toInt() ?? 0; // 0-indexed
-          _watchLog(
-            '⌚ [FLUTTER] ↩️ Uncomplete set ${setIndex + 1} from Watch',
-          );
+          _watchLog('⌚ [FLUTTER] ↩️ Uncomplete set ${setIndex + 1} from Watch');
           onUncompleteSetFromWatch?.call(setIndex);
         }
         return true;
@@ -712,7 +719,9 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         final args = call.arguments as Map<dynamic, dynamic>?;
         if (args != null) {
           final snapshot = Map<String, dynamic>.from(args);
-          _watchLog('⌚ [FLUTTER] 📸 Full workout snapshot from Watch (hasActive: ${snapshot['hasActiveWorkout']})');
+          _watchLog(
+            '⌚ [FLUTTER] 📸 Full workout snapshot from Watch (hasActive: ${snapshot['hasActiveWorkout']})',
+          );
           onFullWorkoutSnapshotFromWatch?.call(snapshot);
         }
         return true;
@@ -744,15 +753,17 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
               final weight = (args['weight'] as num?)?.toDouble() ?? 0;
               final reps = (args['reps'] as num?)?.toInt() ?? 0;
               final setNumber = (args['setNumber'] as num?)?.toInt() ?? 1;
-              onSetModificationFromWatch?.call(weight, reps, setNumber: setNumber);
+              onSetModificationFromWatch?.call(
+                weight,
+                reps,
+                setNumber: setNumber,
+              );
             case 'skipRest':
               onSkipRestFromWatch?.call();
             case 'pauseWorkout':
               onPauseWorkoutFromWatch?.call();
             default:
-              _watchLog(
-                '⌚ [FLUTTER] 📦 Unhandled background data type: $type',
-              );
+              _watchLog('⌚ [FLUTTER] 📦 Unhandled background data type: $type');
           }
         }
         return true;
@@ -881,9 +892,7 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         );
 
         if (kDebugMode) {
-          _watchLog(
-            'Successfully sent ${templates.length} templates to watch',
-          );
+          _watchLog('Successfully sent ${templates.length} templates to watch');
         }
       }
 
@@ -960,11 +969,14 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
   /// - supersetRound: Current round (1-indexed)
   /// - totalSupersetRounds: Total rounds to complete
   Future<void> notifyWorkoutStarted({
+    required String workoutId,
     required String exerciseName,
     required int currentSet,
     required int totalSets,
+    String countingMode = 'weighted',
     double? targetWeight,
     int? targetReps,
+    int? targetSeconds,
     int? minReps, // ⌚ Rep range support
     int? maxReps, // ⌚ Rep range support
     int setsCompleted = 0,
@@ -1026,11 +1038,14 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         '⌚ [PROVIDER DEBUG] Calling _channel.invokeMethod(notifyWorkoutStarted)',
       );
       await _channel.invokeMethod('notifyWorkoutStarted', {
+        'workoutId': workoutId,
         'exerciseName': exerciseName,
         'currentSet': currentSet,
         'totalSets': totalSets,
+        'countingMode': countingMode,
         'targetWeight': targetWeight ?? 0.0,
         'targetReps': targetReps ?? 0,
+        'targetSeconds': targetSeconds ?? 0,
         if (minReps != null) 'minReps': minReps, // ⌚ Rep range support
         if (maxReps != null) 'maxReps': maxReps, // ⌚ Rep range support
         'setsCompleted': setsCompleted,
@@ -1117,11 +1132,14 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
   /// - supersetRound: Current round (1-indexed)
   /// - totalSupersetRounds: Total rounds to complete
   Future<void> sendWorkoutUpdate({
+    required String workoutId,
     required String exerciseName,
     required int currentSet,
     required int totalSets,
+    String countingMode = 'weighted',
     double? targetWeight,
     int? targetReps,
+    int? targetSeconds,
     int? minReps, // ⌚ Rep range support
     int? maxReps, // ⌚ Rep range support
     int setsCompleted = 0,
@@ -1165,11 +1183,14 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
     // For reliability, we could add applicationContext fallback on iOS side
     try {
       await _channel.invokeMethod('sendWorkoutUpdate', {
+        'workoutId': workoutId,
         'exerciseName': exerciseName,
         'currentSet': currentSet,
         'totalSets': totalSets,
+        'countingMode': countingMode,
         'targetWeight': targetWeight ?? 0.0,
         'targetReps': targetReps ?? 0,
+        'targetSeconds': targetSeconds ?? 0,
         if (minReps != null) 'minReps': minReps, // ⌚ Rep range support
         if (maxReps != null) 'maxReps': maxReps, // ⌚ Rep range support
         'setsCompleted': setsCompleted,

@@ -36,8 +36,9 @@ void main() {
 
   group('HiveBoxManager Leak Detection Tests', () {
     // SKIPPED: Widget leak tracking too slow (>2min) for CI
-    testWidgets('should not leak boxes after dispose',
-        (WidgetTester tester) async {
+    testWidgets('should not leak boxes after dispose', (
+      WidgetTester tester,
+    ) async {
       final container = ProviderContainer();
 
       // Open boxes
@@ -81,8 +82,9 @@ void main() {
     });
 
     // SKIPPED: Widget leak tracking too slow (>2min) for CI
-    testWidgets('Provider disposal should close all boxes',
-        (WidgetTester tester) async {
+    testWidgets('Provider disposal should close all boxes', (
+      WidgetTester tester,
+    ) async {
       final container = ProviderContainer();
 
       final manager = container.read(hiveBoxManagerProvider);
@@ -196,6 +198,24 @@ void main() {
       // Opening a box should succeed (even with retry logic)
       final box = await manager.openBox<Map>('retry_test', maxRetries: 3);
       expect(box.isOpen, true);
+
+      await manager.closeAll();
+    });
+
+    test('should reopen a tracked box closed outside the manager', () async {
+      final manager = HiveBoxManagerEnhanced();
+
+      final originalBox = await manager.openBox<Map>('externally_closed_test');
+      await originalBox.put('seed', {'value': 'ok'});
+      await originalBox.close();
+
+      expect(Hive.isBoxOpen('externally_closed_test'), false);
+
+      final reopenedBox = await manager.openBox<Map>('externally_closed_test');
+
+      expect(reopenedBox.isOpen, true);
+      await reopenedBox.put('after_reopen', {'value': 'still_ok'});
+      expect(reopenedBox.get('after_reopen'), equals({'value': 'still_ok'}));
 
       await manager.closeAll();
     });

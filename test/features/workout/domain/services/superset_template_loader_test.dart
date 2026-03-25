@@ -37,10 +37,8 @@ void main() {
       });
 
       test('returns cached data on subsequent calls', () async {
-        final first =
-            await SupersetTemplateLoader.loadPredefinedTemplates();
-        final second =
-            await SupersetTemplateLoader.loadPredefinedTemplates();
+        final first = await SupersetTemplateLoader.loadPredefinedTemplates();
+        final second = await SupersetTemplateLoader.loadPredefinedTemplates();
 
         expect(identical(first, second), isTrue);
       });
@@ -86,8 +84,7 @@ void main() {
           return _makeDbExercise(exerciseId, 'Exercise $exerciseId');
         }
 
-        final templates =
-            await SupersetTemplateLoader.loadPredefinedTemplates(
+        final templates = await SupersetTemplateLoader.loadPredefinedTemplates(
           lookupExercise: mockLookup,
         );
 
@@ -104,8 +101,7 @@ void main() {
           return null;
         }
 
-        final templates =
-            await SupersetTemplateLoader.loadPredefinedTemplates(
+        final templates = await SupersetTemplateLoader.loadPredefinedTemplates(
           lookupExercise: mockLookup,
         );
 
@@ -123,8 +119,7 @@ void main() {
           throw Exception('Lookup failed');
         }
 
-        final templates =
-            await SupersetTemplateLoader.loadPredefinedTemplates(
+        final templates = await SupersetTemplateLoader.loadPredefinedTemplates(
           lookupExercise: mockLookup,
         );
 
@@ -141,14 +136,12 @@ void main() {
           return _makeDbExercise(exerciseId, 'Name $callCount');
         }
 
-        final first =
-            await SupersetTemplateLoader.loadPredefinedTemplates(
+        await SupersetTemplateLoader.loadPredefinedTemplates(
           lookupExercise: mockLookup,
         );
         final firstCallCount = callCount;
 
-        final second =
-            await SupersetTemplateLoader.loadPredefinedTemplates(
+        await SupersetTemplateLoader.loadPredefinedTemplates(
           lookupExercise: mockLookup,
         );
 
@@ -159,11 +152,9 @@ void main() {
 
     group('clearCache', () {
       test('clears cached data', () async {
-        final first =
-            await SupersetTemplateLoader.loadPredefinedTemplates();
+        final first = await SupersetTemplateLoader.loadPredefinedTemplates();
         SupersetTemplateLoader.clearCache();
-        final second =
-            await SupersetTemplateLoader.loadPredefinedTemplates();
+        final second = await SupersetTemplateLoader.loadPredefinedTemplates();
 
         expect(identical(first, second), isFalse);
         expect(first.length, second.length);
@@ -183,11 +174,9 @@ void main() {
         expect(templates, isNotEmpty);
         for (final t in templates) {
           expect(
-            t.targetPersona == UserPersona.marco ||
-                t.targetPersona == null,
+            t.targetPersona == UserPersona.marco || t.targetPersona == null,
             isTrue,
-            reason:
-                'Template ${t.id} should target marco or be generic',
+            reason: 'Template ${t.id} should target marco or be generic',
           );
         }
       });
@@ -197,8 +186,9 @@ void main() {
           UserPersona.luca,
         );
 
-        final genericCount =
-            templates.where((t) => t.targetPersona == null).length;
+        final genericCount = templates
+            .where((t) => t.targetPersona == null)
+            .length;
         expect(genericCount, greaterThan(0));
       });
 
@@ -236,8 +226,7 @@ void main() {
 
     group('loadEvidenceBased', () {
       test('returns only templates with scientific basis', () async {
-        final templates =
-            await SupersetTemplateLoader.loadEvidenceBased();
+        final templates = await SupersetTemplateLoader.loadEvidenceBased();
 
         expect(templates, isNotEmpty);
         for (final t in templates) {
@@ -246,10 +235,8 @@ void main() {
       });
 
       test('all current templates are evidence-based', () async {
-        final all =
-            await SupersetTemplateLoader.loadPredefinedTemplates();
-        final evidenceBased =
-            await SupersetTemplateLoader.loadEvidenceBased();
+        final all = await SupersetTemplateLoader.loadPredefinedTemplates();
+        final evidenceBased = await SupersetTemplateLoader.loadEvidenceBased();
 
         // All 18 templates have scientificBasis
         expect(evidenceBased.length, all.length);
@@ -258,8 +245,7 @@ void main() {
 
     group('loadTimeEfficient', () {
       test('returns templates within default range (15-20 min)', () async {
-        final templates =
-            await SupersetTemplateLoader.loadTimeEfficient();
+        final templates = await SupersetTemplateLoader.loadTimeEfficient();
 
         for (final t in templates) {
           expect(t.estimatedTimeMinutes, greaterThanOrEqualTo(15));
@@ -268,8 +254,7 @@ void main() {
       });
 
       test('returns templates within custom range', () async {
-        final templates =
-            await SupersetTemplateLoader.loadTimeEfficient(
+        final templates = await SupersetTemplateLoader.loadTimeEfficient(
           minMinutes: 10,
           maxMinutes: 15,
         );
@@ -281,8 +266,7 @@ void main() {
       });
 
       test('returns empty with impossible range', () async {
-        final templates =
-            await SupersetTemplateLoader.loadTimeEfficient(
+        final templates = await SupersetTemplateLoader.loadTimeEfficient(
           minMinutes: 100,
           maxMinutes: 200,
         );
@@ -291,8 +275,7 @@ void main() {
       });
 
       test('wide range returns all templates', () async {
-        final all =
-            await SupersetTemplateLoader.loadPredefinedTemplates();
+        final all = await SupersetTemplateLoader.loadPredefinedTemplates();
         final wide = await SupersetTemplateLoader.loadTimeEfficient(
           minMinutes: 0,
           maxMinutes: 1000,

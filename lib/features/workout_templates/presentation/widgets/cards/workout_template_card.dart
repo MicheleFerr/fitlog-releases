@@ -36,6 +36,7 @@ class WorkoutTemplateCard extends ConsumerStatefulWidget {
     required this.onShare,
     required this.onDelete,
     this.onMakePublic,
+    this.onShowShareCode,
     this.preloadedStats,
   });
 
@@ -46,6 +47,7 @@ class WorkoutTemplateCard extends ConsumerStatefulWidget {
   final VoidCallback onShare; // Shares template
   final VoidCallback onDelete;
   final VoidCallback? onMakePublic; // Make template public
+  final VoidCallback? onShowShareCode;
 
   /// Pre-calculated stats from parent (optimization: avoids N provider calls)
   final TemplateStats? preloadedStats;
@@ -142,11 +144,11 @@ class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors:
-                                  category.gradientColors(context.isDarkMode),
+                              colors: category.gradientColors(
+                                context.isDarkMode,
+                              ),
                             ),
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.sm),
+                            borderRadius: BorderRadius.circular(AppSpacing.sm),
                             boxShadow: [
                               BoxShadow(
                                 color: categoryColor.withValues(alpha: 0.3),
@@ -173,8 +175,9 @@ class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
 
                   // Name
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                    ),
                     child: Text(
                       widget.template.name,
                       style: context.textTheme.titleSmall?.copyWith(
@@ -308,8 +311,7 @@ class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
   String _buildExercisePreview() {
     final exercises = widget.template.exercises;
     final names = exercises.take(3).map((e) => e.exerciseName).join(' · ');
-    final remaining =
-        exercises.length > 3 ? ' +${exercises.length - 3}' : '';
+    final remaining = exercises.length > 3 ? ' +${exercises.length - 3}' : '';
     return '$names$remaining';
   }
 
@@ -319,7 +321,66 @@ class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
     AppLocalizations l10n,
     TemplateStats? stats,
   ) {
-    final hasRealDuration = stats != null &&
+    if (widget.template.isDistributedTemplate) {
+      return Row(
+        children: [
+          SemanticIcon(
+            icon: AppIcons.layers,
+            semanticLabel: 'Version ${widget.template.versionNumber}',
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            'V${widget.template.versionNumber}',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          SemanticIcon(
+            icon: AppIcons.download,
+            semanticLabel: '${widget.template.downloadCount}',
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            '${widget.template.downloadCount}',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          SemanticIcon(
+            icon: AppIcons.history,
+            semanticLabel: '${widget.template.usageCount}',
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            '${widget.template.usageCount}',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          SemanticIcon(
+            icon: widget.template.isPublic ? AppIcons.public : AppIcons.lock,
+            semanticLabel: widget.template.isPublic
+                ? l10n.publishPublicly
+                : l10n.sharePrivately,
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+        ],
+      );
+    }
+
+    final hasRealDuration =
+        stats != null &&
         stats.totalCompletions > 0 &&
         stats.avgDuration != null;
 
@@ -379,15 +440,16 @@ class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
           Icon(
             AppIcons.history,
             size: AppIconSize.tiny,
-            color: stats.statusColor(context) ??
-                context.colors.onSurfaceVariant,
+            color:
+                stats.statusColor(context) ?? context.colors.onSurfaceVariant,
           ),
           const SizedBox(width: 2),
           Flexible(
             child: Text(
               stats.formattedLastPerformed(context),
               style: context.textTheme.labelSmall?.copyWith(
-                color: stats.statusColor(context) ??
+                color:
+                    stats.statusColor(context) ??
                     context.colors.onSurfaceVariant,
               ),
               maxLines: 1,
@@ -401,34 +463,63 @@ class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
 
   /// Build popup menu for card actions
   Widget _buildPopupMenu(BuildContext context, AppLocalizations l10n) {
+    final duplicateLabel = widget.template.isEditable
+        ? l10n.duplicate
+        : l10n.customizeYourCopy;
+    final duplicateIcon = widget.template.isEditable
+        ? const CNSymbol('doc.on.doc', size: 14)
+        : const CNSymbol('slider.horizontal.3', size: 14);
+    final items = <CNPopupMenuItem>[
+      CNPopupMenuItem(
+        label: l10n.startWorkout,
+        icon: const CNSymbol('play', size: 14),
+      ),
+      CNPopupMenuItem(label: duplicateLabel, icon: duplicateIcon),
+    ];
+
+    final actions = <VoidCallback>[widget.onStartWorkout, widget.onDuplicate];
+
+    if (widget.onMakePublic != null && !widget.template.isPublic) {
+      items.add(
+        CNPopupMenuItem(
+          label: l10n.shareTemplate,
+          icon: const CNSymbol('globe', size: 14),
+        ),
+      );
+      actions.add(widget.onMakePublic!);
+    }
+
+    if (widget.onShowShareCode != null) {
+      items.add(
+        CNPopupMenuItem(
+          label: l10n.showCode,
+          icon: const CNSymbol('number.square', size: 14),
+        ),
+      );
+      actions.add(widget.onShowShareCode!);
+    }
+
+    items.addAll([
+      CNPopupMenuItem(
+        label: l10n.share,
+        icon: const CNSymbol('square.and.arrow.up', size: 14),
+      ),
+      CNPopupMenuItem(
+        label: l10n.delete,
+        icon: const CNSymbol('trash', size: 14),
+      ),
+    ]);
+
+    actions.addAll([widget.onShare, widget.onDelete]);
+
     return CNPopupMenuButton.icon(
       buttonIcon: const CNSymbol('ellipsis', size: 16),
       buttonStyle: CNButtonStyle.plain,
       size: 32,
-      items: [
-        CNPopupMenuItem(
-          label: l10n.startWorkout,
-          icon: const CNSymbol('play', size: 14),
-        ),
-        CNPopupMenuItem(
-          label: l10n.duplicate,
-          icon: const CNSymbol('doc.on.doc', size: 14),
-        ),
-        CNPopupMenuItem(
-          label: l10n.share,
-          icon: const CNSymbol('square.and.arrow.up', size: 14),
-        ),
-        CNPopupMenuItem(
-          label: l10n.delete,
-          icon: const CNSymbol('trash', size: 14),
-        ),
-      ],
+      items: items,
       onSelected: (index) {
-        switch (index) {
-          case 0: widget.onStartWorkout();
-          case 1: widget.onDuplicate();
-          case 2: widget.onShare();
-          case 3: widget.onDelete();
+        if (index >= 0 && index < actions.length) {
+          actions[index]();
         }
       },
     );

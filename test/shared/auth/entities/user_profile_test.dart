@@ -1,4 +1,4 @@
-/// UserProfile and TemplateQuota entity tests.
+// UserProfile and TemplateQuota entity tests.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
@@ -15,10 +15,10 @@ void main() {
   group('TemplateQuota', () {
     test('constructor', () {
       const quota = TemplateQuota(
-        maxPrivateTemplates: 10,
-        maxPublicTemplates: 5,
-        usedPrivateTemplates: 3,
-        usedPublicTemplates: 1,
+        maxLibraryTemplates: 10,
+        maxDistributionTemplates: 5,
+        usedLibraryTemplates: 3,
+        distributedTemplateCount: 1,
       );
       expect(quota.maxPrivateTemplates, 10);
       expect(quota.maxPublicTemplates, 5);
@@ -27,88 +27,107 @@ void main() {
     });
 
     test('defaults for used', () {
-      const quota = TemplateQuota(maxPrivateTemplates: 4, maxPublicTemplates: 2);
+      const quota = TemplateQuota(
+        maxLibraryTemplates: 4,
+        maxDistributionTemplates: 2,
+      );
       expect(quota.usedPrivateTemplates, 0);
       expect(quota.usedPublicTemplates, 0);
     });
 
     test('canSavePrivate', () {
       const canSave = TemplateQuota(
-        maxPrivateTemplates: 4, maxPublicTemplates: 2,
-        usedPrivateTemplates: 3,
+        maxLibraryTemplates: 4,
+        maxDistributionTemplates: 2,
+        usedLibraryTemplates: 3,
       );
       expect(canSave.canSavePrivate, true);
 
       const cantSave = TemplateQuota(
-        maxPrivateTemplates: 4, maxPublicTemplates: 2,
-        usedPrivateTemplates: 4,
+        maxLibraryTemplates: 4,
+        maxDistributionTemplates: 2,
+        usedLibraryTemplates: 4,
       );
       expect(cantSave.canSavePrivate, false);
     });
 
-    test('canSavePublic', () {
-      const canSave = TemplateQuota(
-        maxPrivateTemplates: 4, maxPublicTemplates: 2,
-        usedPublicTemplates: 1,
-      );
-      expect(canSave.canSavePublic, true);
+    test(
+      'canSavePublic remains true because distribution is not quota-gated',
+      () {
+        const canSave = TemplateQuota(
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
+          distributedTemplateCount: 1,
+        );
+        expect(canSave.canSavePublic, true);
 
-      const cantSave = TemplateQuota(
-        maxPrivateTemplates: 4, maxPublicTemplates: 2,
-        usedPublicTemplates: 2,
-      );
-      expect(cantSave.canSavePublic, false);
-    });
+        const stillCanSave = TemplateQuota(
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 2,
+          distributedTemplateCount: 2,
+        );
+        expect(stillCanSave.canSavePublic, true);
+      },
+    );
 
     test('remainingPrivate', () {
       const quota = TemplateQuota(
-        maxPrivateTemplates: 10, maxPublicTemplates: 5,
-        usedPrivateTemplates: 3,
+        maxLibraryTemplates: 10,
+        maxDistributionTemplates: 5,
+        usedLibraryTemplates: 3,
       );
       expect(quota.remainingPrivate, 7);
     });
 
     test('remainingPublic', () {
       const quota = TemplateQuota(
-        maxPrivateTemplates: 10, maxPublicTemplates: 5,
-        usedPublicTemplates: 2,
+        maxLibraryTemplates: 10,
+        maxDistributionTemplates: 5,
+        distributedTemplateCount: 2,
       );
       expect(quota.remainingPublic, 3);
     });
 
     test('forTier free', () {
-      final quota = TemplateQuota.forTier(AccountTier.free, usedPrivate: 2);
-      expect(quota.maxPrivateTemplates, 4);
-      expect(quota.maxPublicTemplates, 2);
-      expect(quota.usedPrivateTemplates, 2);
+      final quota = TemplateQuota.forTier(
+        AccountTier.free,
+        usedLibrary: 2,
+        distributedCount: 1,
+      );
+      expect(quota.maxLibraryTemplates, 4);
+      expect(quota.maxDistributionTemplates, 999);
+      expect(quota.usedLibraryTemplates, 2);
+      expect(quota.distributedTemplateCount, 1);
     });
 
     test('forTier premium', () {
       final quota = TemplateQuota.forTier(AccountTier.premium);
-      expect(quota.maxPrivateTemplates, 999);
-      expect(quota.maxPublicTemplates, 999);
+      expect(quota.maxLibraryTemplates, 999);
+      expect(quota.maxDistributionTemplates, 999);
     });
 
     test('forUserTier', () {
-      final quota = TemplateQuota.forUserTier(UserTier.starter, usedPrivate: 1, usedPublic: 0);
-      expect(quota.maxPrivateTemplates, UserTier.starter.maxTemplates);
-      expect(quota.maxPublicTemplates, UserTier.starter.maxPublicTemplates);
-      expect(quota.usedPrivateTemplates, 1);
+      final quota = TemplateQuota.forUserTier(
+        UserTier.starter,
+        usedLibrary: 1,
+        distributedCount: 0,
+      );
+      expect(quota.maxLibraryTemplates, UserTier.starter.maxTemplates);
+      expect(quota.maxDistributionTemplates, 999);
+      expect(quota.usedLibraryTemplates, 1);
     });
 
     test('consolidated takes max of XP and account', () {
       final quota = TemplateQuota.consolidated(
         userTier: UserTier.starter,
         accountTier: AccountTier.premium,
-        usedPrivate: 2,
-        usedPublic: 1,
+        usedLibrary: 2,
+        distributedCount: 1,
       );
-      // Premium gives 999, starter gives tier-based value
-      // consolidated takes the max
-      expect(quota.maxPrivateTemplates, 999);
-      expect(quota.maxPublicTemplates, 999);
-      expect(quota.usedPrivateTemplates, 2);
-      expect(quota.usedPublicTemplates, 1);
+      expect(quota.maxLibraryTemplates, 999);
+      expect(quota.maxDistributionTemplates, 999);
+      expect(quota.usedLibraryTemplates, 2);
+      expect(quota.distributedTemplateCount, 1);
     });
 
     test('fromJson', () {
@@ -126,16 +145,16 @@ void main() {
     test('fromJson with defaults', () {
       final quota = TemplateQuota.fromJson({});
       expect(quota.maxPrivateTemplates, 4);
-      expect(quota.maxPublicTemplates, 2);
+      expect(quota.maxPublicTemplates, 999);
       expect(quota.usedPrivateTemplates, 0);
     });
 
     test('toJson round-trip', () {
       const quota = TemplateQuota(
-        maxPrivateTemplates: 10,
-        maxPublicTemplates: 5,
-        usedPrivateTemplates: 3,
-        usedPublicTemplates: 1,
+        maxLibraryTemplates: 10,
+        maxDistributionTemplates: 5,
+        usedLibraryTemplates: 3,
+        distributedTemplateCount: 1,
       );
       final json = quota.toJson();
       final restored = TemplateQuota.fromJson(json);
@@ -156,10 +175,12 @@ void main() {
         email: 'test@test.com',
         displayName: 'Test User',
         accountTier: accountTier,
-        templateQuota: quota ?? const TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
-        ),
+        templateQuota:
+            quota ??
+            const TemplateQuota(
+              maxLibraryTemplates: 4,
+              maxDistributionTemplates: 2,
+            ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),
         preferences: preferences ?? {},
@@ -227,8 +248,9 @@ void main() {
     test('decrementTemplateUsage public', () {
       final profile = createTestProfile(
         quota: const TemplateQuota(
-          maxPrivateTemplates: 4, maxPublicTemplates: 2,
-          usedPublicTemplates: 2,
+          maxLibraryTemplates: 4,
+          maxDistributionTemplates: 999,
+          distributedTemplateCount: 2,
         ),
       );
       final updated = profile.decrementTemplateUsage(isPublic: true);
@@ -237,10 +259,7 @@ void main() {
 
     test('copyWith', () {
       final profile = createTestProfile();
-      final copy = profile.copyWith(
-        displayName: 'New Name',
-        isAdmin: true,
-      );
+      final copy = profile.copyWith(displayName: 'New Name', isAdmin: true);
       expect(copy.displayName, 'New Name');
       expect(copy.isAdmin, true);
       expect(copy.uid, 'test-uid');
@@ -301,10 +320,7 @@ void main() {
         'displayName': 'Test',
         'createdAt': '2024-01-01T00:00:00.000',
         'lastLoginAt': '2024-01-01T00:00:00.000',
-        'stats': {
-          'privateTemplateCount': 2,
-          'publicTemplateCount': 1,
-        },
+        'stats': {'privateTemplateCount': 2, 'publicTemplateCount': 1},
       };
       final profile = UserProfile.fromJson(json);
       expect(profile.templateQuota.usedPrivateTemplates, 2);
@@ -318,8 +334,8 @@ void main() {
         displayName: 'Test',
         accountTier: AccountTier.premium,
         templateQuota: const TemplateQuota(
-          maxPrivateTemplates: 999,
-          maxPublicTemplates: 999,
+          maxLibraryTemplates: 999,
+          maxDistributionTemplates: 999,
         ),
         createdAt: DateTime(2024, 1, 1),
         lastLoginAt: DateTime(2024, 6, 1),

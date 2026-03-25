@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -71,6 +73,7 @@ class ReminderTimePicker extends StatefulWidget {
 class _ReminderTimePickerState extends State<ReminderTimePicker> {
   ReminderTimePreset _selectedPreset = ReminderTimePreset.morning;
   TimeOfDay? _customTime;
+  static const _pickerSheetHeight = 318.0;
 
   @override
   void initState() {
@@ -110,25 +113,14 @@ class _ReminderTimePickerState extends State<ReminderTimePicker> {
 
   Future<void> _showTimePicker() async {
     final initialTime = _customTime ?? const TimeOfDay(hour: 12, minute: 0);
-
-    final time = await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            timePickerTheme: TimePickerThemeData(
-              backgroundColor: context.colors.surface,
-              hourMinuteColor: context.colors.surfaceContainerHighest,
-              dayPeriodColor: context.colors.surfaceContainerHighest,
-              dialBackgroundColor: context.colors.surfaceContainerHighest,
-              dialHandColor: context.colors.primary,
-              entryModeIconColor: context.colors.primary,
-            ),
-          ),
-          child: child!,
-        );
-      },
+    final time = await ModalService.showSheet<TimeOfDay>(
+      context,
+      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      builder: (context) => _ReminderTimeWheelSheet(
+        initialTime: initialTime,
+        formatTime: (time) => _formatTime(context, time),
+      ),
     );
 
     if (time != null) {
@@ -274,6 +266,239 @@ class _ReminderTimePickerState extends State<ReminderTimePicker> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ReminderTimeWheelSheet extends StatefulWidget {
+  const _ReminderTimeWheelSheet({
+    required this.initialTime,
+    required this.formatTime,
+  });
+
+  final TimeOfDay initialTime;
+  final String Function(TimeOfDay time) formatTime;
+
+  @override
+  State<_ReminderTimeWheelSheet> createState() => _ReminderTimeWheelSheetState();
+}
+
+class _ReminderTimeWheelSheetState extends State<_ReminderTimeWheelSheet> {
+  late int _selectedHour;
+  late int _selectedMinute;
+  late final FixedExtentScrollController _hourController;
+  late final FixedExtentScrollController _minuteController;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedHour = widget.initialTime.hour;
+    _selectedMinute = widget.initialTime.minute;
+    _hourController = FixedExtentScrollController(initialItem: _selectedHour);
+    _minuteController = FixedExtentScrollController(
+      initialItem: _selectedMinute,
+    );
+  }
+
+  @override
+  void dispose() {
+    _hourController.dispose();
+    _minuteController.dispose();
+    super.dispose();
+  }
+
+  TimeOfDay get _selectedTime =>
+      TimeOfDay(hour: _selectedHour, minute: _selectedMinute);
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final hourLabel = languageCode == 'it' ? 'Ore' : 'Hours';
+    final minuteLabel = languageCode == 'it' ? 'Minuti' : 'Minutes';
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.sm,
+            AppSpacing.md,
+            AppSpacing.md + bottomInset,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.28),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: const SizedBox(width: 40, height: 4),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(context.l10n.cancel),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          context.l10n.reminderTimePresetCustom,
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          widget.formatTime(_selectedTime),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(_selectedTime),
+                    child: Text(context.l10n.ok),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Container(
+                height: _ReminderTimePickerState._pickerSheetHeight,
+                decoration: BoxDecoration(
+                  color: context.colors.surfaceContainerHighest.withValues(
+                    alpha: 0.42,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TimeWheel(
+                        label: hourLabel,
+                        controller: _hourController,
+                        itemCount: 24,
+                        selectedItem: _selectedHour,
+                        onSelectedItemChanged: (index) {
+                          HapticFeedback.selectionClick();
+                          setState(() => _selectedHour = index);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.lg),
+                      child: Text(
+                        ':',
+                        style: context.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: _TimeWheel(
+                        label: minuteLabel,
+                        controller: _minuteController,
+                        itemCount: 60,
+                        selectedItem: _selectedMinute,
+                        onSelectedItemChanged: (index) {
+                          HapticFeedback.selectionClick();
+                          setState(() => _selectedMinute = index);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TimeWheel extends StatelessWidget {
+  const _TimeWheel({
+    required this.label,
+    required this.controller,
+    required this.itemCount,
+    required this.selectedItem,
+    required this.onSelectedItemChanged,
+  });
+
+  final String label;
+  final FixedExtentScrollController controller;
+  final int itemCount;
+  final int selectedItem;
+  final ValueChanged<int> onSelectedItemChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          label,
+          style: context.textTheme.labelMedium?.copyWith(
+            color: context.colors.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Expanded(
+          child: CupertinoPicker(
+            itemExtent: 42,
+            diameterRatio: 1.25,
+            useMagnifier: true,
+            magnification: 1.08,
+            scrollController: controller,
+            selectionOverlay: Container(
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.16),
+                ),
+              ),
+            ),
+            onSelectedItemChanged: onSelectedItemChanged,
+            children: List.generate(itemCount, (index) {
+              final isSelected = index == selectedItem;
+              final value = index.toString().padLeft(2, '0');
+
+              return Center(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 140),
+                  style: (isSelected
+                          ? context.textTheme.headlineSmall
+                          : context.textTheme.titleLarge)
+                      ?.copyWith(
+                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isSelected
+                            ? context.colors.onSurface
+                            : context.colors.onSurfaceVariant,
+                      ) ??
+                      const TextStyle(),
+                  child: Text(value),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
     );
   }
 }

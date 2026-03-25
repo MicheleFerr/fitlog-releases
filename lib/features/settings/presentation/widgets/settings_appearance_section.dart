@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/settings/data/services/app_icon_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_icon_variant.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
@@ -15,15 +21,17 @@ import 'package:cupertino_native/cupertino_native.dart';
 
 /// Appearance settings section: theme mode, primary color, font size.
 class SettingsAppearanceSection extends ConsumerWidget {
-  const SettingsAppearanceSection({
-    super.key,
-    required this.config,
-  });
+  const SettingsAppearanceSection({super.key, required this.config});
 
   final AppConfig config;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showAppIconPicker =
+        !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.android);
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -84,6 +92,29 @@ class SettingsAppearanceSection extends ConsumerWidget {
             ),
 
             const Divider(),
+
+            if (showAppIconPicker) ...[
+              ListTile(
+                title: Text(_appIconTitle(context.l10n)),
+                subtitle: Text(
+                  _getAppIconText(context.l10n, config.appIconVariant),
+                ),
+                leading: const SemanticIcon(
+                  icon: AppIcons.apps,
+                  semanticLabel: 'App icon',
+                  size: AppIconSize.medium,
+                ),
+                trailing: const SemanticIcon(
+                  icon: AppIcons.chevronRight,
+                  semanticLabel: 'Chevron right',
+                ),
+                onTap: () => unawaited(
+                  _showAppIconDialog(context, ref, config.appIconVariant),
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
+              const Divider(),
+            ],
 
             // Primary Color Selection
             ListTile(
@@ -242,6 +273,93 @@ class SettingsAppearanceSection extends ConsumerWidget {
 
   // --- Color Picker Dialog ---
 
+  Future<void> _showAppIconDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppIconVariant currentVariant,
+  ) async {
+    final supported = await AppIconService.isSupported();
+    if (!context.mounted) return;
+
+    if (!supported) {
+      SnackBarService.showError(context, _appIconUnsupportedText(context.l10n));
+      return;
+    }
+
+    AppIconVariant effectiveVariant = currentVariant;
+    try {
+      effectiveVariant = await AppIconService.getCurrentIcon();
+    } catch (_) {
+      effectiveVariant = currentVariant;
+    }
+
+    if (!context.mounted) return;
+
+    await ModalService.showSheet(
+      context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+              child: Text(
+                _chooseAppIconTitle(context.l10n),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            RadioGroup<AppIconVariant>(
+              groupValue: effectiveVariant,
+              onChanged: (value) async {
+                if (value == null) return;
+                try {
+                  await AppIconService.setIcon(value);
+                  await ref
+                      .read(appConfigProvider.notifier)
+                      .setAppIconVariant(value);
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                  SnackBarService.showSuccess(
+                    context,
+                    '${_appIconTitle(context.l10n)}: ${_getAppIconText(context.l10n, value)}',
+                  );
+                } on PlatformException catch (e) {
+                  if (!context.mounted) return;
+                  final message =
+                      e.message ?? _unableToChangeAppIconText(context.l10n);
+                  SnackBarService.showError(context, message);
+                } catch (_) {
+                  if (!context.mounted) return;
+                  SnackBarService.showError(
+                    context,
+                    _unableToChangeAppIconText(context.l10n),
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<AppIconVariant>(
+                    title: Text(_defaultAppIconText(context.l10n)),
+                    subtitle: Text(_defaultAppIconSubtitle(context.l10n)),
+                    value: AppIconVariant.defaultIcon,
+                  ),
+                  RadioListTile<AppIconVariant>(
+                    title: Text(context.l10n.themePink),
+                    subtitle: Text(_pinkAppIconSubtitle(context.l10n)),
+                    value: AppIconVariant.pink,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
   void _showColorPickerDialog(
     BuildContext context,
     WidgetRef ref,
@@ -345,6 +463,44 @@ class SettingsAppearanceSection extends ConsumerWidget {
         return l10n.themeSystem;
     }
   }
+
+  String _getAppIconText(AppLocalizations l10n, AppIconVariant variant) {
+    switch (variant) {
+      case AppIconVariant.defaultIcon:
+        return _defaultAppIconText(l10n);
+      case AppIconVariant.pink:
+        return l10n.themePink;
+    }
+  }
+
+  String _appIconTitle(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it') ? 'Icona App' : 'App Icon';
+
+  String _chooseAppIconTitle(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it') ? 'Scegli icona app' : 'Choose App Icon';
+
+  String _defaultAppIconText(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it') ? 'Predefinita' : 'Default';
+
+  String _defaultAppIconSubtitle(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it')
+      ? 'Icona classica FitLog Pro'
+      : 'Classic FitLog Pro icon';
+
+  String _pinkAppIconSubtitle(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it')
+      ? 'Variante icona rosa'
+      : 'Pink icon variant';
+
+  String _appIconUnsupportedText(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it')
+      ? 'Le icone alternative non sono supportate su questo dispositivo.'
+      : 'Alternate icons are not supported on this device.';
+
+  String _unableToChangeAppIconText(AppLocalizations l10n) =>
+      l10n.localeName.startsWith('it')
+      ? 'Impossibile cambiare icona app.'
+      : 'Unable to change app icon.';
 
   IconData _getThemeModeIcon(AppThemeMode mode) {
     switch (mode) {

@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/create_template_popup.dart';
@@ -57,6 +58,9 @@ class QuickActionsOverlayContent extends ConsumerWidget {
               onTemplateSelected: (template) =>
                   _handleTemplateSelected(context, ref, template),
               onViewAllTemplates: () => _handleFromTemplate(context),
+              onRecentWorkoutSelected: (workout) =>
+                  _handleRecentWorkoutSelected(context, ref, workout),
+              onViewHistory: () => _handleViewHistory(context),
               onEmpty: () => _handleEmptyWorkout(context, ref),
               onResumeDraft: () => _handleResumeDraft(context, ref),
               onDiscardDraft: () => _handleDiscardDraft(ref),
@@ -90,10 +94,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildAnimatedSection({
-    required double delay,
-    required Widget child,
-  }) {
+  Widget _buildAnimatedSection({required double delay, required Widget child}) {
     final delayed = CurvedAnimation(
       parent: animation,
       curve: Interval(delay, 1.0, curve: Curves.easeOutCubic),
@@ -104,10 +105,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
         begin: const Offset(0, 0.15),
         end: Offset.zero,
       ).animate(delayed),
-      child: FadeTransition(
-        opacity: delayed,
-        child: child,
-      ),
+      child: FadeTransition(opacity: delayed, child: child),
     );
   }
 
@@ -125,8 +123,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
     _postFrameNavigate(context, () {
       if (templateId != null) {
         // Load template and start from it
-        final templates =
-            ref.read(customWorkoutTemplatesProvider).value ?? [];
+        final templates = ref.read(customWorkoutTemplatesProvider).value ?? [];
         final template = templates.where((t) => t.id == templateId).firstOrNull;
         if (template != null) {
           ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
@@ -174,6 +171,28 @@ class QuickActionsOverlayContent extends ConsumerWidget {
       ref.read(currentWorkoutProvider.notifier).createWorkout('Workout');
       ref.read(currentWorkoutProvider.notifier).startWorkout();
       navigationShell.goBranch(1);
+    });
+  }
+
+  void _handleRecentWorkoutSelected(
+    BuildContext context,
+    WidgetRef ref,
+    WorkoutHistoryDetail workout,
+  ) {
+    HapticFeedback.mediumImpact();
+    onClose();
+    _postFrameNavigate(context, () async {
+      await ref.read(currentWorkoutProvider.notifier).startFromHistory(workout);
+      navigationShell.goBranch(1);
+    });
+  }
+
+  void _handleViewHistory(BuildContext context) {
+    HapticFeedback.lightImpact();
+    onClose();
+    _postFrameNavigate(context, () {
+      navigationShell.goBranch(1);
+      context.pushNamed(AppRoutes.workoutHistoryName);
     });
   }
 

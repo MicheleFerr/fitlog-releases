@@ -22,9 +22,11 @@ class SettingsAdvancedSection extends ConsumerWidget {
   const SettingsAdvancedSection({
     super.key,
     required this.config,
+    this.collapsible = true,
   });
 
   final AppConfig config;
+  final bool collapsible;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +35,54 @@ class SettingsAdvancedSection extends ConsumerWidget {
     final ghostConfig = ghostState.config;
     final dayCutoffHour =
         ref.watch(userProfileProvider).value?.dayCutoffHour ?? 4;
+    final advancedControls = _buildAdvancedControls(
+      context,
+      ref,
+      ghostEnabled: ghostEnabled,
+      ghostConfig: ghostConfig,
+      dayCutoffHour: dayCutoffHour,
+    );
+
+    if (!collapsible) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.tune,
+                    semanticLabel: 'Advanced settings',
+                    size: AppIconSize.medium,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.settingsAdvancedTitle,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                context.l10n.settingsAdvancedDesc,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Divider(),
+              advancedControls,
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Card(
       child: Theme(
@@ -64,139 +114,7 @@ class SettingsAdvancedSection extends ConsumerWidget {
               child: Column(
                 children: [
                   const Divider(),
-
-                  // Ghost Mode Toggle
-                  CNSwitchListTile(
-                    title: Row(
-                      children: [
-                        Expanded(child: Text(context.l10n.ghostModeTitle)),
-                        buildInfoTooltip(
-                          context,
-                          context.l10n.ghostModeTooltip,
-                        ),
-                      ],
-                    ),
-                    subtitle: Text(context.l10n.ghostModeDescription),
-                    value: ghostEnabled,
-                    onChanged: (value) async {
-                      await ref
-                          .read(ghostModeProvider.notifier)
-                          .setEnabled(value);
-                      if (context.mounted) {
-                        SnackBarService.showInfo(
-                          context,
-                          value
-                              ? context.l10n.ghostModeEnabled
-                              : context.l10n.ghostModeDisabled,
-                        );
-                      }
-                    },
-                    secondary: SemanticIcon(
-                      icon: ghostEnabled
-                          ? AppIcons.visibilityOff
-                          : AppIcons.visibility,
-                      semanticLabel: ghostEnabled ? 'Hidden' : 'Visible',
-                      size: AppIconSize.medium,
-                    ),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-
-                  // Ghost Mode Customization (only when enabled)
-                  if (ghostEnabled)
-                    _buildGhostModeCustomization(context, ref, ghostConfig),
-
-                  const Divider(),
-
-                  // Day Cutoff Hour
-                  buildSettingTile(
-                    context,
-                    title: context.l10n.settingsDayCutoffHour,
-                    subtitle: context.l10n.settingsDayCutoffHourDesc(
-                      dayCutoffHour,
-                    ),
-                    leading: const SemanticIcon(
-                      icon: AppIcons.schedule,
-                      semanticLabel: 'Schedule',
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        buildInfoTooltip(
-                          context,
-                          context.l10n.dayCutoffTooltip,
-                        ),
-                        const SizedBox(width: 8),
-                        const SemanticIcon(
-                          icon: AppIcons.chevronRight,
-                          semanticLabel: 'Edit',
-                        ),
-                      ],
-                    ),
-                    onTap: () => _showDayCutoffDialog(context, ref),
-                  ),
-
-                  const Divider(),
-
-                  // Effort Scale (RPE vs RIR)
-                  buildSettingTile(
-                    context,
-                    title: context.l10n.effortScale,
-                    subtitle: config.effortScale == 'rpe'
-                        ? context.l10n.rpeScale
-                        : context.l10n.rirScale,
-                    leading: const SemanticIcon(
-                      icon: AppIcons.speed,
-                      semanticLabel: 'Effort scale',
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        buildInfoTooltip(
-                          context,
-                          context.l10n.effortScaleTooltip,
-                        ),
-                        const SizedBox(width: 8),
-                        const SemanticIcon(
-                          icon: AppIcons.chevronRight,
-                          semanticLabel: 'Edit',
-                        ),
-                      ],
-                    ),
-                    onTap: () => _showEffortScaleDialog(
-                      context,
-                      ref,
-                      config.effortScale,
-                    ),
-                  ),
-
-                  const Divider(),
-
-                  // Recalculate Stress Index
-                  buildSettingTile(
-                    context,
-                    title: context.l10n.recalculateStressIndex,
-                    subtitle: context.l10n.recalculateStressIndexDesc,
-                    leading: const SemanticIcon(
-                      icon: AppIcons.refresh,
-                      semanticLabel: 'Recalculate',
-                    ),
-                    onTap: () => _recalculateStressIndex(context, ref),
-                  ),
-
-                  const Divider(),
-
-                  // Reset Tutorials
-                  buildSettingTile(
-                    context,
-                    title: context.l10n.resetTutorials,
-                    subtitle: context.l10n.resetTutorialsDesc,
-                    leading: const SemanticIcon(
-                      icon: AppIcons.school,
-                      semanticLabel: 'Reset tutorials',
-                    ),
-                    onTap: () => _showResetTutorialsDialog(context, ref),
-                  ),
-
+                  advancedControls,
                   const SizedBox(height: 16),
                 ],
               ),
@@ -204,6 +122,131 @@ class SettingsAdvancedSection extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAdvancedControls(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool ghostEnabled,
+    required dynamic ghostConfig,
+    required int dayCutoffHour,
+  }) {
+    return Column(
+      children: [
+        // Ghost Mode Toggle
+        CNSwitchListTile(
+          title: Row(
+            children: [
+              Expanded(child: Text(context.l10n.ghostModeTitle)),
+              buildInfoTooltip(context, context.l10n.ghostModeTooltip),
+            ],
+          ),
+          subtitle: Text(context.l10n.ghostModeDescription),
+          value: ghostEnabled,
+          onChanged: (value) async {
+            await ref.read(ghostModeProvider.notifier).setEnabled(value);
+            if (context.mounted) {
+              SnackBarService.showInfo(
+                context,
+                value
+                    ? context.l10n.ghostModeEnabled
+                    : context.l10n.ghostModeDisabled,
+              );
+            }
+          },
+          secondary: SemanticIcon(
+            icon: ghostEnabled ? AppIcons.visibilityOff : AppIcons.visibility,
+            semanticLabel: ghostEnabled ? 'Hidden' : 'Visible',
+            size: AppIconSize.medium,
+          ),
+          contentPadding: EdgeInsets.zero,
+        ),
+
+        // Ghost Mode Customization (only when enabled)
+        if (ghostEnabled)
+          _buildGhostModeCustomization(context, ref, ghostConfig),
+
+        const Divider(),
+
+        // Day Cutoff Hour
+        buildSettingTile(
+          context,
+          title: context.l10n.settingsDayCutoffHour,
+          subtitle: context.l10n.settingsDayCutoffHourDesc(dayCutoffHour),
+          leading: const SemanticIcon(
+            icon: AppIcons.schedule,
+            semanticLabel: 'Schedule',
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildInfoTooltip(context, context.l10n.dayCutoffTooltip),
+              const SizedBox(width: 8),
+              const SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Edit',
+              ),
+            ],
+          ),
+          onTap: () => _showDayCutoffDialog(context, ref),
+        ),
+
+        const Divider(),
+
+        // Effort Scale (RPE vs RIR)
+        buildSettingTile(
+          context,
+          title: context.l10n.effortScale,
+          subtitle: config.effortScale == 'rpe'
+              ? context.l10n.rpeScale
+              : context.l10n.rirScale,
+          leading: const SemanticIcon(
+            icon: AppIcons.speed,
+            semanticLabel: 'Effort scale',
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildInfoTooltip(context, context.l10n.effortScaleTooltip),
+              const SizedBox(width: 8),
+              const SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Edit',
+              ),
+            ],
+          ),
+          onTap: () => _showEffortScaleDialog(context, ref, config.effortScale),
+        ),
+
+        const Divider(),
+
+        // Recalculate Stress Index
+        buildSettingTile(
+          context,
+          title: context.l10n.recalculateStressIndex,
+          subtitle: context.l10n.recalculateStressIndexDesc,
+          leading: const SemanticIcon(
+            icon: AppIcons.refresh,
+            semanticLabel: 'Recalculate',
+          ),
+          onTap: () => _recalculateStressIndex(context, ref),
+        ),
+
+        const Divider(),
+
+        // Reset Tutorials
+        buildSettingTile(
+          context,
+          title: context.l10n.resetTutorials,
+          subtitle: context.l10n.resetTutorialsDesc,
+          leading: const SemanticIcon(
+            icon: AppIcons.school,
+            semanticLabel: 'Reset tutorials',
+          ),
+          onTap: () => _showResetTutorialsDialog(context, ref),
+        ),
+      ],
     );
   }
 

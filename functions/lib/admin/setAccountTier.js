@@ -3,7 +3,7 @@
  * 🔐 ADMIN: Cloud Function to set a user's account tier
  *
  * Only callable by authenticated admins (custom claim: admin=true).
- * Updates accountTier and templateQuota atomically.
+ * Updates accountTier and Library quota atomically.
  *
  * **Usage** (Flutter):
  * ```dart
@@ -50,10 +50,7 @@ exports.setAccountTier = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
 const rateLimiterV1_1 = require("../security/rateLimiterV1");
-const TEMPLATE_QUOTAS = {
-    free: { maxPrivateTemplates: 4, maxPublicTemplates: 2 },
-    premium: { maxPrivateTemplates: 999, maxPublicTemplates: 999 },
-};
+const entitlements_1 = require("../premium/entitlements");
 /**
  * Check if the caller has admin custom claims
  */
@@ -68,7 +65,7 @@ async function verifyAdmin(uid) {
     }
 }
 exports.setAccountTier = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
-    var _a, _b, _c, _d;
+    var _a, _b;
     // 1. Authentication
     if (!request.auth) {
         throw new https_1.HttpsError('unauthenticated', 'Must be authenticated');
@@ -89,39 +86,27 @@ exports.setAccountTier = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
         throw new https_1.HttpsError('invalid-argument', 'tier must be "free" or "premium"');
     }
     const accountTier = tier;
-    const quota = TEMPLATE_QUOTAS[accountTier];
     // 4. Verify target user exists
     const userRef = admin.firestore().collection('users').doc(targetUserId);
     const userDoc = await userRef.get();
     if (!userDoc.exists) {
         throw new https_1.HttpsError('not-found', `User ${targetUserId} not found`);
     }
-    const currentData = userDoc.data();
-    const currentUsed = {
-        private: (_b = (_a = currentData === null || currentData === void 0 ? void 0 : currentData.templateQuota) === null || _a === void 0 ? void 0 : _a.usedPrivateTemplates) !== null && _b !== void 0 ? _b : 0,
-        public: (_d = (_c = currentData === null || currentData === void 0 ? void 0 : currentData.templateQuota) === null || _c === void 0 ? void 0 : _c.usedPublicTemplates) !== null && _d !== void 0 ? _d : 0,
-    };
     // 5. Update atomically
-    await userRef.update({
-        accountTier: accountTier,
-        templateQuota: {
-            maxPrivateTemplates: quota.maxPrivateTemplates,
-            maxPublicTemplates: quota.maxPublicTemplates,
-            usedPrivateTemplates: currentUsed.private,
-            usedPublicTemplates: currentUsed.public,
-        },
+    const snapshot = await (0, entitlements_1.applyPremiumEntitlements)(targetUserId, {
+        accountTier,
+        source: 'admin',
+        isLifetime: false,
+        willRenew: false,
     });
     console.log(`Admin ${callerUid} set account tier for ${targetUserId} to ${accountTier}`);
     return {
         success: true,
         targetUserId,
         tier: accountTier,
-        quota: {
-            maxPrivateTemplates: quota.maxPrivateTemplates,
-            maxPublicTemplates: quota.maxPublicTemplates,
-            usedPrivateTemplates: currentUsed.private,
-            usedPublicTemplates: currentUsed.public,
-        },
+        premiumActive: snapshot.premiumActive,
+        plan: snapshot.plan,
+        expiresAt: (_b = (_a = snapshot.expiresAt) === null || _a === void 0 ? void 0 : _a.toISOString()) !== null && _b !== void 0 ? _b : null,
     };
 }, Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'setAccountTier' }));
 //# sourceMappingURL=setAccountTier.js.map

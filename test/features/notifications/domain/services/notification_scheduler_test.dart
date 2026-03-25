@@ -60,6 +60,7 @@ class FakeNotificationRepository implements NotificationRepository {
     required DateTime scheduledTime,
     String? context,
     int? inactivityDay,
+    String? deepLinkPath,
   }) async {
     scheduleCount++;
     final id = 'record-$scheduleCount';
@@ -70,6 +71,7 @@ class FakeNotificationRepository implements NotificationRepository {
       'scheduledTime': scheduledTime,
       'context': context,
       'inactivityDay': inactivityDay,
+      'deepLinkPath': deepLinkPath,
     });
     return id;
   }
@@ -79,6 +81,7 @@ class FakeNotificationRepository implements NotificationRepository {
     required NotificationType type,
     required NotificationMessage message,
     String? context,
+    String? deepLinkPath,
   }) async {
     return 'shown-1';
   }
@@ -99,9 +102,7 @@ class FakeNotificationRepository implements NotificationRepository {
   Future<void> markNotificationOpened(String recordId) async {}
 
   @override
-  Future<NotificationStats> getNotificationStats(
-    NotificationType type,
-  ) async {
+  Future<NotificationStats> getNotificationStats(NotificationType type) async {
     return const NotificationStats(
       totalSent: 5,
       totalOpened: 2,
@@ -175,8 +176,9 @@ void main() {
     test('uses message rotation (excludeKey)', () async {
       fakeRepo.setLastMessageKey('workout_forgotten_1');
       await scheduler.scheduleWorkoutForgotten(l10n);
-      final msg = fakeRepo.scheduledNotifications.first['message']
-          as NotificationMessage;
+      final msg =
+          fakeRepo.scheduledNotifications.first['message']
+              as NotificationMessage;
       // With excludeKey workout_forgotten_1, it should pick a different key
       // (or fallback to pool if all excluded)
       expect(msg.key, isNotEmpty);
@@ -226,10 +228,7 @@ void main() {
         l10n: l10n,
       );
       expect(fakeRepo.scheduleCount, 1);
-      expect(
-        fakeRepo.scheduledNotifications.first['inactivityDay'],
-        3,
-      );
+      expect(fakeRepo.scheduledNotifications.first['inactivityDay'], 3);
     });
 
     test('schedules for 7 days inactivity', () async {
@@ -238,10 +237,7 @@ void main() {
         l10n: l10n,
       );
       expect(fakeRepo.scheduleCount, 1);
-      expect(
-        fakeRepo.scheduledNotifications.first['inactivityDay'],
-        7,
-      );
+      expect(fakeRepo.scheduledNotifications.first['inactivityDay'], 7);
     });
 
     test('schedules for 14 days inactivity', () async {
@@ -250,15 +246,11 @@ void main() {
         l10n: l10n,
       );
       expect(fakeRepo.scheduleCount, 1);
-      expect(
-        fakeRepo.scheduledNotifications.first['inactivityDay'],
-        14,
-      );
+      expect(fakeRepo.scheduledNotifications.first['inactivityDay'], 14);
     });
 
     test('does NOT re-schedule for same inactivity day', () async {
-      final lastWorkout =
-          DateTime.now().subtract(const Duration(days: 4));
+      final lastWorkout = DateTime.now().subtract(const Duration(days: 4));
       await scheduler.scheduleInactivityIfNeeded(
         lastWorkoutDate: lastWorkout,
         l10n: l10n,
@@ -315,6 +307,11 @@ void main() {
     test('schedules PR notification with exercise name', () async {
       await scheduler.schedulePrNotification(
         exerciseName: 'Bench Press',
+        exerciseId: 'bench-press',
+        prTypeName: 'weight',
+        prValue: 110,
+        previousValue: 105,
+        achievedAt: DateTime(2026, 3, 7, 10, 30),
         l10n: l10n,
       );
       expect(fakeRepo.scheduleCount, 1);
@@ -322,65 +319,47 @@ void main() {
         fakeRepo.scheduledNotifications.first['type'],
         NotificationType.insightPr,
       );
+      expect(fakeRepo.scheduledNotifications.first['context'], 'Bench Press');
       expect(
-        fakeRepo.scheduledNotifications.first['context'],
-        'Bench Press',
+        fakeRepo.scheduledNotifications.first['deepLinkPath'],
+        '/stats/analytics/exercise/Bench%20Press'
+        '?source=notification&id=bench-press&prType=weight'
+        '&prValue=110.0&previousValue=105.0&achievedAt=2026-03-07T10%3A30%3A00.000',
       );
     });
 
     test('blocked by anti-spam', () async {
       fakeRepo.setCanSend(false);
-      await scheduler.schedulePrNotification(
-        exerciseName: 'Squat',
-        l10n: l10n,
-      );
+      await scheduler.schedulePrNotification(exerciseName: 'Squat', l10n: l10n);
       expect(fakeRepo.scheduleCount, 0);
     });
   });
 
   group('NotificationScheduler.scheduleStreakNotification', () {
     test('schedules for milestone streak (7 days)', () async {
-      await scheduler.scheduleStreakNotification(
-        streakDays: 7,
-        l10n: l10n,
-      );
+      await scheduler.scheduleStreakNotification(streakDays: 7, l10n: l10n);
       expect(fakeRepo.scheduleCount, 1);
-      expect(
-        fakeRepo.scheduledNotifications.first['context'],
-        '7',
-      );
+      expect(fakeRepo.scheduledNotifications.first['context'], '7');
     });
 
     test('schedules for milestone streak (30 days)', () async {
-      await scheduler.scheduleStreakNotification(
-        streakDays: 30,
-        l10n: l10n,
-      );
+      await scheduler.scheduleStreakNotification(streakDays: 30, l10n: l10n);
       expect(fakeRepo.scheduleCount, 1);
     });
 
     test('does NOT schedule for non-milestone streak', () async {
-      await scheduler.scheduleStreakNotification(
-        streakDays: 5,
-        l10n: l10n,
-      );
+      await scheduler.scheduleStreakNotification(streakDays: 5, l10n: l10n);
       expect(fakeRepo.scheduleCount, 0);
     });
 
     test('does NOT schedule for non-milestone streak (10 days)', () async {
-      await scheduler.scheduleStreakNotification(
-        streakDays: 10,
-        l10n: l10n,
-      );
+      await scheduler.scheduleStreakNotification(streakDays: 10, l10n: l10n);
       expect(fakeRepo.scheduleCount, 0);
     });
 
     test('blocked by anti-spam', () async {
       fakeRepo.setCanSend(false);
-      await scheduler.scheduleStreakNotification(
-        streakDays: 14,
-        l10n: l10n,
-      );
+      await scheduler.scheduleStreakNotification(streakDays: 14, l10n: l10n);
       expect(fakeRepo.scheduleCount, 0);
     });
   });
@@ -392,10 +371,7 @@ void main() {
         l10n: l10n,
       );
       expect(fakeRepo.scheduleCount, 1);
-      expect(
-        fakeRepo.scheduledNotifications.first['context'],
-        '25',
-      );
+      expect(fakeRepo.scheduledNotifications.first['context'], '25');
     });
 
     test('schedules for exactly 20% increase', () async {

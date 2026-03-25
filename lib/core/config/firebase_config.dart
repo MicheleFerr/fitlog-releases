@@ -51,6 +51,63 @@ class FirebaseConfig {
     }
   }
 
+  /// Returns `true` when the core Firebase identifiers for a platform are all present.
+  static bool hasRequiredCoreValues({
+    required String apiKey,
+    required String appId,
+    required String messagingSenderId,
+    required String projectId,
+  }) {
+    return [
+      apiKey,
+      appId,
+      messagingSenderId,
+      projectId,
+    ].every((value) => value.trim().isNotEmpty);
+  }
+
+  static bool get hasAndroidEnvironmentConfig => hasRequiredCoreValues(
+    apiKey: EnvironmentConfig.firebaseApiKeyAndroid,
+    appId: EnvironmentConfig.firebaseAppIdAndroid,
+    messagingSenderId: EnvironmentConfig.firebaseMessagingSenderIdAndroid,
+    projectId: EnvironmentConfig.firebaseProjectIdAndroid,
+  );
+
+  static bool get hasAppleEnvironmentConfig => hasRequiredCoreValues(
+    apiKey: EnvironmentConfig.firebaseApiKeyIOS,
+    appId: EnvironmentConfig.firebaseAppIdIOS,
+    messagingSenderId: EnvironmentConfig.firebaseMessagingSenderIdIOS,
+    projectId: EnvironmentConfig.firebaseProjectIdIOS,
+  );
+
+  /// Returns environment-based options only when the current platform has a
+  /// complete runtime config. Mobile platforms intentionally fall back to
+  /// native `google-services.json` / `GoogleService-Info.plist` to avoid
+  /// drift between local env files and Firebase app registration.
+  static FirebaseOptions? get maybeCurrentPlatform {
+    if (kIsWeb) {
+      return _webOptions;
+    }
+
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return null;
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return null;
+      case TargetPlatform.windows:
+        return _windowsOptions;
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'Firebase is not supported on Linux platform',
+        );
+      default:
+        throw UnsupportedError(
+          'Firebase is not supported on this platform',
+        );
+    }
+  }
+
   /// Firebase options for iOS (from environment variables)
   static FirebaseOptions get _iOSOptions => FirebaseOptions(
         apiKey: EnvironmentConfig.firebaseApiKeyIOS,

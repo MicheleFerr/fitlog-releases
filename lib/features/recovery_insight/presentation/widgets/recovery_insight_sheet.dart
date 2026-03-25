@@ -16,7 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_workout_correlation.dart';
@@ -26,8 +26,10 @@ import 'package:gymbro_flutter_new/features/recovery_insight/presentation/extens
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Bottom sheet with expanded recovery insight details
@@ -36,7 +38,8 @@ class RecoveryInsightSheet extends ConsumerStatefulWidget {
 
   /// Show the recovery insight bottom sheet
   static Future<void> show(BuildContext context) {
-    return ModalService.showSheet<void>(context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -59,7 +62,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   Widget build(BuildContext context) {
     final insightAsync = ref.watch(recoveryInsightProvider);
     final sleepRecordsAsync = ref.watch(sleepRecordsProvider);
-    final isPro = ref.watch(isPremiumUserProvider);
+    final isPro = ref.watch(hasEffectivePremiumAccessProvider);
     final l10n = context.l10n;
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
@@ -73,7 +76,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
         return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: AppBorderRadius.onlyTop(AppBorderRadius.xl),
             boxShadow: [
               BoxShadow(
                 color: context.colors.shadow.withValues(alpha: 0.1),
@@ -86,17 +89,22 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             children: [
               // Handle
               Container(
-                margin: const EdgeInsets.only(top: 12),
+                margin: const EdgeInsets.only(top: AppSpacing.sm),
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
                   color: context.colors.outline.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: AppBorderRadius.xxsRadius,
                 ),
               ),
               // Header
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.md,
+                  AppSpacing.lg,
+                  AppSpacing.xs,
+                ),
                 child: Row(
                   children: [
                     Icon(
@@ -167,15 +175,15 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
 
     return ListView(
       controller: scrollController,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         // Main score card with trend
         _buildScoreCard(context, insight, sleepRecords),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.lg),
 
         // Category breakdown
         _buildCategoryBreakdown(context, insight),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.lg),
 
         // Collapsible Sleep Details Section
         _buildCollapsibleSection(
@@ -189,7 +197,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             children: [
               // Sleep metrics grid
               _buildSleepMetricsGrid(context, insight),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
               // Weekly chart
               if (sleepRecords.isNotEmpty)
@@ -197,7 +205,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.md),
 
         // Collapsible Correlation Section (Pro only)
         _buildCollapsibleSection(
@@ -211,11 +219,11 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               ? _buildCorrelationContent(context, insight.correlation)
               : _buildProUpgradePrompt(context),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.xl),
 
         // Recommendation card
         _buildRecommendationCard(context, insight),
-        const SizedBox(height: 32),
+        const SizedBox(height: AppSpacing.xxl),
       ],
     );
   }
@@ -233,7 +241,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     final hasTrend = yesterdayScore > 0 && sleepRecords.length >= 2;
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -243,7 +251,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: AppBorderRadius.xlRadius,
         border: Border.all(color: categoryColor.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -300,7 +308,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                                         ? context.successColor
                                         : context.errorColor,
                                   ),
-                                  const SizedBox(width: 2),
+                                  const SizedBox(width: AppSpacing.xxs),
                                   Text(
                                     '${scoreDiff >= 0 ? '+' : ''}$scoreDiff',
                                     style: context.textTheme.labelSmall
@@ -327,7 +335,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                   );
                 },
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: AppSpacing.lg),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,7 +346,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                           insight.category.emoji,
                           style: context.textTheme.headlineSmall,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.xs),
                         Flexible(
                           child: Text(
                             insight.category.localizedName(context),
@@ -350,7 +358,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       _getCategoryDescription(insight.category, context),
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -364,7 +372,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
           ),
           // Mini weekly trend sparkline
           if (sleepRecords.length >= 3) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             _buildMiniTrendSparkline(context, sleepRecords, categoryColor),
           ],
         ],
@@ -386,10 +394,13 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     final minHours = hours.reduce((a, b) => a < b ? a : b).clamp(0.0, 6.0);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
       ),
       child: Row(
         children: [
@@ -398,14 +409,14 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             size: AppIconSize.small,
             color: context.colors.onSurfaceVariant,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.xs),
           Text(
             context.l10n.weeklyTrend,
             style: context.textTheme.labelSmall?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: SizedBox(
               height: 24,
@@ -421,7 +432,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.xs),
           // Average indicator
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -485,15 +496,16 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   ) {
     final l10n = context.l10n;
     final categoryColor = _getCategoryColor(insight.category, context);
+    final onCategoryColor = _foregroundForAccent(categoryColor);
 
     // Calculate cursor position based on score (0-100 mapped to 0-1)
     final cursorPosition = insight.score / 100;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainer,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.mdRadius,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -510,12 +522,12 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               // Score badge
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xxs,
                 ),
                 decoration: BoxDecoration(
                   color: categoryColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppBorderRadius.smRadius,
                   border: Border.all(
                     color: categoryColor.withValues(alpha: 0.3),
                   ),
@@ -527,7 +539,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                       insight.category.emoji,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.xxs),
                     Text(
                       '${insight.score}',
                       style: context.textTheme.labelMedium?.copyWith(
@@ -540,7 +552,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
 
           // Progress bar with segments and cursor
           LayoutBuilder(
@@ -568,12 +580,12 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: categoryColor,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: AppBorderRadius.xsRadius,
                                 ),
                                 child: Text(
                                   '${insight.score}',
                                   style: context.textTheme.labelSmall?.copyWith(
-                                    color: context.colors.onPrimary,
+                                    color: onCategoryColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 10,
                                   ),
@@ -608,7 +620,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                             duration: const Duration(milliseconds: 300),
                             height: isCurrentSegment ? 14 : 10,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: AppBorderRadius.xsRadius,
                               color: isFilled
                                   ? dotColor
                                   : context.colors.surfaceContainerHighest,
@@ -634,7 +646,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                       );
                     }),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.xs),
 
                   // Category labels
                   Row(
@@ -690,7 +702,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             color: context.colors.tertiary,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: _buildMetricCard(
             context,
@@ -700,7 +712,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             color: context.colors.secondary,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: _buildMetricCard(
             context,
@@ -722,16 +734,16 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: AppIconSize.medium, color: color),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             value,
             style: context.textTheme.titleMedium?.copyWith(
@@ -762,10 +774,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     final weekRecords = records.take(7).toList().reversed.toList();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.mdRadius,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -776,7 +788,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           // Chart
           SizedBox(
             height: 120,
@@ -805,7 +817,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xxs),
                         // Hours label
                         if (hasRecord)
                           Text(
@@ -816,7 +828,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xxs),
                         // Day label
                         Text(
                           _getDayLabel(index, weekRecords.length, context),
@@ -834,7 +846,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               }),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           // Legend: 7h recommended line indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -844,7 +856,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                 height: 2,
                 color: context.colors.outline.withValues(alpha: 0.5),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.xs),
               Text(
                 l10n.recommendedSleep,
                 style: context.textTheme.labelSmall?.copyWith(
@@ -867,10 +879,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
 
     if (correlation == null || !correlation.hasEnoughData) {
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           color: context.colors.surfaceContainer,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppBorderRadius.mdRadius,
         ),
         child: Column(
           children: [
@@ -879,7 +891,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               color: context.colors.onSurfaceVariant,
               size: AppIconSize.large,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               l10n.correlationInsufficientData,
               textAlign: TextAlign.center,
@@ -893,10 +905,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainer,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.mdRadius,
       ),
       child: Column(
         children: [
@@ -909,7 +921,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             subtitle: '${correlation.workoutsWithGoodSleep} ${l10n.workouts}',
             isPositive: correlation.volumeChangeAbove7h >= 0,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           // Poor sleep effect
           _buildCorrelationRow(
             context,
@@ -919,13 +931,13 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             subtitle: '${correlation.workoutsWithPoorSleep} ${l10n.workouts}',
             isPositive: false,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           // Summary message
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: context.colors.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppBorderRadius.smRadius,
             ),
             child: Row(
               children: [
@@ -934,7 +946,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                   size: AppIconSize.small,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: Text(
                     correlation.summaryMessageKey.localizedCorrelationSummary(
@@ -966,14 +978,14 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppSpacing.sm),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.smRadius,
           ),
           child: Icon(icon, color: color, size: AppIconSize.small),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1008,7 +1020,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     final l10n = context.l10n;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -1016,7 +1028,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             context.colors.tertiary.withValues(alpha: 0.1),
           ],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.mdRadius,
         border: Border.all(
           color: context.colors.primary.withValues(alpha: 0.3),
         ),
@@ -1028,7 +1040,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             color: context.colors.primary,
             size: AppIconSize.xlarge,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             l10n.premiumFeature,
             style: context.textTheme.titleMedium?.copyWith(
@@ -1036,7 +1048,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               color: context.colors.primary,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             l10n.sleepCorrelationProDescription,
             textAlign: TextAlign.center,
@@ -1044,7 +1056,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               color: context.colors.onSurface.withValues(alpha: 0.8),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           FilledButton(
             onPressed: () {
               HapticFeedback.mediumImpact();
@@ -1070,10 +1082,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     final l10n = context.l10n;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: categoryColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppBorderRadius.lgRadius,
         border: Border.all(color: categoryColor.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -1086,7 +1098,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                 color: categoryColor,
                 size: AppIconSize.medium,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   l10n.todaysRecommendation,
@@ -1098,7 +1110,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             insight.recommendation.localizedRecommendation(context),
             style: context.textTheme.bodyLarge?.copyWith(
@@ -1106,12 +1118,15 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             ),
           ),
           if (insight.consecutiveBadNights > 0) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.sm),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
               decoration: BoxDecoration(
                 color: context.errorColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppBorderRadius.xsRadius,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -1121,7 +1136,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                     size: AppIconSize.small,
                     color: context.errorColor,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
                   Text(
                     '${insight.consecutiveBadNights} ${l10n.consecutiveBadNights}',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -1154,12 +1169,15 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             HapticFeedback.selectionClick();
             onToggle();
           },
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppBorderRadius.smRadius,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
             decoration: BoxDecoration(
               color: context.colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppBorderRadius.smRadius,
             ),
             child: Row(
               children: [
@@ -1168,7 +1186,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                   color: context.colors.primary,
                   size: AppIconSize.medium,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
                     title,
@@ -1192,7 +1210,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
         // Animated content
         AnimatedCrossFade(
           firstChild: Padding(
-            padding: const EdgeInsets.only(top: 12),
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
             child: child,
           ),
           secondChild: const SizedBox.shrink(),
@@ -1241,6 +1259,12 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
       RecoveryCategory.low => context.errorColor,
       RecoveryCategory.critical => context.errorColor,
     };
+  }
+
+  Color _foregroundForAccent(Color color) {
+    return ThemeData.estimateBrightnessForColor(color) == Brightness.dark
+        ? Colors.white
+        : Colors.black;
   }
 
   String _getCategoryDescription(

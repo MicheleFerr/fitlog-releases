@@ -166,51 +166,48 @@ void main() {
   // StartWorkoutCard
   // -------------------------------------------------------------------------
   group('StartWorkoutCard', () {
-    testWidgets(
-      'shows "Start Now" card when no workout is active',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              currentWorkoutProvider.overrideWith(
-                () => _FakeCurrentWorkoutNotifier(null),
-              ),
-            ],
-            child: const StartWorkoutCard(),
-          ),
-        );
-        await tester.pumpAndSettle();
+    testWidgets('shows "Free Workout" card when no workout is active', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            currentWorkoutProvider.overrideWith(
+              () => _FakeCurrentWorkoutNotifier(null),
+            ),
+          ],
+          child: const StartWorkoutCard(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // l10n key startNow = "Start Now"
-        expect(find.text('Start Now'), findsOneWidget);
-      },
-    );
+      expect(find.text('Free Workout'), findsOneWidget);
+    });
 
-    testWidgets(
-      'shows "Resume" card when a workout is in progress',
-      (WidgetTester tester) async {
-        final workout = _buildWorkout(
-          status: WorkoutStatus.inProgress,
-          name: 'Push Day',
-        );
+    testWidgets('shows "Resume" card when a workout is in progress', (
+      WidgetTester tester,
+    ) async {
+      final workout = _buildWorkout(
+        status: WorkoutStatus.inProgress,
+        name: 'Push Day',
+      );
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              currentWorkoutProvider.overrideWith(
-                () => _FakeCurrentWorkoutNotifier(workout),
-              ),
-            ],
-            child: const StartWorkoutCard(),
-          ),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            currentWorkoutProvider.overrideWith(
+              () => _FakeCurrentWorkoutNotifier(workout),
+            ),
+          ],
+          child: const StartWorkoutCard(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // Active card must show the workout name and the Resume button text
-        expect(find.text('Push Day'), findsOneWidget);
-        expect(find.text('Resume'), findsWidgets);
-      },
-    );
+      // Active card must show the workout name and the Resume button text
+      expect(find.text('Push Day'), findsOneWidget);
+      expect(find.text('Resume'), findsWidgets);
+    });
 
     testWidgets(
       'active card shows Finish and Discard secondary action buttons',
@@ -234,56 +231,54 @@ void main() {
       },
     );
 
-    testWidgets(
-      'tapping Finish on active card opens confirmation dialog',
-      (WidgetTester tester) async {
-        final workout = _buildWorkout(status: WorkoutStatus.inProgress);
+    testWidgets('tapping Finish on active card opens confirmation dialog', (
+      WidgetTester tester,
+    ) async {
+      final workout = _buildWorkout(status: WorkoutStatus.inProgress);
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              currentWorkoutProvider.overrideWith(
-                () => _FakeCurrentWorkoutNotifier(workout),
-              ),
-            ],
-            child: const StartWorkoutCard(),
-          ),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            currentWorkoutProvider.overrideWith(
+              () => _FakeCurrentWorkoutNotifier(workout),
+            ),
+          ],
+          child: const StartWorkoutCard(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // Tap the OutlinedButton "Finish" that is the secondary action in the
-        // active card body (not the FilledButton inside the yet-to-appear dialog)
-        final finishButtons = find.text('Finish');
-        await tester.tap(finishButtons.first);
-        await tester.pumpAndSettle();
+      // Tap the OutlinedButton "Finish" that is the secondary action in the
+      // active card body (not the FilledButton inside the yet-to-appear dialog)
+      final finishButtons = find.text('Finish');
+      await tester.tap(finishButtons.first);
+      await tester.pumpAndSettle();
 
-        expect(find.byType(AlertDialog), findsOneWidget);
-      },
-    );
+      expect(find.byType(AlertDialog), findsOneWidget);
+    });
 
-    testWidgets(
-      'tapping Discard on active card opens confirmation dialog',
-      (WidgetTester tester) async {
-        final workout = _buildWorkout(status: WorkoutStatus.inProgress);
+    testWidgets('tapping Discard on active card opens confirmation dialog', (
+      WidgetTester tester,
+    ) async {
+      final workout = _buildWorkout(status: WorkoutStatus.inProgress);
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              currentWorkoutProvider.overrideWith(
-                () => _FakeCurrentWorkoutNotifier(workout),
-              ),
-            ],
-            child: const StartWorkoutCard(),
-          ),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            currentWorkoutProvider.overrideWith(
+              () => _FakeCurrentWorkoutNotifier(workout),
+            ),
+          ],
+          child: const StartWorkoutCard(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        await tester.tap(find.text('Discard'));
-        await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard'));
+      await tester.pumpAndSettle();
 
-        expect(find.byType(AlertDialog), findsOneWidget);
-      },
-    );
+      expect(find.byType(AlertDialog), findsOneWidget);
+    });
 
     testWidgets(
       'tapping Cancel in Finish confirmation dialog closes the dialog',
@@ -314,39 +309,37 @@ void main() {
       },
     );
 
-    testWidgets(
-      'inactive card renders in dark theme without errors',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              currentWorkoutProvider.overrideWith(
-                () => _FakeCurrentWorkoutNotifier(null),
-              ),
+    testWidgets('inactive card renders in dark theme without errors', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            currentWorkoutProvider.overrideWith(
+              () => _FakeCurrentWorkoutNotifier(null),
+            ),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
-            child: MaterialApp(
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: const [Locale('en')],
-              locale: const Locale('en'),
-              themeMode: ThemeMode.dark,
-              darkTheme: ThemeData.dark(useMaterial3: true),
-              home: const Scaffold(
-                body: SingleChildScrollView(child: StartWorkoutCard()),
-              ),
+            supportedLocales: const [Locale('en')],
+            locale: const Locale('en'),
+            themeMode: ThemeMode.dark,
+            darkTheme: ThemeData.dark(useMaterial3: true),
+            home: const Scaffold(
+              body: SingleChildScrollView(child: StartWorkoutCard()),
             ),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // l10n key startNow = "Start Now"
-        expect(find.text('Start Now'), findsOneWidget);
-      },
-    );
+      expect(find.text('Free Workout'), findsOneWidget);
+    });
   });
 
   // -------------------------------------------------------------------------
@@ -388,58 +381,54 @@ void main() {
       },
     );
 
-    testWidgets(
-      'shows dismiss and action buttons when visible',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              shouldShowTemplateWizardReminderProvider.overrideWithValue(true),
-            ],
-            child: const TemplateWizardReminderCard(),
-          ),
-        );
-        await tester.pumpAndSettle();
+    testWidgets('shows dismiss and action buttons when visible', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            shouldShowTemplateWizardReminderProvider.overrideWithValue(true),
+          ],
+          child: const TemplateWizardReminderCard(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // l10n key templateWizardReminderDismiss = "Later"
-        expect(find.text('Later'), findsOneWidget);
-        // l10n key templateWizardReminderAction = "Start Wizard"
-        expect(find.text('Start Wizard'), findsOneWidget);
-      },
-    );
+      // l10n key templateWizardReminderDismiss = "Later"
+      expect(find.text('Later'), findsOneWidget);
+      // l10n key templateWizardReminderAction = "Start Wizard"
+      expect(find.text('Start Wizard'), findsOneWidget);
+    });
 
-    testWidgets(
-      'card renders in Italian locale without crashing',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              shouldShowTemplateWizardReminderProvider.overrideWithValue(true),
+    testWidgets('card renders in Italian locale without crashing', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            shouldShowTemplateWizardReminderProvider.overrideWithValue(true),
+          ],
+          child: const MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
-            child: const MaterialApp(
-              localizationsDelegates: [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: [Locale('en'), Locale('it')],
-              locale: Locale('it'),
-              home: Scaffold(
-                body: SingleChildScrollView(
-                  child: TemplateWizardReminderCard(),
-                ),
-              ),
+            supportedLocales: [Locale('en'), Locale('it')],
+            locale: Locale('it'),
+            home: Scaffold(
+              body: SingleChildScrollView(child: TemplateWizardReminderCard()),
             ),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // Italian locale – just verify widget builds and shows some text
-        expect(find.byType(TemplateWizardReminderCard), findsOneWidget);
-        expect(find.byType(Text), isNot(findsNothing));
-      },
-    );
+      // Italian locale – just verify widget builds and shows some text
+      expect(find.byType(TemplateWizardReminderCard), findsOneWidget);
+      expect(find.byType(Text), isNot(findsNothing));
+    });
   });
 
   // -------------------------------------------------------------------------
@@ -483,61 +472,59 @@ void main() {
       },
     );
 
-    testWidgets(
-      'shows days-since value in nudge card subtitle',
-      (WidgetTester tester) async {
-        const daysSince = 42;
+    testWidgets('shows days-since value in nudge card subtitle', (
+      WidgetTester tester,
+    ) async {
+      const daysSince = 42;
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              shouldShowWeightNudgeProvider.overrideWithValue(true),
-              daysSinceWeightUpdateProvider.overrideWithValue(daysSince),
-            ],
-            child: const WeightUpdateNudgeCard(),
-          ),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            shouldShowWeightNudgeProvider.overrideWithValue(true),
+            daysSinceWeightUpdateProvider.overrideWithValue(daysSince),
+          ],
+          child: const WeightUpdateNudgeCard(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // The subtitle contains the number of days
-        expect(find.textContaining('$daysSince'), findsWidgets);
-      },
-    );
+      // The subtitle contains the number of days
+      expect(find.textContaining('$daysSince'), findsWidgets);
+    });
 
-    testWidgets(
-      'nudge card can be swiped horizontally to dismiss',
-      (WidgetTester tester) async {
-        // Override only the async notifier (source of truth). The derived
-        // shouldShowWeightNudgeProvider and daysSinceWeightUpdateProvider are
-        // NOT overridden so they derive their values from the fake notifier
-        // state and correctly reflect the dismissed state after swipe.
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              weightUpdateNudgeProvider.overrideWith(
-                () => _FakeWeightNudgeNotifier(),
-              ),
-            ],
-            child: const WeightUpdateNudgeCard(),
-          ),
-        );
-        // Wait for async notifier build
-        await tester.pumpAndSettle();
+    testWidgets('nudge card can be swiped horizontally to dismiss', (
+      WidgetTester tester,
+    ) async {
+      // Override only the async notifier (source of truth). The derived
+      // shouldShowWeightNudgeProvider and daysSinceWeightUpdateProvider are
+      // NOT overridden so they derive their values from the fake notifier
+      // state and correctly reflect the dismissed state after swipe.
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            weightUpdateNudgeProvider.overrideWith(
+              () => _FakeWeightNudgeNotifier(),
+            ),
+          ],
+          child: const WeightUpdateNudgeCard(),
+        ),
+      );
+      // Wait for async notifier build
+      await tester.pumpAndSettle();
 
-        expect(find.byKey(const Key('weight_update_nudge')), findsOneWidget);
+      expect(find.byKey(const Key('weight_update_nudge')), findsOneWidget);
 
-        // Fling far to the right to exceed the dismissal threshold
-        await tester.fling(
-          find.byKey(const Key('weight_update_nudge')),
-          const Offset(800, 0),
-          1500,
-        );
-        await tester.pumpAndSettle();
+      // Fling far to the right to exceed the dismissal threshold
+      await tester.fling(
+        find.byKey(const Key('weight_update_nudge')),
+        const Offset(800, 0),
+        1500,
+      );
+      await tester.pumpAndSettle();
 
-        // After dismissal the Dismissible and the card are removed
-        expect(find.byKey(const Key('weight_update_nudge')), findsNothing);
-      },
-    );
+      // After dismissal the Dismissible and the card are removed
+      expect(find.byKey(const Key('weight_update_nudge')), findsNothing);
+    });
   });
 
   // -------------------------------------------------------------------------
@@ -552,125 +539,122 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets(
-      'shows loading skeleton when isLoading is true',
-      (WidgetTester tester) async {
-        const loadingState = UserXPState(isLoading: true);
+    testWidgets('shows loading skeleton when isLoading is true', (
+      WidgetTester tester,
+    ) async {
+      const loadingState = UserXPState(isLoading: true);
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              // Use overrideWith and a plain Notifier to avoid Firebase init
-              userXPProvider.overrideWith(() => _FakeUserXPNotifier(loadingState)),
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            // Use overrideWith and a plain Notifier to avoid Firebase init
+            userXPProvider.overrideWith(
+              () => _FakeUserXPNotifier(loadingState),
+            ),
+          ],
+          child: const XPProgressBar(),
+        ),
+      );
+      await tester.pump();
+
+      // Loading skeleton is a Container with height 80 – no tier label shown
+      expect(find.text('Starter'), findsNothing);
+      expect(find.text('Bronze'), findsNothing);
+    });
+
+    testWidgets('renders nothing (SizedBox.shrink) when error is set', (
+      WidgetTester tester,
+    ) async {
+      const errorState = UserXPState(error: 'Firestore unavailable');
+
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            userXPProvider.overrideWith(() => _FakeUserXPNotifier(errorState)),
+          ],
+          child: const XPProgressBar(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Nothing should be rendered on error
+      expect(find.text('Starter'), findsNothing);
+    });
+
+    testWidgets('shows tier name and XP when data is available', (
+      WidgetTester tester,
+    ) async {
+      // 50 XP is below the 100-XP bronze threshold → Starter tier
+      const xpState = UserXPState(workoutXP: 50);
+
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            userXPProvider.overrideWith(() => _FakeUserXPNotifier(xpState)),
+          ],
+          child: const XPProgressBar(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tier: Starter (0-99 XP) – text may appear more than once
+      // (e.g. in the tier name row and the progress section)
+      expect(find.text(UserTier.starter.displayName), findsWidgets);
+      // XP total text
+      expect(find.textContaining('50 XP'), findsWidgets);
+    });
+
+    testWidgets('shows "MAX" badge when user is at Platinum tier', (
+      WidgetTester tester,
+    ) async {
+      // Platinum requires 5000+ XP
+      const xpState = UserXPState(workoutXP: 6000);
+
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            userXPProvider.overrideWith(() => _FakeUserXPNotifier(xpState)),
+          ],
+          child: const XPProgressBar(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // l10n key maxLevel = "MAX"
+      expect(find.text('MAX'), findsOneWidget);
+    });
+
+    testWidgets('XPProgressBar renders without crash in dark theme', (
+      WidgetTester tester,
+    ) async {
+      const xpState = UserXPState(workoutXP: 500);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            userXPProvider.overrideWith(() => _FakeUserXPNotifier(xpState)),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
-            child: const XPProgressBar(),
-          ),
-        );
-        await tester.pump();
-
-        // Loading skeleton is a Container with height 80 – no tier label shown
-        expect(find.text('Starter'), findsNothing);
-        expect(find.text('Bronze'), findsNothing);
-      },
-    );
-
-    testWidgets(
-      'renders nothing (SizedBox.shrink) when error is set',
-      (WidgetTester tester) async {
-        const errorState = UserXPState(error: 'Firestore unavailable');
-
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              userXPProvider.overrideWith(() => _FakeUserXPNotifier(errorState)),
-            ],
-            child: const XPProgressBar(),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // Nothing should be rendered on error
-        expect(find.text('Starter'), findsNothing);
-      },
-    );
-
-    testWidgets(
-      'shows tier name and XP when data is available',
-      (WidgetTester tester) async {
-        // 50 XP is below the 100-XP bronze threshold → Starter tier
-        const xpState = UserXPState(workoutXP: 50);
-
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              userXPProvider.overrideWith(() => _FakeUserXPNotifier(xpState)),
-            ],
-            child: const XPProgressBar(),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // Tier: Starter (0-99 XP) – text may appear more than once
-        // (e.g. in the tier name row and the progress section)
-        expect(find.text(UserTier.starter.displayName), findsWidgets);
-        // XP total text
-        expect(find.textContaining('50 XP'), findsWidgets);
-      },
-    );
-
-    testWidgets(
-      'shows "MAX" badge when user is at Platinum tier',
-      (WidgetTester tester) async {
-        // Platinum requires 5000+ XP
-        const xpState = UserXPState(workoutXP: 6000);
-
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              userXPProvider.overrideWith(() => _FakeUserXPNotifier(xpState)),
-            ],
-            child: const XPProgressBar(),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // l10n key maxLevel = "MAX"
-        expect(find.text('MAX'), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      'XPProgressBar renders without crash in dark theme',
-      (WidgetTester tester) async {
-        const xpState = UserXPState(workoutXP: 500);
-
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              userXPProvider.overrideWith(() => _FakeUserXPNotifier(xpState)),
-            ],
-            child: MaterialApp(
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: const [Locale('en')],
-              locale: const Locale('en'),
-              themeMode: ThemeMode.dark,
-              darkTheme: ThemeData.dark(useMaterial3: true),
-              home: const Scaffold(
-                body: SingleChildScrollView(child: XPProgressBar()),
-              ),
+            supportedLocales: const [Locale('en')],
+            locale: const Locale('en'),
+            themeMode: ThemeMode.dark,
+            darkTheme: ThemeData.dark(useMaterial3: true),
+            home: const Scaffold(
+              body: SingleChildScrollView(child: XPProgressBar()),
             ),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(find.byType(XPProgressBar), findsOneWidget);
-      },
-    );
+      expect(find.byType(XPProgressBar), findsOneWidget);
+    });
   });
 
   // -------------------------------------------------------------------------
@@ -708,43 +692,42 @@ void main() {
       },
     );
 
-    testWidgets(
-      'shows data rings and stats when ActivityRingsData is loaded',
-      (WidgetTester tester) async {
-        final loadedData = ActivityRingsData(
-          moveCalories: 350,
-          moveGoal: 500,
-          exerciseMinutes: 25,
-          exerciseGoal: 30,
-          standHours: 8,
-          standGoal: 12,
-          lastUpdated: DateTime(2026, 2, 28),
-        );
+    testWidgets('shows data rings and stats when ActivityRingsData is loaded', (
+      WidgetTester tester,
+    ) async {
+      final loadedData = ActivityRingsData(
+        moveCalories: 350,
+        moveGoal: 500,
+        exerciseMinutes: 25,
+        exerciseGoal: 30,
+        standHours: 8,
+        standGoal: 12,
+        lastUpdated: DateTime(2026, 2, 28),
+      );
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              activityRingsProvider.overrideWith(
-                () => _FakeActivityRingsNotifier(loadedData),
-              ),
-            ],
-            child: const ActivityRingsWidget(),
-          ),
-        );
-        // Advance past the 5-second initState timer
-        await tester.pump(const Duration(seconds: 5));
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            activityRingsProvider.overrideWith(
+              () => _FakeActivityRingsNotifier(loadedData),
+            ),
+          ],
+          child: const ActivityRingsWidget(),
+        ),
+      );
+      // Advance past the 5-second initState timer
+      await tester.pump(const Duration(seconds: 5));
 
-        // Stats labels visible
-        expect(find.text('Move'), findsOneWidget);
-        expect(find.text('Exercise'), findsOneWidget);
-        expect(find.text('Stand'), findsOneWidget);
+      // Stats labels visible
+      expect(find.text('Move'), findsOneWidget);
+      expect(find.text('Exercise'), findsOneWidget);
+      expect(find.text('Stand'), findsOneWidget);
 
-        // Calorie value
-        expect(find.textContaining('350'), findsWidgets);
-        // "HealthKit" badge is shown when hasData is true
-        expect(find.text('HealthKit'), findsOneWidget);
-      },
-    );
+      // Calorie value
+      expect(find.textContaining('350'), findsWidgets);
+      // "HealthKit" badge is shown when hasData is true
+      expect(find.text('HealthKit'), findsOneWidget);
+    });
 
     testWidgets(
       'shows "Connect Health" error state when data has an error message',
@@ -777,76 +760,72 @@ void main() {
       },
     );
 
-    testWidgets(
-      'showLabels=false hides Move/Exercise/Stand stat rows',
-      (WidgetTester tester) async {
-        final loadedData = ActivityRingsData(
-          moveCalories: 200,
-          moveGoal: 500,
-          exerciseMinutes: 15,
-          exerciseGoal: 30,
-          standHours: 4,
-          standGoal: 12,
-          lastUpdated: DateTime(2026, 2, 28),
-        );
+    testWidgets('showLabels=false hides Move/Exercise/Stand stat rows', (
+      WidgetTester tester,
+    ) async {
+      final loadedData = ActivityRingsData(
+        moveCalories: 200,
+        moveGoal: 500,
+        exerciseMinutes: 15,
+        exerciseGoal: 30,
+        standHours: 4,
+        standGoal: 12,
+        lastUpdated: DateTime(2026, 2, 28),
+      );
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              activityRingsProvider.overrideWith(
-                () => _FakeActivityRingsNotifier(loadedData),
-              ),
-            ],
-            child: const ActivityRingsWidget(
-              size: 80,
-              strokeWidth: 8,
-              showLabels: false,
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            activityRingsProvider.overrideWith(
+              () => _FakeActivityRingsNotifier(loadedData),
             ),
+          ],
+          child: const ActivityRingsWidget(
+            size: 80,
+            strokeWidth: 8,
+            showLabels: false,
           ),
-        );
-        await tester.pump(const Duration(seconds: 5));
+        ),
+      );
+      await tester.pump(const Duration(seconds: 5));
 
-        // With showLabels=false the stat rows are absent
-        expect(find.text('Move'), findsNothing);
-        expect(find.text('Exercise'), findsNothing);
-        expect(find.text('Stand'), findsNothing);
-      },
-    );
+      // With showLabels=false the stat rows are absent
+      expect(find.text('Move'), findsNothing);
+      expect(find.text('Exercise'), findsNothing);
+      expect(find.text('Stand'), findsNothing);
+    });
 
-    testWidgets(
-      'custom onTap callback is invoked when widget is tapped',
-      (WidgetTester tester) async {
-        final loadedData = ActivityRingsData(
-          moveCalories: 300,
-          moveGoal: 500,
-          exerciseMinutes: 20,
-          exerciseGoal: 30,
-          standHours: 6,
-          standGoal: 12,
-          lastUpdated: DateTime(2026, 2, 28),
-        );
+    testWidgets('custom onTap callback is invoked when widget is tapped', (
+      WidgetTester tester,
+    ) async {
+      final loadedData = ActivityRingsData(
+        moveCalories: 300,
+        moveGoal: 500,
+        exerciseMinutes: 20,
+        exerciseGoal: 30,
+        standHours: 6,
+        standGoal: 12,
+        lastUpdated: DateTime(2026, 2, 28),
+      );
 
-        var tapped = false;
+      var tapped = false;
 
-        await tester.pumpWidget(
-          buildTestApp(
-            overrides: [
-              activityRingsProvider.overrideWith(
-                () => _FakeActivityRingsNotifier(loadedData),
-              ),
-            ],
-            child: ActivityRingsWidget(
-              onTap: () => tapped = true,
+      await tester.pumpWidget(
+        buildTestApp(
+          overrides: [
+            activityRingsProvider.overrideWith(
+              () => _FakeActivityRingsNotifier(loadedData),
             ),
-          ),
-        );
-        await tester.pump(const Duration(seconds: 5));
+          ],
+          child: ActivityRingsWidget(onTap: () => tapped = true),
+        ),
+      );
+      await tester.pump(const Duration(seconds: 5));
 
-        await tester.tap(find.byType(GestureDetector).first);
-        await tester.pump();
+      await tester.tap(find.byType(GestureDetector).first);
+      await tester.pump();
 
-        expect(tapped, isTrue);
-      },
-    );
+      expect(tapped, isTrue);
+    });
   });
 }

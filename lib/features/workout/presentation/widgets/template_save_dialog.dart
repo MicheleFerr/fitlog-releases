@@ -45,7 +45,8 @@ Future<TemplateSaveResult?> showTemplateSaveDialog({
   required Workout completedWorkout,
   required WorkoutTemplate originalTemplate,
 }) async {
-  final result = await ModalService.showSheet<TemplateSaveResult>(context,
+  final result = await ModalService.showSheet<TemplateSaveResult>(
+    context,
     isScrollControlled: true,
     isDismissible: true,
     enableDrag: true,
@@ -347,7 +348,11 @@ class _TemplateSaveDialogContentState
   }
 
   Future<void> _updateTemplate() async {
-    final updatedTemplate = widget.originalTemplate.copyWith(
+    final repository = ref.read(workoutTemplateRepositoryProvider);
+    final editableTemplate = await repository.ensureEditableTemplate(
+      widget.originalTemplate,
+    );
+    final updatedTemplate = editableTemplate.copyWith(
       // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT
       exercises: widget.completedWorkout.exercises.map((ex) {
         return ExerciseTemplate.fromExercise(ex);
@@ -360,6 +365,14 @@ class _TemplateSaveDialogContentState
         .saveTemplate(updatedTemplate);
 
     if (mounted) {
+      if (editableTemplate.id != widget.originalTemplate.id) {
+        SnackBarService.showInfo(
+          context,
+          context.l10n.templatePrivateDraftCreated(
+            widget.originalTemplate.name,
+          ),
+        );
+      }
       SnackBarService.showSuccess(context, context.l10n.templateUpdated);
     }
   }

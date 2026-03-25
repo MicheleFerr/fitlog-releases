@@ -14,21 +14,25 @@ class LegalDocumentsConfig {
   /// Base URL for legal documents (your domain)
   static const String baseUrl = 'https://fitlogpro.it/legal';
 
-  /// Privacy Policy URLs
+  /// Apple standard Terms of Use (EULA) URL.
+  static const String appleStandardEula =
+      'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+
+  /// Privacy Policy URLs.
   static const String privacyPolicyIt = '$baseUrl/privacy-it.html';
   static const String privacyPolicyEn = '$baseUrl/privacy-en.html';
 
-  /// Terms of Service URLs
+  /// Terms of Service URLs.
   static const String termsOfServiceIt = '$baseUrl/terms-it.html';
   static const String termsOfServiceEn = '$baseUrl/terms-en.html';
 
   /// Local asset paths (fallback when offline)
-  static const String privacyPolicyItLocal = 'docs/legal/PRIVACY_POLICY_IT.md';
-  static const String privacyPolicyEnLocal = 'docs/legal/PRIVACY_POLICY_EN.md';
+  static const String privacyPolicyItLocal = 'assets/legal/privacy_policy.md';
+  static const String privacyPolicyEnLocal = 'assets/legal/privacy_policy.md';
   static const String termsOfServiceItLocal =
-      'docs/legal/TERMS_OF_SERVICE_IT.md';
+      'assets/legal/terms_of_service.md';
   static const String termsOfServiceEnLocal =
-      'docs/legal/TERMS_OF_SERVICE_EN.md';
+      'assets/legal/terms_of_service.md';
 
   /// Coach Agreement URLs
   static const String coachAgreementIt = '$baseUrl/coach-agreement-it.html';
@@ -43,8 +47,8 @@ class LegalDocumentsConfig {
 
 /// Screen to display legal documents (Privacy Policy, Terms of Service)
 ///
-/// Attempts to load from web URL first (in-app WebView),
-/// falls back to local assets if offline.
+/// Loads the bundled document for guaranteed in-app availability and lets the
+/// user open the hosted version when needed.
 class LegalDocumentScreen extends StatefulWidget {
   const LegalDocumentScreen({
     super.key,
@@ -58,42 +62,44 @@ class LegalDocumentScreen extends StatefulWidget {
   final String localAssetPath;
 
   /// Show Privacy Policy based on current locale
-  static void showPrivacyPolicy(BuildContext context) {
+  static Future<void> showPrivacyPolicy(BuildContext context) async {
     final locale = Localizations.localeOf(context);
     final isItalian = locale.languageCode == 'it';
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => LegalDocumentScreen(
-          title: context.l10n.privacyPolicy,
-          webUrl: isItalian
-              ? LegalDocumentsConfig.privacyPolicyIt
-              : LegalDocumentsConfig.privacyPolicyEn,
-          localAssetPath: isItalian
-              ? LegalDocumentsConfig.privacyPolicyItLocal
-              : LegalDocumentsConfig.privacyPolicyEnLocal,
-        ),
-      ),
+    await _openHostedDocument(
+      context,
+      title: context.l10n.privacyPolicy,
+      webUrl: isItalian
+          ? LegalDocumentsConfig.privacyPolicyIt
+          : LegalDocumentsConfig.privacyPolicyEn,
+      localAssetPath: isItalian
+          ? LegalDocumentsConfig.privacyPolicyItLocal
+          : LegalDocumentsConfig.privacyPolicyEnLocal,
     );
   }
 
   /// Show Terms of Service based on current locale
-  static void showTermsOfService(BuildContext context) {
+  static Future<void> showTermsOfService(BuildContext context) async {
     final locale = Localizations.localeOf(context);
     final isItalian = locale.languageCode == 'it';
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => LegalDocumentScreen(
-          title: context.l10n.termsOfService,
-          webUrl: isItalian
-              ? LegalDocumentsConfig.termsOfServiceIt
-              : LegalDocumentsConfig.termsOfServiceEn,
-          localAssetPath: isItalian
-              ? LegalDocumentsConfig.termsOfServiceItLocal
-              : LegalDocumentsConfig.termsOfServiceEnLocal,
-        ),
-      ),
+    await _openHostedDocument(
+      context,
+      title: context.l10n.termsOfService,
+      webUrl: isItalian
+          ? LegalDocumentsConfig.termsOfServiceIt
+          : LegalDocumentsConfig.termsOfServiceEn,
+      localAssetPath: isItalian
+          ? LegalDocumentsConfig.termsOfServiceItLocal
+          : LegalDocumentsConfig.termsOfServiceEnLocal,
+    );
+  }
+
+  /// Show the Apple standard Terms of Use (EULA).
+  static Future<void> showAppleStandardEula(BuildContext context) async {
+    await _openWebDocument(
+      context,
+      url: LegalDocumentsConfig.appleStandardEula,
     );
   }
 
@@ -117,27 +123,44 @@ class LegalDocumentScreen extends StatefulWidget {
     );
   }
 
-  @override
-  State<LegalDocumentScreen> createState() => _LegalDocumentScreenState();
-}
+  static Future<void> _openHostedDocument(
+    BuildContext context, {
+    required String title,
+    required String webUrl,
+    required String localAssetPath,
+  }) async {
+    try {
+      final launched = await launchUrl(
+        Uri.parse(webUrl),
+        mode: LaunchMode.inAppWebView,
+        webViewConfiguration: const WebViewConfiguration(
+          enableJavaScript: true,
+          enableDomStorage: true,
+        ),
+      );
+      if (launched || !context.mounted) return;
+    } catch (_) {
+      if (!context.mounted) return;
+    }
 
-class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
-  bool _isLoading = true;
-  bool _showingLocalFallback = false;
-  String? _localContent;
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _tryOpenWebView();
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LegalDocumentScreen(
+          title: title,
+          webUrl: webUrl,
+          localAssetPath: localAssetPath,
+        ),
+      ),
+    );
   }
 
-  Future<void> _tryOpenWebView() async {
-    try {
-      final uri = Uri.parse(widget.webUrl);
+  static Future<void> _openWebDocument(
+    BuildContext context, {
+    required String url,
+  }) async {
+    final uri = Uri.parse(url);
 
-      // Try to launch in-app WebView
+    try {
       final launched = await launchUrl(
         uri,
         mode: LaunchMode.inAppWebView,
@@ -146,26 +169,69 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
           enableDomStorage: true,
         ),
       );
+      if (launched || !context.mounted) return;
+    } catch (_) {
+      if (!context.mounted) return;
+    }
 
-      if (launched && mounted) {
-        // WebView opened successfully, pop this screen
-        // The WebView handles everything
-        Navigator.of(context).pop();
-      } else {
-        // Couldn't open WebView, fall back to local
-        await _loadLocalFallback();
-      }
-    } catch (e) {
-      // Network error or other issue, fall back to local
-      await _loadLocalFallback();
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open document link')),
+      );
     }
   }
 
-  Future<void> _loadLocalFallback() async {
+  @override
+  State<LegalDocumentScreen> createState() => _LegalDocumentScreenState();
+}
+
+class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
+  bool _isLoading = true;
+  String? _localContent;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocalDocument();
+  }
+
+  Future<void> _openOnlineVersion() async {
+    try {
+      final uri = Uri.parse(widget.webUrl);
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.inAppWebView,
+        webViewConfiguration: const WebViewConfiguration(
+          enableJavaScript: true,
+          enableDomStorage: true,
+        ),
+      );
+      if (!launched) {
+        _showOpenLinkError();
+      }
+    } catch (e) {
+      _showOpenLinkError();
+    }
+  }
+
+  void _showOpenLinkError() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Unable to open document link')),
+    );
+  }
+
+  Future<void> _loadLocalDocument() async {
     if (!mounted) return;
 
     setState(() {
-      _showingLocalFallback = true;
+      _isLoading = true;
+      _localContent = null;
+      _errorMessage = null;
     });
 
     try {
@@ -212,20 +278,11 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          if (_showingLocalFallback)
-            IconButton(
-              icon: const Icon(AppIcons.refresh),
-              onPressed: () {
-                setState(() {
-                  _isLoading = true;
-                  _showingLocalFallback = false;
-                  _localContent = null;
-                  _errorMessage = null;
-                });
-                _tryOpenWebView();
-              },
-              tooltip: context.l10n.retry,
-            ),
+          IconButton(
+            icon: const Icon(AppIcons.openInNew),
+            onPressed: _openOnlineVersion,
+            tooltip: context.l10n.open,
+          ),
         ],
       ),
       body: _buildBody(),
@@ -260,11 +317,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                 button: true,
                 child: FilledButton.icon(
                   onPressed: () {
-                    setState(() {
-                      _isLoading = true;
-                      _errorMessage = null;
-                    });
-                    _tryOpenWebView();
+                    _loadLocalDocument();
                   },
                   icon: const Icon(AppIcons.refresh),
                   label: Text(context.l10n.retry),
@@ -277,43 +330,12 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
     }
 
     if (_localContent != null) {
-      return Column(
-        children: [
-          // Offline banner
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: context.colors.tertiaryContainer,
-            child: Row(
-              children: [
-                Icon(
-                  AppIcons.cloudOff,
-                  size: 16,
-                  color: context.colors.onTertiaryContainer,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    context.l10n.offlineMode,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onTertiaryContainer,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: SelectableText(
-                _localContent!,
-                style: context.textTheme.bodyMedium?.copyWith(height: 1.6),
-              ),
-            ),
-          ),
-        ],
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: SelectableText(
+          _localContent!,
+          style: context.textTheme.bodyMedium?.copyWith(height: 1.6),
+        ),
       );
     }
 

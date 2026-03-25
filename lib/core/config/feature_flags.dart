@@ -19,6 +19,9 @@ class FeatureFlags {
   /// TEMPORARILY DISABLED - Remove this line to re-enable
   static bool get workoutImportEnabled => false; // was: aiCoachEnabled
 
+  /// Guided onboarding V1 (default test mode + workout-first flow)
+  static bool get guidedTestModeEnabled => true;
+
   /// Debug mode flag
   static bool get isDebugMode => EnvironmentConfig.environment == 'development';
 

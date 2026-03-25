@@ -152,8 +152,7 @@ class FakeHiveBoxManager {
   }
 
   Future<Box> openBox(String name) async => getBox(name);
-  Future<Box<T>> openBoxTyped<T>(String name) async =>
-      getBox(name) as Box<T>;
+  Future<Box<T>> openBoxTyped<T>(String name) async => getBox(name) as Box<T>;
 }
 
 // -------------------------------------------------------------------------
@@ -395,52 +394,42 @@ void main() {
   group('SyncStatus - logica di stato', () {
     test('notSynced quando metadata non ha initial_sync_done', () {
       // Simulazione della logica currentSyncStatus
-      bool hasInitialSync = false;
-      DateTime? lastSyncTimestamp;
-
-      SyncStatus computeStatus() {
+      SyncStatus computeStatus(bool hasInitialSync) {
         if (!hasInitialSync) return SyncStatus.notSynced;
-        if (lastSyncTimestamp == null) return SyncStatus.notSynced;
-        final hours = DateTime.now().difference(lastSyncTimestamp!).inHours;
-        if (hours > 24) return SyncStatus.needsSync;
         return SyncStatus.synced;
       }
 
-      expect(computeStatus(), equals(SyncStatus.notSynced));
+      expect(computeStatus(false), equals(SyncStatus.notSynced));
     });
 
     test('synced dopo sync recente', () {
-      bool hasInitialSync = true;
-      DateTime? lastSyncTimestamp = DateTime.now().subtract(
+      final lastSyncTimestamp = DateTime.now().subtract(
         const Duration(hours: 2),
       );
 
-      SyncStatus computeStatus() {
+      SyncStatus computeStatus(bool hasInitialSync) {
         if (!hasInitialSync) return SyncStatus.notSynced;
-        if (lastSyncTimestamp == null) return SyncStatus.notSynced;
-        final hours = DateTime.now().difference(lastSyncTimestamp!).inHours;
+        final hours = DateTime.now().difference(lastSyncTimestamp).inHours;
         if (hours > 24) return SyncStatus.needsSync;
         return SyncStatus.synced;
       }
 
-      expect(computeStatus(), equals(SyncStatus.synced));
+      expect(computeStatus(true), equals(SyncStatus.synced));
     });
 
     test('needsSync dopo 24+ ore', () {
-      bool hasInitialSync = true;
-      DateTime? lastSyncTimestamp = DateTime.now().subtract(
+      final lastSyncTimestamp = DateTime.now().subtract(
         const Duration(hours: 25),
       );
 
-      SyncStatus computeStatus() {
+      SyncStatus computeStatus(bool hasInitialSync) {
         if (!hasInitialSync) return SyncStatus.notSynced;
-        if (lastSyncTimestamp == null) return SyncStatus.notSynced;
-        final hours = DateTime.now().difference(lastSyncTimestamp!).inHours;
+        final hours = DateTime.now().difference(lastSyncTimestamp).inHours;
         if (hours > 24) return SyncStatus.needsSync;
         return SyncStatus.synced;
       }
 
-      expect(computeStatus(), equals(SyncStatus.needsSync));
+      expect(computeStatus(true), equals(SyncStatus.needsSync));
     });
   });
 
@@ -474,10 +463,7 @@ void main() {
             id: 'ex1',
             sets: [makeSet(), makeSet(setNumber: 2), makeSet(setNumber: 3)],
           ),
-          makeExercise(
-            id: 'ex2',
-            sets: [makeSet(), makeSet(setNumber: 2)],
-          ),
+          makeExercise(id: 'ex2', sets: [makeSet(), makeSet(setNumber: 2)]),
         ],
       );
 

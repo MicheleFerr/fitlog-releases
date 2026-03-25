@@ -35,9 +35,15 @@ void main() {
       name: name,
       type: ExerciseType.single,
       category: category,
-      sets: sets ??
+      sets:
+          sets ??
           [
-            ExerciseSet(setNumber: 1, weight: 80.0, reps: 10, isCompleted: true),
+            ExerciseSet(
+              setNumber: 1,
+              weight: 80.0,
+              reps: 10,
+              isCompleted: true,
+            ),
           ],
     );
   }
@@ -116,8 +122,9 @@ void main() {
         final workout = _makeWorkout(name: 'AB');
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('id'));
 
         final result = await usecase(params);
 
@@ -128,8 +135,9 @@ void main() {
         final workout = _makeWorkout(name: 'A' * 100);
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('id'));
 
         final result = await usecase(params);
 
@@ -236,8 +244,9 @@ void main() {
         final workout = _makeWorkout(exercises: [exercise]);
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('id'));
 
         final result = await usecase(params);
 
@@ -251,8 +260,9 @@ void main() {
         final workout = _makeWorkout(exercises: [exercise]);
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('id'));
 
         final result = await usecase(params);
 
@@ -266,8 +276,9 @@ void main() {
         final workout = _makeWorkout(exercises: [exercise]);
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('id'));
 
         final result = await usecase(params);
 
@@ -276,42 +287,63 @@ void main() {
     });
 
     group('requireCompletedSets', () {
-      test('should fail when requireCompletedSets is true and no completed sets', () async {
-        final exercise = _makeExercise(
-          sets: [ExerciseSet(setNumber: 1, weight: 80.0, reps: 10, isCompleted: false)],
-        );
-        final workout = _makeWorkout(exercises: [exercise]);
-        final params = SaveWorkoutParams(
-          workout: workout,
-          requireCompletedSets: true,
-        );
+      test(
+        'should fail when requireCompletedSets is true and no completed sets',
+        () async {
+          final exercise = _makeExercise(
+            sets: [
+              ExerciseSet(
+                setNumber: 1,
+                weight: 80.0,
+                reps: 10,
+                isCompleted: false,
+              ),
+            ],
+          );
+          final workout = _makeWorkout(exercises: [exercise]);
+          final params = SaveWorkoutParams(
+            workout: workout,
+            requireCompletedSets: true,
+          );
 
-        final result = await usecase(params);
+          final result = await usecase(params);
 
-        expect(result.isLeft, isTrue);
-        expect(
-          (result.leftOrNull as ValidationFailure).code,
-          equals('no_completed_sets'),
-        );
-      });
+          expect(result.isLeft, isTrue);
+          expect(
+            (result.leftOrNull as ValidationFailure).code,
+            equals('no_completed_sets'),
+          );
+        },
+      );
 
-      test('should succeed when requireCompletedSets is false and no completed sets', () async {
-        final exercise = _makeExercise(
-          sets: [ExerciseSet(setNumber: 1, weight: 80.0, reps: 10, isCompleted: false)],
-        );
-        final workout = _makeWorkout(exercises: [exercise]);
-        final params = SaveWorkoutParams(
-          workout: workout,
-          requireCompletedSets: false,
-        );
+      test(
+        'should succeed when requireCompletedSets is false and no completed sets',
+        () async {
+          final exercise = _makeExercise(
+            sets: [
+              ExerciseSet(
+                setNumber: 1,
+                weight: 80.0,
+                reps: 10,
+                isCompleted: false,
+              ),
+            ],
+          );
+          final workout = _makeWorkout(exercises: [exercise]);
+          final params = SaveWorkoutParams(
+            workout: workout,
+            requireCompletedSets: false,
+          );
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+          when(
+            () => mockRepository.saveWorkout(any()),
+          ).thenAnswer((_) async => const Right('id'));
 
-        final result = await usecase(params);
+          final result = await usecase(params);
 
-        expect(result.isRight, isTrue);
-      });
+          expect(result.isRight, isTrue);
+        },
+      );
     });
 
     group('successful save', () {
@@ -319,8 +351,9 @@ void main() {
         final workout = _makeWorkout();
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('saved-workout-id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('saved-workout-id'));
 
         final result = await usecase(params);
 
@@ -329,42 +362,46 @@ void main() {
         verify(() => mockRepository.saveWorkout(any())).called(1);
       });
 
-      test('should set endTime for completed workout without endTime', () async {
-        final workout = _makeWorkout(status: WorkoutStatus.completed);
-        final params = SaveWorkoutParams(workout: workout);
+      test(
+        'should set endTime for completed workout without endTime',
+        () async {
+          final workout = _makeWorkout(status: WorkoutStatus.completed);
+          final params = SaveWorkoutParams(workout: workout);
 
-        late Workout savedWorkout;
-        when(() => mockRepository.saveWorkout(any())).thenAnswer((invocation) async {
-          savedWorkout = invocation.positionalArguments[0] as Workout;
-          return const Right('id');
-        });
+          late Workout savedWorkout;
+          when(() => mockRepository.saveWorkout(any())).thenAnswer((
+            invocation,
+          ) async {
+            savedWorkout = invocation.positionalArguments[0] as Workout;
+            return const Right('id');
+          });
 
-        await usecase(params);
+          await usecase(params);
 
-        expect(savedWorkout.endTime, isNotNull);
-      });
+          expect(savedWorkout.endTime, isNotNull);
+        },
+      );
 
       test('should filter out invalid sets during preparation', () async {
-        final exercise = _makeExercise(
-          sets: [
-            ExerciseSet(setNumber: 1, weight: 80.0, reps: 10, isCompleted: true),
-            ExerciseSet(setNumber: 2, weight: -5.0, reps: 10), // invalid - negative weight
-          ],
-        );
-        // Since validation runs first and negative weight fails validation,
-        // we need to test the preparation logic with sets that pass validation
-        // but get filtered in _prepareWorkoutForSave (reps <= 0 when non-null)
+        // Since validation runs first, this test focuses only on preparation logic
+        // for sets that are still valid at entity level.
         final exerciseWithFilterable = _makeExercise(
           sets: [
-            ExerciseSet(setNumber: 1, weight: 80.0, reps: 10, isCompleted: true),
+            ExerciseSet(
+              setNumber: 1,
+              weight: 80.0,
+              reps: 10,
+              isCompleted: true,
+            ),
             ExerciseSet(setNumber: 2, weight: 80.0), // null reps - valid, kept
           ],
         );
         final workout = _makeWorkout(exercises: [exerciseWithFilterable]);
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenAnswer((_) async => const Right('id'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Right('id'));
 
         final result = await usecase(params);
 
@@ -382,7 +419,9 @@ void main() {
         final params = SaveWorkoutParams(workout: workout);
 
         late Workout savedWorkout;
-        when(() => mockRepository.saveWorkout(any())).thenAnswer((invocation) async {
+        when(() => mockRepository.saveWorkout(any())).thenAnswer((
+          invocation,
+        ) async {
           savedWorkout = invocation.positionalArguments[0] as Workout;
           return const Right('id');
         });
@@ -400,9 +439,9 @@ void main() {
         final workout = _makeWorkout();
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any())).thenAnswer(
-          (_) async => const Left(ServerFailure('Save failed')),
-        );
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenAnswer((_) async => const Left(ServerFailure('Save failed')));
 
         final result = await usecase(params);
 
@@ -414,8 +453,9 @@ void main() {
         final workout = _makeWorkout();
         final params = SaveWorkoutParams(workout: workout);
 
-        when(() => mockRepository.saveWorkout(any()))
-            .thenThrow(Exception('Unexpected'));
+        when(
+          () => mockRepository.saveWorkout(any()),
+        ).thenThrow(Exception('Unexpected'));
 
         final result = await usecase(params);
 

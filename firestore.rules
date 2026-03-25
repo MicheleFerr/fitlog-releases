@@ -25,6 +25,22 @@ service cloud.firestore {
       return request.auth.token.email != null && request.auth.token.email == docEmail;
     }
 
+    // Premium entitlement fields are server-managed and must never be set by clients.
+    function hasServerManagedPremiumFields(data) {
+      return data.keys().hasAny([
+        'premiumActivatedAt',
+        'premiumExpiresAt',
+        'premiumExpiredAt',
+        'lastPurchaseId',
+        'lastPurchasePlatform',
+        'lastPurchaseProductId'
+      ]);
+    }
+
+    function hasSafeInitialAccountTier(data) {
+      return !data.keys().hasAny(['accountTier']) || data.accountTier == 'free';
+    }
+
     // Validate coach permission payload to prevent forged privilege flags
     function isValidCoachPermissions(permissions) {
       return permissions is map
@@ -333,15 +349,49 @@ service cloud.firestore {
     }
 
     match /workoutTemplates/{templateId} {
+      function normalizedTemplateVisibility(data) {
+        return ('visibility' in data && data.visibility in ['private', 'unlisted', 'public'])
+          ? data.visibility
+          : (('isPublic' in data && data.isPublic == true) ? 'public' : 'private');
+      }
+
+      function normalizedTemplateLineageType(data) {
+        return ('lineageType' in data && data.lineageType in ['original', 'fork'])
+          ? data.lineageType
+          : (('forkedFromTemplateId' in data && data.forkedFromTemplateId != null) ? 'fork' : 'original');
+      }
+
+      function normalizedTemplateDistributionStatus(data) {
+        return ('distributionStatus' in data && data.distributionStatus in ['active', 'superseded', 'hidden'])
+          ? data.distributionStatus
+          : 'active';
+      }
+
+      function isTemplateOwnerOrCoach(data) {
+        return ('userId' in data && request.auth.uid == data.userId) ||
+          ('coachId' in data && request.auth.uid == data.coachId) ||
+          ('email' in data && emailMatches(data.email));
+      }
+
+      function isSharedReadableTemplate(data) {
+        return normalizedTemplateDistributionStatus(data) == 'active' &&
+          normalizedTemplateVisibility(data) != 'private';
+      }
+
+      function isDiscoverablePublicTemplate(data) {
+        return isSharedReadableTemplate(data) &&
+          normalizedTemplateVisibility(data) == 'public' &&
+          normalizedTemplateLineageType(data) == 'original';
+      }
+
       // ========================================
-      // 🔐 SECURITY: Template Quota Enforcement (Updated 2025-11-29)
+      // 🔐 SECURITY: Library Quota Enforcement (Updated 2026-03-08)
       // ========================================
       // CREATE is BLOCKED for direct client writes.
-      // All template creation MUST go through the `createTemplate` Cloud Function
-      // which enforces quota limits server-side:
-      // - Free: 4 private templates
-      // - Premium: 20 private templates
-      // - Pro: 999 private templates (unlimited)
+      // All editable Library copies MUST go through Cloud Functions
+      // so monetized Library slots are enforced server-side.
+      // Publish/share distribution stays free and is controlled by
+      // Cloud Functions + moderation/rate limits instead of client writes.
       //
       // Cloud Functions use Admin SDK which bypasses Security Rules.
       // This ensures quota cannot be bypassed by malicious clients.
@@ -350,9 +400,8 @@ service cloud.firestore {
       // LIST (queries): Allow authenticated users to query templates
       // Query results are still ownership/public constrained by rules.
       allow list: if request.auth != null && (
-        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
-        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
-        ('isPublic' in resource.data && resource.data.isPublic == true)
+        isTemplateOwnerOrCoach(resource.data) ||
+        isDiscoverablePublicTemplate(resource.data)
       );
 
       // GET (single document): User can read their own templates or public templates
@@ -360,9 +409,8 @@ service cloud.firestore {
       // When document doesn't exist, resource is null - we must handle this case
       allow get: if request.auth != null && (
         resource == null ||  // Document doesn't exist - allow for existence checks
-        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
-        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
-        ('isPublic' in resource.data && resource.data.isPublic == true)
+        isTemplateOwnerOrCoach(resource.data) ||
+        isSharedReadableTemplate(resource.data)
       );
 
       // 🚫 CREATE: BLOCKED - Must use createTemplate Cloud Function
@@ -370,21 +418,42 @@ service cloud.firestore {
       // DO NOT enable direct client creates without quota enforcement!
       allow create: if false;
 
-      // UPDATE: Allow if user owns document (quota not affected by updates)
+      // UPDATE: Allow if user owns document and keeps it as a private editable copy.
+      // Distributed templates remain read-only client-side.
       // FIXED 2025-02-09: Added backward compatibility for 'email' field (legacy templates)
-      allow update: if request.auth != null && (
-        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
-        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
-        ('email' in resource.data && emailMatches(resource.data.email))
-      );
+      allow update: if request.auth != null &&
+        resource != null &&
+        isTemplateOwnerOrCoach(resource.data) &&
+        normalizedTemplateVisibility(resource.data) == 'private' &&
+        normalizedTemplateVisibility(request.resource.data) == 'private' &&
+        normalizedTemplateDistributionStatus(request.resource.data) == 'active' &&
+        normalizedTemplateLineageType(request.resource.data) == normalizedTemplateLineageType(resource.data) &&
+        (
+          !('userId' in resource.data) ||
+          request.resource.data.userId == resource.data.userId
+        ) &&
+        (
+          !('coachId' in resource.data) ||
+          request.resource.data.coachId == resource.data.coachId
+        ) &&
+        (
+          !('email' in resource.data) ||
+          request.resource.data.email == resource.data.email
+        ) &&
+        (
+          !('parentTemplateId' in resource.data) ||
+          request.resource.data.parentTemplateId == resource.data.parentTemplateId
+        ) &&
+        (
+          !('rootTemplateId' in resource.data) ||
+          request.resource.data.rootTemplateId == resource.data.rootTemplateId
+        );
 
       // DELETE: User must own the template (quota decremented client-side via listener)
       // FIXED 2025-02-09: Added backward compatibility for 'email' field (legacy templates)
-      allow delete: if request.auth != null && (
-        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
-        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
-        ('email' in resource.data && emailMatches(resource.data.email))
-      );
+      allow delete: if request.auth != null &&
+        resource != null &&
+        isTemplateOwnerOrCoach(resource.data);
     }
 
     // ============= USERS =============
@@ -950,11 +1019,22 @@ service cloud.firestore {
         isAdmin() ||
         hasCoachDashboardAccessByUserId(userId)
       );
-      allow create: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && hasSafeInitialAccountTier(request.resource.data)
+        && !hasServerManagedPremiumFields(request.resource.data);
       allow update: if request.auth != null
         && request.auth.uid == userId
-        // Prevent client from self-promoting to premium (only Cloud Functions can change accountTier)
-        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['accountTier']))
+        // Prevent client from self-promoting to premium or mutating billing metadata.
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'accountTier',
+          'premiumActivatedAt',
+          'premiumExpiresAt',
+          'premiumExpiredAt',
+          'lastPurchaseId',
+          'lastPurchasePlatform',
+          'lastPurchaseProductId'
+        ]))
         && (!('completedMin' in request.resource.data) ||
             request.resource.data.completedMin >= resource.data.completedMin)
         // Validate accountMode if being updated (must be solo, coach, or coached)
@@ -991,6 +1071,25 @@ service cloud.firestore {
       match /customExercises/{exerciseId} {
         // Users can read/write their own custom exercises
         allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= USER CONSENTS SUBCOLLECTION (SOCIAL FEATURES) =============
+      // Path: /users/{userId}/consents/social
+      // Purpose: Consent for profile visibility on public templates
+      match /consents/{consentId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        allow create, update: if request.auth != null
+          && request.auth.uid == userId
+          && consentId == 'social'
+          && request.resource.data.keys().hasAll(['granted', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['granted', 'grantedAt', 'revokedAt', 'updatedAt'])
+          && request.resource.data.granted is bool
+          && request.resource.data.updatedAt is timestamp
+          && (!('grantedAt' in request.resource.data) || request.resource.data.grantedAt is timestamp)
+          && (!('revokedAt' in request.resource.data) || request.resource.data.revokedAt is timestamp);
+
+        allow delete: if request.auth != null && request.auth.uid == userId;
       }
 
       // ============= BODY MEASUREMENTS SUBCOLLECTION (DEPRECATED) =============
@@ -1049,6 +1148,15 @@ service cloud.firestore {
         // Users can read/write their own settings (notifications, preferences, etc.)
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+    }
+
+    match /user_entitlements/{userId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        isAdmin() ||
+        hasCoachDashboardAccessByUserId(userId)
+      );
+      allow create, update, delete: if false;
     }
 
     // ============= SETTINGS =============

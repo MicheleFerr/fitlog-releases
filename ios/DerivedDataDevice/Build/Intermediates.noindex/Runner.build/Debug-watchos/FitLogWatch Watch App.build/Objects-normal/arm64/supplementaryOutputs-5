@@ -1,0 +1,23 @@
+{
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Models/WatchStrings.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchStrings.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchStrings.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchStrings.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchStrings.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/WatchStrings.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Views/ActualRepsPickerView.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ActualRepsPickerView.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ActualRepsPickerView.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ActualRepsPickerView.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ActualRepsPickerView.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ActualRepsPickerView.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Views/AdvancedInfoView.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/AdvancedInfoView.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/AdvancedInfoView.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/AdvancedInfoView.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/AdvancedInfoView.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/AdvancedInfoView.swiftdeps"
+  }
+}

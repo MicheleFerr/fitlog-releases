@@ -20,7 +20,6 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/i
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 
 // ---------------------------------------------------------------------------
@@ -289,9 +288,7 @@ void main() {
     });
 
     test('hasSeen returns true only for seen tutorials', () {
-      final state = TutorialState.fromSets(
-        seenTutorials: {'logging_set'},
-      );
+      final state = TutorialState.fromSets(seenTutorials: {'logging_set'});
       expect(state.hasSeen('logging_set'), isTrue);
       expect(state.hasSeen('rest_timer'), isFalse);
     });
@@ -303,8 +300,14 @@ void main() {
     });
 
     test('hasCompletedFirstWorkout is true when totalWorkouts > 0', () {
-      expect(const TutorialState(totalWorkouts: 0).hasCompletedFirstWorkout, isFalse);
-      expect(const TutorialState(totalWorkouts: 1).hasCompletedFirstWorkout, isTrue);
+      expect(
+        const TutorialState(totalWorkouts: 0).hasCompletedFirstWorkout,
+        isFalse,
+      );
+      expect(
+        const TutorialState(totalWorkouts: 1).hasCompletedFirstWorkout,
+        isTrue,
+      );
     });
 
     test('canShowHint returns true for non-dismissed hints', () {
@@ -391,11 +394,14 @@ void main() {
       expect(map['h1']!.month, 6);
     });
 
-    test('equality compares seenTutorialsList, dismissedHintsList, totalWorkouts', () {
-      const a = TutorialState(seenTutorialsList: ['t1'], totalWorkouts: 3);
-      const b = TutorialState(seenTutorialsList: ['t1'], totalWorkouts: 3);
-      expect(a, equals(b));
-    });
+    test(
+      'equality compares seenTutorialsList, dismissedHintsList, totalWorkouts',
+      () {
+        const a = TutorialState(seenTutorialsList: ['t1'], totalWorkouts: 3);
+        const b = TutorialState(seenTutorialsList: ['t1'], totalWorkouts: 3);
+        expect(a, equals(b));
+      },
+    );
 
     test('toString contains relevant info', () {
       const state = TutorialState(totalWorkouts: 5);
@@ -470,8 +476,14 @@ void main() {
     });
 
     test('TrainingGoalUI extension maps correctly', () {
-      expect(TrainingGoalUI.buildMuscle.toTrainingGoal(), TrainingGoal.hypertrophy);
-      expect(TrainingGoalUI.getStronger.toTrainingGoal(), TrainingGoal.strength);
+      expect(
+        TrainingGoalUI.buildMuscle.toTrainingGoal(),
+        TrainingGoal.hypertrophy,
+      );
+      expect(
+        TrainingGoalUI.getStronger.toTrainingGoal(),
+        TrainingGoal.strength,
+      );
       expect(TrainingGoalUI.endurance.toTrainingGoal(), TrainingGoal.endurance);
       expect(TrainingGoalUI.stayFit.toTrainingGoal(), TrainingGoal.hypertrophy);
     });
@@ -642,18 +654,21 @@ void main() {
       expect(container.read(homeTourCompletedProvider), isTrue);
     });
 
-    test('completeTour + resetTour cycle correctly toggles hasCompletedTour', () async {
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+    test(
+      'completeTour + resetTour cycle correctly toggles hasCompletedTour',
+      () async {
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      // Start -> complete -> reset cycle
-      container.read(homeTourProvider.notifier).startTour();
-      await container.read(homeTourProvider.notifier).completeTour();
-      expect(container.read(homeTourProvider).hasCompletedTour, isTrue);
+        // Start -> complete -> reset cycle
+        container.read(homeTourProvider.notifier).startTour();
+        await container.read(homeTourProvider.notifier).completeTour();
+        expect(container.read(homeTourProvider).hasCompletedTour, isTrue);
 
-      await container.read(homeTourProvider.notifier).resetTour();
-      expect(container.read(homeTourProvider).hasCompletedTour, isFalse);
-    });
+        await container.read(homeTourProvider.notifier).resetTour();
+        expect(container.read(homeTourProvider).hasCompletedTour, isFalse);
+      },
+    );
   });
 
   // =========================================================================
@@ -663,13 +678,13 @@ void main() {
     test('default values', () {
       const state = WorkoutTutorialState(
         isActive: false,
-        currentStep: WorkoutTutorialStep.addExercise,
+        currentStep: WorkoutTutorialStep.welcome,
         hasCompletedTutorial: false,
         hasStartedTutorial: false,
       );
       expect(state.isActive, isFalse);
       expect(state.isPaused, isFalse);
-      expect(state.currentStep, WorkoutTutorialStep.addExercise);
+      expect(state.currentStep, WorkoutTutorialStep.welcome);
       expect(state.hasCompletedTutorial, isFalse);
       expect(state.hasStartedTutorial, isFalse);
     });
@@ -677,17 +692,17 @@ void main() {
     test('copyWith updates fields', () {
       const state = WorkoutTutorialState(
         isActive: false,
-        currentStep: WorkoutTutorialStep.addExercise,
+        currentStep: WorkoutTutorialStep.welcome,
         hasCompletedTutorial: false,
         hasStartedTutorial: false,
       );
       final updated = state.copyWith(
         isActive: true,
-        currentStep: WorkoutTutorialStep.tapSet,
+        currentStep: WorkoutTutorialStep.editSetGestures,
         isPaused: true,
       );
       expect(updated.isActive, isTrue);
-      expect(updated.currentStep, WorkoutTutorialStep.tapSet);
+      expect(updated.currentStep, WorkoutTutorialStep.editSetGestures);
       expect(updated.isPaused, isTrue);
       // original unchanged
       expect(state.isActive, isFalse);
@@ -713,17 +728,20 @@ void main() {
       expect(container.read(workoutTutorialProvider).isActive, isFalse);
     });
 
-    test('startTutorial sets isActive=true and hasStartedTutorial=true', () async {
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+    test(
+      'startTutorial sets isActive=true and hasStartedTutorial=true',
+      () async {
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      await container.read(workoutTutorialProvider.notifier).startTutorial();
+        await container.read(workoutTutorialProvider.notifier).startTutorial();
 
-      final state = container.read(workoutTutorialProvider);
-      expect(state.isActive, isTrue);
-      expect(state.hasStartedTutorial, isTrue);
-      expect(state.currentStep, WorkoutTutorialStep.addExercise);
-    });
+        final state = container.read(workoutTutorialProvider);
+        expect(state.isActive, isTrue);
+        expect(state.hasStartedTutorial, isTrue);
+        expect(state.currentStep, WorkoutTutorialStep.welcome);
+      },
+    );
 
     test('stopTutorial sets isActive=false', () async {
       final container = _makeContainer();
@@ -763,38 +781,43 @@ void main() {
       // Not active
       container
           .read(workoutTutorialProvider.notifier)
-          .advanceToStep(WorkoutTutorialStep.tapSet);
+          .advanceToStep(WorkoutTutorialStep.editSetGestures);
       expect(
         container.read(workoutTutorialProvider).currentStep,
-        WorkoutTutorialStep.addExercise,
+        WorkoutTutorialStep.welcome,
       );
 
       // Now active
       await container.read(workoutTutorialProvider.notifier).startTutorial();
       container
           .read(workoutTutorialProvider.notifier)
-          .advanceToStep(WorkoutTutorialStep.exerciseMenu);
+          .advanceToStep(WorkoutTutorialStep.customizeExercise);
       expect(
         container.read(workoutTutorialProvider).currentStep,
-        WorkoutTutorialStep.exerciseMenu,
+        WorkoutTutorialStep.customizeExercise,
       );
     });
 
-    test('completeTutorial sets hasCompletedTutorial=true and persists', () async {
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+    test(
+      'completeTutorial sets hasCompletedTutorial=true and persists',
+      () async {
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      await container.read(workoutTutorialProvider.notifier).startTutorial();
-      await container.read(workoutTutorialProvider.notifier).completeTutorial();
+        await container.read(workoutTutorialProvider.notifier).startTutorial();
+        await container
+            .read(workoutTutorialProvider.notifier)
+            .completeTutorial();
 
-      final state = container.read(workoutTutorialProvider);
-      expect(state.hasCompletedTutorial, isTrue);
-      expect(state.isActive, isFalse);
-      expect(state.currentStep, WorkoutTutorialStep.completed);
+        final state = container.read(workoutTutorialProvider);
+        expect(state.hasCompletedTutorial, isTrue);
+        expect(state.isActive, isFalse);
+        expect(state.currentStep, WorkoutTutorialStep.completed);
 
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getBool('workout_tutorial_completed'), isTrue);
-    });
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool('workout_tutorial_completed'), isTrue);
+      },
+    );
 
     test('resetTutorial clears persisted flags', () async {
       final container = _makeContainer();
@@ -808,7 +831,7 @@ void main() {
       expect(state.hasCompletedTutorial, isFalse);
       expect(state.hasStartedTutorial, isFalse);
       expect(state.isActive, isFalse);
-      expect(state.currentStep, WorkoutTutorialStep.addExercise);
+      expect(state.currentStep, WorkoutTutorialStep.welcome);
 
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getBool('workout_tutorial_completed'), isNull);
@@ -836,15 +859,18 @@ void main() {
       expect(container.read(workoutTutorialCompletedProvider), isTrue);
     });
 
-    test('startTutorial persists hasStartedTutorial to SharedPreferences', () async {
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+    test(
+      'startTutorial persists hasStartedTutorial to SharedPreferences',
+      () async {
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      await container.read(workoutTutorialProvider.notifier).startTutorial();
+        await container.read(workoutTutorialProvider.notifier).startTutorial();
 
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getBool('workout_tutorial_started'), isTrue);
-    });
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool('workout_tutorial_started'), isTrue);
+      },
+    );
 
     test('second startTutorial does not re-persist started flag', () async {
       final container = _makeContainer();
@@ -873,9 +899,9 @@ void main() {
   // WorkoutTutorialStep enum
   // =========================================================================
   group('WorkoutTutorialStep enum', () {
-    test('all 6 values accessible', () {
-      expect(WorkoutTutorialStep.values, hasLength(6));
-      expect(WorkoutTutorialStep.values.first, WorkoutTutorialStep.addExercise);
+    test('all 9 values accessible', () {
+      expect(WorkoutTutorialStep.values, hasLength(9));
+      expect(WorkoutTutorialStep.values.first, WorkoutTutorialStep.welcome);
       expect(WorkoutTutorialStep.values.last, WorkoutTutorialStep.completed);
     });
   });
@@ -930,13 +956,87 @@ void main() {
       await service.setChoice(OnboardingChoice.guided);
       await service.setTemplateWizardCompleted(true);
       await service.dismissTemplateWizardReminder();
+      await service.startGuidedTestMode(workoutId: 'w1');
+      await service.startGuidedRealMode();
 
       await service.resetAll();
 
       expect(service.getChoice(), OnboardingChoice.notAsked);
       expect(service.isTemplateWizardCompleted(), isFalse);
       expect(service.isTemplateWizardDismissed(), isFalse);
+      expect(service.isGuidedTestModeActive(), isFalse);
+      expect(service.isGuidedRealStarted(), isFalse);
     });
+
+    test('startGuidedTestMode sets expected guided test state', () async {
+      await service.startGuidedTestMode(workoutId: 'workout_123');
+
+      expect(service.isGuidedTestModeActive(), isTrue);
+      expect(service.isGuidedTestStarted(), isTrue);
+      expect(service.isGuidedTestCompleted(), isFalse);
+      expect(service.getGuidedActiveWorkoutId(), 'workout_123');
+      expect(service.isGuidedActiveTestWorkout('workout_123'), isTrue);
+      expect(service.isGuidedActiveTestWorkout('other'), isFalse);
+    });
+
+    test(
+      'completeGuidedTestMode closes active test and marks completed',
+      () async {
+        await service.startGuidedTestMode(workoutId: 'workout_123');
+        await service.completeGuidedTestMode();
+
+        expect(service.isGuidedTestModeActive(), isFalse);
+        expect(service.isGuidedTestCompleted(), isTrue);
+        expect(service.getGuidedActiveWorkoutId(), isNull);
+      },
+    );
+
+    test(
+      'cancelGuidedTestMode closes active test without completion',
+      () async {
+        await service.startGuidedTestMode(workoutId: 'workout_123');
+        await service.cancelGuidedTestMode();
+
+        expect(service.isGuidedTestModeActive(), isFalse);
+        expect(service.isGuidedTestCompleted(), isFalse);
+        expect(service.getGuidedActiveWorkoutId(), isNull);
+      },
+    );
+
+    test(
+      'guided soft gate reminder obeys completion, cooldown and cap',
+      () async {
+        await service.setChoice(OnboardingChoice.guided);
+        await service.startGuidedTestMode(workoutId: 'w1');
+        await service.completeGuidedTestMode();
+
+        // Initially visible (no cooldown timestamp yet)
+        expect(service.shouldShowGuidedSoftGateReminder(), isTrue);
+
+        // After defer, reminder hidden during cooldown
+        await service.deferGuidedRealReminder();
+        expect(
+          service.shouldShowGuidedSoftGateReminder(
+            now: DateTime.now().add(const Duration(hours: 1)),
+          ),
+          isFalse,
+        );
+
+        // Cooldown elapsed -> visible again
+        expect(
+          service.shouldShowGuidedSoftGateReminder(
+            now: DateTime.now().add(const Duration(hours: 12)),
+          ),
+          isTrue,
+        );
+
+        // Cap reached -> hidden
+        for (var i = 0; i < 8; i++) {
+          await service.incrementGuidedReminderImpression();
+        }
+        expect(service.shouldShowGuidedSoftGateReminder(), isFalse);
+      },
+    );
   });
 
   // =========================================================================
@@ -953,16 +1053,20 @@ void main() {
       service = OnboardingChoiceService(prefs);
     });
 
-    test('show reminder when choice=explore, not completed, not dismissed', () async {
-      await service.setChoice(OnboardingChoice.explore);
+    test(
+      'show reminder when choice=explore, not completed, not dismissed',
+      () async {
+        await service.setChoice(OnboardingChoice.explore);
 
-      final choice = service.getChoice();
-      final completed = service.isTemplateWizardCompleted();
-      final dismissed = service.isTemplateWizardDismissed();
+        final choice = service.getChoice();
+        final completed = service.isTemplateWizardCompleted();
+        final dismissed = service.isTemplateWizardDismissed();
 
-      final shouldShow = choice != OnboardingChoice.guided && !completed && !dismissed;
-      expect(shouldShow, isTrue);
-    });
+        final shouldShow =
+            choice != OnboardingChoice.guided && !completed && !dismissed;
+        expect(shouldShow, isTrue);
+      },
+    );
 
     test('hide reminder when choice=guided', () async {
       await service.setChoice(OnboardingChoice.guided);
@@ -987,7 +1091,8 @@ void main() {
       final completed = service.isTemplateWizardCompleted();
       final dismissed = service.isTemplateWizardDismissed();
 
-      final shouldShow = choice != OnboardingChoice.guided && !completed && !dismissed;
+      final shouldShow =
+          choice != OnboardingChoice.guided && !completed && !dismissed;
       expect(shouldShow, isTrue);
     });
   });

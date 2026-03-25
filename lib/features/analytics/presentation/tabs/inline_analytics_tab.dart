@@ -6,7 +6,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/muscle_balance_tab.dart';
@@ -14,9 +13,8 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/plateau_
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/rep_zone_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/stress_index_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/volume_progression_tab.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/analytics_navigation_tab_bar.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 
 /// Inline analytics tab that embeds the 5 Pro Analytics sub-tabs
 /// directly within the Statistics page TabBarView.
@@ -54,7 +52,7 @@ class _InlineAnalyticsTabState extends ConsumerState<InlineAnalyticsTab>
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+    final tabLabels = buildAnalyticsNavigationLabels(context);
 
     // Get exercise muscle map for weighted distribution
     final exerciseMuscleMapAsync = ref.watch(exerciseMuscleMapProvider);
@@ -63,51 +61,9 @@ class _InlineAnalyticsTabState extends ConsumerState<InlineAnalyticsTab>
     return Column(
       children: [
         // Sub-tab bar for the 5 analytics sections
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            border: Border(
-              bottom: BorderSide(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-              ),
-            ),
-          ),
-          child: TabBar(
-            controller: _tabController,
-            onTap: (_) => HapticFeedback.selectionClick(),
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                colors: [
-                  colorScheme.tertiary.withValues(alpha: 0.2),
-                  colorScheme.tertiary.withValues(alpha: 0.1),
-                ],
-              ),
-              border: Border.all(
-                color: colorScheme.tertiary.withValues(alpha: 0.5),
-                width: 1.5,
-              ),
-            ),
-            indicatorPadding: const EdgeInsets.symmetric(vertical: 8),
-            labelColor: colorScheme.tertiary,
-            unselectedLabelColor: colorScheme.onSurfaceVariant,
-            labelStyle: context.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-            unselectedLabelStyle: context.textTheme.labelMedium,
-            dividerColor: colorScheme.surface.withValues(alpha: 0),
-            tabs: [
-              Tab(text: context.l10n.repZones),
-              Tab(text: context.l10n.volume),
-              Tab(text: context.l10n.muscleBalance),
-              Tab(text: context.l10n.stressIndex),
-              Tab(text: context.l10n.analyticsTrendPlateau),
-            ],
-          ),
+        AnalyticsNavigationTabBar(
+          controller: _tabController,
+          labels: tabLabels,
         ),
 
         // Sub-tab content

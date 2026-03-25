@@ -251,7 +251,8 @@ class PRDetector {
 
   /// Detect PRs for a single exercise
   PRDetectionResult detectForExercise(Exercise exercise, String workoutId) {
-    final exercisePRs = historicalPRs[exercise.id] ?? [];
+    final stableExerciseId = exercise.stableExerciseId;
+    final exercisePRs = historicalPRs[stableExerciseId] ?? [];
     final newPRs = <PersonalRecord>[];
     final prsByType = <PRType, PersonalRecord>{};
 
@@ -277,7 +278,7 @@ class PRDetector {
         newPRs.add(
           PersonalRecord.fromSet(
             exerciseName: exercise.name,
-            exerciseId: exercise.id,
+            exerciseId: stableExerciseId,
             set: set,
             type: PRType.weight,
             workoutId: workoutId,
@@ -297,7 +298,7 @@ class PRDetector {
         newPRs.add(
           PersonalRecord.fromSet(
             exerciseName: exercise.name,
-            exerciseId: exercise.id,
+            exerciseId: stableExerciseId,
             set: set,
             type: PRType.volume,
             workoutId: workoutId,
@@ -321,7 +322,7 @@ class PRDetector {
         newPRs.add(
           PersonalRecord.fromSet(
             exerciseName: exercise.name,
-            exerciseId: exercise.id,
+            exerciseId: stableExerciseId,
             set: set,
             type: PRType.reps,
             workoutId: workoutId,
@@ -336,9 +337,10 @@ class PRDetector {
         if (oneRMPR == null || oneRM > oneRMPR.value) {
           newPRs.add(
             PersonalRecord(
-              id: '${exercise.id}_oneRM_${DateTime.now().millisecondsSinceEpoch}',
+              id:
+                  '${stableExerciseId}_oneRM_${DateTime.now().millisecondsSinceEpoch}',
               exerciseName: exercise.name,
-              exerciseId: exercise.id,
+              exerciseId: stableExerciseId,
               type: PRType.oneRM,
               value: oneRM,
               reps: actualReps,
@@ -361,9 +363,10 @@ class PRDetector {
     if (totalVolumePR == null || totalVolume > totalVolumePR.value) {
       newPRs.add(
         PersonalRecord(
-          id: '${exercise.id}_totalVolume_${DateTime.now().millisecondsSinceEpoch}',
+          id:
+              '${stableExerciseId}_totalVolume_${DateTime.now().millisecondsSinceEpoch}',
           exerciseName: exercise.name,
-          exerciseId: exercise.id,
+          exerciseId: stableExerciseId,
           type: PRType.totalVolume,
           value: totalVolume,
           achievedAt: DateTime.now(),
@@ -388,7 +391,7 @@ class PRDetector {
     }
 
     return PRDetectionResult(
-      exerciseId: exercise.id,
+      exerciseId: stableExerciseId,
       exerciseName: exercise.name,
       newPRs: newPRs,
       status: status,

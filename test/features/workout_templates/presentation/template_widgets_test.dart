@@ -43,9 +43,7 @@ Widget buildSimpleTestApp({required Widget child}) {
       ],
       supportedLocales: const [Locale('en'), Locale('it')],
       locale: const Locale('en'),
-      home: Scaffold(
-        body: SingleChildScrollView(child: child),
-      ),
+      home: Scaffold(body: SingleChildScrollView(child: child)),
     ),
   );
 }
@@ -152,7 +150,9 @@ void main() {
       expect(find.text('3'), findsOneWidget);
     });
 
-    testWidgets('renders exercise preview text for 3 exercises', (tester) async {
+    testWidgets('renders exercise preview text for 3 exercises', (
+      tester,
+    ) async {
       final exercises = [
         makeExerciseTemplate(exerciseId: 'ex-1', exerciseName: 'Bench Press'),
         makeExerciseTemplate(exerciseId: 'ex-2', exerciseName: 'Fly'),
@@ -179,48 +179,51 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('Bench Press · Fly · Dips'),
-        findsOneWidget,
-      );
+      expect(find.text('Bench Press · Fly · Dips'), findsOneWidget);
     });
 
-    testWidgets('renders exercise preview with overflow indicator when >3 exercises',
-        (tester) async {
-      final exercises = List.generate(
-        5,
-        (i) => makeExerciseTemplate(
-          exerciseId: 'ex-$i',
-          exerciseName: 'Exercise ${i + 1}',
-        ),
-      );
-      final template = makeTemplate(exercises: exercises);
+    testWidgets(
+      'renders exercise preview with overflow indicator when >3 exercises',
+      (tester) async {
+        final exercises = List.generate(
+          5,
+          (i) => makeExerciseTemplate(
+            exerciseId: 'ex-$i',
+            exerciseName: 'Exercise ${i + 1}',
+          ),
+        );
+        final template = makeTemplate(exercises: exercises);
 
-      await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: SizedBox(
-            width: 300,
-            height: 250,
-            child: WorkoutTemplateCard(
-              template: template,
-              onTap: () {},
-              onStartWorkout: () {},
-              onDuplicate: () {},
-              onShare: () {},
-              onDelete: () {},
-              preloadedStats: TemplateStats.empty(),
+        await tester.pumpWidget(
+          buildSimpleTestApp(
+            child: SizedBox(
+              width: 300,
+              height: 250,
+              child: WorkoutTemplateCard(
+                template: template,
+                onTap: () {},
+                onStartWorkout: () {},
+                onDuplicate: () {},
+                onShare: () {},
+                onDelete: () {},
+                preloadedStats: TemplateStats.empty(),
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // Should show first 3 exercises and "+2" overflow
-      expect(find.text('Exercise 1 · Exercise 2 · Exercise 3 +2'), findsOneWidget);
-    });
+        // Should show first 3 exercises and "+2" overflow
+        expect(
+          find.text('Exercise 1 · Exercise 2 · Exercise 3 +2'),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('renders estimated duration from template when no stats',
-        (tester) async {
+    testWidgets('renders estimated duration from template when no stats', (
+      tester,
+    ) async {
       final template = makeTemplate(estimatedDuration: 60);
 
       await tester.pumpWidget(
@@ -246,8 +249,9 @@ void main() {
       expect(find.text('60m'), findsOneWidget);
     });
 
-    testWidgets('renders avg duration from preloaded stats when available',
-        (tester) async {
+    testWidgets('renders avg duration from preloaded stats when available', (
+      tester,
+    ) async {
       final stats = TemplateStats(
         lastPerformed: DateTime.now().subtract(const Duration(days: 3)),
         totalCompletions: 5,
@@ -307,37 +311,41 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('renders fork attribution badge when forkedFromTemplateId set',
-        (tester) async {
-      final template = makeTemplate(
-        forkedFromTemplateId: 'original-123',
-        originalAuthorName: 'Marco',
-      );
+    testWidgets(
+      'renders fork attribution badge when forkedFromTemplateId set',
+      (tester) async {
+        final template = makeTemplate(
+          forkedFromTemplateId: 'original-123',
+          originalAuthorName: 'Marco',
+        );
 
-      await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: SizedBox(
-            width: 300,
-            height: 250,
-            child: WorkoutTemplateCard(
-              template: template,
-              onTap: () {},
-              onStartWorkout: () {},
-              onDuplicate: () {},
-              onShare: () {},
-              onDelete: () {},
-              preloadedStats: TemplateStats.empty(),
+        await tester.pumpWidget(
+          buildSimpleTestApp(
+            child: SizedBox(
+              width: 300,
+              height: 250,
+              child: WorkoutTemplateCard(
+                template: template,
+                onTap: () {},
+                onStartWorkout: () {},
+                onDuplicate: () {},
+                onShare: () {},
+                onDelete: () {},
+                preloadedStats: TemplateStats.empty(),
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // The fork attribution text contains the original author name
-      expect(find.textContaining('Marco'), findsWidgets);
-    });
+        // The fork attribution text contains the original author name
+        expect(find.textContaining('Marco'), findsWidgets);
+      },
+    );
 
-    testWidgets('renders in dark theme without overflow errors', (tester) async {
+    testWidgets('renders in dark theme without overflow errors', (
+      tester,
+    ) async {
       final template = makeTemplate(name: 'Night Workout');
 
       await tester.pumpWidget(
@@ -375,8 +383,9 @@ void main() {
       expect(find.text('Night Workout'), findsOneWidget);
     });
 
-    testWidgets('renders template with beginner difficulty set explicitly',
-        (tester) async {
+    testWidgets('renders template with beginner difficulty set explicitly', (
+      tester,
+    ) async {
       final template = makeTemplate(difficulty: 'beginner');
 
       await tester.pumpWidget(
@@ -402,8 +411,9 @@ void main() {
       expect(find.textContaining('Beginner'), findsOneWidget);
     });
 
-    testWidgets('renders correctly with no exercises (empty template)',
-        (tester) async {
+    testWidgets('renders correctly with no exercises (empty template)', (
+      tester,
+    ) async {
       final template = makeTemplate(exercises: []);
 
       await tester.pumpWidget(
@@ -456,7 +466,9 @@ void main() {
       expect(find.text('Full Body Power'), findsOneWidget);
     });
 
-    testWidgets('renders exercise preview for non-empty exercises', (tester) async {
+    testWidgets('renders exercise preview for non-empty exercises', (
+      tester,
+    ) async {
       final exercises = [
         makeExerciseTemplate(exerciseId: 'ex-1', exerciseName: 'Squat'),
         makeExerciseTemplate(exerciseId: 'ex-2', exerciseName: 'Deadlift'),
@@ -555,8 +567,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('renders estimated duration when stats have no completions',
-        (tester) async {
+    testWidgets('renders estimated duration when stats have no completions', (
+      tester,
+    ) async {
       final template = makeTemplate(estimatedDuration: 30);
 
       await tester.pumpWidget(
@@ -603,8 +616,9 @@ void main() {
       expect(find.text('~38m'), findsOneWidget);
     });
 
-    testWidgets('renders fork attribution when forkedFromTemplateId is set',
-        (tester) async {
+    testWidgets('renders fork attribution when forkedFromTemplateId is set', (
+      tester,
+    ) async {
       final template = makeTemplate(
         forkedFromTemplateId: 'source-template-abc',
         originalAuthorName: 'Luca',
@@ -673,64 +687,67 @@ void main() {
     // the upgrade button callback. Since no test below taps that button, all tests
     // use buildSimpleTestApp (plain MaterialApp) to avoid GoRouter lifecycle leaks.
 
-    testWidgets('renders "Template Quota" header text', (tester) async {
+    testWidgets('renders "Library quota" header text', (tester) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Template Quota'), findsOneWidget);
+      expect(find.text('Library quota'), findsOneWidget);
     });
 
-    testWidgets('renders "FREE PLAN" badge', (tester) async {
+    testWidgets('renders library quota subtitle', (tester) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 2,
-            usedPublic: 0,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 2,
+            maxLibrary: 10,
+            distributedCount: 0,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('FREE PLAN'), findsOneWidget);
+      expect(
+        find.text(
+          'Editable copies in your Library are the only monetized limit.',
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows quota bar labels when expanded', (tester) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
             isExpanded: true,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Private Templates'), findsOneWidget);
-      expect(find.text('Public Templates'), findsOneWidget);
+      expect(find.text('Editable templates in Library'), findsOneWidget);
+      expect(find.text('Publishing and sharing are free'), findsOneWidget);
     });
 
-    testWidgets('shows "3 / 10" for private quota when expanded', (tester) async {
+    testWidgets('shows "3 / 10" for library quota when expanded', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
             isExpanded: true,
           ),
         ),
@@ -740,21 +757,23 @@ void main() {
       expect(find.text('3 / 10'), findsOneWidget);
     });
 
-    testWidgets('shows "1 / 5" for public quota when expanded', (tester) async {
+    testWidgets('shows distribution helper text when expanded', (tester) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
             isExpanded: true,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('1 / 5'), findsOneWidget);
+      expect(
+        find.textContaining('1 templates currently distributed.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('collapse state has expand icon not rotated', (tester) async {
@@ -767,10 +786,9 @@ void main() {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
             isExpanded: false,
           ),
         ),
@@ -778,7 +796,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // In collapsed state the header is still visible; widget renders cleanly.
-      expect(find.text('Template Quota'), findsOneWidget);
+      expect(find.text('Library quota'), findsOneWidget);
       // AnimatedRotation with turns=0 (not rotated) indicates collapsed state
       final rotations = tester.widgetList<AnimatedRotation>(
         find.byType(AnimatedRotation),
@@ -786,62 +804,65 @@ void main() {
       expect(rotations.any((r) => r.turns == 0.0), isTrue);
     });
 
-    testWidgets('shows upgrade prompt when private quota is full and expanded',
-        (tester) async {
+    testWidgets('shows upgrade prompt when private quota is full and expanded', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 10,
-            usedPublic: 0,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 10,
+            maxLibrary: 10,
+            distributedCount: 0,
             isExpanded: true,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Need more templates?'), findsOneWidget);
+      expect(find.text('Need more Library space?'), findsOneWidget);
       expect(
-        find.text('Upgrade to Premium for unlimited templates'),
+        find.text(
+          'Upgrade to keep more editable templates, duplicates, and customized copies.',
+        ),
         findsOneWidget,
       );
     });
 
-    testWidgets('shows upgrade prompt when public quota is full and expanded',
-        (tester) async {
+    testWidgets(
+      'does not show upgrade prompt when only distributed count is high',
+      (tester) async {
+        await tester.pumpWidget(
+          buildSimpleTestApp(
+            child: const TemplateQuotaIndicator(
+              usedLibrary: 0,
+              maxLibrary: 10,
+              distributedCount: 99,
+              isExpanded: true,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('Need more Library space?'), findsNothing);
+      },
+    );
+
+    testWidgets('does not show upgrade prompt when library has space', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 0,
-            usedPublic: 5,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
             isExpanded: true,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Need more templates?'), findsOneWidget);
-    });
-
-    testWidgets('does NOT show upgrade prompt when both quotas have space',
-        (tester) async {
-      await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: const TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
-            isExpanded: true,
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Need more templates?'), findsNothing);
+      expect(find.text('Need more Library space?'), findsNothing);
     });
 
     testWidgets('calls onTap when tapped', (tester) async {
@@ -850,10 +871,9 @@ void main() {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: TemplateQuotaIndicator(
-            usedPrivate: 3,
-            usedPublic: 1,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 3,
+            maxLibrary: 10,
+            distributedCount: 1,
             onTap: () => tapped = true,
           ),
         ),
@@ -866,24 +886,24 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('renders LinearProgressIndicator for each quota bar when expanded',
-        (tester) async {
-      await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: const TemplateQuotaIndicator(
-            usedPrivate: 5,
-            usedPublic: 2,
-            maxPrivate: 10,
-            maxPublic: 5,
-            isExpanded: true,
+    testWidgets(
+      'renders a LinearProgressIndicator for the library quota when expanded',
+      (tester) async {
+        await tester.pumpWidget(
+          buildSimpleTestApp(
+            child: const TemplateQuotaIndicator(
+              usedLibrary: 5,
+              maxLibrary: 10,
+              distributedCount: 2,
+              isExpanded: true,
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // Two LinearProgressIndicators – one per quota bar
-      expect(find.byType(LinearProgressIndicator), findsNWidgets(2));
-    });
+        expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      },
+    );
 
     testWidgets('renders in dark theme without errors', (tester) async {
       await tester.pumpWidget(
@@ -901,10 +921,9 @@ void main() {
             home: const Scaffold(
               body: SingleChildScrollView(
                 child: TemplateQuotaIndicator(
-                  usedPrivate: 3,
-                  usedPublic: 1,
-                  maxPrivate: 10,
-                  maxPublic: 5,
+                  usedLibrary: 3,
+                  maxLibrary: 10,
+                  distributedCount: 1,
                   isExpanded: true,
                 ),
               ),
@@ -914,18 +933,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Template Quota'), findsOneWidget);
+      expect(find.text('Library quota'), findsOneWidget);
     });
 
-    testWidgets('shows "10 / 10" when private quota is exactly full',
-        (tester) async {
+    testWidgets('shows "10 / 10" when library quota is exactly full', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildSimpleTestApp(
           child: const TemplateQuotaIndicator(
-            usedPrivate: 10,
-            usedPublic: 0,
-            maxPrivate: 10,
-            maxPublic: 5,
+            usedLibrary: 10,
+            maxLibrary: 10,
+            distributedCount: 0,
             isExpanded: true,
           ),
         ),
@@ -943,9 +962,7 @@ void main() {
   group('EmptyTemplatesState', () {
     testWidgets('renders "no templates yet" heading', (tester) async {
       await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: EmptyTemplatesState(onCreateTap: () {}),
-        ),
+        buildSimpleTestApp(child: EmptyTemplatesState(onCreateTap: () {})),
       );
       await tester.pumpAndSettle();
 
@@ -955,9 +972,7 @@ void main() {
 
     testWidgets('renders create template subtitle text', (tester) async {
       await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: EmptyTemplatesState(onCreateTap: () {}),
-        ),
+        buildSimpleTestApp(child: EmptyTemplatesState(onCreateTap: () {})),
       );
       await tester.pumpAndSettle();
 
@@ -967,9 +982,7 @@ void main() {
 
     testWidgets('renders a create button', (tester) async {
       await tester.pumpWidget(
-        buildSimpleTestApp(
-          child: EmptyTemplatesState(onCreateTap: () {}),
-        ),
+        buildSimpleTestApp(child: EmptyTemplatesState(onCreateTap: () {})),
       );
       await tester.pumpAndSettle();
 
@@ -978,7 +991,9 @@ void main() {
       expect(find.textContaining('Create'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('calls onCreateTap when create button is tapped', (tester) async {
+    testWidgets('calls onCreateTap when create button is tapped', (
+      tester,
+    ) async {
       bool tapped = false;
 
       await tester.pumpWidget(
@@ -1007,9 +1022,7 @@ void main() {
             ],
             supportedLocales: const [Locale('en'), Locale('it')],
             locale: const Locale('it'),
-            home: Scaffold(
-              body: EmptyTemplatesState(onCreateTap: () {}),
-            ),
+            home: Scaffold(body: EmptyTemplatesState(onCreateTap: () {})),
           ),
         ),
       );
@@ -1032,9 +1045,7 @@ void main() {
             ],
             supportedLocales: const [Locale('en')],
             locale: const Locale('en'),
-            home: Scaffold(
-              body: EmptyTemplatesState(onCreateTap: () {}),
-            ),
+            home: Scaffold(body: EmptyTemplatesState(onCreateTap: () {})),
           ),
         ),
       );

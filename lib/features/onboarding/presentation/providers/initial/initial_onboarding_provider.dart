@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/initial_onboarding_data.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/utils/onboarding_health_permissions.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 
@@ -103,9 +104,10 @@ class InitialOnboardingState {
       bodyweightKg: bodyweightKg!,
       experience: experience!,
       healthKitConnected: healthKitConnected,
-      healthKitPermissionsGranted: selectedHealthTypes
-          .map((e) => e.name)
-          .toList(),
+      healthKitPermissionsGranted: onboardingHealthPermissionNames(
+        healthKitConnected: healthKitConnected,
+        selectedTypes: selectedHealthTypes,
+      ),
       workoutsPerWeek: workoutsPerWeek,
       completedAt: DateTime.now(),
     );
@@ -256,7 +258,7 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
   // HEALTHKIT
   // ============================================================
 
-  /// Toggle a health data type for permission request
+  /// Toggle an optional health data type for the onboarding permission request
   void toggleHealthType(HealthDataType type) {
     final current = List<HealthDataType>.from(state.selectedHealthTypes);
     if (current.contains(type)) {

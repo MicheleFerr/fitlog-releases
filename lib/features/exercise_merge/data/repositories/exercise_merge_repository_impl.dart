@@ -200,8 +200,26 @@ class ExerciseMergeRepositoryImpl
 
     // Trova workouts che contengono l'esercizio sorgente
     int totalUpdated = 0;
-    final batch = _firestore.batch();
+    WriteBatch batch = _firestore.batch();
     int batchCount = 0;
+
+    Future<void> commitBatchIfNeeded({required bool force}) async {
+      if (!force && batchCount < _batchLimit) {
+        return;
+      }
+
+      if (batchCount == 0) {
+        return;
+      }
+
+      await batch.commit();
+      if (kDebugMode) {
+        debugPrint('📦 Batch committed: $batchCount workouts');
+      }
+
+      batch = _firestore.batch();
+      batchCount = 0;
+    }
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
@@ -237,23 +255,12 @@ class ExerciseMergeRepositoryImpl
         batchCount++;
 
         // Commit batch if reaching limit
-        if (batchCount >= _batchLimit) {
-          await batch.commit();
-          if (kDebugMode) {
-            debugPrint('📦 Batch committed: $batchCount workouts');
-          }
-          batchCount = 0;
-        }
+        await commitBatchIfNeeded(force: false);
       }
     }
 
     // Commit remaining batch
-    if (batchCount > 0) {
-      await batch.commit();
-      if (kDebugMode) {
-        debugPrint('📦 Final batch committed: $batchCount workouts');
-      }
-    }
+    await commitBatchIfNeeded(force: true);
 
     if (kDebugMode) {
       debugPrint('✅ Updated $totalUpdated workouts with exercise merge');
@@ -281,7 +288,22 @@ class ExerciseMergeRepositoryImpl
     }
 
     int totalUpdated = 0;
-    final batch = _firestore.batch();
+    WriteBatch batch = _firestore.batch();
+    int batchCount = 0;
+
+    Future<void> commitBatchIfNeeded({required bool force}) async {
+      if (!force && batchCount < _batchLimit) {
+        return;
+      }
+
+      if (batchCount == 0) {
+        return;
+      }
+
+      await batch.commit();
+      batch = _firestore.batch();
+      batchCount = 0;
+    }
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
@@ -310,18 +332,15 @@ class ExerciseMergeRepositoryImpl
           'updatedAt': DateTime.now().toIso8601String(),
         });
         totalUpdated++;
+        batchCount++;
       }
 
       // Commit batch ogni 500 documenti
-      if (totalUpdated > 0 && totalUpdated % _batchLimit == 0) {
-        await batch.commit();
-      }
+      await commitBatchIfNeeded(force: false);
     }
 
     // Commit final batch
-    if (totalUpdated % _batchLimit != 0) {
-      await batch.commit();
-    }
+    await commitBatchIfNeeded(force: true);
 
     return totalUpdated;
   }

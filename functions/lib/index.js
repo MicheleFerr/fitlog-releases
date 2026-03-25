@@ -36,8 +36,11 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.aiCoachChatCompletion = exports.onTemplateCreated = exports.generatePopularityBundle = exports.gdprCleanupAuditLogs = exports.gdprGetAuditLog = exports.gdprAuditUserData = exports.gdprLogAdminAccess = exports.gdprHardDeletePhotos = exports.gdprCheckInactiveUsers = exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.setAccountTier = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
+exports.aiCoachChatCompletion = exports.onTemplateCreated = exports.generatePopularityBundle = exports.gdprCleanupAuditLogs = exports.gdprGetAuditLog = exports.gdprAuditUserData = exports.gdprLogAdminAccess = exports.gdprHardDeletePhotos = exports.gdprCheckInactiveUsers = exports.migrateTemplateQuotaToLibrary = exports.migrateTemplateMetadata = exports.hideTemplate = exports.reportTemplate = exports.createTemplateDraftFromShared = exports.forkTemplate = exports.shareTemplateUnlisted = exports.publishTemplate = exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.revenueCatWebhook = exports.syncRevenueCatEntitlements = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.setAccountTier = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -60,6 +63,10 @@ Object.defineProperty(exports, "setAccountTier", { enumerable: true, get: functi
 var verifyPremiumPurchase_1 = require("./premium/verifyPremiumPurchase");
 Object.defineProperty(exports, "verifyPremiumPurchase", { enumerable: true, get: function () { return verifyPremiumPurchase_1.verifyPremiumPurchase; } });
 Object.defineProperty(exports, "checkExpiredSubscriptions", { enumerable: true, get: function () { return verifyPremiumPurchase_1.checkExpiredSubscriptions; } });
+var syncRevenueCatEntitlements_1 = require("./premium/syncRevenueCatEntitlements");
+Object.defineProperty(exports, "syncRevenueCatEntitlements", { enumerable: true, get: function () { return syncRevenueCatEntitlements_1.syncRevenueCatEntitlements; } });
+var revenueCatWebhook_1 = require("./premium/revenueCatWebhook");
+Object.defineProperty(exports, "revenueCatWebhook", { enumerable: true, get: function () { return revenueCatWebhook_1.revenueCatWebhook; } });
 // ========================================
 // 🔐 SECURITY: Community Moderation (Server-Side Validation)
 // ========================================
@@ -95,6 +102,14 @@ Object.defineProperty(exports, "enforceConsentRateLimit", { enumerable: true, ge
 var createTemplate_1 = require("./templates/createTemplate");
 Object.defineProperty(exports, "createTemplate", { enumerable: true, get: function () { return createTemplate_1.createTemplate; } });
 Object.defineProperty(exports, "getTemplateQuota", { enumerable: true, get: function () { return createTemplate_1.getTemplateQuota; } });
+Object.defineProperty(exports, "publishTemplate", { enumerable: true, get: function () { return createTemplate_1.publishTemplate; } });
+Object.defineProperty(exports, "shareTemplateUnlisted", { enumerable: true, get: function () { return createTemplate_1.shareTemplateUnlisted; } });
+Object.defineProperty(exports, "forkTemplate", { enumerable: true, get: function () { return createTemplate_1.forkTemplate; } });
+Object.defineProperty(exports, "createTemplateDraftFromShared", { enumerable: true, get: function () { return createTemplate_1.createTemplateDraftFromShared; } });
+Object.defineProperty(exports, "reportTemplate", { enumerable: true, get: function () { return createTemplate_1.reportTemplate; } });
+Object.defineProperty(exports, "hideTemplate", { enumerable: true, get: function () { return createTemplate_1.hideTemplate; } });
+Object.defineProperty(exports, "migrateTemplateMetadata", { enumerable: true, get: function () { return createTemplate_1.migrateTemplateMetadata; } });
+Object.defineProperty(exports, "migrateTemplateQuotaToLibrary", { enumerable: true, get: function () { return createTemplate_1.migrateTemplateQuotaToLibrary; } });
 // ========================================
 // 🔐 GDPR: Data Retention & Cleanup (Scheduled)
 // ========================================
@@ -133,4 +148,9 @@ Object.defineProperty(exports, "onTemplateCreated", { enumerable: true, get: fun
 // Keeps OpenRouter key on backend and enforces App Check + rate limits.
 var chatCompletion_1 = require("./ai_coach/chatCompletion");
 Object.defineProperty(exports, "aiCoachChatCompletion", { enumerable: true, get: function () { return chatCompletion_1.aiCoachChatCompletion; } });
+// ========================================
+// 🔔 Notifications
+// ========================================
+// Enterprise notification triggers, queue processing and compliance tools.
+__exportStar(require("./notifications"), exports);
 //# sourceMappingURL=index.js.map

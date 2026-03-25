@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_a
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
@@ -66,6 +65,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 // 📊 Workout to Analytics Converter utility
 import 'package:gymbro_flutter_new/features/analytics/data/converters/workout_to_analytics_converter.dart';
+import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 // 💾 Template Cache Service for auto-saving modifications
@@ -91,16 +91,17 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 // 🎮 Gamification: XP awarding on workout completion
 import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 // ⌚ Apple Watch Connectivity for workout companion updates
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 // 🍎 HealthKit Integration for Apple Fitness / Activity rings sync
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
-// 📏 Body Measurements for bodyweight exercise volume calculation
-import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
-import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
-import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
+// 📏 Unified user bodyweight for analytics/bodyweight exercise volume
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_bodyweight_provider.dart';
 // 📚 Exercise Database for real TUT lookup
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 // 🔄 RPE Autoregulation for rest time adjustment
@@ -184,27 +185,33 @@ class CurrentWorkoutNotifier extends Notifier<Workout?>
   /// This method lives in the main class (not in a mixin) so it can reference
   /// methods from all applied mixins without triggering circular `on` constraints.
   /// Called from WorkoutWatchNotifyMixin._notifyWatchWorkoutStarted().
+  @override
   void _setupWatchCallbacks() {
     final watchNotifier = ref.read(watchConnectivityProvider.notifier);
     watchNotifier.onSetCompletedFromWatch = completeCurrentSetFromWatch;
     watchNotifier.onSkipRestFromWatch = _skipRestFromWatch;
     watchNotifier.onHealthMetricsFromWatch = _handleHealthMetricsFromWatch;
     watchNotifier.onEndWorkoutFromWatch = _endWorkoutFromWatch;
-    watchNotifier.onEditCompletedSetRepsFromWatch = _editCompletedSetRepsFromWatch;
+    watchNotifier.onEditCompletedSetRepsFromWatch =
+        _editCompletedSetRepsFromWatch;
     watchNotifier.onUncompleteSetFromWatch = _uncompleteSetFromWatch;
     watchNotifier.onSetModificationFromWatch = _updateCurrentSetTargetFromWatch;
-    watchNotifier.onSupersetRoundCompletedFromWatch = _completeSupersetRoundFromWatch;
+    watchNotifier.onSupersetRoundCompletedFromWatch =
+        _completeSupersetRoundFromWatch;
     // 🔥 DROPSET: Register callbacks
-    watchNotifier.onDropsetStageCompletedFromWatch = _completeDropsetStageFromWatch;
+    watchNotifier.onDropsetStageCompletedFromWatch =
+        _completeDropsetStageFromWatch;
     watchNotifier.onDropsetCompletedFromWatch = _completeDropsetFromWatch;
     // 🔥 REST-PAUSE: Register callbacks
-    watchNotifier.onRestPauseSetCompletedFromWatch = _completeRestPauseSetFromWatch;
+    watchNotifier.onRestPauseSetCompletedFromWatch =
+        _completeRestPauseSetFromWatch;
     watchNotifier.onRestPauseCompletedFromWatch = _completeRestPauseFromWatch;
     // 🔄 Navigation & Copy callbacks from Watch
     watchNotifier.onJumpToExerciseFromWatch = _jumpToExerciseFromWatch;
     watchNotifier.onJumpToSetFromWatch = _jumpToSetFromWatch;
     watchNotifier.onCopyToAllSetsFromWatch = _copyToAllSetsFromWatch;
-    watchNotifier.onCopyFromPreviousSetFromWatch = _copyFromPreviousSetFromWatch;
+    watchNotifier.onCopyFromPreviousSetFromWatch =
+        _copyFromPreviousSetFromWatch;
     watchNotifier.onStartNewTimerFromWatch = _startNewTimerFromWatch;
   }
 }
@@ -298,8 +305,7 @@ String? _inferTutFromExercise({
 
   // Isometrico / Anti-Rotation / Core Stability: hold isometrico
   // formato 0-hold-0-hold (es. Pallof Press, Plank, Ab Wheel)
-  if (pattern.contains('anti-rotation') ||
-      pattern.contains('core stability')) {
+  if (pattern.contains('anti-rotation') || pattern.contains('core stability')) {
     return '0-2-0-2';
   }
 
@@ -322,8 +328,7 @@ String? _inferTutFromExercise({
   if (pattern.contains('strength')) return '3-1-2-0';
 
   // Isolation / Functional: flusso continuo, picco di contrazione
-  if (pattern.contains('isolation') ||
-      pattern.contains('functional')) {
+  if (pattern.contains('isolation') || pattern.contains('functional')) {
     return '2-0-2-0';
   }
 

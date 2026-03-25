@@ -65,16 +65,14 @@ class _FakeWorkoutAnalyticsRepository implements WorkoutAnalyticsRepository {
   Future<Map<PRType, PersonalRecord>> getExercisePRs(
     String userId,
     String exerciseId,
-  ) async =>
-      {};
+  ) async => {};
 
   @override
   Future<List<Workout>> getHistoricalWorkouts(
     String userId, {
-    int limit = 50,
+    int? limit = 50,
     DateTime? since,
-  }) async =>
-      [];
+  }) async => [];
 
   @override
   Future<List<Workout>> getSimilarWorkouts(
@@ -82,8 +80,7 @@ class _FakeWorkoutAnalyticsRepository implements WorkoutAnalyticsRepository {
     Workout targetWorkout, {
     int limit = 10,
     double minSimilarity = 0.3,
-  }) async =>
-      [];
+  }) async => [];
 
   @override
   Future<void> savePR(PersonalRecord pr) async {}
@@ -93,8 +90,7 @@ class _FakeWorkoutAnalyticsRepository implements WorkoutAnalyticsRepository {
     String userId, {
     int limit = 30,
     DateTime? since,
-  }) async =>
-      [];
+  }) async => [];
 
   @override
   Future<void> cacheWorkoutMetrics(WorkoutMetrics metrics) async {}
@@ -133,14 +129,12 @@ class _FakeAnalyticsRepository implements AnalyticsRepository {
   Future<fp.Either<Failure, List<ExerciseHistory>>> searchExercises({
     required String userId,
     required String query,
-  }) async =>
-      fp.Right(searchResults);
+  }) async => fp.Right(searchResults);
 
   @override
   Stream<fp.Either<Failure, List<ExerciseHistory>>> getExerciseHistory(
     String userId,
-  ) =>
-      Stream.value(fp.Right([]));
+  ) => Stream.value(fp.Right([]));
 
   @override
   Future<fp.Either<Failure, List<ExerciseSession>>> getSessionsByTimeframe({
@@ -148,8 +142,7 @@ class _FakeAnalyticsRepository implements AnalyticsRepository {
     required String exerciseName,
     required DateTime start,
     required DateTime end,
-  }) async =>
-      fp.Right([]);
+  }) async => fp.Right([]);
 
   @override
   Future<fp.Either<Failure, void>> clearCache() async => fp.Right(null);
@@ -164,8 +157,7 @@ class _FakeAnalyticsRepository implements AnalyticsRepository {
     required String exerciseName,
     required String muscleGroup,
     required ExerciseSession session,
-  }) async =>
-      fp.Right(null);
+  }) async => fp.Right(null);
 }
 
 // ---------------------------------------------------------------------------
@@ -175,7 +167,6 @@ class _FakeAnalyticsRepository implements AnalyticsRepository {
 WorkoutHistoryDetail _makeWorkout({
   int daysAgo = 1,
   String name = 'Push Day',
-  double volumePerExercise = 5000,
   int durationMinutes = 60,
 }) {
   final completedAt = DateTime.now().subtract(Duration(days: daysAgo));
@@ -322,10 +313,11 @@ void main() {
       final result = await executor.getWeeklyCheckin({}, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
-      expect(
-        ['on_track', 'warning', 'critical'],
-        contains(json['adherenceStatus']),
-      );
+      expect([
+        'on_track',
+        'warning',
+        'critical',
+      ], contains(json['adherenceStatus']));
     });
 
     test('marks critical adherence when no workouts this week', () async {
@@ -422,10 +414,9 @@ void main() {
     test('returns error when exerciseName is empty string', () async {
       final executor = _buildExecutor();
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': '   '},
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': '   ',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['error'], isNotNull);
@@ -442,19 +433,16 @@ void main() {
           ExerciseSession(
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
-            sets: [
-              AnalyticsSet(weight: 100, reps: 8, date: DateTime.now()),
-            ],
+            sets: [AnalyticsSet(weight: 100, reps: 8, date: DateTime.now())],
             date: DateTime.now(),
           ),
         ],
       );
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': 'Bench Press'},
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Bench Press',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['message'], contains('insufficienti'));
@@ -474,13 +462,7 @@ void main() {
             ExerciseSession(
               exerciseName: 'Bench Press',
               muscleGroup: 'chest',
-              sets: [
-                AnalyticsSet(
-                  weight: 105,
-                  reps: 10,
-                  date: DateTime.now(),
-                ),
-              ],
+              sets: [AnalyticsSet(weight: 105, reps: 10, date: DateTime.now())],
               date: DateTime.now(),
             ),
             // Previous: 100kg x 8 reps
@@ -500,14 +482,11 @@ void main() {
         );
         final executor = _buildExecutor(analyticsOverride: analytics);
 
-        final result = await executor.getAutoProgressionPlan(
-          {
-            'exerciseName': 'Bench Press',
-            'targetRepsMin': 8,
-            'targetRepsMax': 10,
-          },
-          userId,
-        );
+        final result = await executor.getAutoProgressionPlan({
+          'exerciseName': 'Bench Press',
+          'targetRepsMin': 8,
+          'targetRepsMax': 10,
+        }, userId);
         final json = jsonDecode(result) as Map<String, dynamic>;
 
         expect(json.containsKey('autoProgression'), isTrue);
@@ -518,54 +497,49 @@ void main() {
       },
     );
 
-    test('returns deload recommendation when trend is strongly negative',
-        () async {
-      final analytics = _FakeAnalyticsRepository();
-      analytics.historyToReturn = ExerciseHistory(
-        exerciseId: 'squat',
-        exerciseName: 'Squat',
-        muscleGroup: 'legs',
-        sessions: [
-          // Most recent: very low weight (big drop)
-          ExerciseSession(
-            exerciseName: 'Squat',
-            muscleGroup: 'legs',
-            sets: [
-              AnalyticsSet(
-                weight: 80,
-                reps: 5,
-                date: DateTime.now(),
-              ),
-            ],
-            date: DateTime.now(),
-          ),
-          // Previous: high weight
-          ExerciseSession(
-            exerciseName: 'Squat',
-            muscleGroup: 'legs',
-            sets: [
-              AnalyticsSet(
-                weight: 120,
-                reps: 8,
-                date: DateTime.now().subtract(const Duration(days: 7)),
-              ),
-            ],
-            date: DateTime.now().subtract(const Duration(days: 7)),
-          ),
-        ],
-      );
-      final executor = _buildExecutor(analyticsOverride: analytics);
+    test(
+      'returns deload recommendation when trend is strongly negative',
+      () async {
+        final analytics = _FakeAnalyticsRepository();
+        analytics.historyToReturn = ExerciseHistory(
+          exerciseId: 'squat',
+          exerciseName: 'Squat',
+          muscleGroup: 'legs',
+          sessions: [
+            // Most recent: very low weight (big drop)
+            ExerciseSession(
+              exerciseName: 'Squat',
+              muscleGroup: 'legs',
+              sets: [AnalyticsSet(weight: 80, reps: 5, date: DateTime.now())],
+              date: DateTime.now(),
+            ),
+            // Previous: high weight
+            ExerciseSession(
+              exerciseName: 'Squat',
+              muscleGroup: 'legs',
+              sets: [
+                AnalyticsSet(
+                  weight: 120,
+                  reps: 8,
+                  date: DateTime.now().subtract(const Duration(days: 7)),
+                ),
+              ],
+              date: DateTime.now().subtract(const Duration(days: 7)),
+            ),
+          ],
+        );
+        final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': 'Squat'},
-        userId,
-      );
-      final json = jsonDecode(result) as Map<String, dynamic>;
-      final progression = json['autoProgression'] as Map<String, dynamic>;
+        final result = await executor.getAutoProgressionPlan({
+          'exerciseName': 'Squat',
+        }, userId);
+        final json = jsonDecode(result) as Map<String, dynamic>;
+        final progression = json['autoProgression'] as Map<String, dynamic>;
 
-      // With a strong drop in 1RM, action should be deload
-      expect(progression['action'], equals('deload'));
-    });
+        // With a strong drop in 1RM, action should be deload
+        expect(progression['action'], equals('deload'));
+      },
+    );
 
     test('exercises with legs muscle group use 5.0 load step', () async {
       final analytics = _FakeAnalyticsRepository();
@@ -577,9 +551,7 @@ void main() {
           ExerciseSession(
             exerciseName: 'Squat',
             muscleGroup: 'legs',
-            sets: [
-              AnalyticsSet(weight: 100, reps: 10, date: DateTime.now()),
-            ],
+            sets: [AnalyticsSet(weight: 100, reps: 10, date: DateTime.now())],
             date: DateTime.now(),
           ),
           ExerciseSession(
@@ -598,14 +570,11 @@ void main() {
       );
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {
-          'exerciseName': 'Squat',
-          'targetRepsMin': 8,
-          'targetRepsMax': 10,
-        },
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Squat',
+        'targetRepsMin': 8,
+        'targetRepsMax': 10,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json.containsKey('autoProgression'), isTrue);
@@ -626,10 +595,9 @@ void main() {
 
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': 'Unknown Exercise'},
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Unknown Exercise',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['error'], contains('not found'));
@@ -644,10 +612,9 @@ void main() {
       analytics.searchResults = [];
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': 'Bench Press'},
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Bench Press',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['error'], isNotNull);
@@ -659,10 +626,9 @@ void main() {
       analytics.historyToReturn = _makeExerciseHistory(sessionCount: 4);
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': 'Bench Press'},
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Bench Press',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
       final progression = json['autoProgression'] as Map<String, dynamic>;
 
@@ -674,10 +640,9 @@ void main() {
       analytics.historyToReturn = _makeExerciseHistory(sessionCount: 2);
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {'exerciseName': 'Bench Press'},
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Bench Press',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
       final progression = json['autoProgression'] as Map<String, dynamic>;
 
@@ -689,14 +654,11 @@ void main() {
       analytics.historyToReturn = _makeExerciseHistory(sessionCount: 2);
       final executor = _buildExecutor(analyticsOverride: analytics);
 
-      final result = await executor.getAutoProgressionPlan(
-        {
-          'exerciseName': 'Bench Press',
-          'targetRepsMin': '5',
-          'targetRepsMax': '8',
-        },
-        userId,
-      );
+      final result = await executor.getAutoProgressionPlan({
+        'exerciseName': 'Bench Press',
+        'targetRepsMin': '5',
+        'targetRepsMax': '8',
+      }, userId);
       expect(() => jsonDecode(result), returnsNormally);
     });
   });
@@ -763,10 +725,7 @@ void main() {
 
     test('detects routine_fragile barrier for large gap', () async {
       // Two workouts far apart (> 5 days gap)
-      final workouts = [
-        _makeWorkout(daysAgo: 1),
-        _makeWorkout(daysAgo: 20),
-      ];
+      final workouts = [_makeWorkout(daysAgo: 1), _makeWorkout(daysAgo: 20)];
       final executor = _buildExecutor(historyFn: () => Right(workouts));
 
       final result = await executor.getAdherenceInsights({}, userId);
@@ -797,8 +756,7 @@ void main() {
       expect(json['toolName'], equals('getAdherenceInsights'));
     });
 
-    test('returns error JSON when history fetch returns cache failure',
-        () async {
+    test('returns error JSON when history fetch returns cache failure', () async {
       // Tests the error path without triggering FirebaseCrashlytics catch block.
       // Uses Left(CacheFailure) which is handled via fold, not catch.
       final executor = _buildExecutor(
@@ -814,10 +772,7 @@ void main() {
 
     test('adherencePercent clamped to max 120', () async {
       // 20 workouts in 28 days, target 3/week = 12 target -> 166% raw
-      final workouts = List.generate(
-        20,
-        (i) => _makeWorkout(daysAgo: i + 1),
-      );
+      final workouts = List.generate(20, (i) => _makeWorkout(daysAgo: i + 1));
       final executor = _buildExecutor(historyFn: () => Right(workouts));
 
       final result = await executor.getAdherenceInsights({}, userId);

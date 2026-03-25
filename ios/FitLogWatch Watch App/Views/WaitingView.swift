@@ -12,6 +12,8 @@ import SwiftUI
 
 struct WaitingView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
+    @State private var waitingSyncTask: Task<Void, Never>?
+    private let waitingRecoverySchedule = [12, 24, 48]
 
     private var locale: String { connectivity.appLocale }
     private var connectedText: String { WatchStrings.connected(locale) }
@@ -90,5 +92,48 @@ struct WaitingView: View {
             }
         }
         .padding()
+        .onAppear {
+            startWaitingRecoveryLoop(triggerImmediateSync: true)
+        }
+        .onDisappear {
+            waitingSyncTask?.cancel()
+            waitingSyncTask = nil
+        }
+        .onChange(of: connectivity.isWorkoutActive) { _, isActive in
+            if isActive {
+                waitingSyncTask?.cancel()
+                waitingSyncTask = nil
+            } else {
+                startWaitingRecoveryLoop(triggerImmediateSync: true)
+            }
+        }
+    }
+
+    private func startWaitingRecoveryLoop(triggerImmediateSync: Bool) {
+        waitingSyncTask?.cancel()
+        guard !connectivity.isWorkoutActive else { return }
+
+        waitingSyncTask = Task {
+            if triggerImmediateSync {
+                connectivity.syncWorkoutStateFromiPhone()
+            }
+
+            for (index, delaySeconds) in waitingRecoverySchedule.enumerated() {
+                try? await Task.sleep(for: .seconds(delaySeconds))
+                guard !Task.isCancelled else { return }
+                guard !connectivity.isWorkoutActive else { return }
+
+                connectivity.syncWorkoutStateFromiPhone(skipCache: true)
+
+                let isFinalCheckpoint = index == waitingRecoverySchedule.count - 1
+                guard isFinalCheckpoint else { continue }
+
+                try? await Task.sleep(for: .seconds(1))
+                guard !Task.isCancelled else { return }
+                guard !connectivity.isWorkoutActive else { return }
+
+                connectivity.sendWatchWaitingForWorkoutBootstrap()
+            }
+        }
     }
 }

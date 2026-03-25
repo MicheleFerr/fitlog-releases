@@ -1,15 +1,15 @@
 # Terms of Service for FitLog Pro
 
-**Last Updated: February 20, 2026**
-**Effective Date: February 20, 2026**
+**Last Updated: March 25, 2026**
+**Effective Date: March 25, 2026**
 
 ## 1. Agreement to Terms
 
 By downloading, installing, or using FitLog Pro ("FitLog Pro", "the App", "Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, you do not have permission to access the Service.
 
-**Developer**: Michele Cozzolino  
-**Contact**: michele.cozzolino93@gmail.com  
-**App Website**: https://fitlogpro.app
+**Developer**: Michele Cozzolino
+**Contact**: michele.cozzolino93@gmail.com
+**App Website**: https://fitlogpro.it
 
 ## 2. Definitions
 
@@ -209,7 +209,7 @@ We may terminate or suspend your account for:
 
 ## 13. Privacy
 
-Your use of FitLog Pro is also governed by our Privacy Policy, available at [Privacy Policy Link].
+Your use of FitLog Pro is also governed by our [Privacy Policy](https://fitlogpro.it/legal/privacy-it.html).
 
 ## 14. Dispute Resolution
 
@@ -245,18 +245,10 @@ Provisions that should survive termination will survive.
 
 For questions about these Terms:
 
-**Email**: legal@fitlogpro.app  
-**Developer**: Michele Cozzolino  
-**Support**: support@fitlogpro.app  
+**Email**: legal@fitlogpro.it
+**Developer**: Michele Cozzolino
+**Support**: support@fitlogpro.it
 **Response Time**: 24-48 hours
-
-**Mailing Address**:
-```
-FitLog Pro
-c/o Michele Cozzolino
-[Address to be provided]
-European Union
-```
 
 ## 17. Special Provisions
 
@@ -273,18 +265,19 @@ Additional rights under CCPA apply. See Privacy Policy for details.
 
 ## 18. Acknowledgment
 
-BY USING GYMBRO TRACKLOG, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE, UNDERSTAND THEM, AND AGREE TO BE BOUND BY THEM.
+BY USING FITLOG PRO, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE, UNDERSTAND THEM, AND AGREE TO BE BOUND BY THEM.
 
 ---
 
-**Document Version**: 1.0.0  
-**Last Review Date**: January 21, 2025  
-**Next Review Date**: January 21, 2026  
+**Document Version**: 1.1.0
+**Last Review Date**: March 25, 2026
+**Next Review Date**: March 25, 2027
 
 ## Change Log
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1.0 | Mar 25, 2026 | Updated branding, website links, and legal references for app release |
 | 1.0.0 | Jan 21, 2025 | Initial Terms of Service |
 
 ---

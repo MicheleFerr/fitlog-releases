@@ -8,6 +8,10 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import * as admin from 'firebase-admin';
 import * as appleReceiptVerify from 'node-apple-receipt-verify';
 import { google } from 'googleapis';
+import {
+  applyPremiumEntitlements,
+  downgradeExpiredEntitlements,
+} from './entitlements';
 
 // Lazy initialization flag for Apple receipt verification
 let appleReceiptConfigured = false;
@@ -102,26 +106,17 @@ export const verifyPremiumPurchase = onCall<PurchaseData>({ enforceAppCheck: tru
       return { success: false, error: 'Purchase verification failed' };
     }
 
-    // Update user profile with premium status
-    const userRef = admin.firestore().collection('users').doc(userId);
-    const updateData: Record<string, unknown> = {
+    const entitlementSnapshot = await applyPremiumEntitlements(userId, {
       accountTier: 'premium',
-      premiumActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      lastPurchaseId: purchaseId,
+      source: 'store_verification',
+      expiresAt: expiryDate,
+      willRenew: purchaseType === 'subscription',
+      isLifetime: purchaseType === 'lifetime',
+      productId,
+      lastPurchaseId: purchaseId ?? null,
       lastPurchasePlatform: platform,
       lastPurchaseProductId: productId,
-    };
-
-    if (expiryDate) {
-      updateData.premiumExpiresAt = admin.firestore.Timestamp.fromDate(expiryDate);
-    } else if (purchaseType === 'lifetime') {
-      // Lifetime purchase - set expiry to far future
-      const farFuture = new Date();
-      farFuture.setFullYear(farFuture.getFullYear() + 100);
-      updateData.premiumExpiresAt = admin.firestore.Timestamp.fromDate(farFuture);
-    }
-
-    await userRef.update(updateData);
+    });
 
     // Log purchase for analytics
     await admin.firestore().collection('purchases').add({
@@ -138,8 +133,8 @@ export const verifyPremiumPurchase = onCall<PurchaseData>({ enforceAppCheck: tru
 
     return {
       success: true,
-      accountTier: updateData.accountTier,
-      expiryDate: expiryDate?.toISOString(),
+      accountTier: entitlementSnapshot.accountTier,
+      expiryDate: entitlementSnapshot.expiresAt?.toISOString(),
     };
 
   } catch (error) {
@@ -284,28 +279,6 @@ async function verifyGooglePurchase(
  * Scheduled function to check and update expired subscriptions
  */
 export const checkExpiredSubscriptions = onSchedule('every 24 hours', async () => {
-  const now = admin.firestore.Timestamp.now();
-
-  // Find users with expired premium
-  const expiredUsers = await admin.firestore()
-    .collection('users')
-    .where('accountTier', '==', 'premium')
-    .where('premiumExpiresAt', '<', now)
-    .get();
-
-  console.log(`Found ${expiredUsers.size} expired subscriptions`);
-
-  // Downgrade expired users
-  const batch = admin.firestore().batch();
-
-  expiredUsers.forEach((doc) => {
-    batch.update(doc.ref, {
-      accountTier: 'free',
-      premiumExpiredAt: now,
-    });
-  });
-
-  await batch.commit();
-
-  console.log(`Downgraded ${expiredUsers.size} expired users to free tier`);
+  const downgradedCount = await downgradeExpiredEntitlements();
+  console.log(`Downgraded ${downgradedCount} expired users to free tier`);
 });

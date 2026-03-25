@@ -1,14 +1,13 @@
+// ignore_for_file: subtype_of_sealed_class
+
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
 
 // ─── Fakes ───────────────────────────────────────────────────────────────────
 
@@ -81,6 +80,8 @@ class FakeAuthService implements AuthService {
   Exception? passwordResetError;
   Exception? googleSignInError;
   Exception? appleSignInError;
+  bool googleSignInReturnsNull = false;
+  bool lastForceAccountSelection = false;
 
   Map<String, dynamic>? userDocData;
   int signOutCallCount = 0;
@@ -123,7 +124,9 @@ class FakeAuthService implements AuthService {
   Future<UserCredential?> signInWithGoogle({
     bool forceAccountSelection = false,
   }) async {
+    lastForceAccountSelection = forceAccountSelection;
     if (googleSignInError != null) throw googleSignInError!;
+    if (googleSignInReturnsNull) return null;
     return FakeUserCredential(user: null);
   }
 
@@ -186,9 +189,7 @@ void main() {
     setUp(() {
       fakeAuth = FakeAuthService();
       container = ProviderContainer(
-        overrides: [
-          authServiceProvider.overrideWithValue(fakeAuth),
-        ],
+        overrides: [authServiceProvider.overrideWithValue(fakeAuth)],
       );
     });
 
@@ -284,6 +285,7 @@ void main() {
             .signInWithGoogle(forceAccountSelection: true);
 
         expect(container.read(authControllerProvider), isA<AsyncData<void>>());
+        expect(fakeAuth.lastForceAccountSelection, isTrue);
       });
 
       test('sets error on failure', () async {
@@ -293,18 +295,28 @@ void main() {
             .read(authControllerProvider.notifier)
             .signInWithGoogle();
 
+        expect(container.read(authControllerProvider), isA<AsyncError<void>>());
+      });
+
+      test('sets error when Google sign-in returns no credential', () async {
+        fakeAuth.googleSignInReturnsNull = true;
+
+        await container
+            .read(authControllerProvider.notifier)
+            .signInWithGoogle();
+
+        final state = container.read(authControllerProvider);
+        expect(state, isA<AsyncError<void>>());
         expect(
-          container.read(authControllerProvider),
-          isA<AsyncError<void>>(),
+          state.error.toString(),
+          contains('Google Sign In did not complete'),
         );
       });
     });
 
     group('signInWithApple', () {
       test('succeeds', () async {
-        await container
-            .read(authControllerProvider.notifier)
-            .signInWithApple();
+        await container.read(authControllerProvider.notifier).signInWithApple();
 
         expect(container.read(authControllerProvider), isA<AsyncData<void>>());
       });
@@ -312,14 +324,9 @@ void main() {
       test('sets error on failure', () async {
         fakeAuth.appleSignInError = Exception('Apple Sign In failed');
 
-        await container
-            .read(authControllerProvider.notifier)
-            .signInWithApple();
+        await container.read(authControllerProvider.notifier).signInWithApple();
 
-        expect(
-          container.read(authControllerProvider),
-          isA<AsyncError<void>>(),
-        );
+        expect(container.read(authControllerProvider), isA<AsyncError<void>>());
       });
     });
 
@@ -389,9 +396,7 @@ void main() {
         fakeAuth.deleteError = Exception('deletion-failed');
 
         expect(
-          () => container
-              .read(authControllerProvider.notifier)
-              .deleteAccount(),
+          () => container.read(authControllerProvider.notifier).deleteAccount(),
           throwsA(isA<Exception>()),
         );
       });

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
-import 'package:gymbro_flutter_new/shared/domain/privacy/consent_type.dart';
+import 'package:gymbro_flutter_new/shared/data/services/analytics_collection_guard.dart';
 
 /// Privacy-Safe Analytics Service
 ///
@@ -55,25 +54,29 @@ class PrivacySafeAnalytics {
       return;
     }
 
-    // Check if user has consented to analytics
-    final hasConsent = await PrivacyManager.hasConsent(ConsentType.analytics);
-    if (!hasConsent) {
-      // 🔐 GDPR: Ensure Firebase Analytics stays disabled
+    final canCollectAnalytics =
+        await AnalyticsCollectionGuard.canCollectAnalytics();
+    if (!canCollectAnalytics) {
+      // 🔐 GDPR + ATT: Ensure Firebase Analytics stays disabled
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
       if (kDebugMode) {
-        debugPrint('ℹ️ Analytics consent not granted - tracking disabled');
+        debugPrint(
+          'ℹ️ Analytics collection blocked until analytics consent and ATT authorization are granted',
+        );
       }
       return;
     }
 
-    // 🔐 GDPR FIX (A2): Enable Firebase Analytics ONLY after consent verified
+    // 🔐 GDPR + ATT: Enable Firebase Analytics only after both checks pass.
     await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
     // TODO: Initialize actual Plausible client here
     _initialized = true;
 
     if (kDebugMode) {
-      debugPrint('✅ Privacy-Safe Analytics initialized (GDPR-compliant, consent-based)');
+      debugPrint(
+        '✅ Privacy-Safe Analytics initialized (GDPR-compliant, consent-based)',
+      );
       debugPrint('   Firebase Analytics: ENABLED (consent granted)');
       debugPrint('   Domain: $_domain');
       debugPrint('   Server: $_serverUrl');
@@ -91,7 +94,9 @@ class PrivacySafeAnalytics {
 
     // TODO: Implement actual Plausible pageview tracking
     if (kDebugMode) {
-      debugPrint('📊 [PLACEHOLDER] Page view: $path ${referrer != null ? "(ref: $referrer)" : ""}');
+      debugPrint(
+        '📊 [PLACEHOLDER] Page view: $path ${referrer != null ? "(ref: $referrer)" : ""}',
+      );
     }
   }
 
@@ -112,7 +117,9 @@ class PrivacySafeAnalytics {
 
     // TODO: Implement actual Plausible event tracking
     if (kDebugMode) {
-      debugPrint('📊 [PLACEHOLDER] Event: $name ${props != null ? props.toString() : ""}');
+      debugPrint(
+        '📊 [PLACEHOLDER] Event: $name ${props != null ? props.toString() : ""}',
+      );
     }
   }
 
@@ -144,9 +151,9 @@ class PrivacySafeAnalytics {
   /// - User has granted analytics consent
   /// - Analytics is initialized
   static Future<bool> _canTrack() async {
-    // Check consent first
-    final hasConsent = await PrivacyManager.hasConsent(ConsentType.analytics);
-    if (!hasConsent) {
+    final canCollectAnalytics =
+        await AnalyticsCollectionGuard.canCollectAnalytics();
+    if (!canCollectAnalytics) {
       return false;
     }
 
@@ -162,17 +169,11 @@ class PrivacySafeAnalytics {
   ///
   /// Pre-defined events for common actions
   static Future<void> trackTemplateCreated(String category) async {
-    await trackEvent(
-      name: 'template_created',
-      props: {'category': category},
-    );
+    await trackEvent(name: 'template_created', props: {'category': category});
   }
 
   static Future<void> trackWorkoutStarted(String templateId) async {
-    await trackEvent(
-      name: 'workout_started',
-      props: {'source': 'template'},
-    );
+    await trackEvent(name: 'workout_started', props: {'source': 'template'});
   }
 
   static Future<void> trackWorkoutCompleted({
@@ -200,18 +201,12 @@ class PrivacySafeAnalytics {
   static Future<void> trackSearch(String query, int resultsCount) async {
     await trackEvent(
       name: 'search',
-      props: {
-        'query_length': query.length,
-        'results_count': resultsCount,
-      },
+      props: {'query_length': query.length, 'results_count': resultsCount},
     );
   }
 
   static Future<void> trackFeatureUsed(String featureName) async {
-    await trackEvent(
-      name: 'feature_used',
-      props: {'feature': featureName},
-    );
+    await trackEvent(name: 'feature_used', props: {'feature': featureName});
   }
 
   /// Track app open (only if consent given)

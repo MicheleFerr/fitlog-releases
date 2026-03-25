@@ -35,6 +35,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   // Track notification ID to record ID mapping
   final Map<int, String> _notificationIdToRecordId = {};
+  final Map<int, NotificationType> _notificationIdToType = {};
 
   @override
   Future<void> initialize() async {
@@ -44,6 +45,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     );
     // Clean up old records on init
     await cleanupOldRecords();
+    await _restorePendingMappings();
   }
 
   @override
@@ -53,6 +55,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     required DateTime scheduledTime,
     String? context,
     int? inactivityDay,
+    String? deepLinkPath,
   }) async {
     // Check anti-spam rules
     if (!await canSendNotification(type)) {
@@ -66,27 +69,30 @@ class NotificationRepositoryImpl implements NotificationRepository {
     final record = NotificationRecord(
       id: recordId,
       type: type,
-      sentAt: DateTime.now(),
+      sentAt: scheduledTime,
       messageKey: message.key,
       context: context,
       inactivityDay: inactivityDay,
     );
 
-    await _storageDatasource.saveRecord(record);
-    await _storageDatasource.updateLastMessageKey(type, message.key);
-
-    // Schedule the notification
     await _localDatasource.scheduleNotification(
       id: notificationId,
       title: message.title,
       body: message.body,
       scheduledTime: scheduledTime,
       type: type,
-      payload: _createPayload(recordId, type),
+      payload: _createPayload(recordId, type, deepLinkPath: deepLinkPath),
     );
 
-    // Track mapping
-    _notificationIdToRecordId[notificationId] = recordId;
+    try {
+      await _storageDatasource.saveRecord(record);
+      await _storageDatasource.updateLastMessageKey(type, message.key);
+    } catch (_) {
+      await _localDatasource.cancelNotification(notificationId);
+      rethrow;
+    }
+
+    _trackNotification(notificationId, recordId, type);
 
     if (kDebugMode) {
       debugPrint('✅ Scheduled ${type.name} notification for $scheduledTime');
@@ -100,6 +106,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     required NotificationType type,
     required NotificationMessage message,
     String? context,
+    String? deepLinkPath,
   }) async {
     // Check anti-spam rules
     if (!await canSendNotification(type)) {
@@ -118,20 +125,23 @@ class NotificationRepositoryImpl implements NotificationRepository {
       context: context,
     );
 
-    await _storageDatasource.saveRecord(record);
-    await _storageDatasource.updateLastMessageKey(type, message.key);
-
-    // Show immediately
     await _localDatasource.showNotification(
       id: notificationId,
       title: message.title,
       body: message.body,
       type: type,
-      payload: _createPayload(recordId, type),
+      payload: _createPayload(recordId, type, deepLinkPath: deepLinkPath),
     );
 
-    // Track mapping
-    _notificationIdToRecordId[notificationId] = recordId;
+    try {
+      await _storageDatasource.saveRecord(record);
+      await _storageDatasource.updateLastMessageKey(type, message.key);
+    } catch (_) {
+      await _localDatasource.cancelNotification(notificationId);
+      rethrow;
+    }
+
+    _trackNotification(notificationId, recordId, type);
 
     if (kDebugMode) {
       debugPrint('✅ Showed ${type.name} notification immediately');
@@ -152,7 +162,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
     if (notificationId != -1) {
       await _localDatasource.cancelNotification(notificationId);
-      _notificationIdToRecordId.remove(notificationId);
+      _untrackNotification(notificationId);
     }
 
     await _storageDatasource.markAsCanceled(recordId);
@@ -162,11 +172,18 @@ class NotificationRepositoryImpl implements NotificationRepository {
   Future<void> cancelNotificationsByType(NotificationType type) async {
     await _localDatasource.cancelNotificationsByType(type);
 
-    // Remove tracked IDs for this type
-    _notificationIdToRecordId.removeWhere((id, _) {
-      final startId = _getIdRangeStart(type);
-      return id >= startId && id < startId + 100;
-    });
+    final notificationIds = _notificationIdToType.entries
+        .where((entry) => entry.value == type)
+        .map((entry) => entry.key)
+        .toList(growable: false);
+
+    for (final notificationId in notificationIds) {
+      final recordId = _notificationIdToRecordId[notificationId];
+      if (recordId != null) {
+        await _storageDatasource.markAsCanceled(recordId);
+      }
+      _untrackNotification(notificationId);
+    }
   }
 
   @override
@@ -209,9 +226,56 @@ class NotificationRepositoryImpl implements NotificationRepository {
     await _storageDatasource.close();
   }
 
+  Future<void> _restorePendingMappings() async {
+    final pendingNotifications = await _localDatasource
+        .getPendingNotifications();
+
+    for (final pendingNotification in pendingNotifications) {
+      final parsed = _parsePayload(pendingNotification.payload);
+      if (parsed == null) continue;
+
+      final recordId = parsed['recordId'];
+      final typeName = parsed['type'];
+      if (recordId == null || typeName == null) continue;
+
+      final notificationType = _notificationTypeFromName(typeName);
+      if (notificationType == null) continue;
+
+      _trackNotification(pendingNotification.id, recordId, notificationType);
+    }
+  }
+
+  void _trackNotification(
+    int notificationId,
+    String recordId,
+    NotificationType type,
+  ) {
+    _notificationIdToRecordId[notificationId] = recordId;
+    _notificationIdToType[notificationId] = type;
+  }
+
+  void _untrackNotification(int notificationId) {
+    _notificationIdToRecordId.remove(notificationId);
+    _notificationIdToType.remove(notificationId);
+  }
+
+  NotificationType? _notificationTypeFromName(String typeName) {
+    for (final type in NotificationType.values) {
+      if (type.name == typeName) {
+        return type;
+      }
+    }
+    return null;
+  }
+
   /// Create payload string for notification
-  String _createPayload(String recordId, NotificationType type) {
-    return '${type.name}:$recordId:${type.deepLinkPath}';
+  String _createPayload(
+    String recordId,
+    NotificationType type, {
+    String? deepLinkPath,
+  }) {
+    final resolvedDeepLink = deepLinkPath ?? type.deepLinkPath;
+    return '${type.name}:$recordId:$resolvedDeepLink';
   }
 
   /// Parse payload from notification tap
@@ -246,22 +310,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
         debugPrint('📲 Notification tapped → navigating to: $deepLink');
       }
       onDeepLinkNavigation?.call(deepLink);
-    }
-  }
-
-  /// Get ID range start for a notification type (mirror of datasource logic)
-  int _getIdRangeStart(NotificationType type) {
-    switch (type) {
-      case NotificationType.workoutForgotten:
-        return 1000;
-      case NotificationType.inactivity:
-        return 2000;
-      case NotificationType.insightPr:
-        return 3000;
-      case NotificationType.insightStreak:
-        return 4000;
-      case NotificationType.insightVolume:
-        return 5000;
     }
   }
 }

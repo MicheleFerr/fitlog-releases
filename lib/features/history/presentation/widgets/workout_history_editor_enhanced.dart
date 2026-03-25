@@ -14,11 +14,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/widgets/history_effort_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/utils/exercise_replacement_utils.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -119,6 +123,12 @@ class _WorkoutHistoryEditorEnhancedState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final showEffortTracking = ref.watch(
+      appConfigProvider.select((config) => config.rpeTracking ?? false),
+    );
+    final useRirMode = ref.watch(
+      appConfigProvider.select((config) => config.effortScale == 'rir'),
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -226,6 +236,8 @@ class _WorkoutHistoryEditorEnhancedState
                           entry.value,
                           theme,
                           l10n,
+                          showEffortTracking: showEffortTracking,
+                          useRirMode: useRirMode,
                         ),
                       ),
                     ),
@@ -345,8 +357,10 @@ class _WorkoutHistoryEditorEnhancedState
     int index,
     Exercise exercise,
     ThemeData theme,
-    AppLocalizations l10n,
-  ) {
+    AppLocalizations l10n, {
+    required bool showEffortTracking,
+    required bool useRirMode,
+  }) {
     return Card(
       elevation: 2,
       child: Padding(
@@ -390,6 +404,8 @@ class _WorkoutHistoryEditorEnhancedState
                   setEntry.value,
                   theme,
                   l10n,
+                  showEffortTracking: showEffortTracking,
+                  useRirMode: useRirMode,
                 ),
               ),
             ),
@@ -404,8 +420,10 @@ class _WorkoutHistoryEditorEnhancedState
     int setIndex,
     ExerciseSet set,
     ThemeData theme,
-    AppLocalizations l10n,
-  ) {
+    AppLocalizations l10n, {
+    required bool showEffortTracking,
+    required bool useRirMode,
+  }) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -417,95 +435,167 @@ class _WorkoutHistoryEditorEnhancedState
             ? Border.all(color: theme.colorScheme.tertiary, width: 2)
             : null,
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: set.isCompleted
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.outline,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                (setIndex + 1).toString(),
-                style: theme.textTheme.labelMedium?.copyWith(
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
                   color: set.isCompleted
-                      ? theme.colorScheme.onPrimary
-                      : theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.outline,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    (setIndex + 1).toString(),
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: set.isCompleted
+                          ? theme.colorScheme.onPrimary
+                          : theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildSetInput(
+                  value: set.weight.toString(),
+                  hint: l10n.weight,
+                  suffix: 'kg',
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) =>
+                      _updateSet(exerciseIndex, setIndex, weight: value),
+                  theme: theme,
+                  exerciseIndex: exerciseIndex,
+                  setIndex: setIndex,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSetInput(
+                  value: set.reps.toString(),
+                  hint: l10n.reps,
+                  suffix: '',
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) =>
+                      _updateSet(exerciseIndex, setIndex, reps: value),
+                  theme: theme,
+                  exerciseIndex: exerciseIndex,
+                  setIndex: setIndex,
+                ),
+              ),
+              const SizedBox(width: 8),
+              InkWell(
+                onTap: () => _updateSet(
+                  exerciseIndex,
+                  setIndex,
+                  isCompleted: !set.isCompleted,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(
+                    set.isCompleted
+                        ? AppIcons.checkBox
+                        : AppIcons.checkBoxOutlineBlank,
+                    color: set.isCompleted
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (showEffortTracking) ...[
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(left: 44),
+              child: _buildEffortSelector(
+                exerciseIndex: exerciseIndex,
+                setIndex: setIndex,
+                set: set,
+                theme: theme,
+                l10n: l10n,
+                useRirMode: useRirMode,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEffortSelector({
+    required int exerciseIndex,
+    required int setIndex,
+    required ExerciseSet set,
+    required ThemeData theme,
+    required AppLocalizations l10n,
+    required bool useRirMode,
+  }) {
+    final normalizedRpe = _normalizeSetRpe(set.rpe);
+    final accentColor = normalizedRpe != null
+        ? _effortColor(normalizedRpe, theme.colorScheme)
+        : theme.colorScheme.outline;
+
+    return InkWell(
+      onTap: () => _selectEffortValue(
+        exerciseIndex: exerciseIndex,
+        setIndex: setIndex,
+        currentRpe: normalizedRpe,
+        useRirMode: useRirMode,
+      ),
+      borderRadius: BorderRadius.circular(12),
+      child: Ink(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: normalizedRpe != null
+              ? accentColor.withValues(alpha: 0.12)
+              : theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: accentColor.withValues(
+              alpha: normalizedRpe != null ? 0.35 : 0.2,
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildSetInput(
-              value: set.weight.toString(),
-              hint: l10n.weight,
-              suffix: 'kg',
-              keyboardType: TextInputType.number,
-              onChanged: (value) =>
-                  _updateSet(exerciseIndex, setIndex, weight: value),
-              theme: theme,
-              exerciseIndex: exerciseIndex,
-              setIndex: setIndex,
+        ),
+        child: Row(
+          children: [
+            Text(
+              useRirMode ? l10n.actualRir : l10n.actualRpe,
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: accentColor,
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildSetInput(
-              value: set.reps.toString(),
-              hint: l10n.reps,
-              suffix: '',
-              keyboardType: TextInputType.number,
-              onChanged: (value) =>
-                  _updateSet(exerciseIndex, setIndex, reps: value),
-              theme: theme,
-              exerciseIndex: exerciseIndex,
-              setIndex: setIndex,
-            ),
-          ),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 80,
-            child: _buildSetInput(
-              value: set.rpe?.toString() ?? '',
-              hint: 'RPE',
-              suffix: '',
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                final rpe = int.tryParse(value);
-                _updateSet(exerciseIndex, setIndex, rpe: rpe);
-              },
-              theme: theme,
-              exerciseIndex: exerciseIndex,
-              setIndex: setIndex,
-            ),
-          ),
-          const SizedBox(width: 8),
-          InkWell(
-            onTap: () => _updateSet(
-              exerciseIndex,
-              setIndex,
-              isCompleted: !set.isCompleted,
-            ),
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                set.isCompleted
-                    ? AppIcons.checkBox
-                    : AppIcons.checkBoxOutlineBlank,
-                color: set.isCompleted
-                    ? theme.colorScheme.primary
+            const Spacer(),
+            Text(
+              _formatEffortValue(
+                context: context,
+                rpe: normalizedRpe,
+                useRirMode: useRirMode,
+              ),
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: normalizedRpe != null
+                    ? accentColor
                     : theme.colorScheme.onSurfaceVariant,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            SemanticIcon(
+              icon: AppIcons.forwardIos,
+              semanticLabel: 'Select effort',
+              size: AppIconSize.tiny,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -564,6 +654,63 @@ class _WorkoutHistoryEditorEnhancedState
     );
   }
 
+  int? _normalizeSetRpe(int? rpe) {
+    if (rpe == null || rpe <= 0) return null;
+    if (rpe < 6) return 6;
+    if (rpe > 10) return 10;
+    return rpe;
+  }
+
+  Color _effortColor(int rpe, ColorScheme colorScheme) {
+    switch (rpe) {
+      case 6:
+      case 7:
+        return colorScheme.primary;
+      case 8:
+      case 9:
+        return colorScheme.tertiary;
+      case 10:
+        return colorScheme.error;
+      default:
+        return colorScheme.primary;
+    }
+  }
+
+  String _formatEffortValue({
+    required BuildContext context,
+    required int? rpe,
+    required bool useRirMode,
+  }) {
+    if (rpe == null) {
+      return Localizations.localeOf(context).languageCode == 'it'
+          ? 'Seleziona'
+          : 'Select';
+    }
+
+    if (useRirMode) {
+      return RPEAutoregulationService.rpeToRIR(rpe.toDouble()).toString();
+    }
+
+    return rpe.toString();
+  }
+
+  Future<void> _selectEffortValue({
+    required int exerciseIndex,
+    required int setIndex,
+    required int? currentRpe,
+    required bool useRirMode,
+  }) async {
+    final selectedRpe = await HistoryEffortPickerModal.show(
+      context,
+      initialRpe: currentRpe,
+      useRirMode: useRirMode,
+    );
+
+    if (!mounted || selectedRpe == null) return;
+
+    _updateSet(exerciseIndex, setIndex, rpe: selectedRpe);
+  }
+
   void _updateSet(
     int exerciseIndex,
     int setIndex, {
@@ -615,8 +762,10 @@ class _WorkoutHistoryEditorEnhancedState
   void _replaceExercise(int exerciseIndex, Exercise currentExercise) {
     ExerciseReplacementModal.show(context, currentExercise, (newExercise) {
       setState(() {
-        final oldSets = _exercises[exerciseIndex].sets;
-        _exercises[exerciseIndex] = newExercise.copyWith(sets: oldSets);
+        _exercises[exerciseIndex] = buildReplacementExercise(
+          currentExercise: _exercises[exerciseIndex],
+          replacementExercise: newExercise,
+        );
         _hasUnsavedChanges = true;
       });
     });
@@ -643,7 +792,7 @@ class _WorkoutHistoryEditorEnhancedState
                 setNumber: s.setNumber,
                 weight: s.weight ?? 0.0,
                 reps: s.reps ?? 0,
-                rpe: s.rpe ?? 0,
+                rpe: _normalizeSetRpe(s.rpe) ?? 0,
                 restSeconds: null,
                 isWarmup: s.isWarmup,
               );

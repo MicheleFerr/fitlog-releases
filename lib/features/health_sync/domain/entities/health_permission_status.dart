@@ -37,6 +37,10 @@ enum PermissionState {
   /// User authorized access to this data type
   authorized,
 
+  /// iOS-only: permission flow completed, but HealthKit does not disclose
+  /// the current READ authorization state through the plugin.
+  unverified,
+
   /// User explicitly denied access
   denied,
 
@@ -45,38 +49,62 @@ enum PermissionState {
   healthConnectNotInstalled,
 }
 
+extension PermissionStateExtension on PermissionState {
+  bool get isConfirmedAuthorized => this == PermissionState.authorized;
+
+  bool get isSyncAttemptable =>
+      this == PermissionState.authorized || this == PermissionState.unverified;
+
+  bool get isPendingVerification => this == PermissionState.unverified;
+}
+
 /// Extension methods for [HealthPermissionStatus]
 extension HealthPermissionStatusExtension on HealthPermissionStatus {
   /// Returns true if the specified data type can be synced
   /// (permission is authorized)
   bool canSync(HealthDataType type) =>
-      permissions[type] == PermissionState.authorized;
+      (permissions[type]?.isConfirmedAuthorized ?? false);
+
+  /// Returns true if the specified data type can be attempted.
+  ///
+  /// This is used on iOS, where READ access may be impossible to verify even
+  /// after the user has already completed the HealthKit permission flow.
+  bool canAttemptSync(HealthDataType type) =>
+      (permissions[type]?.isSyncAttemptable ?? false);
 
   /// Returns true if at least one permission is authorized
   /// but not all (partial approval scenario)
   ///
   /// Example: User approved workout sync but denied weight sync
   bool get hasPartialPermissions {
-    final hasAuthorized = permissions.values.any(
-      (p) => p == PermissionState.authorized,
-    );
+    final hasAuthorized = permissions.values.any((p) => p.isSyncAttemptable);
     final hasNonAuthorized = permissions.values.any(
-      (p) => p != PermissionState.authorized,
+      (p) => !p.isSyncAttemptable,
     );
     return hasAuthorized && hasNonAuthorized;
   }
 
   /// Returns true if all requested permissions are authorized
   bool get hasFullPermissions =>
-      permissions.values.every((p) => p == PermissionState.authorized);
+      permissions.values.every((p) => p.isConfirmedAuthorized);
 
   /// Returns true if no permissions have been granted
   bool get hasNoPermissions =>
-      permissions.values.every((p) => p != PermissionState.authorized);
+      permissions.values.every((p) => !p.isSyncAttemptable);
+
+  /// Returns true if at least one permission can be attempted.
+  bool get hasAnySyncAccess =>
+      permissions.values.any((p) => p.isSyncAttemptable);
 
   /// Returns a list of data types that are currently authorized
   List<HealthDataType> get authorizedDataTypes => permissions.entries
-      .where((e) => e.value == PermissionState.authorized)
+      .where((e) => e.value.isConfirmedAuthorized)
+      .map((e) => e.key)
+      .toList();
+
+  /// Returns a list of data types whose sync can be attempted.
+  List<HealthDataType> get attemptableDataTypes => permissions.entries
+      .where((e) => e.value.isSyncAttemptable)
       .map((e) => e.key)
       .toList();
 
@@ -86,13 +114,19 @@ extension HealthPermissionStatusExtension on HealthPermissionStatus {
       .map((e) => e.key)
       .toList();
 
+  /// Returns a list of data types waiting for runtime verification on iOS.
+  List<HealthDataType> get unverifiedDataTypes => permissions.entries
+      .where((e) => e.value.isPendingVerification)
+      .map((e) => e.key)
+      .toList();
+
   /// iOS-specific: Returns true if sequential permission flow is needed
   /// (workout authorized, weight not yet requested)
   bool get needsSequentialPermission {
     final workoutState = permissions[HealthDataType.workout];
     final weightState = permissions[HealthDataType.bodyWeight];
 
-    return workoutState == PermissionState.authorized &&
+    return (workoutState?.isSyncAttemptable ?? false) &&
         weightState == PermissionState.notDetermined;
   }
 }

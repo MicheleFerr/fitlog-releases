@@ -21,7 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 
 /// Two side-by-side tiles for personalized content access
 ///
-/// - Left tile: "Le mie schede" (primary) → /templates
+/// - Left tile: "Library" (primary) → /templates
 /// - Right tile: "Esercizi custom" (tertiary) → /templates?tab=1
 class PersonalizedContentCard extends ConsumerWidget {
   const PersonalizedContentCard({super.key});
@@ -34,37 +34,90 @@ class PersonalizedContentCard extends ConsumerWidget {
     final customExercisesAsync = ref.watch(allCustomExercisesProvider);
     final entitlements = ref.watch(tierEntitlementsProvider);
 
-    final templateCount = templatesAsync.value?.length ?? 0;
+    final templateCount =
+        templatesAsync.value?.where((template) => template.isEditable).length ??
+        0;
     final exerciseCount = customExercisesAsync.value?.length ?? 0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: Row(
+      child: Column(
         children: [
-          // Left tile: Templates
-          Expanded(
-            child: _ContentTile(
-              icon: AppIcons.listAlt,
-              title: context.l10n.myTemplates,
-              count: templateCount,
-              max: entitlements.maxTemplates,
-              color: colorScheme.primary,
-              onTap: () => context.push('/templates'),
-            ),
+          Row(
+            children: [
+              // Left tile: Templates
+              Expanded(
+                child: _ContentTile(
+                  icon: AppIcons.listAlt,
+                  title: context.l10n.libraryTab,
+                  count: templateCount,
+                  max: entitlements.maxLibraryTemplates,
+                  color: colorScheme.primary,
+                  onTap: () => context.push('/templates'),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              // Right tile: Custom exercises
+              Expanded(
+                child: _ContentTile(
+                  icon: AppIcons.workout,
+                  title: context.l10n.customExercises,
+                  count: exerciseCount,
+                  max: entitlements.maxCustomSingleExercises,
+                  color: colorScheme.tertiary,
+                  onTap: () => context.push('/templates?tab=1'),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: AppSpacing.sm),
-          // Right tile: Custom exercises
-          Expanded(
-            child: _ContentTile(
-              icon: AppIcons.workout,
-              title: context.l10n.exercises,
-              count: exerciseCount,
-              max: entitlements.maxCustomSingleExercises,
-              color: colorScheme.tertiary,
-              onTap: () => context.push('/templates?tab=1'),
-            ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickActionButton(
+                  icon: AppIcons.public,
+                  label: context.l10n.storeTab,
+                  onTap: () => context.push('/templates?tab=2'),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: _QuickActionButton(
+                  icon: AppIcons.qrCode,
+                  label: context.l10n.useCode,
+                  onTap: () => context.push('/templates?tab=2&action=useCode'),
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _QuickActionButton extends StatelessWidget {
+  const _QuickActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () {
+        HapticFeedback.lightImpact();
+        onTap();
+      },
+      icon: Icon(icon, size: 18),
+      label: Text(label),
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 12),
       ),
     );
   }
@@ -177,7 +230,9 @@ class _ContentTileState extends State<_ContentTile>
                   const SizedBox(height: 4),
                   // Counter
                   Text(
-                    isUnlimited ? '${widget.count}' : '${widget.count}/${widget.max}',
+                    isUnlimited
+                        ? '${widget.count}'
+                        : '${widget.count}/${widget.max}',
                     style: context.textTheme.labelMedium?.copyWith(
                       color: widget.color,
                       fontWeight: FontWeight.bold,

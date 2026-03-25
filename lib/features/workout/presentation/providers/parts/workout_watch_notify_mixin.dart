@@ -1,6 +1,8 @@
 part of '../workout_provider.dart';
 
 mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
+  int _latestWatchSyncToken = 0;
+
   // ─── Abstract requirements ───────────────────────────────────────────────
   // These are implemented by other mixins or the main class.
   // Declaring them here avoids circular `on` constraints while still
@@ -104,6 +106,7 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
               (s) => {
                 'weight': s.weight?.toDouble() ?? 0.0,
                 'reps': s.reps ?? 0,
+                'seconds': s.seconds ?? 0,
                 'actualReps':
                     s.actualReps, // ✅ Reps effettive (null se non completato)
                 'isCompleted': s.isCompleted, // ✅ Stato completamento
@@ -121,12 +124,15 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
             (firstExercise.sets.isNotEmpty ? firstExercise.sets.first : null);
 
         _getFormCuesAndNotifyWatch(
+          workoutId: workout.id,
           exerciseName: firstExercise.name,
           exerciseId: firstExercise.id,
           currentSet: 1,
           totalSets: firstExercise.sets.length,
+          countingMode: firstExercise.countingMode.name,
           targetWeight: firstSet?.weight,
           targetReps: firstSet?.reps ?? firstSet?.minReps,
+          targetSeconds: firstSet?.seconds,
           minReps: firstSet?.minReps, // ⌚ Rep range support
           maxReps: firstSet?.maxReps, // ⌚ Rep range support
           setsCompleted: 0,
@@ -142,6 +148,7 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
       debugPrint('⌚ [FLUTTER DEBUG] No first exercise, using workout name');
       final watchNotifier = ref.read(watchConnectivityProvider.notifier);
       watchNotifier.notifyWorkoutStarted(
+        workoutId: workout.id,
         exerciseName: workout.name,
         currentSet: 1,
         totalSets: 1,
@@ -171,12 +178,15 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
 
   /// Helper to get Form Cues and notify Watch
   Future<void> _getFormCuesAndNotifyWatch({
+    required String workoutId,
     required String exerciseName,
     String? exerciseId,
     required int currentSet,
     required int totalSets,
+    String countingMode = 'weighted',
     double? targetWeight,
     int? targetReps,
+    int? targetSeconds,
     int? minReps, // ⌚ Rep range support
     int? maxReps, // ⌚ Rep range support
     required int setsCompleted,
@@ -215,6 +225,7 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
     int currentRestPauseSet = 0,
     int totalRestPauseSets = 0,
   }) async {
+    final requestToken = ++_latestWatchSyncToken;
     final watchNotifier = ref.read(watchConnectivityProvider.notifier);
     final prefsRepo = ref.read(userExercisePreferencesRepositoryProvider);
 
@@ -246,7 +257,8 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
           );
         } else {
           // 📚 Smart fallback based on exercise type and movement pattern
-          effectiveTut = _inferTutFromExercise(
+          effectiveTut =
+              _inferTutFromExercise(
                 tipoEsercizio: dbExercise.tipoEsercizio as String?,
                 patternMovimento: dbExercise.patternMovimento as String?,
                 defaultTut: tut,
@@ -283,6 +295,13 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
       '⌚ [FLUTTER DEBUG] Form Cues for $exerciseName: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars (from db: ${effectiveFormCues != formCues})" : "none"}',
     );
 
+    if (requestToken != _latestWatchSyncToken) {
+      debugPrint(
+        '⌚ [FLUTTER DEBUG] Skipping stale Watch sync for $exerciseName set $currentSet',
+      );
+      return;
+    }
+
     if (isStartup) {
       debugPrint('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
       debugPrint('   - exerciseName: $exerciseName');
@@ -302,45 +321,48 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
       }
       unawaited(
         watchNotifier.notifyWorkoutStarted(
+          workoutId: workoutId,
           exerciseName: exerciseName,
-        currentSet: currentSet,
-        totalSets: totalSets,
-        targetWeight: targetWeight,
-        targetReps: targetReps,
-        minReps: minReps, // ⌚ Rep range support
-        maxReps: maxReps, // ⌚ Rep range support
-        setsCompleted: setsCompleted,
-        setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
-        lastCompletedReps: lastCompletedReps, // ✅ NEW
-        rpeTrackingEnabled: rpeTrackingEnabled,
-        effortScale: effortScale,
-        locale: locale,
-        formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
-        tut: effectiveTut, // ⌚ Real TUT from database or fallback
-        allSets: allSets, // ✅ FIX: All sets for Watch navigation
-        // 🔄 Exercise navigation support
-        exerciseNames: exerciseNames,
-        currentExerciseIndex: currentExerciseIndex,
-        // 🔥 SUPERSET SUPPORT
-        isSuperset: isSuperset,
-        supersetName: supersetName,
-        supersetExercises: supersetExercises,
-        currentExerciseInSuperset: currentExerciseInSuperset,
-        totalExercisesInSuperset: totalExercisesInSuperset,
-        supersetRound: supersetRound,
-        totalSupersetRounds: totalSupersetRounds,
-        // 🔥 DROPSET SUPPORT
-        isDropset: isDropset,
-        dropsetStages: dropsetStages,
-        currentDropsetStage: currentDropsetStage,
-        totalDropsetStages: totalDropsetStages,
-        // 🔥 REST-PAUSE SUPPORT
-        isRestPause: isRestPause,
-        restPauseWeight: restPauseWeight,
-        restPauseTargetReps: restPauseTargetReps,
-        restPauseSets: restPauseSets,
-        currentRestPauseSet: currentRestPauseSet,
-        totalRestPauseSets: totalRestPauseSets,
+          currentSet: currentSet,
+          totalSets: totalSets,
+          countingMode: countingMode,
+          targetWeight: targetWeight,
+          targetReps: targetReps,
+          targetSeconds: targetSeconds,
+          minReps: minReps, // ⌚ Rep range support
+          maxReps: maxReps, // ⌚ Rep range support
+          setsCompleted: setsCompleted,
+          setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
+          lastCompletedReps: lastCompletedReps, // ✅ NEW
+          rpeTrackingEnabled: rpeTrackingEnabled,
+          effortScale: effortScale,
+          locale: locale,
+          formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
+          tut: effectiveTut, // ⌚ Real TUT from database or fallback
+          allSets: allSets, // ✅ FIX: All sets for Watch navigation
+          // 🔄 Exercise navigation support
+          exerciseNames: exerciseNames,
+          currentExerciseIndex: currentExerciseIndex,
+          // 🔥 SUPERSET SUPPORT
+          isSuperset: isSuperset,
+          supersetName: supersetName,
+          supersetExercises: supersetExercises,
+          currentExerciseInSuperset: currentExerciseInSuperset,
+          totalExercisesInSuperset: totalExercisesInSuperset,
+          supersetRound: supersetRound,
+          totalSupersetRounds: totalSupersetRounds,
+          // 🔥 DROPSET SUPPORT
+          isDropset: isDropset,
+          dropsetStages: dropsetStages,
+          currentDropsetStage: currentDropsetStage,
+          totalDropsetStages: totalDropsetStages,
+          // 🔥 REST-PAUSE SUPPORT
+          isRestPause: isRestPause,
+          restPauseWeight: restPauseWeight,
+          restPauseTargetReps: restPauseTargetReps,
+          restPauseSets: restPauseSets,
+          currentRestPauseSet: currentRestPauseSet,
+          totalRestPauseSets: totalRestPauseSets,
         ),
       );
       debugPrint(
@@ -362,47 +384,50 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
       }
       unawaited(
         watchNotifier.sendWorkoutUpdate(
+          workoutId: workoutId,
           exerciseName: exerciseName,
-        currentSet: currentSet,
-        totalSets: totalSets,
-        targetWeight: targetWeight,
-        targetReps: targetReps,
-        minReps: minReps, // ⌚ Rep range support
-        maxReps: maxReps, // ⌚ Rep range support
-        setsCompleted: setsCompleted,
-        setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
-        lastCompletedReps: lastCompletedReps, // ✅ NEW
-        rpeTrackingEnabled: rpeTrackingEnabled,
-        effortScale: effortScale,
-        locale: locale,
-        formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
-        tut: effectiveTut, // ⌚ Real TUT from database or fallback
-        allSets: allSets, // ✅ FIX: All sets for Watch navigation
-        // 🔄 Exercise navigation support
-        exerciseNames: exerciseNames,
-        currentExerciseIndex: currentExerciseIndex,
-        // ✅ FIX: Rest time for Watch optimistic timer
-        restTime: restTime,
-        // 🔥 SUPERSET SUPPORT
-        isSuperset: isSuperset,
-        supersetName: supersetName,
-        supersetExercises: supersetExercises,
-        currentExerciseInSuperset: currentExerciseInSuperset,
-        totalExercisesInSuperset: totalExercisesInSuperset,
-        supersetRound: supersetRound,
-        totalSupersetRounds: totalSupersetRounds,
-        // 🔥 DROPSET SUPPORT
-        isDropset: isDropset,
-        dropsetStages: dropsetStages,
-        currentDropsetStage: currentDropsetStage,
-        totalDropsetStages: totalDropsetStages,
-        // 🔥 REST-PAUSE SUPPORT
-        isRestPause: isRestPause,
-        restPauseWeight: restPauseWeight,
-        restPauseTargetReps: restPauseTargetReps,
-        restPauseSets: restPauseSets,
-        currentRestPauseSet: currentRestPauseSet,
-        totalRestPauseSets: totalRestPauseSets,
+          currentSet: currentSet,
+          totalSets: totalSets,
+          countingMode: countingMode,
+          targetWeight: targetWeight,
+          targetReps: targetReps,
+          targetSeconds: targetSeconds,
+          minReps: minReps, // ⌚ Rep range support
+          maxReps: maxReps, // ⌚ Rep range support
+          setsCompleted: setsCompleted,
+          setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
+          lastCompletedReps: lastCompletedReps, // ✅ NEW
+          rpeTrackingEnabled: rpeTrackingEnabled,
+          effortScale: effortScale,
+          locale: locale,
+          formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
+          tut: effectiveTut, // ⌚ Real TUT from database or fallback
+          allSets: allSets, // ✅ FIX: All sets for Watch navigation
+          // 🔄 Exercise navigation support
+          exerciseNames: exerciseNames,
+          currentExerciseIndex: currentExerciseIndex,
+          // ✅ FIX: Rest time for Watch optimistic timer
+          restTime: restTime,
+          // 🔥 SUPERSET SUPPORT
+          isSuperset: isSuperset,
+          supersetName: supersetName,
+          supersetExercises: supersetExercises,
+          currentExerciseInSuperset: currentExerciseInSuperset,
+          totalExercisesInSuperset: totalExercisesInSuperset,
+          supersetRound: supersetRound,
+          totalSupersetRounds: totalSupersetRounds,
+          // 🔥 DROPSET SUPPORT
+          isDropset: isDropset,
+          dropsetStages: dropsetStages,
+          currentDropsetStage: currentDropsetStage,
+          totalDropsetStages: totalDropsetStages,
+          // 🔥 REST-PAUSE SUPPORT
+          isRestPause: isRestPause,
+          restPauseWeight: restPauseWeight,
+          restPauseTargetReps: restPauseTargetReps,
+          restPauseSets: restPauseSets,
+          currentRestPauseSet: currentRestPauseSet,
+          totalRestPauseSets: totalRestPauseSets,
         ),
       );
     }
@@ -534,6 +559,7 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
           (s) => {
             'weight': s.weight?.toDouble() ?? 0.0,
             'reps': s.reps ?? 0,
+            'seconds': s.seconds ?? 0,
             'actualReps':
                 s.actualReps, // ✅ Reps effettive (null se non completato)
             'isCompleted': s.isCompleted, // ✅ Stato completamento
@@ -552,14 +578,19 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
 
     // 📝 Use async helper to fetch Form Cues and send update
     _getFormCuesAndNotifyWatch(
+      workoutId: workout.id,
       exerciseName: currentExercise.name,
       exerciseId: currentExercise.id,
       currentSet: currentSetIndex >= 0
           ? currentSetIndex + 1
           : currentExercise.sets.length,
       totalSets: currentExercise.sets.length,
+      countingMode: currentExercise.countingMode.name,
       targetWeight: currentSet?.weight,
-      targetReps: currentSet?.reps ?? currentSet?.minReps, // ⌚ Fallback to minReps for rep range
+      targetReps:
+          currentSet?.reps ??
+          currentSet?.minReps, // ⌚ Fallback to minReps for rep range
+      targetSeconds: currentSet?.seconds,
       minReps: currentSet?.minReps, // ⌚ Rep range support
       maxReps: currentSet?.maxReps, // ⌚ Rep range support
       setsCompleted: completedSets,
@@ -578,5 +609,4 @@ mixin WorkoutWatchNotifyMixin on Notifier<Workout?> {
       restTime: currentExercise.restTime,
     );
   }
-
 }

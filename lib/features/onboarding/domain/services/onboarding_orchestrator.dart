@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Priority levels for tours
@@ -307,8 +308,7 @@ class OnboardingOrchestratorState {
 }
 
 /// Central orchestrator for all onboarding tours
-class OnboardingOrchestrator
-    extends Notifier<OnboardingOrchestratorState> {
+class OnboardingOrchestrator extends Notifier<OnboardingOrchestratorState> {
   @override
   OnboardingOrchestratorState build() {
     _loadState();
@@ -508,9 +508,13 @@ class OnboardingOrchestrator
   Future<void> resetAllTours() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      final choiceService = OnboardingChoiceService(prefs);
       for (final config in TourConfig.configs.values) {
         await prefs.remove(config.prefsKey);
       }
+      // Legacy key from removed Exercise Search tutorial.
+      await prefs.remove('exercise_search_tutorial_completed');
+      await choiceService.resetAll();
       await prefs.setBool(_firstLaunchKey, true);
       await prefs.setInt(_workoutCountKey, 0);
       await prefs.remove(_firstLaunchDateKey);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/equipment_selector.dart';
@@ -62,7 +63,8 @@ class CustomExerciseFormSheet extends ConsumerStatefulWidget {
     CustomExercise? existingCustom,
     required ValueChanged<CustomExercise> onSave,
   }) {
-    return ModalService.showSheet<CustomExercise>(context,
+    return ModalService.showSheet<CustomExercise>(
+      context,
       isScrollControlled: true,
       builder: (context) => CustomExerciseFormSheet(
         baseExercise: baseExercise,
@@ -79,8 +81,10 @@ class CustomExerciseFormSheet extends ConsumerStatefulWidget {
 
 class _CustomExerciseFormSheetState
     extends ConsumerState<CustomExerciseFormSheet> {
+  static final RegExp _degreeSuffixRegex = RegExp(r'\s*\((-?\d+)°\)\s*$');
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _inclinationController = TextEditingController();
   final _nameFocusNode = FocusNode();
 
   // Form state
@@ -93,10 +97,15 @@ class _CustomExerciseFormSheetState
   // UI state
   bool _showSecondaryMuscles = false;
 
+  bool get _isVariantMode =>
+      widget.baseExercise != null || widget.existingCustom?.isVariant == true;
+
   @override
   void initState() {
     super.initState();
     _initializeFromBase();
+    _inclinationController.addListener(_syncNameWithInclination);
+    _syncNameWithInclination();
 
     // Auto-focus name field after sheet animation
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,9 +115,35 @@ class _CustomExerciseFormSheetState
 
   @override
   void dispose() {
+    _inclinationController.removeListener(_syncNameWithInclination);
     _nameController.dispose();
+    _inclinationController.dispose();
     _nameFocusNode.dispose();
     super.dispose();
+  }
+
+  void _syncNameWithInclination() {
+    if (!_isVariantMode) return;
+    final currentName = _nameController.text;
+    final baseName = currentName.replaceFirst(_degreeSuffixRegex, '').trim();
+    final rawInclination = _inclinationController.text.trim();
+    final parsedInclination = int.tryParse(rawInclination);
+    final nextName = parsedInclination == null
+        ? baseName
+        : '$baseName ($parsedInclination°)';
+
+    if (nextName == currentName) return;
+    _nameController.value = _nameController.value.copyWith(
+      text: nextName,
+      selection: TextSelection.collapsed(offset: nextName.length),
+      composing: TextRange.empty,
+    );
+  }
+
+  String _normalizedNameForSave(String rawName) {
+    final trimmed = rawName.trim();
+    if (!_isVariantMode) return trimmed;
+    return trimmed.replaceFirst(_degreeSuffixRegex, '').trim();
   }
 
   /// Initialize form state from base exercise or existing custom
@@ -122,6 +157,7 @@ class _CustomExerciseFormSheetState
       _tipoEsercizio = custom.tipoEsercizio;
       _pattern = _parseMovementPattern(custom.patternMovimento);
       _attrezzatura = custom.attrezzatura;
+      _inclinationController.text = custom.inclinazioneGradi?.toString() ?? '';
 
       // Expand sections if they have values
       _showSecondaryMuscles = _muscoliSecondari.isNotEmpty;
@@ -181,35 +217,52 @@ class _CustomExerciseFormSheetState
       return;
     }
 
-    final customExercise =
-        widget.existingCustom?.copyWith(
-          nome: _nameController.text.trim(),
-          focus: _focus,
-          muscoliSecondari: _muscoliSecondari,
-          tipoEsercizio: _tipoEsercizio,
-          patternMovimento: _pattern!.label,
-          attrezzatura: _attrezzatura,
-          isModifiedFromBase: _hasModifiedCategorization,
-        ) ??
-        (widget.baseExercise != null
-            ? CustomExercise.fromBase(
-                baseExerciseId: widget.baseExercise!.id,
-                nome: _nameController.text.trim(),
-                focus: _focus,
-                muscoliSecondari: _muscoliSecondari,
-                tipoEsercizio: _tipoEsercizio,
-                patternMovimento: _pattern!.label,
-                attrezzatura: _attrezzatura,
-                isModifiedFromBase: _hasModifiedCategorization,
-              )
-            : CustomExercise.createNew(
-                nome: _nameController.text.trim(),
-                focus: _focus,
-                muscoliSecondari: _muscoliSecondari,
-                tipoEsercizio: _tipoEsercizio,
-                patternMovimento: _pattern!.label,
-                attrezzatura: _attrezzatura,
-              ));
+    final isVariantExercise = _isVariantMode;
+    final inclinationRaw = _inclinationController.text.trim();
+    final inclinazioneGradi = isVariantExercise && inclinationRaw.isNotEmpty
+        ? int.tryParse(inclinationRaw)
+        : null;
+    final normalizedName = _normalizedNameForSave(_nameController.text);
+    final isModifiedFromBase = widget.baseExercise != null
+        ? _hasModifiedCategorization
+        : (widget.existingCustom?.isModifiedFromBase ?? false);
+
+    final customExercise = widget.existingCustom != null
+        ? CustomExercise(
+            id: widget.existingCustom!.id,
+            nome: normalizedName,
+            baseExerciseId: widget.existingCustom!.baseExerciseId,
+            inclinazioneGradi: inclinazioneGradi,
+            focus: _focus,
+            muscoliSecondari: _muscoliSecondari,
+            tipoEsercizio: _tipoEsercizio,
+            patternMovimento: _pattern!.label,
+            attrezzatura: _attrezzatura,
+            createdAt: widget.existingCustom!.createdAt,
+            unlockedUntil: widget.existingCustom!.unlockedUntil,
+            isModifiedFromBase: isModifiedFromBase,
+            userId: widget.existingCustom!.userId,
+          )
+        : (widget.baseExercise != null
+              ? CustomExercise.fromBase(
+                  baseExerciseId: widget.baseExercise!.id,
+                  nome: normalizedName,
+                  inclinazioneGradi: inclinazioneGradi,
+                  focus: _focus,
+                  muscoliSecondari: _muscoliSecondari,
+                  tipoEsercizio: _tipoEsercizio,
+                  patternMovimento: _pattern!.label,
+                  attrezzatura: _attrezzatura,
+                  isModifiedFromBase: _hasModifiedCategorization,
+                )
+              : CustomExercise.createNew(
+                  nome: normalizedName,
+                  focus: _focus,
+                  muscoliSecondari: _muscoliSecondari,
+                  tipoEsercizio: _tipoEsercizio,
+                  patternMovimento: _pattern!.label,
+                  attrezzatura: _attrezzatura,
+                ));
 
     widget.onSave(customExercise);
     Navigator.pop(context, customExercise);
@@ -218,7 +271,7 @@ class _CustomExerciseFormSheetState
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.existingCustom != null;
-    final isVariant = widget.baseExercise != null;
+    final isVariant = _isVariantMode;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.9,
@@ -255,9 +308,15 @@ class _CustomExerciseFormSheetState
                         _buildNameField(),
                         const SizedBox(height: AppSpacing.lg),
 
-                        // Base exercise info (if variant)
-                        if (isVariant) ...[
+                        // Base exercise info (if variant created from base)
+                        if (widget.baseExercise != null) ...[
                           _buildBaseExerciseInfo(),
+                          const SizedBox(height: AppSpacing.lg),
+                        ],
+
+                        // Optional incline/decline angle for variants
+                        if (isVariant) ...[
+                          _buildInclinationField(),
                           const SizedBox(height: AppSpacing.xl),
                         ],
 
@@ -342,6 +401,28 @@ class _CustomExerciseFormSheetState
       },
       textCapitalization: TextCapitalization.words,
       maxLength: 100,
+    );
+  }
+
+  Widget _buildInclinationField() {
+    return TextFormField(
+      controller: _inclinationController,
+      keyboardType: const TextInputType.numberWithOptions(signed: true),
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9-]'))],
+      decoration: const InputDecoration(
+        labelText: 'Inclinazione (°)',
+        hintText: 'Es. 30, 45, -15',
+        border: OutlineInputBorder(),
+        filled: true,
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) return null;
+        final parsed = int.tryParse(value.trim());
+        if (parsed == null || parsed < -30 || parsed > 90) {
+          return 'Inserisci un valore tra -30 e 90';
+        }
+        return null;
+      },
     );
   }
 

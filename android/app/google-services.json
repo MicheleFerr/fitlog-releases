@@ -7,29 +7,102 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:206648824958:android:acdc503da18b82f6bdf42f",
+        "mobilesdk_app_id": "1:206648824958:android:1f719986c128c67fbdf42f",
         "android_client_info": {
-          "package_name": "com.micheleferrero93.GymProgressAppNew"
+          "package_name": "com.michele.gymbro.flutter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "206648824958-08g2p86vhvn6q8c6qtfn86l4p2h65ur3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.michele.gymbro.flutter",
+            "certificate_hash": "c6e1c62f47cefbf9e8b27ee67636f6ee52565c79"
+          }
+        },
+        {
+          "client_id": "206648824958-tihje6cic6ma2l9oip3h0kr6tpqo7nnv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.michele.gymbro.flutter",
+            "certificate_hash": "0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "client_id": "206648824958-49vgd2ffc9u7a6g1gmd8pr90noeecgcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDFV9LfG7M7UjUxvSeqxZIMPuwF2xXIycc"
+          "current_key": "AIzaSyAyY4hAUMzsxEIYIopbua0NYACWzfMzzLM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "206648824958-she4v0ovv6gpi01k6vsbp6poku7m7nm5.apps.googleusercontent.com",
+              "client_id": "206648824958-49vgd2ffc9u7a6g1gmd8pr90noeecgcp.apps.googleusercontent.com",
               "client_type": 3
             },
             {
               "client_id": "206648824958-91h4cm9fjmivavikmcvup5atg0sp6v5t.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.micheleferrero93.GymProgressAppNew"
+                "bundle_id": "com.michele.gymbro.flutter"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206648824958:android:697fc0ac2c6a8674bdf42f",
+        "android_client_info": {
+          "package_name": "com.micheleferrero93.GymProgressAppNew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206648824958-carblvihju42llaokdrqo8j38scnrav8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.micheleferrero93.GymProgressAppNew",
+            "certificate_hash": "a46ef1a68d8ad28fdd27a40130a5e149fffa1d4c"
+          }
+        },
+        {
+          "client_id": "206648824958-kkma8tr4i4jr5asq3intgtd12cqmu786.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.micheleferrero93.GymProgressAppNew",
+            "certificate_hash": "c6e1c62f47cefbf9e8b27ee67636f6ee52565c79"
+          }
+        },
+        {
+          "client_id": "206648824958-49vgd2ffc9u7a6g1gmd8pr90noeecgcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyY4hAUMzsxEIYIopbua0NYACWzfMzzLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206648824958-49vgd2ffc9u7a6g1gmd8pr90noeecgcp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "206648824958-91h4cm9fjmivavikmcvup5atg0sp6v5t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.michele.gymbro.flutter"
               }
             }
           ]

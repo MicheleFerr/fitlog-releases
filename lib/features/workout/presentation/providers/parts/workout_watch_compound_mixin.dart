@@ -1,6 +1,16 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMixin, WorkoutWatchNotifyMixin, WorkoutWatchTypeMixin {
+mixin WorkoutWatchCompoundMixin
+    on
+        Notifier<Workout?>,
+        WorkoutCoreMixin,
+        WorkoutHelpersMixin,
+        WorkoutWatchNotifyMixin,
+        WorkoutWatchTypeMixin {
+  bool _isAutoRestTimerEnabled() {
+    return ref.read(appConfigProvider).isAutoRestTimerEnabled;
+  }
+
   // ============================================================
   // SUPERSET: Watch handlers
   // ============================================================
@@ -158,8 +168,17 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     // Sync Live Activity (iOS)
     _updateLiveActivityIfActive();
 
+    final autoRestTimerEnabled = _isAutoRestTimerEnabled();
+
     // Start rest timer if not last round
     if (!isLastRound) {
+      if (!autoRestTimerEnabled) {
+        debugPrint(
+          '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping rest timer after superset round',
+        );
+        return;
+      }
+
       final restDuration = currentSuperset.restTime ?? 90;
       debugPrint('⌚🔥 [FLUTTER] ⏱️ Starting rest timer: ${restDuration}s');
 
@@ -173,11 +192,17 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
         totalSets: currentSuperset.supersetSets.length,
       );
     } else {
-      debugPrint('⌚🔥 [FLUTTER] 🏁 Superset completed! Checking for next exercise...');
+      debugPrint(
+        '⌚🔥 [FLUTTER] 🏁 Superset completed! Checking for next exercise...',
+      );
 
       // Start inter-exercise timer if there's a next exercise
       final nextExercise = _getNextIncompleteExercise(state!, currentSuperset);
-      if (nextExercise != null) {
+      if (!autoRestTimerEnabled) {
+        debugPrint(
+          '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping inter-exercise timer after superset',
+        );
+      } else if (nextExercise != null) {
         final interExerciseRest = _resolveInterExerciseRest(currentSuperset);
         final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
 
@@ -207,7 +232,9 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
               );
         }
       } else {
-        debugPrint('⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!');
+        debugPrint(
+          '⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!',
+        );
       }
     }
   }
@@ -332,11 +359,18 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     // Dropset stages are typically done without rest between them
     // (the "drop" is immediate), but we check for inter-exercise timer after LAST stage
     if (isLastStage) {
-      debugPrint('⌚🔥 [FLUTTER] 🏁 Dropset completed! Checking for next exercise...');
+      final autoRestTimerEnabled = _isAutoRestTimerEnabled();
+      debugPrint(
+        '⌚🔥 [FLUTTER] 🏁 Dropset completed! Checking for next exercise...',
+      );
 
       // Start inter-exercise timer if there's a next exercise
       final nextExercise = _getNextIncompleteExercise(state!, currentDropset);
-      if (nextExercise != null) {
+      if (!autoRestTimerEnabled) {
+        debugPrint(
+          '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping inter-exercise timer after dropset',
+        );
+      } else if (nextExercise != null) {
         final interExerciseRest = _resolveInterExerciseRest(currentDropset);
         final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
 
@@ -366,7 +400,9 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
               );
         }
       } else {
-        debugPrint('⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!');
+        debugPrint(
+          '⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!',
+        );
       }
     }
   }
@@ -415,13 +451,17 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
 
     // Mark all remaining stages as completed
     // actualReps from Watch picker applies to the last remaining stage
-    final incompleteStages = currentDropset.stages.where((s) => !s.isCompleted).toList();
+    final incompleteStages = currentDropset.stages
+        .where((s) => !s.isCompleted)
+        .toList();
     final isLastStage = incompleteStages.length == 1;
     final updatedStages = currentDropset.stages.map((stage) {
       if (!stage.isCompleted) {
         return stage.copyWith(
           // Use actual reps from Watch picker for the last stage, else target reps
-          actualReps: (isLastStage && actualReps != null) ? actualReps : stage.reps,
+          actualReps: (isLastStage && actualReps != null)
+              ? actualReps
+              : stage.reps,
           rpe: rpeValue,
           isCompleted: true,
           completedAt: DateTime.now(),
@@ -431,9 +471,7 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     }).toList();
 
     // Create updated exercise using copyWith to preserve all fields
-    final updatedExercise = currentDropset.copyWith(
-      stages: updatedStages,
-    );
+    final updatedExercise = currentDropset.copyWith(stages: updatedStages);
 
     // Update workout state
     final updatedExercises = List<Exercise>.from(workout.exercises);
@@ -454,14 +492,45 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     // Sync Live Activity (iOS)
     _updateLiveActivityIfActive();
 
-    // Start rest timer after completing dropset
-    if (currentDropset.restTime != null) {
-      final timerActions = ref.read(tier1TimerActionsProvider);
-      timerActions.startExerciseRest(
-        seconds: currentDropset.restTime!,
-        exerciseName: currentDropset.name,
-        currentSet: 1,
-        totalSets: 1,
+    final autoRestTimerEnabled = _isAutoRestTimerEnabled();
+
+    // Start inter-exercise timer if there's a next exercise
+    final nextExercise = _getNextIncompleteExercise(state!, currentDropset);
+    if (!autoRestTimerEnabled) {
+      debugPrint(
+        '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping inter-exercise timer after dropset',
+      );
+    } else if (nextExercise != null) {
+      final interExerciseRest = _resolveInterExerciseRest(currentDropset);
+      final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+      debugPrint(
+        '⏰ [TIMER] 🏋️ Starting INTER-EXERCISE timer after dropset: ${interExerciseRest}s before ${nextExercise.name}',
+      );
+
+      ref
+          .read(unifiedTimerProvider.notifier)
+          .startTimer(
+            durationSeconds: interExerciseRest,
+            type: TimerType.interExercise,
+            exerciseName: nextExercise.name,
+            currentSet: 1,
+            totalSets: nextExerciseTotalSets,
+            exerciseId: nextExercise.id,
+          );
+
+      if (Platform.isIOS) {
+        ref
+            .read(workoutSessionLAProvider.notifier)
+            .transitionToRest(
+              restDurationSeconds: interExerciseRest,
+              nextExercise: nextExercise,
+              nextSetIndex: 1,
+            );
+      }
+    } else {
+      debugPrint(
+        '⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!',
       );
     }
   }
@@ -579,8 +648,17 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     // Sync Live Activity (iOS)
     _updateLiveActivityIfActive();
 
+    final autoRestTimerEnabled = _isAutoRestTimerEnabled();
+
     // Start short rest timer between rest-pause sets (not the full rest)
     if (!isLastSet) {
+      if (!autoRestTimerEnabled) {
+        debugPrint(
+          '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping rest-pause timer',
+        );
+        return;
+      }
+
       // Use the rest seconds from the NEXT set (if available)
       final nextSetIndex = targetSetIndex + 1;
       if (nextSetIndex < updatedExercise.restPauseSets.length) {
@@ -597,15 +675,46 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
           totalSets: updatedExercise.restPauseSets.length,
         );
       }
-    } else if (currentRestPause.restTime != null) {
-      // Last set - start full rest timer
-      final timerActions = ref.read(tier1TimerActionsProvider);
-      timerActions.startExerciseRest(
-        seconds: currentRestPause.restTime!,
-        exerciseName: currentRestPause.name,
-        currentSet: 1,
-        totalSets: 1,
-      );
+    } else {
+      // Last set - move to next exercise using the same policy as other flows
+      final nextExercise = _getNextIncompleteExercise(state!, currentRestPause);
+      if (!autoRestTimerEnabled) {
+        debugPrint(
+          '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping inter-exercise timer after rest-pause',
+        );
+      } else if (nextExercise != null) {
+        final interExerciseRest = _resolveInterExerciseRest(currentRestPause);
+        final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+        debugPrint(
+          '⏰ [TIMER] 🏋️ Starting INTER-EXERCISE timer after rest-pause: ${interExerciseRest}s before ${nextExercise.name}',
+        );
+
+        ref
+            .read(unifiedTimerProvider.notifier)
+            .startTimer(
+              durationSeconds: interExerciseRest,
+              type: TimerType.interExercise,
+              exerciseName: nextExercise.name,
+              currentSet: 1,
+              totalSets: nextExerciseTotalSets,
+              exerciseId: nextExercise.id,
+            );
+
+        if (Platform.isIOS) {
+          ref
+              .read(workoutSessionLAProvider.notifier)
+              .transitionToRest(
+                restDurationSeconds: interExerciseRest,
+                nextExercise: nextExercise,
+                nextSetIndex: 1,
+              );
+        }
+      } else {
+        debugPrint(
+          '⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!',
+        );
+      }
     }
   }
 
@@ -654,7 +763,9 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
 
     // Mark all remaining sets as completed
     // actualReps from Watch picker applies to the last remaining mini-set
-    final incompleteSets = currentRestPause.restPauseSets.where((s) => !s.isCompleted).toList();
+    final incompleteSets = currentRestPause.restPauseSets
+        .where((s) => !s.isCompleted)
+        .toList();
     final isLastSet = incompleteSets.length == 1;
     final updatedSets = currentRestPause.restPauseSets.map((set) {
       if (!set.isCompleted) {
@@ -694,10 +805,17 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     _updateLiveActivityIfActive();
 
     // Start inter-exercise timer if there's a next exercise
-    debugPrint('⌚🔥 [FLUTTER] 🏁 Rest-Pause completed! Checking for next exercise...');
+    debugPrint(
+      '⌚🔥 [FLUTTER] 🏁 Rest-Pause completed! Checking for next exercise...',
+    );
 
+    final autoRestTimerEnabled = _isAutoRestTimerEnabled();
     final nextExercise = _getNextIncompleteExercise(state!, currentRestPause);
-    if (nextExercise != null) {
+    if (!autoRestTimerEnabled) {
+      debugPrint(
+        '⌚🔥 [FLUTTER] ⏸️ Auto rest timer disabled - skipping inter-exercise timer after rest-pause',
+      );
+    } else if (nextExercise != null) {
       final interExerciseRest = _resolveInterExerciseRest(currentRestPause);
       final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
 
@@ -727,7 +845,9 @@ mixin WorkoutWatchCompoundMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
             );
       }
     } else {
-      debugPrint('⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!');
+      debugPrint(
+        '⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!',
+      );
     }
   }
 }

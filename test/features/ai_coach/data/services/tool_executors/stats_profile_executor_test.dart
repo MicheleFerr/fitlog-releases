@@ -196,10 +196,9 @@ class FakeWorkoutAnalyticsRepository implements WorkoutAnalyticsRepository {
   @override
   Future<List<Workout>> getHistoricalWorkouts(
     String userId, {
-    int limit = 50,
+    int? limit = 50,
     DateTime? since,
-  }) async =>
-      [];
+  }) async => [];
 
   @override
   Future<List<Workout>> getSimilarWorkouts(
@@ -207,8 +206,7 @@ class FakeWorkoutAnalyticsRepository implements WorkoutAnalyticsRepository {
     Workout targetWorkout, {
     int limit = 10,
     double minSimilarity = 0.3,
-  }) async =>
-      [];
+  }) async => [];
 
   @override
   Future<void> savePR(PersonalRecord pr) async {}
@@ -218,8 +216,7 @@ class FakeWorkoutAnalyticsRepository implements WorkoutAnalyticsRepository {
     String userId, {
     int limit = 30,
     DateTime? since,
-  }) async =>
-      [];
+  }) async => [];
 
   @override
   Future<void> cacheWorkoutMetrics(WorkoutMetrics metrics) async {}
@@ -257,14 +254,12 @@ class FakeAnalyticsRepository implements AnalyticsRepository {
   Future<fp.Either<Failure, List<ExerciseHistory>>> searchExercises({
     required String userId,
     required String query,
-  }) async =>
-      fp.Right([]);
+  }) async => fp.Right([]);
 
   @override
   Stream<fp.Either<Failure, List<ExerciseHistory>>> getExerciseHistory(
     String userId,
-  ) =>
-      Stream.value(fp.Right([]));
+  ) => Stream.value(fp.Right([]));
 
   @override
   Future<fp.Either<Failure, List<ExerciseSession>>> getSessionsByTimeframe({
@@ -272,8 +267,7 @@ class FakeAnalyticsRepository implements AnalyticsRepository {
     required String exerciseName,
     required DateTime start,
     required DateTime end,
-  }) async =>
-      fp.Right([]);
+  }) async => fp.Right([]);
 
   @override
   Future<fp.Either<Failure, void>> clearCache() async => fp.Right(null);
@@ -288,8 +282,7 @@ class FakeAnalyticsRepository implements AnalyticsRepository {
     required String exerciseName,
     required String muscleGroup,
     required ExerciseSession session,
-  }) async =>
-      fp.Right(null);
+  }) async => fp.Right(null);
 }
 
 class FakeStreakRepository implements StreakRepository {
@@ -347,21 +340,18 @@ class FakeMeasurementRepository implements MeasurementRepository {
   @override
   Future<fp.Either<MeasurementFailure, void>> updateMeasurement(
     Measurement measurement,
-  ) async =>
-      fp.Right(null);
+  ) async => fp.Right(null);
 
   @override
   Future<fp.Either<MeasurementFailure, void>> deleteMeasurement({
     required String measurementId,
     required String userId,
-  }) async =>
-      fp.Right(null);
+  }) async => fp.Right(null);
 
   @override
   Future<fp.Either<MeasurementFailure, void>> permanentlyDeleteMeasurement(
     String measurementId,
-  ) async =>
-      fp.Right(null);
+  ) async => fp.Right(null);
 
   @override
   Future<fp.Either<MeasurementFailure, SyncResult>> syncWithHealthPlatform({
@@ -382,28 +372,24 @@ class FakeMeasurementRepository implements MeasurementRepository {
   @override
   Future<fp.Either<MeasurementFailure, List<SyncConflict>>> getSyncConflicts(
     String userId,
-  ) async =>
-      fp.Right([]);
+  ) async => fp.Right([]);
 
   @override
   Future<fp.Either<MeasurementFailure, void>> resolveConflict({
     required String conflictId,
     required ConflictResolution resolution,
-  }) async =>
-      fp.Right(null);
+  }) async => fp.Right(null);
 
   @override
   Future<fp.Either<MeasurementFailure, DateTime?>> getLastSyncTimestamp(
     String userId,
-  ) async =>
-      fp.Right(null);
+  ) async => fp.Right(null);
 
   @override
   Future<fp.Either<MeasurementFailure, int>> cleanupExpiredMeasurements(
     String userId, {
     int retentionDays = 30,
-  }) async =>
-      fp.Right(0);
+  }) async => fp.Right(0);
 }
 
 // ---------------------------------------------------------------------------
@@ -505,7 +491,6 @@ PersonalRecord _makePR({
 WorkoutHistoryDetail _makeWorkout({
   int daysAgo = 1,
   String name = 'Push Day',
-  double volume = 5000,
   int durationMinutes = 60,
 }) {
   final completedAt = DateTime.now().subtract(Duration(days: daysAgo));
@@ -673,42 +658,42 @@ void main() {
         analyticsOverride: analyticsRepo,
       );
 
-      final result = await executor.getPersonalRecords(
-        {'exerciseName': 'Bench Press'},
-        userId,
-      );
+      final result = await executor.getPersonalRecords({
+        'exerciseName': 'Bench Press',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json, isNotNull);
       expect(json.containsKey('error') || json.containsKey('records'), isTrue);
     });
 
-    test('falls back to filtered PRs when exercise not found in analytics',
-        () async {
-      final analyticsRepo = FakeAnalyticsRepository();
-      analyticsRepo.historyFailure = const NotFoundFailure('Not found');
+    test(
+      'falls back to filtered PRs when exercise not found in analytics',
+      () async {
+        final analyticsRepo = FakeAnalyticsRepository();
+        analyticsRepo.historyFailure = const NotFoundFailure('Not found');
 
-      final workoutAnalyticsRepo = FakeWorkoutAnalyticsRepository();
-      workoutAnalyticsRepo.prsToReturn = [
-        _makePR(exerciseName: 'Bench Press', value: 100),
-        _makePR(exerciseName: 'Squat', value: 150),
-      ];
+        final workoutAnalyticsRepo = FakeWorkoutAnalyticsRepository();
+        workoutAnalyticsRepo.prsToReturn = [
+          _makePR(exerciseName: 'Bench Press', value: 100),
+          _makePR(exerciseName: 'Squat', value: 150),
+        ];
 
-      final executor = _buildExecutor(
-        analyticsRepoOverride: workoutAnalyticsRepo,
-        analyticsOverride: analyticsRepo,
-      );
+        final executor = _buildExecutor(
+          analyticsRepoOverride: workoutAnalyticsRepo,
+          analyticsOverride: analyticsRepo,
+        );
 
-      final result = await executor.getPersonalRecords(
-        {'exerciseName': 'bench'},
-        userId,
-      );
-      final json = jsonDecode(result) as Map<String, dynamic>;
+        final result = await executor.getPersonalRecords({
+          'exerciseName': 'bench',
+        }, userId);
+        final json = jsonDecode(result) as Map<String, dynamic>;
 
-      // Should find matching PR or return no-PRs error
-      expect(json, isNotNull);
-      expect(() => jsonDecode(result), returnsNormally);
-    });
+        // Should find matching PR or return no-PRs error
+        expect(json, isNotNull);
+        expect(() => jsonDecode(result), returnsNormally);
+      },
+    );
 
     test('returns error JSON when repository throws', () async {
       final repo = FakeWorkoutAnalyticsRepository();
@@ -783,14 +768,12 @@ void main() {
         _makeWorkout(daysAgo: 3, name: 'Pull'),
         _makeWorkout(daysAgo: 5, name: 'Legs'),
       ];
-      final executor = _buildExecutor(
-        historyFn: () => Right(workouts),
-      );
+      final executor = _buildExecutor(historyFn: () => Right(workouts));
 
-      final result = await executor.getWorkoutHistory(
-        {'daysBack': 7, 'limit': 10},
-        userId,
-      );
+      final result = await executor.getWorkoutHistory({
+        'daysBack': 7,
+        'limit': 10,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['daysBack'], equals(7));
@@ -799,15 +782,13 @@ void main() {
     });
 
     test('returns empty list when no recent workouts', () async {
-      final workouts = [
-        _makeWorkout(daysAgo: 60, name: 'Old Workout'),
-      ];
+      final workouts = [_makeWorkout(daysAgo: 60, name: 'Old Workout')];
       final executor = _buildExecutor(historyFn: () => Right(workouts));
 
-      final result = await executor.getWorkoutHistory(
-        {'daysBack': 7, 'limit': 10},
-        userId,
-      );
+      final result = await executor.getWorkoutHistory({
+        'daysBack': 7,
+        'limit': 10,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['count'], equals(0));
@@ -821,10 +802,10 @@ void main() {
       );
       final executor = _buildExecutor(historyFn: () => Right(workouts));
 
-      final result = await executor.getWorkoutHistory(
-        {'daysBack': 30, 'limit': 3},
-        userId,
-      );
+      final result = await executor.getWorkoutHistory({
+        'daysBack': 30,
+        'limit': 3,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect((json['workouts'] as List).length, equals(3));
@@ -834,20 +815,17 @@ void main() {
       final workouts = [_makeWorkout(daysAgo: 1)];
       final executor = _buildExecutor(historyFn: () => Right(workouts));
 
-      final result = await executor.getWorkoutHistory(
-        {'daysBack': '14', 'limit': '5'},
-        userId,
-      );
+      final result = await executor.getWorkoutHistory({
+        'daysBack': '14',
+        'limit': '5',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['daysBack'], equals(14));
     });
 
     test('clamps daysBack to historyDaysLimit', () async {
-      final workouts = List.generate(
-        5,
-        (i) => _makeWorkout(daysAgo: i + 1),
-      );
+      final workouts = List.generate(5, (i) => _makeWorkout(daysAgo: i + 1));
       // Build executor with historyDaysLimit = 10
       final executor = StatsProfileExecutor(
         analyticsRepo: FakeAnalyticsRepository(),
@@ -857,10 +835,9 @@ void main() {
         historyDaysLimit: 10,
       );
 
-      final result = await executor.getWorkoutHistory(
-        {'daysBack': 999},
-        userId,
-      );
+      final result = await executor.getWorkoutHistory({
+        'daysBack': 999,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['daysBack'], equals(10));
@@ -882,10 +859,10 @@ void main() {
       final workouts = [_makeWorkout(daysAgo: 1, name: 'Test Workout')];
       final executor = _buildExecutor(historyFn: () => Right(workouts));
 
-      final result = await executor.getWorkoutHistory(
-        {'daysBack': 7, 'limit': 5},
-        userId,
-      );
+      final result = await executor.getWorkoutHistory({
+        'daysBack': 7,
+        'limit': 5,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
       final workoutList = json['workouts'] as List;
 
@@ -975,10 +952,9 @@ void main() {
     test('accepts valid experienceLevel', () async {
       final executor = _buildExecutor();
 
-      final result = await executor.updateUserProfilePreferences(
-        {'experienceLevel': 'beginner'},
-        userId,
-      );
+      final result = await executor.updateUserProfilePreferences({
+        'experienceLevel': 'beginner',
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       // Either success or error (Hive may not be available in unit test)
@@ -989,10 +965,9 @@ void main() {
     test('normalizes Italian experience level input', () async {
       final executor = _buildExecutor();
 
-      final result = await executor.updateUserProfilePreferences(
-        {'experienceLevel': 'principiante'},
-        userId,
-      );
+      final result = await executor.updateUserProfilePreferences({
+        'experienceLevel': 'principiante',
+      }, userId);
       expect(() => jsonDecode(result), returnsNormally);
     });
 
@@ -1000,10 +975,9 @@ void main() {
       final executor = _buildExecutor();
 
       // weeklyTarget = 999 should be clamped to 7
-      final result = await executor.updateUserProfilePreferences(
-        {'weeklyTarget': 999},
-        userId,
-      );
+      final result = await executor.updateUserProfilePreferences({
+        'weeklyTarget': 999,
+      }, userId);
       expect(() => jsonDecode(result), returnsNormally);
     });
   });
@@ -1063,10 +1037,9 @@ void main() {
     test('returns fallback card when no callbacks configured', () async {
       final executor = _buildExecutor();
 
-      final result = await executor.updateWorkoutPreferencesResult(
-        {'defaultExerciseSets': 5},
-        userId,
-      );
+      final result = await executor.updateWorkoutPreferencesResult({
+        'defaultExerciseSets': 5,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['success'], isFalse);
@@ -1090,10 +1063,10 @@ void main() {
         updateWorkoutPreferences: (_) async => updated,
       );
 
-      final result = await executor.updateWorkoutPreferencesResult(
-        {'defaultExerciseSets': 5, 'defaultExerciseReps': 5},
-        userId,
-      );
+      final result = await executor.updateWorkoutPreferencesResult({
+        'defaultExerciseSets': 5,
+        'defaultExerciseReps': 5,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['success'], isTrue);
@@ -1112,10 +1085,9 @@ void main() {
         updateWorkoutPreferences: (_) async => {},
       );
 
-      final result = await executor.updateWorkoutPreferencesResult(
-        {'unknownKey': 42},
-        userId,
-      );
+      final result = await executor.updateWorkoutPreferencesResult({
+        'unknownKey': 42,
+      }, userId);
       final json = jsonDecode(result) as Map<String, dynamic>;
 
       expect(json['error'], isNotNull);
@@ -1136,10 +1108,9 @@ void main() {
         },
       );
 
-      await executor.updateWorkoutPreferencesResult(
-        {'defaultExerciseSets': 999},
-        userId,
-      );
+      await executor.updateWorkoutPreferencesResult({
+        'defaultExerciseSets': 999,
+      }, userId);
 
       expect(updates['defaultExerciseSets'], equals(8));
     });

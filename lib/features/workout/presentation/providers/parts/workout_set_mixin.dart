@@ -1,6 +1,12 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMixin, WorkoutWatchNotifyMixin, WorkoutWatchTypeMixin {
+mixin WorkoutSetMixin
+    on
+        Notifier<Workout?>,
+        WorkoutCoreMixin,
+        WorkoutHelpersMixin,
+        WorkoutWatchNotifyMixin,
+        WorkoutWatchTypeMixin {
   void completeSet(String exerciseId, String setId) {
     debugPrint(
       '🏋️ [completeSet] Called with exerciseId=$exerciseId, setId=$setId',
@@ -94,6 +100,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
         );
       }
 
+      _autoSaveIfNeeded();
+
       // Notify Apple Watch about set completion
       _notifyWatchWorkoutUpdate();
 
@@ -106,6 +114,17 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
       );
       debugPrint('⏰ [TIMER DEBUG] completedSetNumber: $completedSetNumber');
       debugPrint('⏰ [TIMER DEBUG] totalSets: $totalSets');
+
+      final autoRestTimerEnabled = ref
+          .read(appConfigProvider)
+          .isAutoRestTimerEnabled;
+      if (!autoRestTimerEnabled) {
+        debugPrint(
+          '⏰ [TIMER DEBUG] Auto rest timer disabled - skipping automatic timer start',
+        );
+        _updateLiveActivityIfActive();
+        return;
+      }
 
       // BUG FIX: Auto-start rest timer after completing a set
       if (targetExercise != null && completedSetNumber > 0) {
@@ -153,7 +172,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
                 currentSet: nextSetNumber,
                 totalSets: totalSets,
                 exerciseId: targetExercise!.id,
-                completedSetId: setId, // Rest Timer Tracking: pass completed set ID
+                completedSetId:
+                    setId, // Rest Timer Tracking: pass completed set ID
               );
 
           debugPrint('⏰ [TIMER] ✅ Timer start called!');
@@ -175,11 +195,16 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
           }
         } else {
           // Last set of this exercise - check for inter-exercise timer
-          final nextExercise = _getNextIncompleteExercise(state!, targetExercise!);
+          final nextExercise = _getNextIncompleteExercise(
+            state!,
+            targetExercise!,
+          );
 
           if (nextExercise != null) {
             // Start inter-exercise rest timer
-            final interExerciseRest = _resolveInterExerciseRest(targetExercise!);
+            final interExerciseRest = _resolveInterExerciseRest(
+              targetExercise!,
+            );
             final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
 
             debugPrint(
@@ -195,7 +220,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
                   currentSet: 1,
                   totalSets: nextExerciseTotalSets,
                   exerciseId: nextExercise.id,
-                  completedSetId: setId, // Rest Timer Tracking: pass completed set ID
+                  completedSetId:
+                      setId, // Rest Timer Tracking: pass completed set ID
                 );
 
             // iOS 17+: Transition Live Activity to inter-exercise rest mode
@@ -344,6 +370,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
 
       state = state!.copyWith(exercises: updatedExercises);
 
+      _autoSaveIfNeeded();
+
       // Sync to Watch
       _notifyWatchWorkoutUpdate();
 
@@ -385,6 +413,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      _autoSaveIfNeeded();
 
       // Sync to Watch
       _notifyWatchWorkoutUpdate();
@@ -435,6 +465,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      _autoSaveIfNeeded();
 
       // Sync to Watch
       _notifyWatchWorkoutUpdate();
@@ -502,6 +534,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
 
       state = state!.copyWith(exercises: updatedExercises);
 
+      _autoSaveIfNeeded();
+
       // Sync to Watch
       _notifyWatchWorkoutUpdate();
 
@@ -552,6 +586,8 @@ mixin WorkoutSetMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMix
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      _autoSaveIfNeeded();
 
       // Sync to Watch
       _notifyWatchWorkoutUpdate();

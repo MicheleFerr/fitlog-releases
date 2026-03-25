@@ -11,6 +11,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
+import 'package:gymbro_flutter_new/shared/data/services/analytics_collection_guard.dart';
 
 /// Firebase Analytics service implementation
 ///
@@ -45,8 +46,9 @@ class FirebaseAnalyticsService implements IAnalyticsService {
   final Map<String, Trace> _activeTraces = {};
 
   bool _isInitialized = false;
-  bool _isEnabled = true;
+  bool _isEnabled = false;
   bool _debugMode = false;
+  bool? _manualCollectionOverride;
 
   // ===== LIFECYCLE =====
 
@@ -55,14 +57,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     if (_isInitialized) return;
 
     try {
-      // Set analytics collection enabled based on debug mode
-      await _analytics.setAnalyticsCollectionEnabled(!kDebugMode || _debugMode);
-
-      // Enable performance monitoring
-      await _performance.setPerformanceCollectionEnabled(
-        !kDebugMode || _debugMode,
-      );
-
+      await _refreshCollectionState(forceApply: true);
       _isInitialized = true;
 
       if (kDebugMode) {
@@ -78,8 +73,8 @@ class FirebaseAnalyticsService implements IAnalyticsService {
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
-    _isEnabled = enabled;
-    await _analytics.setAnalyticsCollectionEnabled(enabled);
+    _manualCollectionOverride = enabled;
+    await _applyCollectionState(enabled);
 
     if (kDebugMode) {
       debugPrint('📊 Analytics collection ${enabled ? 'enabled' : 'disabled'}');
@@ -98,7 +93,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     required String name,
     Map<String, dynamic>? parameters,
   }) async {
-    if (!_isEnabled) return;
+    if (!await _refreshCollectionState()) return;
 
     try {
       // Convert Map<String, dynamic> to Map<String, Object>
@@ -106,10 +101,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
         (key, value) => MapEntry(key, value as Object),
       );
 
-      await _analytics.logEvent(
-        name: name,
-        parameters: convertedParams,
-      );
+      await _analytics.logEvent(name: name, parameters: convertedParams);
 
       if (_debugMode && kDebugMode) {
         debugPrint('📊 Event logged: $name ${parameters ?? ''}');
@@ -123,7 +115,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
 
   @override
   Future<void> logAppOpen() async {
-    if (!_isEnabled) return;
+    if (!await _refreshCollectionState()) return;
 
     try {
       await _analytics.logAppOpen();
@@ -143,7 +135,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     required String screenName,
     String? screenClass,
   }) async {
-    if (!_isEnabled) return;
+    if (!await _refreshCollectionState()) return;
 
     try {
       await _analytics.logScreenView(
@@ -168,13 +160,10 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     required String name,
     required String? value,
   }) async {
-    if (!_isEnabled) return;
+    if (!await _refreshCollectionState()) return;
 
     try {
-      await _analytics.setUserProperty(
-        name: name,
-        value: value,
-      );
+      await _analytics.setUserProperty(name: name, value: value);
 
       if (_debugMode && kDebugMode) {
         debugPrint('📊 User property set: $name = $value');
@@ -188,13 +177,15 @@ class FirebaseAnalyticsService implements IAnalyticsService {
 
   @override
   Future<void> setUserId(String? userId) async {
-    if (!_isEnabled) return;
+    if (!await _refreshCollectionState()) return;
 
     try {
       await _analytics.setUserId(id: userId);
 
       if (_debugMode && kDebugMode) {
-        debugPrint('📊 User ID set: ${userId != null ? "${userId.substring(0, 8.clamp(0, userId.length))}..." : "null"}');
+        debugPrint(
+          '📊 User ID set: ${userId != null ? "${userId.substring(0, 8.clamp(0, userId.length))}..." : "null"}',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -207,6 +198,10 @@ class FirebaseAnalyticsService implements IAnalyticsService {
 
   @override
   Future<String> startTrace(String name) async {
+    if (!await _refreshCollectionState()) {
+      return '${name}_disabled';
+    }
+
     try {
       final trace = _performance.newTrace(name);
       await trace.start();
@@ -228,10 +223,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
   }
 
   @override
-  Future<void> stopTrace(
-    String traceId, {
-    Map<String, int>? metrics,
-  }) async {
+  Future<void> stopTrace(String traceId, {Map<String, int>? metrics}) async {
     try {
       final trace = _activeTraces[traceId];
       if (trace == null) {
@@ -273,7 +265,9 @@ class FirebaseAnalyticsService implements IAnalyticsService {
       }
       _activeTraces.clear();
       if (kDebugMode) {
-        debugPrint('🔐 FirebaseAnalyticsService: cleared active traces on logout');
+        debugPrint(
+          '🔐 FirebaseAnalyticsService: cleared active traces on logout',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -291,8 +285,13 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     int? httpResponseCode,
     int? responseTime,
   }) async {
+    if (!await _refreshCollectionState()) return;
+
     try {
-      final metric = _performance.newHttpMetric(url, HttpMethod.values.byName(httpMethod));
+      final metric = _performance.newHttpMetric(
+        url,
+        HttpMethod.values.byName(httpMethod),
+      );
 
       if (requestPayloadSize != null) {
         metric.requestPayloadSize = requestPayloadSize;
@@ -313,7 +312,9 @@ class FirebaseAnalyticsService implements IAnalyticsService {
       await metric.stop();
 
       if (_debugMode && kDebugMode) {
-        debugPrint('🌐 Network request logged: $httpMethod $url ($httpResponseCode)');
+        debugPrint(
+          '🌐 Network request logged: $httpMethod $url ($httpResponseCode)',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -331,16 +332,14 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     required String currency,
     String? transactionId,
   }) async {
-    if (!_isEnabled) return;
+    if (!await _refreshCollectionState()) return;
 
     try {
       await _analytics.logPurchase(
         value: price,
         currency: currency,
         transactionId: transactionId,
-        parameters: {
-          'product_id': productId,
-        },
+        parameters: {'product_id': productId},
       );
 
       if (_debugMode && kDebugMode) {
@@ -358,6 +357,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
   @override
   Future<void> setDebugMode(bool enabled) async {
     _debugMode = enabled;
+    await _refreshCollectionState(forceApply: true);
 
     if (kDebugMode) {
       debugPrint('🐛 Analytics debug mode ${enabled ? 'enabled' : 'disabled'}');
@@ -377,5 +377,32 @@ class FirebaseAnalyticsService implements IAnalyticsService {
         debugPrint('❌ Error resetting analytics data: $e');
       }
     }
+  }
+
+  Future<bool> _refreshCollectionState({bool forceApply = false}) async {
+    final shouldEnable = await _resolveCollectionEnabled();
+    if (forceApply || _isEnabled != shouldEnable) {
+      await _applyCollectionState(shouldEnable);
+    }
+    return _isEnabled;
+  }
+
+  Future<bool> _resolveCollectionEnabled() async {
+    final manualOverride = _manualCollectionOverride;
+    if (manualOverride != null) {
+      return manualOverride;
+    }
+
+    if (kDebugMode && _debugMode) {
+      return true;
+    }
+
+    return AnalyticsCollectionGuard.canCollectAnalytics();
+  }
+
+  Future<void> _applyCollectionState(bool enabled) async {
+    _isEnabled = enabled;
+    await _analytics.setAnalyticsCollectionEnabled(enabled);
+    await _performance.setPerformanceCollectionEnabled(enabled);
   }
 }

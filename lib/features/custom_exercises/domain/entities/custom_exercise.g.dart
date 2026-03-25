@@ -20,6 +20,7 @@ class CustomExerciseAdapter extends TypeAdapter<CustomExercise> {
       id: fields[0] as String,
       nome: fields[1] as String,
       baseExerciseId: fields[2] as String?,
+      inclinazioneGradi: (fields[12] as num?)?.toInt(),
       focus: (fields[3] as List).cast<String>(),
       muscoliSecondari: (fields[4] as List).cast<String>(),
       tipoEsercizio: fields[5] as String,
@@ -35,7 +36,7 @@ class CustomExerciseAdapter extends TypeAdapter<CustomExercise> {
   @override
   void write(BinaryWriter writer, CustomExercise obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class CustomExerciseAdapter extends TypeAdapter<CustomExercise> {
       ..writeByte(10)
       ..write(obj.isModifiedFromBase)
       ..writeByte(11)
-      ..write(obj.userId);
+      ..write(obj.userId)
+      ..writeByte(12)
+      ..write(obj.inclinazioneGradi);
   }
 
   @override

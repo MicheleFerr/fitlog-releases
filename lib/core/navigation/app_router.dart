@@ -59,6 +59,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_completion_summary_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_exercise_detail_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_template_start_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
@@ -70,6 +71,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analyt
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/pro_analytics_tabbed_screen.dart';
+import 'package:gymbro_flutter_new/features/scheduling/presentation/models/scheduled_workout_notification_highlight.dart';
 
 // Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
@@ -151,7 +153,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // ═══════════════════════════════════════════════════════════════════════
     redirect: (context, state) {
       final isLoggedIn = authState == AuthState.authenticated;
-      final isLoggingIn = state.fullPath == AppRoutes.loginPath ||
+      final isLoggingIn =
+          state.fullPath == AppRoutes.loginPath ||
           state.fullPath == AppRoutes.registerPath;
       final isOnInitialOnboarding =
           state.fullPath == AppRoutes.initialOnboardingPath;
@@ -161,7 +164,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       debugPrint('🔄 [Router] Redirect check:');
       debugPrint('   - currentPath: $currentPath');
       debugPrint('   - isLoggedIn: $isLoggedIn');
-      debugPrint('   - initialOnboardingCompleted: $initialOnboardingCompleted');
+      debugPrint(
+        '   - initialOnboardingCompleted: $initialOnboardingCompleted',
+      );
       debugPrint('   - isOnInitialOnboarding: $isOnInitialOnboarding');
 
       // Wait for auth to initialize
@@ -210,7 +215,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (isLoggedIn && !rbacService.canAccessRoute(currentPath)) {
         if (kDebugMode) {
           debugPrint(
-              '🚨 [RBAC] Access denied to $currentPath for role: ${rbacService.currentRole}');
+            '🚨 [RBAC] Access denied to $currentPath for role: ${rbacService.currentRole}',
+          );
         }
         return AppRoutes.unauthorizedPath;
       }
@@ -301,7 +307,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // ─────────────────────────────────────────────────────────────────────
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return MainShell(navigationShell: navigationShell).withMobileWebGuard();
+          return MainShell(
+            navigationShell: navigationShell,
+          ).withMobileWebGuard();
         },
         branches: [
           // ═════════════════════════════════════════════════════════════════
@@ -335,13 +343,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'templates',
                     name: AppRoutes.templatesName,
                     builder: (context, state) {
-                      final showTour = state.uri.queryParameters['showTour'] == 'true';
+                      final showTour =
+                          state.uri.queryParameters['showTour'] == 'true';
                       final initialTab = int.tryParse(
                         state.uri.queryParameters['tab'] ?? '',
                       );
+                      final openUseCodeOnLaunch =
+                          state.uri.queryParameters['action'] == 'useCode';
                       return TemplatesHomeScreen(
                         showTour: showTour,
                         initialTab: initialTab,
+                        openUseCodeOnLaunch: openUseCodeOnLaunch,
                       );
                     },
                     routes: [
@@ -350,8 +362,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         path: 'detail',
                         name: AppRoutes.templateDetailName,
                         builder: (context, state) {
-                          final templateId = state.extra as String;
-                          return TemplateViewScreen(templateId: templateId);
+                          final templateId = state.extra is String
+                              ? state.extra as String
+                              : state.uri.queryParameters['id'] ?? '';
+                          return TemplateViewScreen(
+                            templateId: templateId,
+                            scheduledWorkoutHighlight:
+                                ScheduledWorkoutNotificationHighlight.fromUri(
+                                  state.uri,
+                                ),
+                          );
                         },
                       ),
                     ],
@@ -365,27 +385,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       GoRoute(
                         path: 'analytics',
                         name: AppRoutes.analyticsName,
-                        builder: (context, state) => const TabbedAnalyticsScreen(),
+                        builder: (context, state) =>
+                            const TabbedAnalyticsScreen(),
                         routes: [
                           GoRoute(
                             path: 'overview',
                             name: AppRoutes.analyticsOverviewName,
-                            builder: (context, state) => const TabbedAnalyticsScreen(),
+                            builder: (context, state) =>
+                                const TabbedAnalyticsScreen(),
                           ),
                           GoRoute(
                             path: 'exercise/:exerciseName',
                             name: AppRoutes.analyticsExerciseDetailName,
                             builder: (context, state) {
-                              final exerciseName = state.pathParameters['exerciseName']!;
+                              final exerciseName =
+                                  state.pathParameters['exerciseName']!;
+                              final exerciseId =
+                                  state.uri.queryParameters['id'];
                               return ExerciseDetailScreen(
                                 exerciseName: Uri.decodeComponent(exerciseName),
+                                exerciseId: exerciseId,
+                                notificationPrHighlight:
+                                    NotificationPrHighlight.fromUri(state.uri),
                               );
                             },
                           ),
                           GoRoute(
                             path: 'exercise-progress',
                             name: AppRoutes.exerciseProgressName,
-                            builder: (context, state) => const ExerciseProgressScreen(),
+                            builder: (context, state) =>
+                                const ExerciseProgressScreen(),
                             routes: [
                               GoRoute(
                                 path: 'detail',
@@ -402,7 +431,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                           GoRoute(
                             path: 'pro',
                             name: AppRoutes.proAnalyticsName,
-                            builder: (context, state) => const ProAnalyticsTabbedScreen(),
+                            builder: (context, state) =>
+                                const ProAnalyticsTabbedScreen(),
                           ),
                         ],
                       ),
@@ -422,8 +452,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.workoutPath,
                 name: AppRoutes.workoutName,
-                builder: (context, state) => const WorkoutScreen(),
+                builder: (context, state) => WorkoutScreen(
+                  freeWorkoutTrigger: state.uri.queryParameters['freeWorkout'],
+                ),
                 routes: [
+                  GoRoute(
+                    path: 'start/:templateId',
+                    name: AppRoutes.workoutStartName,
+                    builder: (context, state) {
+                      final templateId = state.pathParameters['templateId']!;
+                      return WorkoutTemplateStartScreen(
+                        templateId: Uri.decodeComponent(templateId),
+                      );
+                    },
+                  ),
                   // Workout completion
                   GoRoute(
                     path: 'completion',
@@ -438,7 +480,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'exercise/:exerciseName',
                     name: AppRoutes.workoutExerciseDetailName,
                     builder: (context, state) {
-                      final exerciseName = state.pathParameters['exerciseName']!;
+                      final exerciseName =
+                          state.pathParameters['exerciseName']!;
                       final exerciseId = state.uri.queryParameters['id'];
                       return WorkoutExerciseDetailScreen(
                         exerciseName: Uri.decodeComponent(exerciseName),
@@ -506,7 +549,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'measurements',
                     name: AppRoutes.bodyMeasurementsName,
-                    builder: (context, state) => const _MeasurementListWrapper(),
+                    builder: (context, state) =>
+                        const _MeasurementListWrapper(),
                   ),
                   // Streak calendar (pushed from Calendario quick action)
                   GoRoute(
@@ -571,7 +615,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       GoRoute(
                         path: 'templates',
                         name: AppRoutes.coachTemplatesName,
-                        builder: (context, state) => const CoachTemplatesScreen(),
+                        builder: (context, state) =>
+                            const CoachTemplatesScreen(),
                         routes: [
                           // Template editor (create/edit)
                           GoRoute(
@@ -579,7 +624,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                             name: AppRoutes.coachTemplateEditorName,
                             builder: (context, state) {
                               final template = state.extra as CoachTemplate?;
-                              return CoachTemplateEditorScreen(template: template);
+                              return CoachTemplateEditorScreen(
+                                template: template,
+                              );
                             },
                           ),
                         ],
@@ -588,7 +635,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       GoRoute(
                         path: 'settings',
                         name: AppRoutes.coachSettingsName,
-                        builder: (context, state) => const CoachSettingsScreen(),
+                        builder: (context, state) =>
+                            const CoachSettingsScreen(),
                       ),
                     ],
                   ),
@@ -602,13 +650,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'messages',
                     name: AppRoutes.conversationsName,
-                    builder: (context, state) => const ConversationsListScreen(),
+                    builder: (context, state) =>
+                        const ConversationsListScreen(),
                     routes: [
                       GoRoute(
                         path: ':conversationId',
                         name: AppRoutes.chatName,
                         builder: (context, state) {
-                          final conversationId = state.pathParameters['conversationId']!;
+                          final conversationId =
+                              state.pathParameters['conversationId']!;
                           return ChatScreen(conversationId: conversationId);
                         },
                       ),
@@ -634,7 +684,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'documents/attribution',
                     name: AppRoutes.aiCoachDocumentsAttributionName,
-                    builder: (context, state) => const DocumentsAttributionScreen(),
+                    builder: (context, state) =>
+                        const DocumentsAttributionScreen(),
                   ),
                 ],
               ),
@@ -682,9 +733,7 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.routine),
-      ),
+      appBar: AppBar(title: Text(context.l10n.routine)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xxl),
@@ -717,7 +766,6 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
     );
   }
 }
-
 
 /// Wrapper to provide userId to MeasurementListScreen with GDPR consent handling
 class _MeasurementListWrapper extends ConsumerStatefulWidget {
@@ -766,7 +814,8 @@ class _MeasurementListWrapperState
       (consent) {
         // Check if user has granted consent for at least essential metrics
         final hasEssentialConsent =
-            consent.groupConsents[MetricGroup.essential] == ConsentState.granted;
+            consent.groupConsents[MetricGroup.essential] ==
+            ConsentState.granted;
         setState(() {
           _isCheckingConsent = false;
           _hasConsent = hasEssentialConsent;
@@ -912,4 +961,3 @@ class _MeasurementListWrapperState
     );
   }
 }
-

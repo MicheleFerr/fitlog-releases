@@ -59,6 +59,8 @@ import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/cloud_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/data/services/health_background_service.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_background_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 
@@ -70,13 +72,11 @@ class AppLifecycleManager extends ConsumerStatefulWidget {
   /// Widget child da wrappare (tipicamente MaterialApp)
   final Widget child;
 
-  const AppLifecycleManager({
-    super.key,
-    required this.child,
-  });
+  const AppLifecycleManager({super.key, required this.child});
 
   @override
-  ConsumerState<AppLifecycleManager> createState() => _AppLifecycleManagerState();
+  ConsumerState<AppLifecycleManager> createState() =>
+      _AppLifecycleManagerState();
 }
 
 class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
@@ -142,6 +142,15 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     // 2. inactive: App sta perdendo focus (notifica, control center)
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
+      if (Platform.isAndroid) {
+        final syncConfig = ref.read(backgroundSyncConfigProvider);
+        unawaited(
+          HealthBackgroundService.instance.handleAppBackgrounded(
+            syncInterval: syncConfig.syncInterval,
+          ),
+        );
+      }
+
       final batchWriter = ref.read(firestoreBatchWriterProvider.notifier);
 
       if (kDebugMode) {
@@ -175,10 +184,18 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     // Only on paused (actual background), not inactive (control center, notifications)
     if (state == AppLifecycleState.paused) {
       _scheduleWorkoutForgottenIfNeeded();
+
+      if (Platform.isIOS) {
+        _reconcileWorkoutLiveActivity(recreateIfMissing: true);
+      }
     }
 
     // App torna in foreground
     if (state == AppLifecycleState.resumed) {
+      if (Platform.isAndroid) {
+        unawaited(HealthBackgroundService.instance.handleAppForegrounded());
+      }
+
       if (kDebugMode) {
         debugPrint('📱 [AppLifecycle] App resumed to foreground');
       }
@@ -190,19 +207,30 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // (like +30s) may not be delivered. Check UserDefaults for missed events.
       if (Platform.isIOS) {
         _checkPendingLiveActivityEvents();
+        _reconcileWorkoutLiveActivity(recreateIfMissing: true);
 
         // ⌚ FIX: Check for pending Watch commands on iOS
         // When app is suspended and Watch sends endWorkout, the message may be lost.
         // Check UserDefaults for pending commands and process them.
         _checkPendingWatchCommands();
+        _consumePendingNativeNotificationDeepLink();
       }
     }
 
     // App sta terminando (detached)
     if (state == AppLifecycleState.detached) {
+      if (Platform.isAndroid) {
+        unawaited(HealthBackgroundService.instance.handleAppForegrounded());
+      }
+
       if (kDebugMode) {
         debugPrint('📱 [AppLifecycle] App detaching, performing final cleanup');
       }
+
+      if (Platform.isIOS) {
+        _cleanupIOSLiveActivitiesOnDetach();
+      }
+
       // FIX: Emergency save on detached — iOS may kill without passing through paused
       _emergencySaveCurrentWorkout();
     }
@@ -223,7 +251,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) {
       if (kDebugMode) {
-        debugPrint('📱 [AppLifecycle] No active workout, skipping notification');
+        debugPrint(
+          '📱 [AppLifecycle] No active workout, skipping notification',
+        );
       }
       return;
     }
@@ -235,7 +265,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     final scheduler = ref.read(notificationSchedulerProvider);
     scheduler.scheduleWorkoutForgotten(l10n).catchError((error) {
       if (kDebugMode) {
-        debugPrint('❌ [AppLifecycle] Failed to schedule workout forgotten: $error');
+        debugPrint(
+          '❌ [AppLifecycle] Failed to schedule workout forgotten: $error',
+        );
       }
     });
 
@@ -253,7 +285,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     final scheduler = ref.read(notificationSchedulerProvider);
     scheduler.cancelWorkoutForgotten().catchError((error) {
       if (kDebugMode) {
-        debugPrint('❌ [AppLifecycle] Failed to cancel workout forgotten: $error');
+        debugPrint(
+          '❌ [AppLifecycle] Failed to cancel workout forgotten: $error',
+        );
       }
     });
 
@@ -275,21 +309,43 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) {
       if (kDebugMode) {
-        debugPrint('📱 [AppLifecycle] No active workout, skipping LA event check');
+        debugPrint(
+          '📱 [AppLifecycle] No active workout, skipping LA event check',
+        );
       }
       return;
     }
 
     if (kDebugMode) {
-      debugPrint('📱 [AppLifecycle] Checking for pending Live Activity events...');
+      debugPrint(
+        '📱 [AppLifecycle] Checking for pending Live Activity events...',
+      );
     }
 
     // Fire-and-forget - the check will trigger event handling through the normal flow
-    ref.read(workoutSessionLAProvider.notifier).checkPendingEventsOnResume().catchError((error) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppLifecycle] Failed to check pending LA events: $error');
-      }
-    });
+    ref
+        .read(workoutSessionLAProvider.notifier)
+        .checkPendingEventsOnResume()
+        .catchError((error) {
+          if (kDebugMode) {
+            debugPrint(
+              '❌ [AppLifecycle] Failed to check pending LA events: $error',
+            );
+          }
+        });
+  }
+
+  void _reconcileWorkoutLiveActivity({required bool recreateIfMissing}) {
+    ref
+        .read(workoutSessionLAProvider.notifier)
+        .reconcileWithCurrentWorkout(recreateIfMissing: recreateIfMissing)
+        .catchError((error) {
+          if (kDebugMode) {
+            debugPrint(
+              '❌ [AppLifecycle] Failed to reconcile workout Live Activity: $error',
+            );
+          }
+        });
   }
 
   /// ⌚ FIX: Check for pending Watch commands on app resume
@@ -306,15 +362,21 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     }
 
     // Fire-and-forget - the check will trigger event handling through callbacks
-    ref.read(watchConnectivityProvider.notifier).processPendingWatchCommands().then((processed) {
-      if (processed && kDebugMode) {
-        debugPrint('⌚ [AppLifecycle] ✅ Processed pending Watch commands');
-      }
-    }).catchError((error) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppLifecycle] Failed to check pending Watch commands: $error');
-      }
-    });
+    ref
+        .read(watchConnectivityProvider.notifier)
+        .processPendingWatchCommands()
+        .then((processed) {
+          if (processed && kDebugMode) {
+            debugPrint('⌚ [AppLifecycle] ✅ Processed pending Watch commands');
+          }
+        })
+        .catchError((error) {
+          if (kDebugMode) {
+            debugPrint(
+              '❌ [AppLifecycle] Failed to check pending Watch commands: $error',
+            );
+          }
+        });
   }
 
   /// 💾 FIX: Emergency save current workout when app goes to background (GLOBAL)
@@ -332,18 +394,23 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       if (kDebugMode) {
         // NOTE: If this logs frequently when there WAS an active workout,
         // it means the provider was disposed (check ref.keepAlive() in workout_provider.dart)
-        debugPrint('💾 [AppLifecycle] No active workout to save (provider returned null)');
+        debugPrint(
+          '💾 [AppLifecycle] No active workout to save (provider returned null)',
+        );
       }
       return;
     }
 
     // Only save if workout is active (in progress or paused)
     // BUG FIX: isActive only checks for inProgress, but we also need to save paused workouts!
-    final isActiveOrPaused = currentWorkout.status == WorkoutStatus.inProgress ||
+    final isActiveOrPaused =
+        currentWorkout.status == WorkoutStatus.inProgress ||
         currentWorkout.status == WorkoutStatus.paused;
     if (!isActiveOrPaused) {
       if (kDebugMode) {
-        debugPrint('💾 [AppLifecycle] Workout not active/paused (status: ${currentWorkout.status}), skipping save');
+        debugPrint(
+          '💾 [AppLifecycle] Workout not active/paused (status: ${currentWorkout.status}), skipping save',
+        );
       }
       return;
     }
@@ -362,29 +429,85 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     const channel = MethodChannel(PlatformChannels.unified);
 
     // Request background task from iOS
-    channel.invokeMethod('beginBackgroundTask', {
-      'name': 'emergency_workout_save',
-    }).then((taskId) {
-      if (kDebugMode) {
-        debugPrint('💾 [AppLifecycle] iOS background task started: $taskId');
-      }
-
-      // Perform the save
-      _performEmergencySave(workout).then((_) {
-        // End background task after save completes
-        channel.invokeMethod('endBackgroundTask', {'taskId': taskId}).catchError((e) {
+    channel
+        .invokeMethod('beginBackgroundTask', {'name': 'emergency_workout_save'})
+        .then((taskId) {
           if (kDebugMode) {
-            debugPrint('⚠️ [AppLifecycle] Failed to end background task: $e');
+            debugPrint(
+              '💾 [AppLifecycle] iOS background task started: $taskId',
+            );
           }
+
+          // Perform the save
+          _performEmergencySave(workout).then((_) {
+            // End background task after save completes
+            channel
+                .invokeMethod('endBackgroundTask', {'taskId': taskId})
+                .catchError((e) {
+                  if (kDebugMode) {
+                    debugPrint(
+                      '⚠️ [AppLifecycle] Failed to end background task: $e',
+                    );
+                  }
+                });
+          });
+        })
+        .catchError((error) {
+          // If background task request fails, still try to save
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [AppLifecycle] Background task request failed: $error, saving anyway',
+            );
+          }
+          _performEmergencySave(workout);
         });
-      });
-    }).catchError((error) {
-      // If background task request fails, still try to save
+  }
+
+  Future<void> _consumePendingNativeNotificationDeepLink() async {
+    if (!Platform.isIOS) {
+      return;
+    }
+
+    const channel = MethodChannel(PlatformChannels.unified);
+
+    try {
+      final payload = await channel.invokeMethod<String>(
+        'consumePendingNotificationPayload',
+      );
+      final deepLink = extractNotificationDeepLink(payload);
+      if (deepLink == null) return;
+      if (ref.read(pendingNotificationDeepLinkProvider) == deepLink) return;
+
+      ref.read(pendingNotificationDeepLinkProvider.notifier).state = deepLink;
+
       if (kDebugMode) {
-        debugPrint('⚠️ [AppLifecycle] Background task request failed: $error, saving anyway');
+        debugPrint(
+          '📱 [AppLifecycle] Consumed pending native notification deep link: $deepLink',
+        );
       }
-      _performEmergencySave(workout);
-    });
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [AppLifecycle] Failed to consume pending native notification deep link: $e',
+        );
+      }
+    }
+  }
+
+  void _cleanupIOSLiveActivitiesOnDetach() {
+    const channel = MethodChannel(PlatformChannels.unified);
+
+    unawaited(
+      channel
+          .invokeMethod<void>('cleanupLiveActivitiesForAppTermination')
+          .catchError((Object error) {
+            if (kDebugMode) {
+              debugPrint(
+                '⚠️ [AppLifecycle] Failed to clean up iOS Live Activities on detach: $error',
+              );
+            }
+          }),
+    );
   }
 
   /// Perform the actual emergency save
@@ -394,7 +517,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       await autoSave.emergencySave(workout);
 
       if (kDebugMode) {
-        debugPrint('💾 [AppLifecycle] Emergency saved active workout: ${workout.name}');
+        debugPrint(
+          '💾 [AppLifecycle] Emergency saved active workout: ${workout.name}',
+        );
       }
     } catch (error) {
       if (kDebugMode) {
@@ -444,7 +569,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout != null) {
       if (kDebugMode) {
-        debugPrint('💾 [AppLifecycle] Active workout exists, skipping draft recovery');
+        debugPrint(
+          '💾 [AppLifecycle] Active workout exists, skipping draft recovery',
+        );
       }
       return;
     }
@@ -461,7 +588,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     }
 
     if (kDebugMode) {
-      debugPrint('💾 [AppLifecycle] Found recoverable draft! Waiting for Navigator...');
+      debugPrint(
+        '💾 [AppLifecycle] Found recoverable draft! Waiting for Navigator...',
+      );
     }
 
     // 📸 Try to get Watch snapshot for merge (runs in parallel with navigator wait)
@@ -485,7 +614,11 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     // CRITICAL FIX: Wait for Navigator to be ready before showing dialog.
     // AppLifecycleManager wraps MaterialApp, so Navigator doesn't exist until
     // MaterialApp is fully mounted. We use a retry loop with postFrameCallback.
-    await _showRecoveryDialogWhenReady(l10n, autoSave, mergedDraft: draftWorkout);
+    await _showRecoveryDialogWhenReady(
+      l10n,
+      autoSave,
+      mergedDraft: draftWorkout,
+    );
   }
 
   /// Helper: Wait for Navigator to be ready, then show recovery dialog.
@@ -517,23 +650,37 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // Navigator not ready yet
       if (retryCount >= maxRetries) {
         if (kDebugMode) {
-          debugPrint('💾 [AppLifecycle] Navigator not available after $maxRetries retries (~5s), giving up');
+          debugPrint(
+            '💾 [AppLifecycle] Navigator not available after $maxRetries retries (~5s), giving up',
+          );
         }
         return;
       }
 
       // Exponential backoff: 50ms → 100ms → 200ms → 400ms → 800ms (capped)
-      final delayMs = (50 * (1 << retryCount.clamp(0, 4))).clamp(50, maxDelayMs);
+      final delayMs = (50 * (1 << retryCount.clamp(0, 4))).clamp(
+        50,
+        maxDelayMs,
+      );
       await Future<void>.delayed(Duration(milliseconds: delayMs));
       if (mounted) {
-        unawaited(_showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1, mergedDraft: mergedDraft));
+        unawaited(
+          _showRecoveryDialogWhenReady(
+            l10n,
+            autoSave,
+            retryCount: retryCount + 1,
+            mergedDraft: mergedDraft,
+          ),
+        );
       }
       return;
     }
 
     // Navigator is ready, show dialog
     if (kDebugMode) {
-      debugPrint('💾 [AppLifecycle] Navigator ready (via rootNavigatorKey), showing recovery dialog');
+      debugPrint(
+        '💾 [AppLifecycle] Navigator ready (via rootNavigatorKey), showing recovery dialog',
+      );
     }
 
     try {
@@ -541,7 +688,13 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       final choice = await _showRecoveryDialog(navigatorContext, l10n);
       // Re-check contexts are still valid after async gap
       if (mounted && navigatorContext.mounted) {
-        await _handleRecoveryChoice(choice, autoSave, l10n, navigatorContext, mergedDraft: mergedDraft);
+        await _handleRecoveryChoice(
+          choice,
+          autoSave,
+          l10n,
+          navigatorContext,
+          mergedDraft: mergedDraft,
+        );
       }
     } catch (e, stack) {
       // Catch any remaining Navigator errors (e.g., context became invalid)
@@ -566,20 +719,25 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
         actions: [
           // "Scarta" — red, actually deletes draft
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(_RecoveryChoice.discard),
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_RecoveryChoice.discard),
             child: Text(
               l10n.discard,
-              style: TextStyle(color: Theme.of(dialogContext).colorScheme.error),
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
             ),
           ),
           // "Non ora" — neutral, keeps draft in Hive
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(_RecoveryChoice.notNow),
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_RecoveryChoice.notNow),
             child: Text(l10n.recoveryNotNow),
           ),
           // "Riprendi" — primary, restores workout
           FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(_RecoveryChoice.resume),
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(_RecoveryChoice.resume),
             child: Text(l10n.recover),
           ),
         ],
@@ -604,16 +762,15 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
         final recoveredWorkout = mergedDraft ?? await autoSave.recoverDraft();
         // Check both widget mounted and navigator context still valid after async gap
         if (recoveredWorkout != null && mounted && navigatorContext.mounted) {
-          ref.read(currentWorkoutProvider.notifier).restoreFromDraft(recoveredWorkout);
+          ref
+              .read(currentWorkoutProvider.notifier)
+              .restoreFromDraft(recoveredWorkout);
 
           if (kDebugMode) {
             debugPrint('💾 [AppLifecycle] Draft recovered successfully!');
           }
 
-          SnackBarService.showSuccess(
-            navigatorContext,
-            l10n.workoutRecovered,
-          );
+          SnackBarService.showSuccess(navigatorContext, l10n.workoutRecovered);
 
           navigatorContext.go('/workout');
         }
@@ -665,7 +822,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
         // Watch not reachable, restore callback and return draft as-is
         watchNotifier.onFullWorkoutSnapshotFromWatch = previousCallback;
         if (kDebugMode) {
-          debugPrint('📸 [AppLifecycle] Watch not reachable, using draft as-is');
+          debugPrint(
+            '📸 [AppLifecycle] Watch not reachable, using draft as-is',
+          );
         }
         return draft;
       }
@@ -682,19 +841,25 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
 
       if (snapshot == null || snapshot['hasActiveWorkout'] != true) {
         if (kDebugMode) {
-          debugPrint('📸 [AppLifecycle] No active Watch workout, using draft as-is');
+          debugPrint(
+            '📸 [AppLifecycle] No active Watch workout, using draft as-is',
+          );
         }
         return draft;
       }
 
       if (kDebugMode) {
-        debugPrint('📸 [AppLifecycle] Got Watch snapshot, merging with draft...');
+        debugPrint(
+          '📸 [AppLifecycle] Got Watch snapshot, merging with draft...',
+        );
       }
 
       return _mergeWatchSnapshotIntoDraft(snapshot, draft);
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('📸 [AppLifecycle] Watch snapshot error: $e, using draft as-is');
+        debugPrint(
+          '📸 [AppLifecycle] Watch snapshot error: $e, using draft as-is',
+        );
       }
       return draft;
     }
@@ -724,7 +889,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // Validate exercise index is within bounds
       if (exerciseIndex < 0 || exerciseIndex >= draft.exercises.length) {
         if (kDebugMode) {
-          debugPrint('📸 [Merge] Exercise index $exerciseIndex out of bounds (${draft.exercises.length}), skipping');
+          debugPrint(
+            '📸 [Merge] Exercise index $exerciseIndex out of bounds (${draft.exercises.length}), skipping',
+          );
         }
         return draft;
       }
@@ -734,7 +901,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // Cross-check exercise name if available
       if (exerciseName != null && draftExercise.name != exerciseName) {
         if (kDebugMode) {
-          debugPrint('📸 [Merge] Exercise name mismatch: Watch="$exerciseName" vs Draft="${draftExercise.name}", skipping');
+          debugPrint(
+            '📸 [Merge] Exercise name mismatch: Watch="$exerciseName" vs Draft="${draftExercise.name}", skipping',
+          );
         }
         return draft;
       }
@@ -761,7 +930,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
 
       if (mergeCount == 0) {
         if (kDebugMode) {
-          debugPrint('📸 [Merge] No new completions from Watch, draft is up-to-date');
+          debugPrint(
+            '📸 [Merge] No new completions from Watch, draft is up-to-date',
+          );
         }
         return draft;
       }
@@ -774,7 +945,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       updatedExercises[exerciseIndex] = updatedExercise;
 
       if (kDebugMode) {
-        debugPrint('📸 [Merge] Merged $mergeCount set completions from Watch for "${draftExercise.name}"');
+        debugPrint(
+          '📸 [Merge] Merged $mergeCount set completions from Watch for "${draftExercise.name}"',
+        );
       }
 
       return draft.copyWith(
@@ -805,13 +978,17 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
 
       if (currentUser == null) {
         if (kDebugMode) {
-          debugPrint('🔄 [AppLifecycle] No user logged in, skipping cloud sync');
+          debugPrint(
+            '🔄 [AppLifecycle] No user logged in, skipping cloud sync',
+          );
         }
         return;
       }
 
       if (kDebugMode) {
-        debugPrint('🔄 [AppLifecycle] Starting background cloud sync for user: ${currentUser.email}');
+        debugPrint(
+          '🔄 [AppLifecycle] Starting background cloud sync for user: ${currentUser.email}',
+        );
       }
 
       // Trigger cloud sync in background (non-blocking)
@@ -821,15 +998,20 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       final state = ref.read(cloudSyncProvider);
       if (kDebugMode) {
         if (state.lastSyncSummary != null) {
-          debugPrint('🔄 [AppLifecycle] Cloud sync complete: ${state.lastSyncSummary!.workoutsSynced} workouts synced');
+          debugPrint(
+            '🔄 [AppLifecycle] Cloud sync complete: ${state.lastSyncSummary!.workoutsSynced} workouts synced',
+          );
         }
       }
 
       // ✅ FIX: Invalidate progress providers AFTER sync completes
       // This forces the AI Coach card and other UI to re-read from updated Hive data
-      if (state.lastSyncSummary != null && state.lastSyncSummary!.workoutsSynced > 0) {
+      if (state.lastSyncSummary != null &&
+          state.lastSyncSummary!.workoutsSynced > 0) {
         if (kDebugMode) {
-          debugPrint('🔄 [AppLifecycle] Invalidating progress providers to refresh UI...');
+          debugPrint(
+            '🔄 [AppLifecycle] Invalidating progress providers to refresh UI...',
+          );
         }
 
         // Import progress providers and invalidate them
@@ -839,7 +1021,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
         ref.invalidate(weeklyFrequencyProvider);
 
         if (kDebugMode) {
-          debugPrint('✅ [AppLifecycle] Progress providers invalidated - UI will refresh');
+          debugPrint(
+            '✅ [AppLifecycle] Progress providers invalidated - UI will refresh',
+          );
         }
       }
     } catch (e) {
@@ -860,7 +1044,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
         if (user != null && !_hasTriggeredCloudSync) {
           _hasTriggeredCloudSync = true;
           if (kDebugMode) {
-            debugPrint('🔄 [AppLifecycle] Auth ready - triggering cloud sync for: ${user.email}');
+            debugPrint(
+              '🔄 [AppLifecycle] Auth ready - triggering cloud sync for: ${user.email}',
+            );
           }
           // Trigger sync now that we know user is authenticated
           _syncWorkoutsFromCloudOnStartup();

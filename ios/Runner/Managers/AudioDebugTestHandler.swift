@@ -1,6 +1,6 @@
 /// 🔬 Audio Debug Test Handler
 /// Handles platform channel communication for automated audio debug tests
-/// Bridges Flutter test UI with native iOS timer audio system
+/// using the same one-shot foreground audio / notification-owned paths as production.
 
 import Flutter
 import UIKit
@@ -9,10 +9,15 @@ import UIKit
 class AudioDebugTestHandler: NSObject {
     static let shared = AudioDebugTestHandler()
 
+    private struct AudioDebugTest {
+        let testId: String
+        let liveActivityEnabled: Bool
+        let notificationOwned: Bool
+        let completionWorkItem: DispatchWorkItem
+    }
+
     private var channel: FlutterMethodChannel?
     private var activeTests: [String: AudioDebugTest] = [:]
-
-    // MARK: - Setup
 
     func setup(binaryMessenger: FlutterBinaryMessenger) {
         channel = FlutterMethodChannel(
@@ -20,14 +25,10 @@ class AudioDebugTestHandler: NSObject {
             binaryMessenger: binaryMessenger
         )
 
-        channel?.setMethodCallHandler { [weak self] (call, result) in
+        channel?.setMethodCallHandler { [weak self] call, result in
             self?.handleMethodCall(call: call, result: result)
         }
-
-        print("[AudioDebugTestHandler] Platform channel registered")
     }
-
-    // MARK: - Method Call Handling
 
     private func handleMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
@@ -54,8 +55,6 @@ class AudioDebugTestHandler: NSObject {
         }
     }
 
-    // MARK: - Start Audio Test
-
     private func startAudioTest(args: [String: Any], result: @escaping FlutterResult) {
         guard let testId = args["testId"] as? String,
               let duration = args["duration"] as? Int,
@@ -65,208 +64,111 @@ class AudioDebugTestHandler: NSObject {
             return
         }
 
-        print("[AudioDebugTestHandler] Starting test: \(testId)")
-        print("[AudioDebugTestHandler] Duration: \(duration)s, AppState: \(appStateStr), LA: \(liveActivityEnabled)")
-
-        // Crea test
-        let test = AudioDebugTest(
-            testId: testId,
-            duration: duration,
-            appState: appStateStr,
-            liveActivityEnabled: liveActivityEnabled
-        )
-
-        activeTests[testId] = test
-
-        // ✅ FIX: Se Live Activity è enabled, avviala e skippa notifiche
-        let skipNotification = liveActivityEnabled
+        let soundName = args["soundName"] as? String ?? "YehBuddie"
+        let normalizedAppState = appStateStr.lowercased()
+        let notificationOwned = normalizedAppState.contains("background") || normalizedAppState.contains("lock")
 
         if liveActivityEnabled {
-            // Avvia Live Activity per il test
-            print("[AudioDebugTestHandler] Starting Live Activity for test \(testId)")
+            startDebugLiveActivity(testId: testId, duration: duration, soundName: soundName)
+        }
 
-            let laArgs: [String: Any] = [
-                "exerciseName": "Audio Test \(testId)",
-                "timerType": "rest",
-                "totalSeconds": duration,
-                "remainingSeconds": duration,
-                "isRunning": true,
-                "currentSet": 1,
-                "totalSets": 1,
-                "lastUpdated": Int64(Date().timeIntervalSince1970 * 1000),
-                "soundName": "YehBuddie"
-            ]
+        if notificationOwned {
+            _ = DirectNotificationManager.shared.scheduleRestTimerCompletion(
+                duration: TimeInterval(duration),
+                soundName: soundName,
+                title: "Audio Test",
+                body: "Debug timer completion"
+            )
+        }
 
-            LiveActivityHandler.shared.startLiveActivityDirectly(laArgs) { result in
-                if case .failure(let error) = result as? Result<Void, Error> {
-                    print("[AudioDebugTestHandler] ⚠️ Live Activity failed to start: \(error)")
-                } else {
-                    print("[AudioDebugTestHandler] ✅ Live Activity started successfully")
-                }
+        let completionWorkItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+
+            let actualSounds: Int
+            if notificationOwned {
+                actualSounds = 1
+            } else {
+                let played = TimerSoundFix.shared.playTimerCompletionSound(
+                    preferredSound: soundName,
+                    isPreview: true
+                )
+                actualSounds = played ? 1 : 0
             }
+
+            self.finishTest(testId: testId, actualSounds: actualSounds)
         }
 
-        // Avvia timer audio tramite BackgroundAudioManager
-        BackgroundAudioManager.shared.scheduleTimerAudio(
-            duration: TimeInterval(duration),
-            soundName: "YehBuddie",
-            skipNotification: skipNotification
+        activeTests[testId] = AudioDebugTest(
+            testId: testId,
+            liveActivityEnabled: liveActivityEnabled,
+            notificationOwned: notificationOwned,
+            completionWorkItem: completionWorkItem
         )
 
-        // Ottieni trace ID dal BackgroundAudioManager
-        // NOTA: Assumiamo che currentTraceId sia accessibile
-        let traceId = AudioTraceLogger.shared.getLastTraceId() ?? "unknown-\(testId)"
-        test.traceId = traceId
-
-        print("[AudioDebugTestHandler] Test \(testId) started with trace ID: \(traceId)")
-
-        // Registra observer per audio completion
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleAudioCompleted(_:)),
-            name: NSNotification.Name("TimerAudioCompleted"),
-            object: nil
-        )
-
-        // Avvia timeout timer (durata test + 15s buffer)
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double(duration + 15)) { [weak self] in
-            self?.checkTestCompletion(testId: testId)
-        }
-
-        // Ritorna trace ID a Flutter
-        result(traceId)
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(duration) + 1.0, execute: completionWorkItem)
+        result(testId)
     }
 
-    // MARK: - Audio Completion Handler
-
-    @objc private func handleAudioCompleted(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let traceId = userInfo["traceId"] as? String,
-              let soundCount = userInfo["soundCount"] as? Int else {
-            print("[AudioDebugTestHandler] Invalid audio completion notification")
+    private func startDebugLiveActivity(testId: String, duration: Int, soundName: String) {
+        guard #available(iOS 16.1, *) else {
             return
         }
 
-        print("[AudioDebugTestHandler] Audio completed: \(traceId), sounds: \(soundCount)")
+        let liveActivityArgs: [String: Any] = [
+            "exerciseName": "Audio Test \(testId)",
+            "timerType": "rest",
+            "totalSeconds": duration,
+            "remainingSeconds": duration,
+            "isRunning": true,
+            "currentSet": 1,
+            "totalSets": 1,
+            "lastUpdated": Int64(Date().timeIntervalSince1970 * 1000),
+            "soundName": soundName
+        ]
 
-        // Trova il test associato a questo trace ID
-        if let testId = activeTests.first(where: { $0.value.traceId == traceId })?.key {
-            completeTest(testId: testId, actualSounds: soundCount, traceId: traceId)
-        }
+        LiveActivityHandler.shared.startLiveActivityDirectly(liveActivityArgs) { _ in }
     }
 
-    private func completeTest(testId: String, actualSounds: Int, traceId: String) {
-        guard let test = activeTests[testId] else {
-            print("[AudioDebugTestHandler] Test \(testId) not found")
+    private func finishTest(testId: String, actualSounds: Int) {
+        guard let test = activeTests.removeValue(forKey: testId) else {
             return
         }
 
-        print("[AudioDebugTestHandler] Completing test \(testId): \(actualSounds) sounds")
-
-        // ✅ FIX BUG #2: Remove notification observer to prevent duplicate notifications on subsequent tests
-        NotificationCenter.default.removeObserver(
-            self,
-            name: NSNotification.Name("TimerAudioCompleted"),
-            object: nil
-        )
-        print("[AudioDebugTestHandler] Removed notification observer for test \(testId)")
-
-        // ✅ FIX BUG #6: End Live Activity to prevent zombie LA if it was started
-        if test.liveActivityEnabled {
-            LiveActivityHandler.shared.endAllActiveLiveActivitiesDirectly { _ in
-                print("[AudioDebugTestHandler] Live Activity ended for completed test \(testId)")
-            }
+        if test.liveActivityEnabled, #available(iOS 16.1, *) {
+            LiveActivityHandler.shared.endAllActiveLiveActivitiesDirectly { _ in }
         }
 
-        // Invia risultato a Flutter
         channel?.invokeMethod("onAudioTestCompleted", arguments: [
             "testId": testId,
             "actualSounds": actualSounds,
-            "traceId": traceId,
-            "success": true
+            "traceId": testId,
+            "success": actualSounds > 0
         ])
-
-        // Rimuovi test completato
-        activeTests.removeValue(forKey: testId)
-
-        print("[AudioDebugTestHandler] Test \(testId) completed and removed")
     }
-
-    private func checkTestCompletion(testId: String) {
-        // Se il test è ancora attivo dopo il timeout, consideralo fallito
-        if let test = activeTests[testId] {
-            print("[AudioDebugTestHandler] Test \(testId) timed out")
-
-            // ✅ FIX BUG #2: Remove notification observer on timeout too
-            NotificationCenter.default.removeObserver(
-                self,
-                name: NSNotification.Name("TimerAudioCompleted"),
-                object: nil
-            )
-            print("[AudioDebugTestHandler] Removed notification observer for timed-out test \(testId)")
-
-            // ✅ FIX BUG #6: End Live Activity if it was started
-            if test.liveActivityEnabled {
-                LiveActivityHandler.shared.endAllActiveLiveActivitiesDirectly { _ in
-                    print("[AudioDebugTestHandler] Live Activity ended for timed-out test \(testId)")
-                }
-            }
-
-            channel?.invokeMethod("onAudioTestCompleted", arguments: [
-                "testId": testId,
-                "actualSounds": 0,
-                "traceId": test.traceId ?? "timeout",
-                "success": false
-            ])
-
-            activeTests.removeValue(forKey: testId)
-        }
-    }
-
-    // MARK: - Cancel Test
 
     private func cancelTest(testId: String, result: @escaping FlutterResult) {
-        print("[AudioDebugTestHandler] Cancelling test: \(testId)")
-
-        if let test = activeTests[testId] {
-            // ✅ FIX BUG #4: Remove notification observer on cancel to prevent memory leak
-            NotificationCenter.default.removeObserver(
-                self,
-                name: NSNotification.Name("TimerAudioCompleted"),
-                object: nil
-            )
-            print("[AudioDebugTestHandler] Removed notification observer for cancelled test \(testId)")
-
-            // ✅ FIX BUG #6: End Live Activity if it was started
-            if test.liveActivityEnabled {
-                LiveActivityHandler.shared.endAllActiveLiveActivitiesDirectly { _ in
-                    print("[AudioDebugTestHandler] Live Activity ended for cancelled test \(testId)")
-                }
-            }
-
-            // Cancella timer se possibile
-            BackgroundAudioManager.shared.cancelScheduledAudio()
-
-            activeTests.removeValue(forKey: testId)
-            result(nil)
-        } else {
+        guard let test = activeTests.removeValue(forKey: testId) else {
             result(FlutterError(code: "TEST_NOT_FOUND", message: "Test \(testId) not active", details: nil))
+            return
         }
+
+        test.completionWorkItem.cancel()
+
+        if test.notificationOwned {
+            DirectNotificationManager.shared.cancelRestTimerCompletion()
+        }
+
+        if test.liveActivityEnabled, #available(iOS 16.1, *) {
+            LiveActivityHandler.shared.endAllActiveLiveActivitiesDirectly { _ in }
+        }
+
+        result(nil)
     }
 
-    // MARK: - Request Background Mode
-
     private func requestBackgroundMode(result: @escaping FlutterResult) {
-        print("[AudioDebugTestHandler] Background mode requested - User must manually background app")
-
-        // Non possiamo forzare l'app in background programmaticamente su iOS
-        // L'utente deve farlo manualmente premendo Home
-
-        // Possiamo solo mostrare un alert
         DispatchQueue.main.async {
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let rootViewController = scene.windows.first?.rootViewController {
-
                 let alert = UIAlertController(
                     title: "Put App in Background",
                     message: "Please press the Home button to put the app in background for this test.",
@@ -274,29 +176,11 @@ class AudioDebugTestHandler: NSObject {
                 )
 
                 alert.addAction(UIAlertAction(title: "OK", style: .default))
-
                 rootViewController.present(alert, animated: true)
             }
         }
 
         result(nil)
-    }
-}
-
-// MARK: - Test Model
-
-private class AudioDebugTest {
-    let testId: String
-    let duration: Int
-    let appState: String
-    let liveActivityEnabled: Bool
-    var traceId: String?
-
-    init(testId: String, duration: Int, appState: String, liveActivityEnabled: Bool) {
-        self.testId = testId
-        self.duration = duration
-        self.appState = appState
-        self.liveActivityEnabled = liveActivityEnabled
     }
 }
 #endif

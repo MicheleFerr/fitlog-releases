@@ -9,8 +9,8 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/registry/hint_regi
 ///
 /// Responsibilities:
 /// - Determines which hints are eligible based on TutorialState
-/// - Enforces session limits (max 2 hints per session)
-/// - Enforces cooldown between consecutive hints (30s)
+/// - Enforces session limits (new users: 3, existing users: 2)
+/// - Enforces cooldown between consecutive hints (new: 20s, existing: 30s)
 /// - Returns next hint from priority queue (P0 > P1 > P2)
 ///
 /// Pattern: Singleton with Lock (as per CLAUDE.md performance rules).
@@ -25,11 +25,17 @@ class DiscoverabilityHintService {
   /// Lock for thread-safe operations.
   final _lock = Lock();
 
-  /// Max hints shown per app session.
-  static const int maxHintsPerSession = 2;
+  /// Max hints per session for new users.
+  static const int maxHintsPerSessionNewUser = 3;
 
-  /// Cooldown between consecutive hints.
-  static const Duration hintCooldown = Duration(seconds: 30);
+  /// Max hints per session for existing users.
+  static const int maxHintsPerSessionExistingUser = 2;
+
+  /// Cooldown between hints for new users.
+  static const Duration hintCooldownNewUser = Duration(seconds: 20);
+
+  /// Cooldown between hints for existing users.
+  static const Duration hintCooldownExistingUser = Duration(seconds: 30);
 
   /// Number of hints shown in this session.
   int _hintsShownThisSession = 0;
@@ -63,9 +69,9 @@ class DiscoverabilityHintService {
   /// 5. Hint-specific conditions (workout count, seen/dismissed state)
   bool shouldShow(String hintId, TutorialState tutorialState) {
     if (!tutorialState.tutorialsEnabled) return false;
-    if (_hintsShownThisSession >= maxHintsPerSession) return false;
+    if (_hintsShownThisSession >= _sessionLimitFor(tutorialState)) return false;
     if (_activeHint != null) return false;
-    if (!_isCooldownRespected()) return false;
+    if (!_isCooldownRespected(tutorialState)) return false;
 
     final config = HintRegistry.findById(hintId);
     if (config == null) return false;
@@ -80,9 +86,9 @@ class DiscoverabilityHintService {
   Future<HintConfig?> getNextHint(TutorialState tutorialState) async {
     return _lock.synchronized(() {
       if (!tutorialState.tutorialsEnabled) return null;
-      if (_hintsShownThisSession >= maxHintsPerSession) return null;
+      if (_hintsShownThisSession >= _sessionLimitFor(tutorialState)) return null;
       if (_activeHint != null) return null;
-      if (!_isCooldownRespected()) return null;
+      if (!_isCooldownRespected(tutorialState)) return null;
 
       // HintRegistry.allHints is already sorted P0 > P1 > P2
       for (final hint in HintRegistry.allHints) {
@@ -106,7 +112,7 @@ class DiscoverabilityHintService {
     if (kDebugMode) {
       debugPrint(
         'Hint shown: ${hint.hintId} '
-        '(session: $_hintsShownThisSession/$maxHintsPerSession)',
+        '(session: $_hintsShownThisSession)',
       );
     }
   }
@@ -148,9 +154,22 @@ class DiscoverabilityHintService {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// Check if the cooldown period has elapsed since last hint.
-  bool _isCooldownRespected() {
+  bool _isCooldownRespected(TutorialState tutorialState) {
     if (_lastHintShownAt == null) return true;
-    return DateTime.now().difference(_lastHintShownAt!) >= hintCooldown;
+    return DateTime.now().difference(_lastHintShownAt!) >=
+        _cooldownFor(tutorialState);
+  }
+
+  int _sessionLimitFor(TutorialState tutorialState) {
+    return tutorialState.isNewUser
+        ? maxHintsPerSessionNewUser
+        : maxHintsPerSessionExistingUser;
+  }
+
+  Duration _cooldownFor(TutorialState tutorialState) {
+    return tutorialState.isNewUser
+        ? hintCooldownNewUser
+        : hintCooldownExistingUser;
   }
 
   /// Check hint-specific eligibility against TutorialState.

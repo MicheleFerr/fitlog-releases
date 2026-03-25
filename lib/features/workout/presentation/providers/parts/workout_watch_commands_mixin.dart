@@ -1,6 +1,12 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatchNotifyMixin, WorkoutWatchTypeMixin, WorkoutWatchCompoundMixin {
+mixin WorkoutWatchCommandsMixin
+    on
+        Notifier<Workout?>,
+        WorkoutCoreMixin,
+        WorkoutWatchNotifyMixin,
+        WorkoutWatchTypeMixin,
+        WorkoutWatchCompoundMixin {
   // ─── Abstract requirements ───────────────────────────────────────────────
   // Implemented in WorkoutSetMixin / WorkoutLifecycleMixin.
   // Declared here to avoid circular `on` constraints.
@@ -9,7 +15,7 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
   void completeSet(String exerciseId, String setId);
 
   /// Implemented in WorkoutLifecycleMixin.
-  void completeWorkout([BuildContext? context]);
+  Future<void> completeWorkout([BuildContext? context]);
 
   /// Implemented in WorkoutLifecycleMixin.
   void clearWorkout();
@@ -19,7 +25,11 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
   /// ⌚ Complete current set when triggered from Apple Watch
   /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
   /// - effortScale: "rpe" or "rir" to indicate how to interpret the effort value
-  void completeCurrentSetFromWatch({int? effort, String? effortScale, int? actualReps}) {
+  void completeCurrentSetFromWatch({
+    int? effort,
+    String? effortScale,
+    int? actualReps,
+  }) {
     debugPrint('⌚ [FLUTTER] completeCurrentSetFromWatch called');
     if (effort != null) {
       debugPrint(
@@ -74,8 +84,12 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
     // ✅ FIX Bug 3: If current exercise is a superset, delegate to superset handler
     if (currentExercise is SupersetExercise) {
       final superset = currentExercise;
-      final currentRoundIndex = superset.supersetSets.indexWhere((s) => !s.isCompleted);
-      debugPrint('⌚ [FLUTTER] 🔥 Current exercise is superset, delegating to _completeSupersetRoundFromWatch');
+      final currentRoundIndex = superset.supersetSets.indexWhere(
+        (s) => !s.isCompleted,
+      );
+      debugPrint(
+        '⌚ [FLUTTER] 🔥 Current exercise is superset, delegating to _completeSupersetRoundFromWatch',
+      );
       _completeSupersetRoundFromWatch(
         roundNumber: currentRoundIndex >= 0 ? currentRoundIndex + 1 : 1,
         totalRounds: superset.supersetSets.length,
@@ -88,7 +102,9 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
 
     // ✅ FIX: If current exercise is a dropset, delegate to dropset handler
     if (currentExercise is DropSetExercise) {
-      debugPrint('⌚ [FLUTTER] 🔥 Current exercise is dropset, delegating to _completeDropsetFromWatch');
+      debugPrint(
+        '⌚ [FLUTTER] 🔥 Current exercise is dropset, delegating to _completeDropsetFromWatch',
+      );
       _completeDropsetFromWatch(
         totalStages: currentExercise.stages.length,
         actualReps: actualReps,
@@ -100,7 +116,9 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
 
     // ✅ FIX: If current exercise is a rest-pause, delegate to rest-pause handler
     if (currentExercise is RestPauseExercise) {
-      debugPrint('⌚ [FLUTTER] 🔥 Current exercise is rest-pause, delegating to _completeRestPauseFromWatch');
+      debugPrint(
+        '⌚ [FLUTTER] 🔥 Current exercise is rest-pause, delegating to _completeRestPauseFromWatch',
+      );
       _completeRestPauseFromWatch(
         totalSets: currentExercise.restPauseSets.length,
         weight: currentExercise.weight,
@@ -184,16 +202,24 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
       if (currentEx != null) {
         final setIdx = currentEx.sets.indexWhere((s) => s.id == currentSet.id);
         if (setIdx >= 0) {
-          final updatedSet2 = currentEx.sets[setIdx].copyWith(actualReps: actualReps);
+          final updatedSet2 = currentEx.sets[setIdx].copyWith(
+            actualReps: actualReps,
+          );
           final updatedSets2 = List<ExerciseSet>.from(currentEx.sets);
           updatedSets2[setIdx] = updatedSet2;
           final updatedEx2 = currentEx.copyWith(sets: updatedSets2);
-          final exIdx = currentWorkout.exercises.indexWhere((e) => e.id == currentEx.id);
+          final exIdx = currentWorkout.exercises.indexWhere(
+            (e) => e.id == currentEx.id,
+          );
           if (exIdx >= 0) {
-            final updatedExercises2 = List<Exercise>.from(currentWorkout.exercises);
+            final updatedExercises2 = List<Exercise>.from(
+              currentWorkout.exercises,
+            );
             updatedExercises2[exIdx] = updatedEx2;
             state = currentWorkout.copyWith(exercises: updatedExercises2);
-            debugPrint('⌚ [FLUTTER] ✅ Updated set with actualReps $actualReps from Watch');
+            debugPrint(
+              '⌚ [FLUTTER] ✅ Updated set with actualReps $actualReps from Watch',
+            );
           }
         }
       }
@@ -244,7 +270,7 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
 
     if (save) {
       // Complete the workout (saves and clears state)
-      completeWorkout();
+      unawaited(completeWorkout());
       if (kDebugMode) {
         debugPrint('⌚ [FLUTTER] ✅ Workout saved via Watch');
       }
@@ -531,8 +557,11 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
       '⌚ [FLUTTER] ✅ Targeting set #$setNumber at index $currentSetIndex',
     );
 
-    // Update the set with new weight and reps
-    final updatedSet = currentSet.copyWith(weight: weight, reps: reps);
+    // Watch quick edit only sends exact reps, so clear any previous rep range.
+    final updatedSet = currentSet.copyWithExactTarget(
+      weight: weight,
+      reps: reps,
+    );
 
     final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
     updatedSets[currentSetIndex] = updatedSet;
@@ -681,5 +710,4 @@ mixin WorkoutWatchCommandsMixin on Notifier<Workout?>, WorkoutCoreMixin, Workout
       exerciseIndexInSuperset: exerciseIndexInSuperset,
     );
   }
-
 }

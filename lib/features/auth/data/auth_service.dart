@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,6 +8,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:math';
+import 'package:gymbro_flutter_new/core/config/google_sign_in_config.dart';
 import 'package:gymbro_flutter_new/core/services/rate_limiter.dart';
 
 class AuthService with RateLimiterMixin {
@@ -15,10 +17,10 @@ class AuthService with RateLimiterMixin {
     FirebaseFirestore? firestore,
     FirebaseStorage? storage,
     GoogleSignIn? googleSignIn,
-  })  : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = storage ?? FirebaseStorage.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
+  }) : _auth = auth ?? FirebaseAuth.instance,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _storage = storage ?? FirebaseStorage.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
@@ -30,7 +32,9 @@ class AuthService with RateLimiterMixin {
   /// Call this in your main.dart or app initialization
   static Future<void> initializeGoogleSignIn() async {
     if (_googleSignInInitialized) return;
-    await GoogleSignIn.instance.initialize();
+    await GoogleSignIn.instance.initialize(
+      serverClientId: GoogleSignInConfig.serverClientId,
+    );
     _googleSignInInitialized = true;
   }
 
@@ -108,6 +112,16 @@ class AuthService with RateLimiterMixin {
       // Ensure GoogleSignIn is initialized
       await initializeGoogleSignIn();
 
+      if (kDebugMode && Firebase.apps.isNotEmpty) {
+        final firebaseOptions = Firebase.app().options;
+        debugPrint(
+          '[GoogleSignIn] Firebase projectId=${firebaseOptions.projectId} appId=${firebaseOptions.appId}',
+        );
+        debugPrint(
+          '[GoogleSignIn] serverClientId=${GoogleSignInConfig.serverClientId}',
+        );
+      }
+
       // Force account picker only when explicitly requested (e.g. sign-up flow).
       if (forceAccountSelection) {
         await _googleSignIn.signOut();
@@ -120,9 +134,8 @@ class AuthService with RateLimiterMixin {
           scopeHint: ['email', 'profile'],
         );
       } on GoogleSignInException catch (e) {
-        // Handle cancellation gracefully
         if (e.code == GoogleSignInExceptionCode.canceled) {
-          return null; // User cancelled the sign-in
+          throw Exception(_googleSignInCanceledMessage(e));
         }
         rethrow;
       }
@@ -131,13 +144,14 @@ class AuthService with RateLimiterMixin {
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       final idToken = googleAuth.idToken;
       if (idToken == null || idToken.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('[GoogleSignIn] Missing idToken from Google account');
+        }
         throw Exception('Google Sign In failed: missing ID token');
       }
 
       // For Firebase Auth, idToken is sufficient and avoids extra scope prompts.
-      final credential = GoogleAuthProvider.credential(
-        idToken: idToken,
-      );
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
 
       // Sign in to Firebase with the Google credential
       final userCredential = await _auth.signInWithCredential(credential);
@@ -150,12 +164,36 @@ class AuthService with RateLimiterMixin {
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[GoogleSignIn] FirebaseAuthException code=${e.code} message=${e.message}',
+        );
+      }
       throw Exception(_handleAuthException(e));
     } on GoogleSignInException catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[GoogleSignIn] GoogleSignInException code=${e.code} description=${e.description}',
+        );
+      }
       throw Exception('Google Sign In failed: ${e.code} - ${e.description}');
     } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[GoogleSignIn] Unexpected error: $e');
+      }
       throw Exception('Google Sign In failed: $e');
     }
+  }
+
+  String _googleSignInCanceledMessage(GoogleSignInException exception) {
+    final details = exception.description?.trim();
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      final suffix = (details != null && details.isNotEmpty)
+          ? ' Details: $details'
+          : '';
+      return 'Google Sign In was canceled on Android. This often means the Google/Firebase OAuth configuration is incomplete for this package or signing key (package name, SHA-1/SHA-256, or server client ID).$suffix';
+    }
+    return 'Google Sign In was canceled.';
   }
 
   // Sign in with Apple
@@ -488,10 +526,17 @@ class AuthService with RateLimiterMixin {
         'isGuest': isGuest,
         'accountTier': 'free', // Default tier
         'templateQuota': {
+          'maxLibraryTemplates': 4,
+          'usedLibraryTemplates': 0,
+          'libraryEditableCount': 0,
           'maxPrivateTemplates': 4,
-          'maxPublicTemplates': 2,
           'usedPrivateTemplates': 0,
+          'maxPublicTemplates': 999,
+          'maxSharedTemplates': 999,
           'usedPublicTemplates': 0,
+          'usedSharedTemplates': 0,
+          'distributedTemplateCount': 0,
+          'distributionMetered': false,
         },
         'preferences': {
           'units': 'kg', // Default weight unit

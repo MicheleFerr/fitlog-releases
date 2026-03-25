@@ -48,6 +48,7 @@ const logger = __importStar(require("firebase-functions/logger"));
 const https = __importStar(require("node:https"));
 const admin = __importStar(require("firebase-admin"));
 const rateLimiterV1_1 = require("../security/rateLimiterV1");
+const entitlements_1 = require("../premium/entitlements");
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const DEFAULT_MODEL = 'meta-llama/llama-3.3-70b-instruct';
 const ALLOWED_MODELS = new Set([DEFAULT_MODEL]);
@@ -202,20 +203,8 @@ function getDateKeyUTC(date) {
     return `${y}${m}${d}`;
 }
 async function getUserAccountTier(userId) {
-    var _a;
     try {
-        const userDoc = await admin.firestore()
-            .collection('users')
-            .doc(userId)
-            .get();
-        if (!userDoc.exists) {
-            return 'free';
-        }
-        const tier = (_a = userDoc.data()) === null || _a === void 0 ? void 0 : _a['accountTier'];
-        if (tier === 'premium' || tier === 'pro') {
-            return 'premium';
-        }
-        return 'free';
+        return await (0, entitlements_1.getEffectiveAccountTier)(userId);
     }
     catch (_error) {
         return 'free';

@@ -3,7 +3,6 @@ import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/start_workout_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/personalized_content_card.dart';
@@ -31,8 +30,10 @@ import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/st
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weight_update_nudge_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/template_wizard_reminder_card.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/guided_real_workout_reminder_card.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
 /// Minimal Home Screen - Clean dark premium design
@@ -103,6 +104,11 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
         debugPrint('⏭️ [HomeTour] Tour skipped');
       },
     );
+  }
+
+  void _openHomeSettingsSheet() {
+    if (ModalService.openSheetCount.value > 0) return;
+    showSettingsBottomSheet(context);
   }
 
   @override
@@ -183,24 +189,30 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
               ),
             ),
             actions: [
-              IconButton(
-                tooltip: context.l10n.settings,
-                onPressed: () => showSettingsBottomSheet(context),
-                padding: const EdgeInsets.all(12),
-                constraints: const BoxConstraints(
-                  minWidth: 48,
-                  minHeight: 48,
-                ),
-                icon: CNIcon(
-                  symbol: CNSymbol(
-                    'gearshape',
-                    size: 22,
-                    weight: CNSymbolWeight.light,
-                    color: context.colors.onSurfaceVariant,
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+                child: Tooltip(
+                  message: context.l10n.settings,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapDown: (_) => _openHomeSettingsSheet(),
+                    child: SizedBox(
+                      width: 56,
+                      height: 56,
+                      child: Center(
+                        child: CNIcon(
+                          symbol: CNSymbol(
+                            'gearshape',
+                            size: 22,
+                            weight: CNSymbolWeight.light,
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.xs),
             ],
           ),
 
@@ -240,6 +252,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
 
                 // 0.80 Template Wizard Reminder (for users who skipped wizard)
                 const TemplateWizardReminderCard(),
+                const SizedBox(height: 16),
+
+                // 0.82 Guided soft gate reminder (post test -> real workout)
+                const GuidedRealWorkoutReminderCard(),
                 const SizedBox(height: 16),
 
                 // 0.85 Pro Insights Preview (CTA for Pro Analytics)
@@ -589,23 +605,9 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                       subtitle: 'Clear all tours & tutorials completion',
                       onTap: () async {
                         Navigator.pop(context);
-                        final prefs = await SharedPreferences.getInstance();
-                        // Reset all tour/tutorial completion keys
-                        await prefs.remove('home_tour_completed');
-                        await prefs.remove('workout_tutorial_completed');
-                        await prefs.remove(
-                          'exercise_search_tutorial_completed',
-                        );
-                        await prefs.remove('timer_tour_completed');
-                        await prefs.remove('template_tutorial_completed');
-                        await prefs.remove('analytics_tour_completed');
-                        await prefs.remove(
-                          'advanced_techniques_tutorial_completed',
-                        );
-                        await prefs.remove('health_integration_tour_completed');
-                        await prefs.remove(
-                          'custom_exercise_tutorial_completed',
-                        );
+                        await ref
+                            .read(onboardingOrchestratorProvider.notifier)
+                            .resetAllTours();
                         // Reset providers
                         await ref
                             .read(workoutTutorialProvider.notifier)

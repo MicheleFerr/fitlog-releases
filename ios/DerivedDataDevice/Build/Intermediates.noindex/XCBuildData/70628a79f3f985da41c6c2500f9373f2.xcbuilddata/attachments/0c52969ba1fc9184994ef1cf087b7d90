@@ -1,0 +1,129 @@
+{
+  "" : {
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetExtension-primary.dia",
+    "emit-module-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetExtension-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetExtension-primary-emit-module.dia",
+    "pch" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetExtension-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetExtension-primary.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/AppIntent.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/AppIntent~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/GymBroScheduleAttributes.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroScheduleAttributes~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/GymBroTimerAttributes.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerAttributes~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/GymBroTimerWidgetBundle.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetBundle~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/GymBroTimerWidgetLiveActivity.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/GymBroTimerWidgetLiveActivity~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/SharedTimerState.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/SharedTimerState~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/WidgetLocalization.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WidgetLocalization~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/WorkoutSessionAttributes.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionAttributes~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/WorkoutSessionIntents.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionIntents~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/WorkoutSessionLiveActivity.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/WorkoutSessionLiveActivity~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/RestTimerNotificationSupport.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/GymBroTimerWidgetExtension.build/Objects-normal/arm64/RestTimerNotificationSupport~partial.swiftmodule"
+  }
+}

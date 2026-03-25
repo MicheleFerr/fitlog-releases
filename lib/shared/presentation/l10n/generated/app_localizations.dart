@@ -3223,6 +3223,12 @@ abstract class AppLocalizations {
   /// **'Unlimited templates'**
   String get unlimitedTemplates;
 
+  /// Premium feature description for unlimited editable templates
+  ///
+  /// In en, this message translates to:
+  /// **'Save more than 4 editable workout templates in your Library'**
+  String get unlimitedTemplatesDescription;
+
   /// Welcome message on login screen
   ///
   /// In en, this message translates to:
@@ -5960,7 +5966,7 @@ abstract class AppLocalizations {
   /// Error message when ToS not accepted
   ///
   /// In en, this message translates to:
-  /// **'You must accept the Terms of Service to continue'**
+  /// **'You must accept the Terms of Use to continue'**
   String get tosAcceptanceRequired;
 
   /// Start of ToS acceptance text
@@ -24879,7 +24885,7 @@ abstract class AppLocalizations {
   /// Content text for the legal disclaimer modal
   ///
   /// In en, this message translates to:
-  /// **'⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.'**
+  /// **'⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Use and Privacy Policy.'**
   String get legalDisclaimerContent;
 
   /// Accept button for legal disclaimer
@@ -24912,11 +24918,23 @@ abstract class AppLocalizations {
   /// **'How we handle your data (GDPR compliant)'**
   String get privacyPolicySubtitle;
 
-  /// Terms of Service title
+  /// Apple standard terms of use label
   ///
   /// In en, this message translates to:
-  /// **'Terms of Service'**
+  /// **'Terms of Use (EULA)'**
+  String get termsOfUseEula;
+
+  /// Terms of Use title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
   String get termsOfService;
+
+  /// App-specific service terms label
+  ///
+  /// In en, this message translates to:
+  /// **'Service Terms'**
+  String get serviceTerms;
 
   /// Coach Agreement title for coach-specific terms
   ///
@@ -47087,7 +47105,7 @@ abstract class AppLocalizations {
   /// No description provided for @termsOfServiceDesc.
   ///
   /// In en, this message translates to:
-  /// **'Read our terms of service'**
+  /// **'Read our terms of use'**
   String get termsOfServiceDesc;
 
   /// Beta feedback tile title in settings
@@ -50189,6 +50207,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Premium'**
   String get continueWithPremium;
+
+  /// Purchase CTA button label for monthly plan
+  ///
+  /// In en, this message translates to:
+  /// **'{productName} 1 Month'**
+  String continueWithPremiumMonthlyPlan(String productName);
+
+  /// Purchase CTA button label for yearly plan
+  ///
+  /// In en, this message translates to:
+  /// **'{productName} 1 Year'**
+  String continueWithPremiumYearlyPlan(String productName);
+
+  /// Purchase CTA button label for lifetime plan
+  ///
+  /// In en, this message translates to:
+  /// **'{productName} Lifetime'**
+  String continueWithPremiumLifetimePlan(String productName);
 
   /// Section header above premium feature list
   ///

@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/template_mus
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
@@ -149,8 +150,8 @@ class _TemplateMuscleAnalysisSectionState
         ? context.colors.warning
         : context.colors.success;
 
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       showDragHandle: true,
       builder: (sheetContext) {

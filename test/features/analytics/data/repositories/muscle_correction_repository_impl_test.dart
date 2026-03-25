@@ -20,7 +20,6 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart' hide State;
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -157,8 +156,7 @@ MuscleCorrection makeCorrection({
   );
 }
 
-Map<String, dynamic> correctionToHiveJson(MuscleCorrection c) =>
-    c.toHiveJson();
+Map<String, dynamic> correctionToHiveJson(MuscleCorrection c) => c.toHiveJson();
 
 // =============================================================================
 // Main test suite
@@ -217,29 +215,37 @@ void main() {
       expect(stored['newMuscleGroup'], 'Chest');
     });
 
-    test('overwrites previous correction for the same exercise (one per exercise)',
-        () async {
-      // Arrange – seed an existing correction for "Bench Press"
-      final repo = buildRepo();
-      fakeBox.seed('Bench Press', makeCorrection(newMuscleGroup: 'Shoulders').toHiveJson());
+    test(
+      'overwrites previous correction for the same exercise (one per exercise)',
+      () async {
+        // Arrange – seed an existing correction for "Bench Press"
+        final repo = buildRepo();
+        fakeBox.seed(
+          'Bench Press',
+          makeCorrection(newMuscleGroup: 'Shoulders').toHiveJson(),
+        );
 
-      final updated = makeCorrection(newMuscleGroup: 'Chest');
+        final updated = makeCorrection(newMuscleGroup: 'Chest');
 
-      // Act
-      final result = await repo.saveLocalCorrection(updated);
+        // Act
+        final result = await repo.saveLocalCorrection(updated);
 
-      // Assert
-      expect(result.isRight(), isTrue);
-      // Still only one entry
-      expect(fakeBox.values.length, 1);
-      expect(fakeBox.values.first['newMuscleGroup'], 'Chest');
-    });
+        // Assert
+        expect(result.isRight(), isTrue);
+        // Still only one entry
+        expect(fakeBox.values.length, 1);
+        expect(fakeBox.values.first['newMuscleGroup'], 'Chest');
+      },
+    );
 
     test('different exercises are stored with independent keys', () async {
       // Arrange
       final repo = buildRepo();
       final c1 = makeCorrection(exerciseName: 'Squat', newMuscleGroup: 'Legs');
-      final c2 = makeCorrection(exerciseName: 'Deadlift', newMuscleGroup: 'Back');
+      final c2 = makeCorrection(
+        exerciseName: 'Deadlift',
+        newMuscleGroup: 'Back',
+      );
 
       // Act
       await repo.saveLocalCorrection(c1);
@@ -261,13 +267,10 @@ void main() {
 
       // Assert
       expect(result.isLeft(), isTrue);
-      result.fold(
-        (failure) {
-          expect(failure, isA<CacheFailure>());
-          expect(failure.message, contains('Failed to save correction locally'));
-        },
-        (_) => fail('Expected Left'),
-      );
+      result.fold((failure) {
+        expect(failure, isA<CacheFailure>());
+        expect(failure.message, contains('Failed to save correction locally'));
+      }, (_) => fail('Expected Left'));
     });
 
     test('returns Left(CacheFailure) when openBox itself throws', () async {
@@ -308,7 +311,9 @@ void main() {
       final repo = buildRepo();
       fakeBox.seed('Squat', makeCorrection(exerciseName: 'Squat').toHiveJson());
       fakeBox.seed(
-          'Deadlift', makeCorrection(exerciseName: 'Deadlift').toHiveJson());
+        'Deadlift',
+        makeCorrection(exerciseName: 'Deadlift').toHiveJson(),
+      );
 
       // Act
       final result = await repo.getLocalCorrections();
@@ -338,13 +343,10 @@ void main() {
       final result = await repo.getLocalCorrections();
 
       // Assert
-      result.fold(
-        (failure) => fail('Expected Right, got: $failure'),
-        (list) {
-          expect(list.first.exerciseName, 'Deadlift');
-          expect(list.last.exerciseName, 'Squat');
-        },
-      );
+      result.fold((failure) => fail('Expected Right, got: $failure'), (list) {
+        expect(list.first.exerciseName, 'Deadlift');
+        expect(list.last.exerciseName, 'Squat');
+      });
     });
 
     test('skips malformed entries without failing the call', () async {
@@ -363,13 +365,10 @@ void main() {
       final result = await repo.getLocalCorrections();
 
       // Assert – only the valid entry survives
-      result.fold(
-        (failure) => fail('Expected Right, got: $failure'),
-        (list) {
-          expect(list.length, 1);
-          expect(list.first.exerciseName, 'Squat');
-        },
-      );
+      result.fold((failure) => fail('Expected Right, got: $failure'), (list) {
+        expect(list.length, 1);
+        expect(list.first.exerciseName, 'Squat');
+      });
     });
 
     test('returns Left(CacheFailure) when box.values throws', () async {
@@ -406,54 +405,57 @@ void main() {
   group('submitFeedbackToAdmin –', () {
     setUp(() {
       // Wire Firestore: collection('muscle_group_feedback').doc() -> mockDocRef
-      when(() => mockFirestore.collection('muscle_group_feedback'))
-          .thenReturn(mockFeedbackCollection);
+      when(
+        () => mockFirestore.collection('muscle_group_feedback'),
+      ).thenReturn(mockFeedbackCollection);
       when(() => mockFeedbackCollection.doc()).thenReturn(mockDocRef);
     });
 
-    test('returns Right(unit) and writes correct document to Firestore',
-        () async {
-      // Arrange
-      final repo = buildRepo(userId: 'user-abc');
-      when(() => mockDocRef.set(any())).thenAnswer((_) async {});
+    test(
+      'returns Right(unit) and writes correct document to Firestore',
+      () async {
+        // Arrange
+        final repo = buildRepo(userId: 'user-abc');
+        when(() => mockDocRef.set(any())).thenAnswer((_) async {});
 
-      final correction = makeCorrection();
+        final correction = makeCorrection();
 
-      // Act
-      final result = await repo.submitFeedbackToAdmin(correction);
+        // Act
+        final result = await repo.submitFeedbackToAdmin(correction);
 
-      // Assert
-      expect(result.isRight(), isTrue);
-      final captured = verify(() => mockDocRef.set(captureAny())).captured;
-      final doc = captured.first as Map<String, dynamic>;
-      expect(doc['exerciseName'], 'Bench Press');
-      expect(doc['oldGroup'], 'Back');
-      expect(doc['newGroup'], 'Chest');
-      expect(doc['userId'], 'user-abc');
-      expect(doc['status'], 'pending');
-      expect(doc['notificationShown'], isFalse);
-      expect(doc['pushSent'], isFalse);
-    });
+        // Assert
+        expect(result.isRight(), isTrue);
+        final captured = verify(() => mockDocRef.set(captureAny())).captured;
+        final doc = captured.first as Map<String, dynamic>;
+        expect(doc['exerciseName'], 'Bench Press');
+        expect(doc['oldGroup'], 'Back');
+        expect(doc['newGroup'], 'Chest');
+        expect(doc['userId'], 'user-abc');
+        expect(doc['status'], 'pending');
+        expect(doc['notificationShown'], isFalse);
+        expect(doc['pushSent'], isFalse);
+      },
+    );
 
-    test('returns Left(ServerFailure) when user is not authenticated', () async {
-      // Arrange – no user logged in
-      final repo = buildRepo(userId: null);
+    test(
+      'returns Left(ServerFailure) when user is not authenticated',
+      () async {
+        // Arrange – no user logged in
+        final repo = buildRepo(userId: null);
 
-      // Act
-      final result = await repo.submitFeedbackToAdmin(makeCorrection());
+        // Act
+        final result = await repo.submitFeedbackToAdmin(makeCorrection());
 
-      // Assert
-      expect(result.isLeft(), isTrue);
-      result.fold(
-        (failure) {
+        // Assert
+        expect(result.isLeft(), isTrue);
+        result.fold((failure) {
           expect(failure, isA<ServerFailure>());
           expect(failure.message, contains('not authenticated'));
-        },
-        (_) => fail('Expected Left'),
-      );
-      // Firestore should NOT have been called
-      verifyNever(() => mockDocRef.set(any()));
-    });
+        }, (_) => fail('Expected Left'));
+        // Firestore should NOT have been called
+        verifyNever(() => mockDocRef.set(any()));
+      },
+    );
 
     test('returns Left(ServerFailure) on FirebaseException', () async {
       // Arrange
@@ -467,14 +469,11 @@ void main() {
 
       // Assert
       expect(result.isLeft(), isTrue);
-      result.fold(
-        (failure) {
-          expect(failure, isA<ServerFailure>());
-          expect(failure.message, contains('Failed to submit feedback'));
-          expect(failure.message, contains('Permission denied'));
-        },
-        (_) => fail('Expected Left'),
-      );
+      result.fold((failure) {
+        expect(failure, isA<ServerFailure>());
+        expect(failure.message, contains('Failed to submit feedback'));
+        expect(failure.message, contains('Permission denied'));
+      }, (_) => fail('Expected Left'));
     });
 
     test('returns Left(ServerFailure) on generic exception', () async {
@@ -502,18 +501,21 @@ void main() {
 
     setUp(() {
       mockWatchDocRef = MockDocumentReference();
-      when(() => mockFirestore.collection('muscle_group_feedback'))
-          .thenReturn(mockFeedbackCollection);
-      when(() => mockFeedbackCollection.doc(correctionId))
-          .thenReturn(mockWatchDocRef);
+      when(
+        () => mockFirestore.collection('muscle_group_feedback'),
+      ).thenReturn(mockFeedbackCollection);
+      when(
+        () => mockFeedbackCollection.doc(correctionId),
+      ).thenReturn(mockWatchDocRef);
     });
 
     test('emits Left(ServerFailure) when document does not exist', () async {
       // Arrange
       final mockSnapshot = MockDocumentSnapshot();
       when(() => mockSnapshot.exists).thenReturn(false);
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+      when(
+        () => mockWatchDocRef.snapshots(),
+      ).thenAnswer((_) => Stream.value(mockSnapshot));
 
       // Act
       final repo = buildRepo();
@@ -522,13 +524,10 @@ void main() {
 
       // Assert
       expect(result.isLeft(), isTrue);
-      result.fold(
-        (failure) {
-          expect(failure, isA<ServerFailure>());
-          expect(failure.message, contains('not found'));
-        },
-        (_) => fail('Expected Left'),
-      );
+      result.fold((failure) {
+        expect(failure, isA<ServerFailure>());
+        expect(failure.message, contains('not found'));
+      }, (_) => fail('Expected Left'));
     });
 
     test('emits Left(ServerFailure) when snapshot data is null', () async {
@@ -536,8 +535,9 @@ void main() {
       final mockSnapshot = MockDocumentSnapshot();
       when(() => mockSnapshot.exists).thenReturn(true);
       when(() => mockSnapshot.data()).thenReturn(null);
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+      when(
+        () => mockWatchDocRef.snapshots(),
+      ).thenAnswer((_) => Stream.value(mockSnapshot));
 
       // Act
       final repo = buildRepo();
@@ -557,8 +557,9 @@ void main() {
       final mockSnapshot = MockDocumentSnapshot();
       when(() => mockSnapshot.exists).thenReturn(true);
       when(() => mockSnapshot.data()).thenReturn({'exerciseName': 'Squat'});
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+      when(
+        () => mockWatchDocRef.snapshots(),
+      ).thenAnswer((_) => Stream.value(mockSnapshot));
 
       // Act
       final repo = buildRepo();
@@ -573,86 +574,98 @@ void main() {
       );
     });
 
-    test('emits Right(FeedbackStatus.pending) when status is "pending"',
-        () async {
-      // Arrange
-      final mockSnapshot = MockDocumentSnapshot();
-      when(() => mockSnapshot.exists).thenReturn(true);
-      when(() => mockSnapshot.data()).thenReturn({'status': 'pending'});
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+    test(
+      'emits Right(FeedbackStatus.pending) when status is "pending"',
+      () async {
+        // Arrange
+        final mockSnapshot = MockDocumentSnapshot();
+        when(() => mockSnapshot.exists).thenReturn(true);
+        when(() => mockSnapshot.data()).thenReturn({'status': 'pending'});
+        when(
+          () => mockWatchDocRef.snapshots(),
+        ).thenAnswer((_) => Stream.value(mockSnapshot));
 
-      // Act
-      final repo = buildRepo();
-      final stream = repo.watchFeedbackStatus(correctionId);
-      final result = await stream.first;
+        // Act
+        final repo = buildRepo();
+        final stream = repo.watchFeedbackStatus(correctionId);
+        final result = await stream.first;
 
-      // Assert
-      result.fold(
-        (f) => fail('Expected Right, got: $f'),
-        (status) => expect(status, FeedbackStatus.pending),
-      );
-    });
+        // Assert
+        result.fold(
+          (f) => fail('Expected Right, got: $f'),
+          (status) => expect(status, FeedbackStatus.pending),
+        );
+      },
+    );
 
-    test('emits Right(FeedbackStatus.approved) when status is "approved"',
-        () async {
-      // Arrange
-      final mockSnapshot = MockDocumentSnapshot();
-      when(() => mockSnapshot.exists).thenReturn(true);
-      when(() => mockSnapshot.data()).thenReturn({'status': 'approved'});
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+    test(
+      'emits Right(FeedbackStatus.approved) when status is "approved"',
+      () async {
+        // Arrange
+        final mockSnapshot = MockDocumentSnapshot();
+        when(() => mockSnapshot.exists).thenReturn(true);
+        when(() => mockSnapshot.data()).thenReturn({'status': 'approved'});
+        when(
+          () => mockWatchDocRef.snapshots(),
+        ).thenAnswer((_) => Stream.value(mockSnapshot));
 
-      // Act
-      final repo = buildRepo();
-      final result = await repo.watchFeedbackStatus(correctionId).first;
+        // Act
+        final repo = buildRepo();
+        final result = await repo.watchFeedbackStatus(correctionId).first;
 
-      // Assert
-      result.fold(
-        (f) => fail('Expected Right, got: $f'),
-        (status) => expect(status, FeedbackStatus.approved),
-      );
-    });
+        // Assert
+        result.fold(
+          (f) => fail('Expected Right, got: $f'),
+          (status) => expect(status, FeedbackStatus.approved),
+        );
+      },
+    );
 
-    test('emits Right(FeedbackStatus.rejected) when status is "rejected"',
-        () async {
-      // Arrange
-      final mockSnapshot = MockDocumentSnapshot();
-      when(() => mockSnapshot.exists).thenReturn(true);
-      when(() => mockSnapshot.data()).thenReturn({'status': 'rejected'});
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+    test(
+      'emits Right(FeedbackStatus.rejected) when status is "rejected"',
+      () async {
+        // Arrange
+        final mockSnapshot = MockDocumentSnapshot();
+        when(() => mockSnapshot.exists).thenReturn(true);
+        when(() => mockSnapshot.data()).thenReturn({'status': 'rejected'});
+        when(
+          () => mockWatchDocRef.snapshots(),
+        ).thenAnswer((_) => Stream.value(mockSnapshot));
 
-      // Act
-      final repo = buildRepo();
-      final result = await repo.watchFeedbackStatus(correctionId).first;
+        // Act
+        final repo = buildRepo();
+        final result = await repo.watchFeedbackStatus(correctionId).first;
 
-      // Assert
-      result.fold(
-        (f) => fail('Expected Right, got: $f'),
-        (status) => expect(status, FeedbackStatus.rejected),
-      );
-    });
+        // Assert
+        result.fold(
+          (f) => fail('Expected Right, got: $f'),
+          (status) => expect(status, FeedbackStatus.rejected),
+        );
+      },
+    );
 
-    test('unknown status string falls back to FeedbackStatus.pending', () async {
-      // Arrange
-      final mockSnapshot = MockDocumentSnapshot();
-      when(() => mockSnapshot.exists).thenReturn(true);
-      when(() => mockSnapshot.data())
-          .thenReturn({'status': 'in_review'});
-      when(() => mockWatchDocRef.snapshots())
-          .thenAnswer((_) => Stream.value(mockSnapshot));
+    test(
+      'unknown status string falls back to FeedbackStatus.pending',
+      () async {
+        // Arrange
+        final mockSnapshot = MockDocumentSnapshot();
+        when(() => mockSnapshot.exists).thenReturn(true);
+        when(() => mockSnapshot.data()).thenReturn({'status': 'in_review'});
+        when(
+          () => mockWatchDocRef.snapshots(),
+        ).thenAnswer((_) => Stream.value(mockSnapshot));
 
-      // Act
-      final repo = buildRepo();
-      final result = await repo.watchFeedbackStatus(correctionId).first;
+        // Act
+        final repo = buildRepo();
+        final result = await repo.watchFeedbackStatus(correctionId).first;
 
-      // Assert – fallback to pending (orElse behaviour in impl)
-      result.fold(
-        (f) => fail('Expected Right, got: $f'),
-        (status) => expect(status, FeedbackStatus.pending),
-      );
-    });
+        // Assert – fallback to pending (orElse behaviour in impl)
+        result.fold(
+          (f) => fail('Expected Right, got: $f'),
+          (status) => expect(status, FeedbackStatus.pending),
+        );
+      },
+    );
 
     test('emits multiple status updates over the stream lifetime', () async {
       // Arrange
@@ -663,9 +676,9 @@ void main() {
       when(() => snapshot2.exists).thenReturn(true);
       when(() => snapshot2.data()).thenReturn({'status': 'approved'});
 
-      when(() => mockWatchDocRef.snapshots()).thenAnswer(
-        (_) => Stream.fromIterable([snapshot1, snapshot2]),
-      );
+      when(
+        () => mockWatchDocRef.snapshots(),
+      ).thenAnswer((_) => Stream.fromIterable([snapshot1, snapshot2]));
 
       // Act
       final repo = buildRepo();
@@ -687,7 +700,9 @@ void main() {
       // Arrange
       final repo = buildRepo();
       fakeBox.seed(
-          'Bench Press', makeCorrection(exerciseName: 'Bench Press').toHiveJson());
+        'Bench Press',
+        makeCorrection(exerciseName: 'Bench Press').toHiveJson(),
+      );
 
       // Act
       final result = await repo.deleteLocalCorrection('Bench Press');
@@ -712,7 +727,10 @@ void main() {
       // Arrange
       final repo = buildRepo();
       fakeBox.seed('Squat', makeCorrection(exerciseName: 'Squat').toHiveJson());
-      fakeBox.seed('Deadlift', makeCorrection(exerciseName: 'Deadlift').toHiveJson());
+      fakeBox.seed(
+        'Deadlift',
+        makeCorrection(exerciseName: 'Deadlift').toHiveJson(),
+      );
 
       // Act
       await repo.deleteLocalCorrection('Squat');
@@ -732,13 +750,10 @@ void main() {
 
       // Assert
       expect(result.isLeft(), isTrue);
-      result.fold(
-        (failure) {
-          expect(failure, isA<CacheFailure>());
-          expect(failure.message, contains('Failed to delete correction'));
-        },
-        (_) => fail('Expected Left'),
-      );
+      result.fold((failure) {
+        expect(failure, isA<CacheFailure>());
+        expect(failure.message, contains('Failed to delete correction'));
+      }, (_) => fail('Expected Left'));
     });
 
     test('returns Left(CacheFailure) when openBox throws', () async {
@@ -763,8 +778,9 @@ void main() {
     test('save locally then submit to admin succeeds independently', () async {
       // Arrange
       final repo = buildRepo(userId: 'user-sync');
-      when(() => mockFirestore.collection('muscle_group_feedback'))
-          .thenReturn(mockFeedbackCollection);
+      when(
+        () => mockFirestore.collection('muscle_group_feedback'),
+      ).thenReturn(mockFeedbackCollection);
       when(() => mockFeedbackCollection.doc()).thenReturn(mockDocRef);
       when(() => mockDocRef.set(any())).thenAnswer((_) async {});
 
@@ -777,10 +793,12 @@ void main() {
       final remoteResult = await repo.submitFeedbackToAdmin(correction);
 
       // Assert
-      expect(localResult.isRight(), isTrue,
-          reason: 'Local save must succeed');
-      expect(remoteResult.isRight(), isTrue,
-          reason: 'Remote submit must succeed');
+      expect(localResult.isRight(), isTrue, reason: 'Local save must succeed');
+      expect(
+        remoteResult.isRight(),
+        isTrue,
+        reason: 'Remote submit must succeed',
+      );
 
       // Local storage should contain the entry
       expect(fakeBox.containsKey('Overhead Press'), isTrue);
@@ -788,19 +806,21 @@ void main() {
       verify(() => mockDocRef.set(any())).called(1);
     });
 
-    test('local delete does not affect remote document (they are independent)',
-        () async {
-      // Arrange
-      final repo = buildRepo();
-      fakeBox.seed('Bench Press', makeCorrection().toHiveJson());
+    test(
+      'local delete does not affect remote document (they are independent)',
+      () async {
+        // Arrange
+        final repo = buildRepo();
+        fakeBox.seed('Bench Press', makeCorrection().toHiveJson());
 
-      // Act
-      final deleteResult = await repo.deleteLocalCorrection('Bench Press');
+        // Act
+        final deleteResult = await repo.deleteLocalCorrection('Bench Press');
 
-      // Assert
-      expect(deleteResult.isRight(), isTrue);
-      // Remote Firestore collection must NOT have been touched
-      verifyNever(() => mockFirestore.collection(any()));
-    });
+        // Assert
+        expect(deleteResult.isRight(), isTrue);
+        // Remote Firestore collection must NOT have been touched
+        verifyNever(() => mockFirestore.collection(any()));
+      },
+    );
   });
 }

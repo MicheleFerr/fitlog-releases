@@ -1,6 +1,7 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloudMixin {
+mixin WorkoutSaveMixin
+    on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloudMixin {
   /// Save the completed workout locally and to Firestore.
   ///
   /// Pass [context] to show sync status toasts during save flow.
@@ -10,6 +11,7 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
     if (workout == null || !workout.isCompleted) {
       return;
     }
+    var localSaveSucceeded = false;
 
     final authService = ref.read(authServiceProvider);
     final currentUser = authService.currentUser;
@@ -93,6 +95,7 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
           notes: sanitizedExerciseNotes,
           sets: setsHistory,
           exerciseData: {
+            'databaseExerciseId': exercise.stableExerciseId,
             // FIX: Preserve countingMode for bodyweight volume calculation
             'countingMode': exercise.countingMode.name,
           },
@@ -123,6 +126,8 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
         // Use effectiveUserId instead of FirebaseAuth check - workout ALWAYS saved locally
         final workoutModel = WorkoutModel.fromDomain(workout);
         await hiveDataSource.saveWorkout(workoutModel, effectiveUserId);
+
+        localSaveSucceeded = true;
 
         if (kDebugMode) {
           debugLog(
@@ -167,20 +172,12 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
           // Get user body weight for bodyweight exercise volume calculation
           double? userBodyWeightKg;
           try {
-            final weightMeasurements = await ref.read(
-              bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
-            );
-            if (weightMeasurements.isNotEmpty) {
-              final latestWeight = weightMeasurements.first;
-              userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
-                  ? latestWeight.value * 0.453592 // lbs to kg
-                  : latestWeight.value;
-              if (kDebugMode) {
-                debugLog(
-                  LogCategory.workout,
-                  '📏 [WorkoutProvider] User body weight for analytics: ${userBodyWeightKg.toStringAsFixed(1)}kg',
-                );
-              }
+            userBodyWeightKg = await ref.read(userBodyweightProvider.future);
+            if (userBodyWeightKg != null && kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '📏 [WorkoutProvider] User body weight for analytics: ${userBodyWeightKg.toStringAsFixed(1)}kg',
+              );
             }
           } catch (weightError) {
             // Non-critical: bodyweight exercises will have volume = 0
@@ -460,6 +457,11 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
                 final l10n = ref.read(appLocalizationsProvider);
                 await scheduler.schedulePrNotification(
                   exerciseName: allNewPRs.first.exerciseName,
+                  exerciseId: allNewPRs.first.exerciseId,
+                  prTypeName: allNewPRs.first.type.name,
+                  prValue: allNewPRs.first.value,
+                  previousValue: allNewPRs.first.previousValue,
+                  achievedAt: allNewPRs.first.achievedAt,
                   l10n: l10n,
                 );
                 if (kDebugMode) {
@@ -545,16 +547,7 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
         // Non-critical feature - failure won't affect workout save
         try {
           // Calculate total volume (weight × reps for all completed sets)
-          double totalVolume = 0;
-          for (final exercise in workout.exercises) {
-            for (final set in exercise.sets) {
-              if (set.isCompleted) {
-                final weight = double.tryParse(set.weight.toString()) ?? 0;
-                final reps = int.tryParse(set.reps.toString()) ?? 0;
-                totalVolume += weight * reps;
-              }
-            }
-          }
+          final totalVolume = workout.completedVolume;
 
           // Get workout duration in minutes
           final durationMinutes = workout.duration?.inMinutes ?? 0;
@@ -667,6 +660,10 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
       }
 
       // 3 & 4. Track and queue for cloud sync (extracted to WorkoutSaveCloudMixin)
+      if (context != null && !context.mounted) {
+        return;
+      }
+
       await _syncWorkoutToCloud(
         workoutHistoryDetail: workoutHistoryDetail,
         context: context,
@@ -705,7 +702,9 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
     } catch (e, stackTrace) {
       debugLog(LogCategory.workout, '❌ Critical error saving workout: $e');
       debugLog(LogCategory.workout, 'Stack: $stackTrace');
+      if (!localSaveSucceeded) {
+        rethrow;
+      }
     }
   }
-
 }

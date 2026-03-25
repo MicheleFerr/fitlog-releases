@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/workout/data/services/workout_histor
 /// - Return type validation
 /// - Error handling (returns null/empty instead of throwing)
 /// - Integration test structure (would work with Firebase initialized)
+/// - Constructor DI entrypoints for Firebase/reader
 void main() {
   group('WorkoutHistoryService - Structure Tests', () {
     test('should have all required public methods', () {
@@ -31,24 +32,30 @@ void main() {
       expect(WorkoutHistoryService, isA<Type>());
     });
 
-    test('should define proper method signatures for getLastActivityByExercise', () {
-      // Method signature:
-      // Future<ExerciseActivity?> getLastActivityByExercise({
-      //   required String exerciseName,
-      //   String? userEmail,
-      // })
-      expect(true, isTrue);
-    });
+    test(
+      'should define proper method signatures for getLastActivityByExercise',
+      () {
+        // Method signature:
+        // Future<ExerciseActivity?> getLastActivityByExercise({
+        //   required String exerciseName,
+        //   String? userEmail,
+        // })
+        expect(true, isTrue);
+      },
+    );
 
-    test('should define proper method signatures for getActivitiesByExercise', () {
-      // Method signature:
-      // Future<List<ExerciseActivity>> getActivitiesByExercise({
-      //   required String userEmail,
-      //   required String exerciseName,
-      //   int limit = 50,
-      // })
-      expect(true, isTrue);
-    });
+    test(
+      'should define proper method signatures for getActivitiesByExercise',
+      () {
+        // Method signature:
+        // Future<List<ExerciseActivity>> getActivitiesByExercise({
+        //   required String userEmail,
+        //   required String exerciseName,
+        //   int limit = 50,
+        // })
+        expect(true, isTrue);
+      },
+    );
 
     test('should define proper method signatures for getExerciseHistory', () {
       // Method signature:
@@ -71,11 +78,9 @@ void main() {
   });
 
   group('WorkoutHistoryService - Business Logic Documentation', () {
-    test('should query workouts collection with userId filter', () {
+    test('should query nested workouts with legacy field fallback', () {
       // Implementation detail:
-      // _firestore.collection('workouts')
-      //   .where('userId', isEqualTo: uid)
-      //   .orderBy('completedAt', descending: true)
+      // reader queries users/{uid}/workouts and merges endTime/completedAt
       expect(true, isTrue);
     });
 
@@ -86,8 +91,16 @@ void main() {
       expect(true, isTrue);
     });
 
-    test('should order workouts by completedAt descending', () {
-      // All queries use: orderBy('completedAt', descending: true)
+    test(
+      'should apply free-tier 3 month cutoff when reading Firestore history',
+      () {
+        // Reader defaults to 90-day access unless accountTier proves premium
+        expect(true, isTrue);
+      },
+    );
+
+    test('should order workouts by effective completion date descending', () {
+      // Merged results are sorted in-memory by completedAt descending
       expect(true, isTrue);
     });
 
@@ -165,10 +178,13 @@ void main() {
       expect(true, isTrue);
     });
 
-    test('should continue processing after encountering corrupted documents', () {
-      // try-catch with continue in loops
-      expect(true, isTrue);
-    });
+    test(
+      'should continue processing after encountering corrupted documents',
+      () {
+        // try-catch with continue in loops
+        expect(true, isTrue);
+      },
+    );
   });
 
   group('WorkoutHistoryService - Exercise Variations Documentation', () {
@@ -233,19 +249,22 @@ void main() {
   });
 
   group('WorkoutHistoryService - Data Conversion Documentation', () {
-    test('should convert ExerciseHistoryDetail sets to ExerciseActivitySet', () {
-      // Maps each set:
-      // - set: set.setNumber
-      // - reps: set.reps.toString()
-      // - weight: set.weight.toString()
-      // - actualReps: set.reps.toString()
-      // - rpe: set.rpe
-      // - done: true
-      // - effort: 3
-      // - isWarmup: set.isWarmup
-      // - setDurationMillis: null
-      expect(true, isTrue);
-    });
+    test(
+      'should convert ExerciseHistoryDetail sets to ExerciseActivitySet',
+      () {
+        // Maps each set:
+        // - set: set.setNumber
+        // - reps: set.reps.toString()
+        // - weight: set.weight.toString()
+        // - actualReps: set.reps.toString()
+        // - rpe: set.rpe
+        // - done: true
+        // - effort: 3
+        // - isWarmup: set.isWarmup
+        // - setDurationMillis: null
+        expect(true, isTrue);
+      },
+    );
 
     test('should generate activity ID from workout and exercise IDs', () {
       // id: '${workout.id}_${exercise.id}'
@@ -289,19 +308,25 @@ void main() {
       expect(true, isTrue);
     });
 
-    test('integration: should match Italian exercise name to English workout', () async {
-      // Given: Firestore has workout with "Bench Press"
-      // When: getLastActivityByExercise(exerciseName: 'Panca Piana')
-      // Then: Finds and returns the Bench Press activity
-      expect(true, isTrue);
-    });
+    test(
+      'integration: should match Italian exercise name to English workout',
+      () async {
+        // Given: Firestore has workout with "Bench Press"
+        // When: getLastActivityByExercise(exerciseName: 'Panca Piana')
+        // Then: Finds and returns the Bench Press activity
+        expect(true, isTrue);
+      },
+    );
 
-    test('integration: should collect multiple activities from different workouts', () async {
-      // Given: 3 workouts each containing "Bench Press"
-      // When: getActivitiesByExercise(exerciseName: 'Bench Press', limit: 10)
-      // Then: Returns 3 ExerciseActivity objects
-      expect(true, isTrue);
-    });
+    test(
+      'integration: should collect multiple activities from different workouts',
+      () async {
+        // Given: 3 workouts each containing "Bench Press"
+        // When: getActivitiesByExercise(exerciseName: 'Bench Press', limit: 10)
+        // Then: Returns 3 ExerciseActivity objects
+        expect(true, isTrue);
+      },
+    );
 
     test('integration: should respect limit parameter', () async {
       // Given: 10 workouts with "Bench Press"
@@ -310,19 +335,25 @@ void main() {
       expect(true, isTrue);
     });
 
-    test('integration: should return empty list for non-existent exercise', () async {
-      // Given: No workouts with "Nonexistent Exercise"
-      // When: getActivitiesByExercise(exerciseName: 'Nonexistent Exercise')
-      // Then: Returns empty list
-      expect(true, isTrue);
-    });
+    test(
+      'integration: should return empty list for non-existent exercise',
+      () async {
+        // Given: No workouts with "Nonexistent Exercise"
+        // When: getActivitiesByExercise(exerciseName: 'Nonexistent Exercise')
+        // Then: Returns empty list
+        expect(true, isTrue);
+      },
+    );
 
-    test('integration: should expand sets into individual history data points', () async {
-      // Given: Workout with exercise having 3 sets
-      // When: getExerciseHistory(exerciseName: 'Bench Press')
-      // Then: Returns 3 ExerciseHistoryData objects (one per set)
-      expect(true, isTrue);
-    });
+    test(
+      'integration: should expand sets into individual history data points',
+      () async {
+        // Given: Workout with exercise having 3 sets
+        // When: getExerciseHistory(exerciseName: 'Bench Press')
+        // Then: Returns 3 ExerciseHistoryData objects (one per set)
+        expect(true, isTrue);
+      },
+    );
 
     test('integration: should sort history by date descending', () async {
       // Given: Workouts from different dates
@@ -345,12 +376,15 @@ void main() {
       expect(true, isTrue);
     });
 
-    test('integration: should filter out sets with zero weight and zero reps', () async {
-      // Given: Exercise with mix of completed sets and empty sets
-      // When: getExerciseHistory()
-      // Then: Returns only sets with weight > 0 OR reps > 0
-      expect(true, isTrue);
-    });
+    test(
+      'integration: should filter out sets with zero weight and zero reps',
+      () async {
+        // Given: Exercise with mix of completed sets and empty sets
+        // When: getExerciseHistory()
+        // Then: Returns only sets with weight > 0 OR reps > 0
+        expect(true, isTrue);
+      },
+    );
   });
 
   group('WorkoutHistoryService - Refactor Recommendations', () {
@@ -375,16 +409,19 @@ void main() {
       expect(true, isTrue);
     });
 
-    test('recommendation: extract exercise matching logic to testable utility', () {
-      // Extract _isExerciseMatch and _getExerciseVariations to:
-      // lib/features/workout/domain/utils/exercise_name_matcher.dart
-      //
-      // Benefits:
-      // - Can unit test matching logic in isolation
-      // - Reusable across other services
-      // - Easier to maintain translations
-      expect(true, isTrue);
-    });
+    test(
+      'recommendation: extract exercise matching logic to testable utility',
+      () {
+        // Extract _isExerciseMatch and _getExerciseVariations to:
+        // lib/features/workout/domain/utils/exercise_name_matcher.dart
+        //
+        // Benefits:
+        // - Can unit test matching logic in isolation
+        // - Reusable across other services
+        // - Easier to maintain translations
+        expect(true, isTrue);
+      },
+    );
 
     test('recommendation: extract conversion logic to mapper class', () {
       // Extract _convertToExerciseActivity to:

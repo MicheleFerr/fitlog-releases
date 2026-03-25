@@ -1,15 +1,19 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as database_exercise;
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
@@ -25,6 +29,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
     this.onChangeCountingMode,
     this.onAddWarmupSets,
     this.imageUrl,
+    this.databaseExercise,
     this.languageCode = 'en',
   });
   final Exercise exercise;
@@ -35,6 +40,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
   final VoidCallback? onChangeCountingMode;
   final VoidCallback? onAddWarmupSets;
   final String? imageUrl;
+  final database_exercise.ExerciseDefinition? databaseExercise;
   final String languageCode;
 
   @override
@@ -88,7 +94,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
                     horizontal: 20,
                     vertical: 8,
                   ),
-                  height: 200,
+                  height: 240,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Theme.of(
@@ -97,24 +103,18 @@ class ExerciseOptionsModal extends ConsumerWidget {
                   ),
                   child: Stack(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: CachedNetworkImage(
-                          imageUrl: imageUrl!,
-                          width: double.infinity,
-                          fit: BoxFit.contain,
-                          placeholder: (context, url) => const Center(
-                            child: LoadingIndicator(),
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: ExerciseGifWidget(
+                            gifUrl: imageUrl!,
+                            exerciseName: exercise.name,
+                            size: 220,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                            iconColor: Theme.of(context).colorScheme.primary,
                           ),
-                          errorWidget: (context, url, error) {
-                            return Center(
-                              child: Icon(
-                                AppIcons.imageNotSupported,
-                                size: 48,
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-                            );
-                          },
                         ),
                       ),
                       // Hint overlay
@@ -201,50 +201,20 @@ class ExerciseOptionsModal extends ConsumerWidget {
                       context.l10n.exerciseOptionsExerciseInfoSubtitle,
                     ),
                     onTap: () async {
+                      final presentationContext =
+                          AppRoutes.rootNavigatorKey.currentContext ?? context;
                       Navigator.pop(context);
-                      final exerciseData = await _loadExerciseDataFromJson(
-                        exercise.name,
-                        languageCode,
-                      );
-                      if (exerciseData != null && context.mounted) {
-                        _showExerciseInfoModal(context, exerciseData);
-                      } else if (context.mounted) {
-                        SnackBarService.showInfo(
-                          context,
-                          context.l10n.datiEsercizioNonDisponibili,
+                      final exerciseDetails = await _resolveExerciseDetails();
+                      if (exerciseDetails != null &&
+                          presentationContext.mounted) {
+                        await ExerciseDetailsModal.show(
+                          presentationContext,
+                          exerciseDetails,
                         );
-                      }
-                    },
-                  ),
-
-                  // Info Riscaldamento
-                  ListTile(
-                    leading: Icon(
-                      AppIcons.whatshot,
-                      color: context.colors.warning,
-                    ),
-                    title: Text(context.l10n.exerciseOptionsWarmupInfo),
-                    subtitle: Text(
-                      context.l10n.exerciseOptionsWarmupInfoSubtitle,
-                    ),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      final exerciseData = await _loadExerciseDataFromJson(
-                        exercise.name,
-                        languageCode,
-                      );
-                      if (exerciseData != null &&
-                          _hasWarmupData(exerciseData) &&
-                          context.mounted) {
-                        _showWarmupModal(context, exerciseData);
-                      } else if (context.mounted) {
+                      } else if (presentationContext.mounted) {
                         SnackBarService.showInfo(
-                          context,
-                          exerciseData == null
-                              ? context.l10n.datiEsercizioNonDisponibili
-                              : context
-                                    .l10n
-                                    .exerciseOptionsNoWarmupDataAvailable,
+                          presentationContext,
+                          presentationContext.l10n.datiEsercizioNonDisponibili,
                         );
                       }
                     },
@@ -266,39 +236,6 @@ class ExerciseOptionsModal extends ConsumerWidget {
                     ),
                   ],
 
-                  // Prevenzione infortuni
-                  ListTile(
-                    leading: Icon(
-                      AppIcons.shieldOutlined,
-                      color: context.colors.success,
-                    ),
-                    title: Text(context.l10n.exerciseOptionsInjuryPrevention),
-                    subtitle: Text(
-                      context.l10n.exerciseOptionsInjuryPreventionSubtitle,
-                    ),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      final exerciseData = await _loadExerciseDataFromJson(
-                        exercise.name,
-                        languageCode,
-                      );
-                      if (exerciseData != null &&
-                          _hasInjuryPreventionData(exerciseData) &&
-                          context.mounted) {
-                        _showInjuryPreventionModal(context, exerciseData);
-                      } else if (context.mounted) {
-                        SnackBarService.showInfo(
-                          context,
-                          exerciseData == null
-                              ? context.l10n.datiEsercizioNonDisponibili
-                              : context
-                                    .l10n
-                                    .exerciseOptionsNoInjuryPreventionDataAvailable,
-                        );
-                      }
-                    },
-                  ),
-
                   const Divider(),
 
                   // 🆕 Segnala problema
@@ -316,24 +253,24 @@ class ExerciseOptionsModal extends ConsumerWidget {
                       // Show feedback dialog with database version
                       ExerciseFeedbackButton.showFeedbackDialog(
                         context,
-                        exerciseId: exercise.id,
+                        exerciseId: exercise.stableExerciseId,
                         exerciseName: exercise.name,
                         version: dbVersion,
                       );
                     },
                   ),
-
-                  const Divider(),
-
-                  // Storico
-                  ListTile(
-                    leading: const Icon(AppIcons.history),
-                    title: Text(context.l10n.exerciseOptionsHistory),
-                    onTap: () {
-                      Navigator.pop(context);
-                      if (onHistory != null) onHistory!();
-                    },
-                  ),
+                  // Show other options only if callbacks are provided
+                  if (onHistory != null) ...[
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(AppIcons.history),
+                      title: Text(context.l10n.exerciseOptionsHistory),
+                      onTap: () {
+                        Navigator.pop(context);
+                        onHistory!();
+                      },
+                    ),
+                  ],
 
                   // Show other options only if callbacks are provided
                   if (onEdit != null) ...[
@@ -407,27 +344,51 @@ class ExerciseOptionsModal extends ConsumerWidget {
     );
   }
 
+  Future<database_exercise.ExerciseDefinition?>
+  _resolveExerciseDetails() async {
+    if (databaseExercise != null) {
+      return databaseExercise;
+    }
+
+    final exerciseData = await _loadExerciseDataFromJson(
+      exercise.stableExerciseId,
+      exercise.name,
+      languageCode,
+    );
+    if (exerciseData == null) {
+      return null;
+    }
+
+    return database_exercise.ExerciseDefinition.fromJson(exerciseData);
+  }
+
   /// Load exercise data from JSON
   static Future<Map<String, dynamic>?> _loadExerciseDataFromJson(
+    String exerciseId,
     String exerciseName,
     String languageCode,
   ) async {
     try {
-      // Load from new folder structure with fallback
       final exercises = await ExerciseJsonLoader.loadExercises(languageCode);
       debugPrint('[ExerciseOptions] Loading data for: "$exerciseName"');
 
-      // Find exercise by name (case-insensitive)
-      Map<String, dynamic>? exercise;
-      try {
-        exercise = exercises.firstWhere(
-          (ex) =>
-              ex['nome']?.toString().toLowerCase() ==
-              exerciseName.toLowerCase(),
-        );
-      } catch (e) {
-        exercise = null;
-      }
+      final normalizedName = _normalizeLookupValue(exerciseName);
+
+      Map<String, dynamic>? exercise = exercises.firstWhereOrNull(
+        (ex) => ex['id']?.toString() == exerciseId,
+      );
+
+      exercise ??= exercises.firstWhereOrNull(
+        (ex) =>
+            _normalizeLookupValue(ex['nome']?.toString() ?? '') ==
+            normalizedName,
+      );
+
+      exercise ??= exercises.firstWhereOrNull(
+        (ex) => _normalizeLookupValue(
+          ex['nome']?.toString() ?? '',
+        ).contains(normalizedName),
+      );
 
       if (exercise == null) {
         debugPrint('[ExerciseOptions] Exercise not found: "$exerciseName"');
@@ -447,410 +408,12 @@ class ExerciseOptionsModal extends ConsumerWidget {
     }
   }
 
-  /// Check if exercise has warmup data
-  static bool _hasWarmupData(Map<String, dynamic> exerciseData) {
-    return exerciseData['mobilitaPre'] != null ||
-        exerciseData['attivazionePre'] != null ||
-        exerciseData['warmupSets'] != null;
-  }
-
-  /// Check if exercise has injury prevention data
-  static bool _hasInjuryPreventionData(Map<String, dynamic> exerciseData) {
-    return exerciseData['prevenzioneInfortuni'] != null ||
-        exerciseData['cooldownConsigliato'] != null ||
-        exerciseData['noteTecniche'] != null;
-  }
-
-  /// Show exercise info modal
-  static void _showExerciseInfoModal(
-    BuildContext context,
-    Map<String, dynamic> exerciseData,
-  ) {
-    ModalService.showSheet(context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
-        builder: (context, scrollController) => DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 16),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-
-              // Title
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Icon(
-                      AppIcons.info,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        exerciseData['nome'] ??
-                            context.l10n.exerciseOptionsExerciseInfoTitle,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  children: [
-                    if (exerciseData['focus'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsPrimaryMuscles,
-                        exerciseData['focus'],
-                        AppIcons.workout,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['muscoliSecondari'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsSecondaryMuscles,
-                        exerciseData['muscoliSecondari'],
-                        AppIcons.sports,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['attrezzatura'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsEquipment,
-                        exerciseData['attrezzatura'],
-                        AppIcons.build,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['difficolta'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsDifficultyLevel,
-                        exerciseData['difficolta'],
-                        AppIcons.trendUp,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Show warmup modal
-  static void _showWarmupModal(
-    BuildContext context,
-    Map<String, dynamic> exerciseData,
-  ) {
-    ModalService.showSheet(context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
-        builder: (context, scrollController) => DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 16),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-
-              // Title
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Icon(AppIcons.whatshot, color: context.colors.warning),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        context.l10n.exerciseOptionsWarmupInfoTitle,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  children: [
-                    if (exerciseData['mobilitaPre'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsPreWorkoutMobility,
-                        exerciseData['mobilitaPre'],
-                        AppIcons.accessibility,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['attivazionePre'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsPreWorkoutActivation,
-                        exerciseData['attivazionePre'],
-                        AppIcons.flashOn,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['warmupSets'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsWarmupSets,
-                        exerciseData['warmupSets'],
-                        AppIcons.repeat,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Show injury prevention modal
-  static void _showInjuryPreventionModal(
-    BuildContext context,
-    Map<String, dynamic> exerciseData,
-  ) {
-    ModalService.showSheet(context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
-        builder: (context, scrollController) => DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 16),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-
-              // Title
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Icon(
-                      AppIcons.shieldOutlined,
-                      color: context.colors.success,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        context.l10n.exerciseOptionsInjuryPreventionTitle,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  children: [
-                    if (exerciseData['prevenzioneInfortuni'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsInjuryPreventionSection,
-                        exerciseData['prevenzioneInfortuni'],
-                        AppIcons.warningAmber,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['cooldownConsigliato'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsRecommendedCooldown,
-                        exerciseData['cooldownConsigliato'],
-                        AppIcons.spa,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (exerciseData['noteTecniche'] != null) ...[
-                      _buildInfoSection(
-                        context,
-                        context.l10n.exerciseOptionsTechnicalTips,
-                        exerciseData['noteTecniche'],
-                        AppIcons.tip,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Helper to format step text for better readability
-  static String _formatStepText(String text) {
-    // Se il testo contiene " | ", lo dividiamo per gli step
-    if (text.contains(' | ')) {
-      return text.split(' | ').join('\n\n');
-    }
-    return text;
-  }
-
-  /// Helper method to build info sections
-  static Widget _buildInfoSection(
-    BuildContext context,
-    String title,
-    dynamic content,
-    IconData icon,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainer.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          if (content is List) ...[
-            ...content.map(
-              (item) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('• ', style: Theme.of(context).textTheme.bodyMedium),
-                    Expanded(
-                      child: Text(
-                        item.toString(),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ] else ...[
-            Text(
-              _formatStepText(content.toString()),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ],
-      ),
-    );
+  static String _normalizeLookupValue(String value) {
+    return value
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
   }
 
   /// Static method to show the modal
@@ -864,10 +427,12 @@ class ExerciseOptionsModal extends ConsumerWidget {
     VoidCallback? onChangeCountingMode,
     VoidCallback? onAddWarmupSets,
     String? imageUrl,
+    database_exercise.ExerciseDefinition? databaseExercise,
     String languageCode = 'en',
   }) {
     HapticFeedback.mediumImpact();
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       backgroundColor: Theme.of(
         context,
       ).colorScheme.surface.withValues(alpha: 0),
@@ -881,6 +446,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
         onChangeCountingMode: onChangeCountingMode,
         onAddWarmupSets: onAddWarmupSets,
         imageUrl: imageUrl,
+        databaseExercise: databaseExercise,
         languageCode: languageCode,
       ),
     );

@@ -15,10 +15,13 @@ class ExerciseModel {
     this.noteTecniche,
     this.mobilitaPre,
     this.attivazionePre,
+    this.warmupSets,
+    this.prevenzioneInfortuni,
+    this.cooldownConsigliato,
     this.tempoEsecuzione,
   });
 
-  factory ExerciseModel.fromEntity(Exercise exercise) {
+  factory ExerciseModel.fromEntity(ExerciseDefinition exercise) {
     return ExerciseModel(
       id: exercise.id,
       nome: exercise.nome,
@@ -33,6 +36,9 @@ class ExerciseModel {
       noteTecniche: exercise.noteTecniche,
       mobilitaPre: exercise.mobilitaPre,
       attivazionePre: exercise.attivazionePre,
+      warmupSets: exercise.warmupSets,
+      prevenzioneInfortuni: exercise.prevenzioneInfortuni,
+      cooldownConsigliato: exercise.cooldownConsigliato,
       tempoEsecuzione: exercise.tempoEsecuzione,
     );
   }
@@ -58,6 +64,15 @@ class ExerciseModel {
       attivazionePre: json['attivazionePre']?.isEmpty == true
           ? null
           : json['attivazionePre'],
+      warmupSets: json['warmupSets']?.isEmpty == true
+          ? null
+          : json['warmupSets'],
+      prevenzioneInfortuni: json['prevenzioneInfortuni']?.isEmpty == true
+          ? null
+          : json['prevenzioneInfortuni'],
+      cooldownConsigliato: json['cooldownConsigliato']?.isEmpty == true
+          ? null
+          : json['cooldownConsigliato'],
       tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true
           ? null
           : json['tempoEsecuzione'] as String?,
@@ -72,6 +87,7 @@ class ExerciseModel {
     if (value is List) return value.join(', ');
     return value.toString();
   }
+
   final String id;
   final String nome;
   final String focus;
@@ -85,15 +101,20 @@ class ExerciseModel {
   final String? noteTecniche;
   final String? mobilitaPre;
   final String? attivazionePre;
+  final String? warmupSets;
+  final String? prevenzioneInfortuni;
+  final String? cooldownConsigliato;
   final String? tempoEsecuzione;
 
-  Exercise toEntity() {
-    return Exercise(
+  ExerciseDefinition toEntity() {
+    return ExerciseDefinition(
       id: id,
       nome: nome,
-      focus: Exercise.parseCommaSeparated(focus),
+      focus: ExerciseDefinition.parseCommaSeparated(focus),
       imageUrl: imageUrl,
-      muscoliSecondari: Exercise.parseCommaSeparated(muscoliSecondari),
+      muscoliSecondari: ExerciseDefinition.parseCommaSeparated(
+        muscoliSecondari,
+      ),
       difficolta: difficolta,
       tipoEsercizio: tipoEsercizio,
       attrezzatura: attrezzatura,
@@ -102,6 +123,9 @@ class ExerciseModel {
       noteTecniche: noteTecniche,
       mobilitaPre: mobilitaPre,
       attivazionePre: attivazionePre,
+      warmupSets: warmupSets,
+      prevenzioneInfortuni: prevenzioneInfortuni,
+      cooldownConsigliato: cooldownConsigliato,
       tempoEsecuzione: tempoEsecuzione,
     );
   }
@@ -121,6 +145,9 @@ class ExerciseModel {
       'noteTecniche': noteTecniche,
       'mobilitaPre': mobilitaPre,
       'attivazionePre': attivazionePre,
+      'warmupSets': warmupSets,
+      'prevenzioneInfortuni': prevenzioneInfortuni,
+      'cooldownConsigliato': cooldownConsigliato,
       'tempoEsecuzione': tempoEsecuzione,
     };
   }

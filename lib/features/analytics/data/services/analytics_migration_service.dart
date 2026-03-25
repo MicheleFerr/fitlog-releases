@@ -101,8 +101,9 @@ class AnalyticsMigrationService {
       );
 
       final workoutsSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
           .collection('workouts')
-          .where('userId', isEqualTo: userId)
           // Note: No orderBy to avoid filtering out docs without startTime field
           .get();
 
@@ -111,10 +112,11 @@ class AnalyticsMigrationService {
         data: {'totalWorkouts': workoutsSnapshot.docs.length},
       );
 
-      // Filter only completed workouts (with completedAt timestamp)
+      // Filter only completed workouts. Current workout docs store endTime;
+      // keep completedAt as backward-compatible fallback for migrated data.
       final completedWorkoutDocs = workoutsSnapshot.docs.where((doc) {
         final data = doc.data();
-        return data['completedAt'] != null; // Only workouts with completedAt
+        return data['endTime'] != null || data['completedAt'] != null;
       }).toList();
 
       SecureLogger.info(

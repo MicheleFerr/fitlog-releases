@@ -13,10 +13,12 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
     show ExerciseDefinition;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Result returned when user picks an exercise
@@ -31,10 +33,7 @@ class ExercisePickResult {
 }
 
 class ExerciseMatchPicker extends ConsumerStatefulWidget {
-  const ExerciseMatchPicker({
-    required this.initialQuery,
-    super.key,
-  });
+  const ExerciseMatchPicker({required this.initialQuery, super.key});
 
   final String initialQuery;
 
@@ -139,12 +138,16 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
               autofocus: true,
               decoration: InputDecoration(
                 hintText: l10n.workoutImportSearchExercise,
-                prefixIcon:
-                    const Icon(AppIcons.search, size: AppIconSize.small),
+                prefixIcon: const Icon(
+                  AppIcons.search,
+                  size: AppIconSize.small,
+                ),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(AppIcons.close,
-                            size: AppIconSize.small),
+                        icon: const Icon(
+                          AppIcons.close,
+                          size: AppIconSize.small,
+                        ),
                         onPressed: () {
                           _searchController.clear();
                         },
@@ -168,25 +171,25 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
                     ),
                   )
                 : _results.isEmpty
-                    ? Center(
-                        child: Text(
-                          _searchController.text.isEmpty
-                              ? l10n.workoutImportSearchExercise
-                              : l10n.workoutImportNoMatch,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        itemCount: _results.length,
-                        separatorBuilder: (_, __) => const Divider(height: 1),
-                        itemBuilder: (context, index) {
-                          final result = _results[index];
-                          return _buildResultTile(context, result);
-                        },
+                ? Center(
+                    child: Text(
+                      _searchController.text.isEmpty
+                          ? l10n.workoutImportSearchExercise
+                          : l10n.workoutImportNoMatch,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
                       ),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    itemCount: _results.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final result = _results[index];
+                      return _buildResultTile(context, result);
+                    },
+                  ),
           ),
         ],
       ),
@@ -210,12 +213,7 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      subtitle: Text(
-        exercise.focus.join(', ').toUpperCase(),
-        style: context.textTheme.labelSmall?.copyWith(
-          color: context.colors.onSurfaceVariant,
-        ),
-      ),
+      subtitle: _buildExerciseMetadata(exercise),
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
@@ -242,6 +240,57 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
           ),
         );
       },
+    );
+  }
+
+  Widget? _buildExerciseMetadata(ExerciseDefinition exercise) {
+    final hasMuscleData =
+        exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+    final hasEquipment = exercise.attrezzatura.isNotEmpty;
+
+    if (!hasMuscleData && !hasEquipment) return null;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasMuscleData)
+            ExerciseTargetMuscleMap(
+              primaryMuscles: exercise.focus,
+              secondaryMuscles: exercise.muscoliSecondari,
+              previewWidth: 78,
+              previewHeight: 58,
+              enableFullscreen: false,
+            ),
+          if (hasMuscleData && hasEquipment) const SizedBox(height: 6),
+          if (hasEquipment)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest.withValues(
+                  alpha: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  EquipmentIconBadge(
+                    equipment: exercise.attrezzatura,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    exercise.attrezzatura,
+                    style: context.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

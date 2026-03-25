@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/exercise_strength_level_section.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -20,7 +17,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_p
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_bodyweight_provider.dart';
 
 /// Metric types for exercise charts.
 /// Internal [key] is used for data lookup; [label] for localized display.
@@ -94,14 +90,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        ref.invalidate(
-          exerciseHistoryDataGroupedProvider(widget.exerciseName),
-        );
+        ref.invalidate(exerciseHistoryDataGroupedProvider(widget.exerciseName));
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
-          AppSpacing.md, AppSpacing.md, AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.md,
           AppSpacing.md + context.tabBarInset,
         ),
         child: Column(
@@ -412,7 +408,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             ),
             const SizedBox(height: AppSpacing.md),
             // Strength Level content
-            _buildStrengthLevelContent2(),
+            ExerciseStrengthLevelSection(
+              exerciseName: widget.exerciseName,
+              exerciseId: widget.exerciseId,
+            ),
           ],
         ),
       ),
@@ -525,9 +524,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            border: Border.all(
-              color: color.withValues(alpha: 0.2),
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.2)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -561,386 +558,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   // Strength Level (inner content for unified performance section)
   // ==========================================================================
 
-  bool _looksLikeUuid(String? id) {
-    if (id == null) return false;
-    return id.contains('-') && id.length >= 32;
-  }
-
-  Widget _buildStrengthLevelContent2() {
-    final hasValidDatabaseId =
-        widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
-
-    if (kDebugMode) {
-      debugPrint('[STRENGTH LEVEL] exerciseId=${widget.exerciseId}, '
-          'isUuid=${_looksLikeUuid(widget.exerciseId)}, '
-          'hasValidDbId=$hasValidDatabaseId');
-    }
-
-    if (hasValidDatabaseId) {
-      return _buildStrengthLevelWithKey(widget.exerciseId!);
-    }
-
-    final databaseIdAsync = ref.watch(
-      exerciseIdByNameProvider(widget.exerciseName),
-    );
-
-    return databaseIdAsync.when(
-      data: (databaseId) {
-        if (kDebugMode) {
-          debugPrint('[STRENGTH LEVEL] Name lookup: '
-              '"${widget.exerciseName}" -> databaseId=$databaseId');
-        }
-
-        if (databaseId == null) {
-          return _buildStrengthLevelPlaceholder();
-        }
-
-        return _buildStrengthLevelWithKey(databaseId);
-      },
-      loading: () => const LoadingIndicator(),
-      error: (error, stack) {
-        if (kDebugMode) {
-          debugPrint('[STRENGTH LEVEL] Error looking up database ID: $error');
-        }
-        return _buildStrengthLevelPlaceholder();
-      },
-    );
-  }
-
-  Widget _buildStrengthLevelWithKey(String lookupKey) {
-    final mappingAsync = ref.watch(exerciseMappingByIdProvider(lookupKey));
-    final historyAsync = ref.watch(
-      exerciseHistoryDataGroupedProvider(widget.exerciseName),
-    );
-    final bodyweightAsync = ref.watch(userBodyweightProvider);
-    final userBodyweight = bodyweightAsync.value ?? 80.0;
-
-    // Early return: mapping loading/error
-    if (mappingAsync.isLoading) {
-      return const LoadingIndicator();
-    }
-    if (mappingAsync.hasError || !mappingAsync.hasValue) {
-      if (kDebugMode) {
-        debugPrint('[STRENGTH LEVEL] Mapping error/no value for: $lookupKey '
-            '(hasError=${mappingAsync.hasError}, hasValue=${mappingAsync.hasValue})');
-        if (mappingAsync.hasError) debugPrint('   Error: ${mappingAsync.error}');
-      }
-      return _buildStrengthLevelPlaceholder();
-    }
-
-    final mapping = mappingAsync.value;
-    if (mapping == null || mapping.standardId == null) {
-      if (kDebugMode) {
-        debugPrint('[STRENGTH LEVEL] Mapping null or no standardId for: '
-            '$lookupKey (mapping=$mapping, standardId=${mapping?.standardId})');
-      }
-      return _buildStrengthLevelPlaceholder();
-    }
-
-    if (kDebugMode) {
-      debugPrint('[STRENGTH LEVEL] Mapping found: '
-          'exerciseId=$lookupKey -> standardId=${mapping.standardId}');
-    }
-
-    // Now we have standardId - safe to watch
-    final standardAsync = ref.watch(
-      strengthStandardByIdProvider(mapping.standardId!),
-    );
-
-    // Early return: standard or history loading/error
-    if (standardAsync.isLoading || historyAsync.isLoading) {
-      return const LoadingIndicator();
-    }
-    if (standardAsync.hasError || historyAsync.hasError) {
-      if (kDebugMode) {
-        debugPrint('[STRENGTH LEVEL] Standard/history error '
-            '(std=${standardAsync.hasError}, hist=${historyAsync.hasError})');
-      }
-      return _buildStrengthLevelPlaceholder();
-    }
-
-    final standard = standardAsync.value;
-    if (standard == null) {
-      if (kDebugMode) {
-        debugPrint('[STRENGTH LEVEL] Standard is null '
-            'for standardId=${mapping.standardId}');
-      }
-      return _buildStrengthLevelPlaceholder();
-    }
-
-    final historyMap = historyAsync.value!;
-    final allSets = <ExerciseHistoryData>[];
-    historyMap.forEach((date, sets) => allSets.addAll(sets));
-
-    if (allSets.isEmpty) {
-      return _buildStrengthLevelPlaceholder();
-    }
-
-    // Calculate best 1RM
-    double best1RM = 0.0;
-    for (final set in allSets) {
-      if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated = OneRMCalculator.calculateBrzycki(
-          set.weight!,
-          set.reps!,
-        );
-        if (calculated > best1RM) best1RM = calculated;
-      }
-    }
-
-    return _buildStrengthLevelContent(
-      standard: standard,
-      userBodyweight: userBodyweight,
-      user1RM: best1RM,
-    );
-  }
-
-  Widget _buildStrengthLevelPlaceholder() {
-    return Column(
-      children: [
-        SemanticIcon(
-          icon: AppIcons.infoOutline,
-          semanticLabel: 'Info outline',
-          size: AppIconSize.xxlarge,
-          color: context.colors.onSurface.withValues(alpha: 0.3),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Text(
-          context.l10n.strengthLevelNoData,
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colors.onSurface.withValues(alpha: 0.6),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: AppSpacing.xxs),
-        Text(
-          context.l10n.strengthLevelAvailableAfterWorkout,
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurface.withValues(alpha: 0.5),
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStrengthLevelContent({
-    required StrengthStandard standard,
-    required double userBodyweight,
-    required double user1RM,
-  }) {
-    const levels = ExperienceLevel.values;
-    final levelValues = <ExperienceLevel, double>{};
-
-    for (final level in levels) {
-      final value = standard.getOneRepMax(
-        bodyweightKg: userBodyweight,
-        level: level,
-      );
-      if (value != null) {
-        levelValues[level] = value;
-      }
-    }
-
-    ExperienceLevel currentLevel = ExperienceLevel.untrained;
-    double progressToNext = 0.0;
-
-    for (var i = 0; i < levels.length; i++) {
-      final level = levels[i];
-      final levelValue = levelValues[level];
-
-      if (levelValue == null) continue;
-
-      if (user1RM >= levelValue) {
-        currentLevel = level;
-
-        if (i < levels.length - 1) {
-          final nextLevel = levels[i + 1];
-          final nextValue = levelValues[nextLevel];
-
-          if (nextValue != null && nextValue > levelValue) {
-            progressToNext =
-                ((user1RM - levelValue) / (nextValue - levelValue))
-                    .clamp(0.0, 1.0);
-          }
-        }
-      } else {
-        break;
-      }
-    }
-
-    final levelColor = _getLevelColor(currentLevel);
-    final locale = Localizations.localeOf(context).languageCode;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(
-            color: levelColor.withValues(alpha: 0.1),
-            borderRadius: AppBorderRadius.smRadius,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.l10n.your1RM,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-              Text(
-                '${user1RM.toStringAsFixed(1)} kg',
-                style: context.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: 6,
-              ),
-              decoration: BoxDecoration(
-                color: levelColor,
-                borderRadius: AppBorderRadius.xsRadius,
-              ),
-              child: Text(
-                currentLevel.getLabel(locale).toUpperCase(),
-                style: context.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.surface,
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.xs),
-            if (currentLevel != ExperienceLevel.elite && progressToNext > 0)
-              Expanded(
-                child: Text(
-                  context.l10n.progressToNextLevel(
-                    (progressToNext * 100).toStringAsFixed(0),
-                    levels[levels.indexOf(currentLevel) + 1].getLabel(locale),
-                  ),
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colors.onSurface.withValues(alpha: 0.6),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        if (currentLevel != ExperienceLevel.elite) ...[
-          ClipRRect(
-            borderRadius: AppBorderRadius.xsRadius,
-            child: LinearProgressIndicator(
-              value: progressToNext,
-              minHeight: 8,
-              backgroundColor: context.colors.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation<Color>(levelColor),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-        ],
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest.withValues(
-              alpha: 0.5,
-            ),
-            borderRadius: AppBorderRadius.smRadius,
-          ),
-          child: Column(
-            children: [
-              ...levels.map((level) {
-                final value = levelValues[level];
-                if (value == null) return const SizedBox.shrink();
-
-                final isCurrentLevel = level == currentLevel;
-                final color = _getLevelColor(level);
-
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: isCurrentLevel
-                              ? color
-                              : color.withValues(alpha: 0.3),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          level.getLabel(locale),
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: isCurrentLevel
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: context.colors.onSurface,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        '${value.toStringAsFixed(1)} kg',
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          fontWeight: isCurrentLevel
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: isCurrentLevel
-                              ? color
-                              : context.colors.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-              const SizedBox(height: AppSpacing.xs),
-              const Divider(height: 1),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                context.l10n.benchmarkBodyweight(
-                  userBodyweight.toStringAsFixed(0),
-                ),
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.5),
-                  fontStyle: FontStyle.italic,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Color _getLevelColor(ExperienceLevel level) {
-    switch (level) {
-      case ExperienceLevel.untrained:
-        return context.colors.surfaceContainerHighest;
-      case ExperienceLevel.novice:
-        return context.colors.primary;
-      case ExperienceLevel.intermediate:
-        return context.colors.success;
-      case ExperienceLevel.advanced:
-        return context.colors.secondary;
-      case ExperienceLevel.elite:
-        return context.colors.tertiary;
-    }
-  }
-
   // ==========================================================================
   // Record calculation + details bottom sheet
   // ==========================================================================
@@ -959,7 +576,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     double best1RM = 0.0;
     for (final set in allSets) {
       if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated1RM = OneRMCalculator.calculateBrzycki(set.weight!, set.reps!);
+        final calculated1RM = OneRMCalculator.calculateBrzycki(
+          set.weight!,
+          set.reps!,
+        );
         if (calculated1RM > best1RM) {
           best1RM = calculated1RM;
           best1RMSet = set;
@@ -1124,7 +744,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
               if (recordData.isCalculated)
                 Padding(
-                  padding: const EdgeInsets.only(left: AppSpacing.xxl, top: AppSpacing.xxs),
+                  padding: const EdgeInsets.only(
+                    left: AppSpacing.xxl,
+                    top: AppSpacing.xxs,
+                  ),
                   child: Text(
                     context.l10n.calculatedWithBrzycki,
                     style: context.textTheme.labelSmall?.copyWith(
@@ -1140,9 +763,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               const Divider(),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                context.l10n.sessionSetsCount(
-                  recordData.sessionSets!.length,
-                ),
+                context.l10n.sessionSetsCount(recordData.sessionSets!.length),
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.onSurface,
@@ -1204,7 +825,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: context.colors.primary,
                     foregroundColor: context.colors.onPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: AppBorderRadius.smRadius,
                     ),

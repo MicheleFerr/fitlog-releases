@@ -43,7 +43,7 @@ final healthRepositoryProvider = Provider<IHealthRepository>((ref) {
 ///
 /// permissionStatus.when(
 ///   data: (status) {
-///     if (status.canSync(HealthDataType.workout)) {
+///     if (status.canAttemptSync(HealthDataType.workout)) {
 ///       // Authorized to sync workouts
 ///     }
 ///   },
@@ -58,10 +58,7 @@ final healthPermissionStatusProvider = FutureProvider<HealthPermissionStatus>((
 
   final result = await repository.checkPermissionStatus();
 
-  return result.fold(
-    (failure) => throw failure,
-    (status) => status,
-  );
+  return result.fold((failure) => throw failure, (status) => status);
 });
 
 // ============================================================
@@ -175,7 +172,7 @@ class HealthPermissionController
     // Check if workout was granted
     state.maybeWhen(
       data: (workoutResult) {
-        if (workoutResult.canSync(HealthDataType.workout)) {
+        if (workoutResult.canAttemptSync(HealthDataType.workout)) {
           // Step 2: Request body weight permission
           requestPermissions(dataTypes: [HealthDataType.bodyWeight]);
         }

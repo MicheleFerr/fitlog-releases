@@ -43,6 +43,7 @@ const scheduler_1 = require("firebase-functions/v2/scheduler");
 const admin = __importStar(require("firebase-admin"));
 const appleReceiptVerify = __importStar(require("node-apple-receipt-verify"));
 const googleapis_1 = require("googleapis");
+const entitlements_1 = require("./entitlements");
 // Lazy initialization flag for Apple receipt verification
 let appleReceiptConfigured = false;
 /**
@@ -69,6 +70,7 @@ function ensureAppleReceiptConfigured() {
  * Verify premium purchase from iOS or Android
  */
 exports.verifyPremiumPurchase = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
+    var _a;
     // Verify authenticated user
     if (!request.auth) {
         throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to verify purchase');
@@ -106,25 +108,17 @@ exports.verifyPremiumPurchase = (0, https_1.onCall)({ enforceAppCheck: true }, a
             console.error('Purchase verification failed', { userId, productId, platform });
             return { success: false, error: 'Purchase verification failed' };
         }
-        // Update user profile with premium status
-        const userRef = admin.firestore().collection('users').doc(userId);
-        const updateData = {
+        const entitlementSnapshot = await (0, entitlements_1.applyPremiumEntitlements)(userId, {
             accountTier: 'premium',
-            premiumActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            lastPurchaseId: purchaseId,
+            source: 'store_verification',
+            expiresAt: expiryDate,
+            willRenew: purchaseType === 'subscription',
+            isLifetime: purchaseType === 'lifetime',
+            productId,
+            lastPurchaseId: purchaseId !== null && purchaseId !== void 0 ? purchaseId : null,
             lastPurchasePlatform: platform,
             lastPurchaseProductId: productId,
-        };
-        if (expiryDate) {
-            updateData.premiumExpiresAt = admin.firestore.Timestamp.fromDate(expiryDate);
-        }
-        else if (purchaseType === 'lifetime') {
-            // Lifetime purchase - set expiry to far future
-            const farFuture = new Date();
-            farFuture.setFullYear(farFuture.getFullYear() + 100);
-            updateData.premiumExpiresAt = admin.firestore.Timestamp.fromDate(farFuture);
-        }
-        await userRef.update(updateData);
+        });
         // Log purchase for analytics
         await admin.firestore().collection('purchases').add({
             userId,
@@ -138,8 +132,8 @@ exports.verifyPremiumPurchase = (0, https_1.onCall)({ enforceAppCheck: true }, a
         console.log('Premium activated successfully', { userId, productId, purchaseType });
         return {
             success: true,
-            accountTier: updateData.accountTier,
-            expiryDate: expiryDate === null || expiryDate === void 0 ? void 0 : expiryDate.toISOString(),
+            accountTier: entitlementSnapshot.accountTier,
+            expiryDate: (_a = entitlementSnapshot.expiresAt) === null || _a === void 0 ? void 0 : _a.toISOString(),
         };
     }
     catch (error) {
@@ -254,23 +248,7 @@ async function verifyGooglePurchase(purchaseToken, productId) {
  * Scheduled function to check and update expired subscriptions
  */
 exports.checkExpiredSubscriptions = (0, scheduler_1.onSchedule)('every 24 hours', async () => {
-    const now = admin.firestore.Timestamp.now();
-    // Find users with expired premium
-    const expiredUsers = await admin.firestore()
-        .collection('users')
-        .where('accountTier', '==', 'premium')
-        .where('premiumExpiresAt', '<', now)
-        .get();
-    console.log(`Found ${expiredUsers.size} expired subscriptions`);
-    // Downgrade expired users
-    const batch = admin.firestore().batch();
-    expiredUsers.forEach((doc) => {
-        batch.update(doc.ref, {
-            accountTier: 'free',
-            premiumExpiredAt: now,
-        });
-    });
-    await batch.commit();
-    console.log(`Downgraded ${expiredUsers.size} expired users to free tier`);
+    const downgradedCount = await (0, entitlements_1.downgradeExpiredEntitlements)();
+    console.log(`Downgraded ${downgradedCount} expired users to free tier`);
 });
 //# sourceMappingURL=verifyPremiumPurchase.js.map

@@ -1,21 +1,22 @@
 library;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
+import 'package:gymbro_flutter_new/features/premium/data/services/premium_entitlement_sync_client.dart';
 import 'package:gymbro_flutter_new/features/premium/domain/entities/purchase_result.dart';
 import 'package:gymbro_flutter_new/features/premium/domain/entities/subscription_plan.dart';
 import 'package:gymbro_flutter_new/features/premium/domain/repositories/purchase_repository.dart';
-import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 
 class PurchaseService {
   PurchaseService({
     required PurchaseRepository repository,
-    FirebaseFirestore? firestore,
-  })  : _repository = repository,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+    required PremiumEntitlementSyncClient entitlementSyncClient,
+  }) : _repository = repository,
+       _entitlementSyncClient = entitlementSyncClient;
+
+  static const premiumSyncFailedMessage = 'premiumSyncFailed';
 
   final PurchaseRepository _repository;
-  final FirebaseFirestore _firestore;
+  final PremiumEntitlementSyncClient _entitlementSyncClient;
 
   Future<PurchaseResult> purchasePlan(
     SubscriptionPlan plan,
@@ -23,7 +24,7 @@ class PurchaseService {
   ) async {
     final result = await _repository.purchase(plan);
     if (result is PurchaseSuccess) {
-      await _syncAccountTier(userId, AccountTier.premium);
+      await _syncAfterSuccess(userId, context: 'purchase');
     }
     return result;
   }
@@ -31,28 +32,34 @@ class PurchaseService {
   Future<PurchaseResult> restorePurchases(String userId) async {
     final result = await _repository.restorePurchases();
     if (result is PurchaseSuccess) {
-      await _syncAccountTier(userId, AccountTier.premium);
+      await _syncAfterSuccess(userId, context: 'restore');
     }
     return result;
   }
 
   Future<void> checkAndSyncStatus(String userId) async {
-    final status = await _repository.getSubscriptionStatus();
-    final tier = status.isActive ? AccountTier.premium : AccountTier.free;
-    await _syncAccountTier(userId, tier);
-  }
-
-  Future<void> _syncAccountTier(String userId, AccountTier tier) async {
     try {
-      await _firestore.collection('users').doc(userId).update({
-        'accountTier': tier.name,
-      });
-      if (kDebugMode) {
-        debugPrint('[PurchaseService] Synced accountTier=${tier.name} for $userId');
-      }
+      await _entitlementSyncClient.syncEntitlements(userId);
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[PurchaseService] Failed to sync accountTier: $e');
+        debugPrint(
+          '[PurchaseService] Skipping entitlement sync for $userId, preserving current access: $e',
+        );
+      }
+    }
+  }
+
+  Future<void> _syncAfterSuccess(
+    String userId, {
+    required String context,
+  }) async {
+    try {
+      await _entitlementSyncClient.syncEntitlements(userId);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[PurchaseService] Failed to finalize $context sync; preserving RevenueCat access and retrying later: $e',
+        );
       }
     }
   }

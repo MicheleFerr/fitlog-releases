@@ -18,6 +18,11 @@ BOLD='\033[1m'
 CRITICAL_COUNT=0
 WARNING_COUNT=0
 INFO_COUNT=0
+FLUTTER_AVAILABLE=1
+
+if ! command -v flutter >/dev/null 2>&1; then
+    FLUTTER_AVAILABLE=0
+fi
 
 echo -e "${BLUE}${BOLD}═══════════════════════════════════════════════════════════════${NC}"
 echo -e "${BLUE}${BOLD}       🐛 GymBro TrackLog - Bug Detection Report 🐛${NC}"
@@ -50,23 +55,27 @@ print_info() {
 # 1. FLUTTER ANALYZE
 print_section "1. ANALISI STATICA FLUTTER"
 echo "Esecuzione flutter analyze..."
-ANALYZE_OUTPUT=$(flutter analyze 2>&1 || true)
-ANALYZE_ERRORS=$(echo "$ANALYZE_OUTPUT" | grep -c "error •" || true)
-ANALYZE_WARNINGS=$(echo "$ANALYZE_OUTPUT" | grep -c "warning •" || true)
-ANALYZE_INFO=$(echo "$ANALYZE_OUTPUT" | grep -c "info •" || true)
+if [ "$FLUTTER_AVAILABLE" -eq 0 ]; then
+    print_error "flutter non trovato nel PATH: analisi statica non eseguita"
+else
+    ANALYZE_OUTPUT=$(flutter analyze 2>&1 || true)
+    ANALYZE_ERRORS=$(echo "$ANALYZE_OUTPUT" | grep -c "error •" || true)
+    ANALYZE_WARNINGS=$(echo "$ANALYZE_OUTPUT" | grep -c "warning •" || true)
+    ANALYZE_INFO=$(echo "$ANALYZE_OUTPUT" | grep -c "info •" || true)
 
-if [ "$ANALYZE_ERRORS" -gt 0 ]; then
-    print_error "Trovati $ANALYZE_ERRORS errori di compilazione"
-    echo "$ANALYZE_OUTPUT" | grep "error •" | head -10
-    echo "   ... (mostrando primi 10 errori)"
-fi
+    if [ "$ANALYZE_ERRORS" -gt 0 ]; then
+        print_error "Trovati $ANALYZE_ERRORS errori di compilazione"
+        echo "$ANALYZE_OUTPUT" | grep "error •" | head -10
+        echo "   ... (mostrando primi 10 errori)"
+    fi
 
-if [ "$ANALYZE_WARNINGS" -gt 0 ]; then
-    print_warning "Trovati $ANALYZE_WARNINGS warnings"
-fi
+    if [ "$ANALYZE_WARNINGS" -gt 0 ]; then
+        print_warning "Trovati $ANALYZE_WARNINGS warnings"
+    fi
 
-if [ "$ANALYZE_INFO" -gt 0 ]; then
-    print_info "Trovate $ANALYZE_INFO info/suggestions"
+    if [ "$ANALYZE_INFO" -gt 0 ]; then
+        print_info "Trovate $ANALYZE_INFO info/suggestions"
+    fi
 fi
 
 # 2. TODO/FIXME/BUG COMMENTS
@@ -188,9 +197,13 @@ print_section "12. CONTROLLO DIPENDENZE"
 if [ -f "pubspec.lock" ]; then
     # Controlla dipendenze outdated
     echo "Verifica dipendenze outdated..."
-    OUTDATED=$(flutter pub outdated 2>/dev/null | grep -c "^[!]" || echo "0")
-    if [ "$OUTDATED" -gt 0 ]; then
-        print_warning "$OUTDATED dipendenze hanno major version updates disponibili"
+    if [ "$FLUTTER_AVAILABLE" -eq 0 ]; then
+        print_warning "flutter non trovato: controllo dipendenze outdated saltato"
+    else
+        OUTDATED=$(flutter pub outdated 2>/dev/null | grep -c "^[!]" || echo "0")
+        if [ "$OUTDATED" -gt 0 ]; then
+            print_warning "$OUTDATED dipendenze hanno major version updates disponibili"
+        fi
     fi
 fi
 

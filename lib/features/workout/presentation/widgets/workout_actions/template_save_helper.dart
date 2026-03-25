@@ -16,6 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/template_name_generator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
@@ -25,6 +26,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 
 class TemplateSaveHelper {
   static void showSaveAsTemplateDialog(
@@ -65,7 +67,11 @@ class TemplateSaveHelper {
       final data = userDoc.data()!;
       final quotaData = data['templateQuota'] as Map<String, dynamic>?;
       if (quotaData != null) {
-        usedTemplates = quotaData['usedPrivateTemplates'] ?? 0;
+        usedTemplates =
+            quotaData['usedLibraryTemplates'] ??
+            quotaData['libraryEditableCount'] ??
+            quotaData['usedPrivateTemplates'] ??
+            0;
       }
     }
 
@@ -327,13 +333,12 @@ class TemplateSaveHelper {
     String description,
     dynamic currentWorkout,
   ) async {
-    if (name.isEmpty) {
-      _showErrorSnackBar(
-        context,
-        AppLocalizations.of(context).enterTemplateName,
-      );
-      return;
-    }
+    final resolvedName = name.isNotEmpty
+        ? name
+        : TemplateNameGenerator.generateFromExercises(
+            currentWorkout.exercises,
+            fallbackName: AppLocalizations.of(context).customTemplate,
+          );
 
     Navigator.of(context).pop();
 
@@ -346,10 +351,10 @@ class TemplateSaveHelper {
       );
 
       // Save template
-      await ref
+      final template = await ref
           .read(workoutTemplateNotifierProvider.notifier)
           .createTemplateFromWorkout(
-            name: name,
+            name: resolvedName,
             description: description.isEmpty
                 ? AppLocalizations.of(context).customTemplate
                 : description,
@@ -363,7 +368,7 @@ class TemplateSaveHelper {
       SnackBarService.showCustom(
         context,
         message:
-            '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(name)}',
+            '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(template.name)}',
         actionLabel: AppLocalizations.of(context).view,
         onAction: () => context.push('/templates'),
       );
@@ -456,79 +461,83 @@ class TemplateSaveHelper {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).updateTemplate),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SemanticIcon(
-              icon: AppIcons.refresh,
-              semanticLabel: 'Update',
-              size: AppIconSize.xlarge,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context).updateTemplateDescription,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
+          title: Text(AppLocalizations.of(context).updateTemplate),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SemanticIcon(
+                icon: AppIcons.refresh,
+                semanticLabel: 'Update',
+                size: AppIconSize.xlarge,
+                color: Theme.of(context).colorScheme.primary,
               ),
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.template,
-                    semanticLabel: 'Template',
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          existingTemplate.name,
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '${currentWorkout.exercises.length} ${AppLocalizations.of(context).exercises.toLowerCase()}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                      ],
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context).updateTemplateDescription,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Row(
+                  children: [
+                    const SemanticIcon(
+                      icon: AppIcons.template,
+                      semanticLabel: 'Template',
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            existingTemplate.name,
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '${currentWorkout.exercises.length} ${AppLocalizations.of(context).exercises.toLowerCase()}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(AppLocalizations.of(context).cancel),
+            ),
+            FilledButton.icon(
+              onPressed: () => _updateTemplate(
+                context,
+                ref,
+                existingTemplate,
+                currentWorkout,
+              ),
+              icon: const SemanticIcon(
+                icon: AppIcons.save,
+                semanticLabel: 'Save',
+              ),
+              label: Text(AppLocalizations.of(context).save),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context).cancel),
-          ),
-          FilledButton.icon(
-            onPressed: () =>
-                _updateTemplate(context, ref, existingTemplate, currentWorkout),
-            icon: const SemanticIcon(
-              icon: AppIcons.save,
-              semanticLabel: 'Save',
-            ),
-            label: Text(AppLocalizations.of(context).save),
-          ),
-        ],
-      ),
       ),
     );
   }
@@ -556,8 +565,13 @@ class TemplateSaveHelper {
           })
           .toList();
 
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate = await repository.ensureEditableTemplate(
+        existingTemplate,
+      );
+
       // Create updated template preserving existing metadata
-      final updatedTemplate = existingTemplate.copyWith(
+      final updatedTemplate = editableTemplate.copyWith(
         exercises: exerciseTemplates,
         updatedAt: DateTime.now(),
       );
@@ -569,6 +583,14 @@ class TemplateSaveHelper {
 
       // Show success
       if (context.mounted) {
+        if (editableTemplate.id != existingTemplate.id) {
+          SnackBarService.showInfo(
+            context,
+            AppLocalizations.of(
+              context,
+            ).templatePrivateDraftCreated(existingTemplate.name),
+          );
+        }
         SnackBarService.showCustom(
           context,
           message:
@@ -583,7 +605,7 @@ class TemplateSaveHelper {
           context,
           AppLocalizations.of(
             context,
-          ).saveError(e.toString().replaceAll('Exception: ', '')),
+          ).saveError(localizeTemplateErrorMessage(context, e)),
         );
       }
     }

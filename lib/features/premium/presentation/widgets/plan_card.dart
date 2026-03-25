@@ -30,10 +30,7 @@ class PlanCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? 2.5 : 1,
-          ),
+          border: Border.all(color: borderColor, width: isSelected ? 2.5 : 1),
           borderRadius: BorderRadius.circular(16),
           color: isSelected
               ? context.colors.primary.withValues(alpha: 0.05)
@@ -74,36 +71,34 @@ class PlanCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        _periodTitle(context),
-                        style: context.textTheme.titleMedium?.copyWith(
+                  Text(
+                    _title(context),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (savingsLabel != null) ...[
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        savingsLabel!,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onPrimary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (savingsLabel != null) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.colors.primary,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            savingsLabel!,
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
+                    ),
+                  ],
                   const SizedBox(height: 2),
                   Text(
                     _periodSubtitle(context),
@@ -131,15 +126,15 @@ class PlanCard extends StatelessWidget {
     );
   }
 
-  String _periodTitle(BuildContext context) => switch (plan.period) {
+  String _title(BuildContext context) =>
+      plan.displayTitle ??
+      '${context.l10n.gymbroPremium} ${_periodLabel(context)}';
+
+  String _periodLabel(BuildContext context) => switch (plan.period) {
     SubscriptionPeriod.monthly => context.l10n.perMonth,
     SubscriptionPeriod.yearly => context.l10n.perYear,
     SubscriptionPeriod.lifetime => context.l10n.oneTimePurchase,
   };
 
-  String _periodSubtitle(BuildContext context) => switch (plan.period) {
-    SubscriptionPeriod.monthly => context.l10n.perMonth,
-    SubscriptionPeriod.yearly => context.l10n.perYear,
-    SubscriptionPeriod.lifetime => context.l10n.oneTimePurchase,
-  };
+  String _periodSubtitle(BuildContext context) => _periodLabel(context);
 }

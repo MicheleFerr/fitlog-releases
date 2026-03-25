@@ -4,7 +4,9 @@ mixin WorkoutHelpersMixin on Notifier<Workout?> {
   /// Finds the next exercise with incomplete sets after the given exercise.
   /// Returns null if current exercise is the last one or all following are complete.
   Exercise? _getNextIncompleteExercise(Workout workout, Exercise current) {
-    final currentIndex = workout.exercises.indexWhere((e) => e.id == current.id);
+    final currentIndex = workout.exercises.indexWhere(
+      (e) => e.id == current.id,
+    );
     if (currentIndex == -1) return null;
 
     for (int i = currentIndex + 1; i < workout.exercises.length; i++) {
@@ -47,20 +49,35 @@ mixin WorkoutHelpersMixin on Notifier<Workout?> {
   ///
   /// Returns null if no previous workout is found or if a query error occurs.
   ///
-  /// NOTE: Currently returns null because WorkoutModel does not persist
-  /// templateId to Firestore yet. Once WorkoutModel.toJson() includes
-  /// templateId, this method can query Firestore with:
-  ///   .where('templateId', isEqualTo: templateId)
-  ///   .where('status', isEqualTo: 'completed')
-  ///   .orderBy('endTime', descending: true)
-  ///   .limit(1)
   Future<Workout?> _fetchPreviousTemplateWorkout({
     required String templateId,
     required String userId,
   }) async {
-    // templateId is not yet persisted in Firestore by WorkoutModel.toJson(),
-    // so the query would return no results. Return null until that is fixed.
-    return null;
+    final authUserId = ref.read(authServiceProvider).currentUser?.uid;
+    if (authUserId == null || authUserId != userId) {
+      return null;
+    }
+
+    final result = await ref
+        .read(workoutRepositoryProvider)
+        .getWorkouts(limit: 100);
+
+    return result.fold((_) => null, (workouts) {
+      final matchingWorkouts =
+          workouts
+              .where(
+                (workout) =>
+                    workout.templateId == templateId && workout.isCompleted,
+              )
+              .toList()
+            ..sort((a, b) {
+              final aCompletedAt = a.endTime ?? a.updatedAt;
+              final bCompletedAt = b.endTime ?? b.updatedAt;
+              return bCompletedAt.compareTo(aCompletedAt);
+            });
+
+      return matchingWorkouts.isEmpty ? null : matchingWorkouts.first;
+    });
   }
 
   /// Localizes exercise name by looking up in exercise database.
@@ -73,7 +90,7 @@ mixin WorkoutHelpersMixin on Notifier<Workout?> {
     try {
       // Fetch localized name from exercise database
       final exerciseDefinition = await ref.read(
-        exerciseByIdProvider(exercise.id).future,
+        exerciseByIdProvider(exercise.stableExerciseId).future,
       );
 
       if (exerciseDefinition == null) {
@@ -81,7 +98,7 @@ mixin WorkoutHelpersMixin on Notifier<Workout?> {
         if (kDebugMode) {
           debugLog(
             LogCategory.workout,
-            '⚠️ [WorkoutProvider] Exercise not found in database: ${exercise.id}',
+            '⚠️ [WorkoutProvider] Exercise not found in database: ${exercise.stableExerciseId}',
           );
         }
         return exercise;
@@ -109,7 +126,8 @@ mixin WorkoutHelpersMixin on Notifier<Workout?> {
             // Find the localized name for this exercise
             final localizedExercise = localizedSubExercises.firstWhere(
               (e) => e.id == exerciseId,
-              orElse: () => exercise.exercises.firstWhere((e) => e.id == exerciseId),
+              orElse: () =>
+                  exercise.exercises.firstWhere((e) => e.id == exerciseId),
             );
 
             localizedExerciseData[exerciseId] = data.copyWith(

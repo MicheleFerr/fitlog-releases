@@ -1,6 +1,11 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutExerciseMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatchNotifyMixin, WorkoutWatchTypeMixin {
+mixin WorkoutExerciseMixin
+    on
+        Notifier<Workout?>,
+        WorkoutCoreMixin,
+        WorkoutWatchNotifyMixin,
+        WorkoutWatchTypeMixin {
   void addExercise(Exercise exercise) {
     if (state == null) return;
 
@@ -37,7 +42,7 @@ mixin WorkoutExerciseMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatch
 
       tracker.trackExerciseAdded(
         workoutId: state!.id,
-        exerciseId: exercise.id,
+        exerciseId: exercise.stableExerciseId,
         exerciseName: exercise.name,
         exerciseCategory: exercise.category.name,
         sets: exercise.sets.length,
@@ -86,7 +91,7 @@ mixin WorkoutExerciseMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatch
 
       tracker.trackExerciseAdded(
         workoutId: state!.id,
-        exerciseId: exercise.id,
+        exerciseId: exercise.stableExerciseId,
         exerciseName: exercise.name,
         exerciseCategory: exercise.category.name,
         sets: exercise.sets.length,
@@ -136,7 +141,7 @@ mixin WorkoutExerciseMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatch
 
       tracker.trackExerciseRemoved(
         workoutId: state!.id,
-        exerciseId: exerciseId,
+        exerciseId: exercise.stableExerciseId,
         exerciseName: exercise.name,
       );
     }
@@ -146,28 +151,37 @@ mixin WorkoutExerciseMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatch
     if (state == null) return;
 
     try {
+      final exerciseCount = state!.exercises.length;
+
       // Validate indices
       if (oldIndex < 0 ||
-          oldIndex >= state!.exercises.length ||
+          oldIndex >= exerciseCount ||
           newIndex < 0 ||
-          newIndex >= state!.exercises.length) {
+          newIndex > exerciseCount) {
         if (kDebugMode) {
           debugLog(
             LogCategory.workout,
-            '⚠️ [WorkoutProvider] Invalid reorder indices: old=$oldIndex, new=$newIndex, exercises=${state!.exercises.length}',
+            '⚠️ [WorkoutProvider] Invalid reorder indices: old=$oldIndex, new=$newIndex, exercises=$exerciseCount',
           );
         }
         return;
       }
 
+      var targetIndex = newIndex;
+
       // Adjust newIndex if moving down
-      if (oldIndex < newIndex) {
-        newIndex -= 1;
+      if (oldIndex < targetIndex) {
+        targetIndex -= 1;
+      }
+
+      // No-op reorder
+      if (oldIndex == targetIndex) {
+        return;
       }
 
       final exercises = List<Exercise>.from(state!.exercises);
       final exercise = exercises.removeAt(oldIndex);
-      exercises.insert(newIndex, exercise);
+      exercises.insert(targetIndex, exercise);
 
       state = state!.copyWith(exercises: exercises);
 
@@ -212,7 +226,7 @@ mixin WorkoutExerciseMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatch
 
       tracker.trackExerciseCustomized(
         workoutId: state!.id,
-        exerciseId: updatedExercise.id,
+        exerciseId: updatedExercise.stableExerciseId,
         fieldChanged: 'exercise_data',
         oldValue: 'previous_state',
         newValue: 'updated_state',

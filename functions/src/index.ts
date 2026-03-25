@@ -30,6 +30,8 @@ export {
   verifyPremiumPurchase,
   checkExpiredSubscriptions
 } from './premium/verifyPremiumPurchase';
+export { syncRevenueCatEntitlements } from './premium/syncRevenueCatEntitlements';
+export { revenueCatWebhook } from './premium/revenueCatWebhook';
 
 // ========================================
 // 🔐 SECURITY: Community Moderation (Server-Side Validation)
@@ -72,6 +74,14 @@ export {
 export {
   createTemplate,
   getTemplateQuota,
+  publishTemplate,
+  shareTemplateUnlisted,
+  forkTemplate,
+  createTemplateDraftFromShared,
+  reportTemplate,
+  hideTemplate,
+  migrateTemplateMetadata,
+  migrateTemplateQuotaToLibrary,
 } from './templates/createTemplate';
 
 // ========================================
@@ -120,3 +130,9 @@ export {
 export {
   aiCoachChatCompletion,
 } from './ai_coach/chatCompletion';
+
+// ========================================
+// 🔔 Notifications
+// ========================================
+// Enterprise notification triggers, queue processing and compliance tools.
+export * from './notifications';

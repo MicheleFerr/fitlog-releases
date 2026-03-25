@@ -13,6 +13,8 @@ class AuthHeroAssets {
     'assets/images/auth_login_hero_1.png',
     'assets/images/auth_login_hero_2.png',
   ];
+  // Reuse available hero cards for register until dedicated register assets are added.
+  static const List<String> registerVariants = loginVariants;
   static const String brandLogo = 'assets/images/splash_no_bkg.png';
   static const String register = 'assets/images/auth_register_hero.png';
   static const String fallback = 'assets/images/splash_logo.png';
@@ -20,6 +22,11 @@ class AuthHeroAssets {
   static String randomLoginVariant([Random? random]) {
     final rng = random ?? Random();
     return loginVariants[rng.nextInt(loginVariants.length)];
+  }
+
+  static String randomRegisterVariant([Random? random]) {
+    final rng = random ?? Random();
+    return registerVariants[rng.nextInt(registerVariants.length)];
   }
 }
 

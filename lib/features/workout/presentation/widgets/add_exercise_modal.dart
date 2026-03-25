@@ -29,10 +29,18 @@ class AddExerciseModal extends ConsumerStatefulWidget {
     this.onExerciseAdded,
     this.initialTab = 0,
     this.initialAdvancedTab = 0,
+    this.skipCustomizationOnContinue = false,
+    this.tutorialBrowseDatabaseKey,
+    this.tutorialFiltersAndCustomKey,
+    this.onBrowseDatabaseRequested,
   });
   final Function(Exercise)? onExerciseAdded;
   final int initialTab;
   final int initialAdvancedTab;
+  final bool skipCustomizationOnContinue;
+  final GlobalKey? tutorialBrowseDatabaseKey;
+  final GlobalKey? tutorialFiltersAndCustomKey;
+  final Future<void> Function()? onBrowseDatabaseRequested;
 
   /// ✅ UX: Show modal with proper sizing (80% initial, expandable to ~95%)
   /// This is the recommended way to show the AddExerciseModal
@@ -41,6 +49,10 @@ class AddExerciseModal extends ConsumerStatefulWidget {
     Function(Exercise)? onExerciseAdded,
     int initialTab = 0,
     int initialAdvancedTab = 0,
+    bool skipCustomizationOnContinue = false,
+    GlobalKey? tutorialBrowseDatabaseKey,
+    GlobalKey? tutorialFiltersAndCustomKey,
+    Future<void> Function()? onBrowseDatabaseRequested,
   }) {
     // ✅ FIX: Calculate safe max size to avoid notch/Dynamic Island
     final screenHeight = MediaQuery.of(context).size.height;
@@ -49,7 +61,8 @@ class AddExerciseModal extends ConsumerStatefulWidget {
     final maxSize = (screenHeight - topPadding - 8) / screenHeight;
     final safeMaxSize = maxSize.clamp(0.85, 0.96);
 
-    return ModalService.showSheet<void>(context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
@@ -67,6 +80,10 @@ class AddExerciseModal extends ConsumerStatefulWidget {
           onExerciseAdded: onExerciseAdded,
           initialTab: initialTab,
           initialAdvancedTab: initialAdvancedTab,
+          skipCustomizationOnContinue: skipCustomizationOnContinue,
+          tutorialBrowseDatabaseKey: tutorialBrowseDatabaseKey,
+          tutorialFiltersAndCustomKey: tutorialFiltersAndCustomKey,
+          onBrowseDatabaseRequested: onBrowseDatabaseRequested,
         ),
       ),
     );
@@ -351,7 +368,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      context.l10n.lastTimeWeight(data.weight!.toStringAsFixed(1)),
+                      context.l10n.lastTimeWeight(
+                        data.weight!.toStringAsFixed(1),
+                      ),
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colors.primary,
                         fontWeight: FontWeight.w500,
@@ -423,11 +442,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
           // Exercise name with icon
           Row(
             children: [
-              Icon(
-                AppIcons.trendDown,
-                size: 20,
-                color: context.colors.primary,
-              ),
+              Icon(AppIcons.trendDown, size: 20, color: context.colors.primary),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -439,10 +454,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
               ),
               // Drops badge
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
@@ -480,7 +492,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
 
     final weight = double.tryParse(_restPauseWeightController.text);
     final targetReps = int.tryParse(_restPauseTargetRepsController.text);
-    final restSeconds = int.tryParse(_restPauseRestSecondsController.text) ?? 15;
+    final restSeconds =
+        int.tryParse(_restPauseRestSecondsController.text) ?? 15;
 
     if (weight == null || weight <= 0) return const SizedBox.shrink();
 
@@ -1262,6 +1275,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
       children: [
         // Browse exercises from database button - Prominent
         Card(
+          key: widget.tutorialBrowseDatabaseKey,
           elevation: 2,
           child: ListTile(
             leading: Icon(AppIcons.libraryBooks, color: context.colors.primary),
@@ -1276,6 +1290,11 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
               color: context.colors.primary,
             ),
             onTap: () async {
+              if (widget.onBrowseDatabaseRequested != null) {
+                await widget.onBrowseDatabaseRequested!();
+                return;
+              }
+
               if (kDebugMode) {
                 debugPrint(
                   '🔍 ADD_EXERCISE_MODAL: Opening ExerciseSearchScreen with callback: ${widget.onExerciseAdded != null}',
@@ -1304,6 +1323,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                   MaterialPageRoute(
                     builder: (context) => ExerciseSearchScreen(
                       onExerciseAdded: widget.onExerciseAdded,
+                      skipCustomizationOnContinue:
+                          widget.skipCustomizationOnContinue,
                       showSupersetTemplates:
                           false, // ✅ FIX: No templates for single exercise
                     ),
@@ -1321,6 +1342,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
             dividerColor: context.colors.surface.withValues(alpha: 0),
           ),
           child: ExpansionTile(
+            key: widget.tutorialFiltersAndCustomKey,
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
             leading: Icon(
               AppIcons.addCircleOutline,
@@ -1798,16 +1820,16 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
 
       // Update stage controllers with suggested values
       if (_dropsetStages.isNotEmpty) {
-        _dropsetStages[0].weightController.text =
-            suggestedWeights.stage1.toStringAsFixed(0);
+        _dropsetStages[0].weightController.text = suggestedWeights.stage1
+            .toStringAsFixed(0);
       }
       if (_dropsetStages.length > 1) {
-        _dropsetStages[1].weightController.text =
-            suggestedWeights.stage2.toStringAsFixed(0);
+        _dropsetStages[1].weightController.text = suggestedWeights.stage2
+            .toStringAsFixed(0);
       }
       if (_dropsetStages.length > 2) {
-        _dropsetStages[2].weightController.text =
-            suggestedWeights.stage3.toStringAsFixed(0);
+        _dropsetStages[2].weightController.text = suggestedWeights.stage3
+            .toStringAsFixed(0);
       }
     });
   }
@@ -1911,8 +1933,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
       // Calculate drop percentage from stages
       int dropPercentage = 20; // Default
       if (_dropsetStages.length >= 2) {
-        final w1 = double.tryParse(_dropsetStages[0].weightController.text) ?? 0;
-        final w2 = double.tryParse(_dropsetStages[1].weightController.text) ?? 0;
+        final w1 =
+            double.tryParse(_dropsetStages[0].weightController.text) ?? 0;
+        final w2 =
+            double.tryParse(_dropsetStages[1].weightController.text) ?? 0;
         if (w1 > 0 && w2 > 0) {
           dropPercentage = ((1 - w2 / w1) * 100).round();
         }
@@ -2142,9 +2166,7 @@ class DropSetWeightSuggester {
       'petto',
       'pettorali',
     ];
-    return focus.any(
-      (f) => largeGroups.any((g) => f.contains(g)),
-    );
+    return focus.any((f) => largeGroups.any((g) => f.contains(g)));
   }
 
   static bool _isMediumMuscleGroup(List<String> focus) {
@@ -2156,8 +2178,6 @@ class DropSetWeightSuggester {
       'trap',
       'trapezio',
     ];
-    return focus.any(
-      (f) => mediumGroups.any((g) => f.contains(g)),
-    );
+    return focus.any((f) => mediumGroups.any((g) => f.contains(g)));
   }
 }

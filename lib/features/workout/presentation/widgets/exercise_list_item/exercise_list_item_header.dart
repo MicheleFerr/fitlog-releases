@@ -428,6 +428,13 @@ class ExerciseListItemHeader extends ConsumerWidget {
           size: 14,
         ),
       ));
+
+      // Change counting mode - always visible for single exercises
+      items.add(CNPopupMenuItem(
+        label:
+            '${context.l10n.exerciseOptionsChangeCountingFormat} (${exercise.countingMode.name.toUpperCase()})',
+        icon: const CNSymbol('arrow.left.arrow.right', size: 14),
+      ));
     }
 
     // Delete - always shown
@@ -458,12 +465,6 @@ class ExerciseListItemHeader extends ConsumerWidget {
           icon: const CNSymbol('link', size: 14),
         ));
       }
-
-      // Change counting mode (without badge - CNPopupMenuItem doesn't support custom layout)
-      items.add(CNPopupMenuItem(
-        label: '${context.l10n.exerciseOptionsChangeCountingFormat} (${exercise.countingMode.name.toUpperCase()})',
-        icon: const CNSymbol('arrow.left.arrow.right', size: 14),
-      ));
     }
 
     // Insights - conditional
@@ -485,6 +486,13 @@ class ExerciseListItemHeader extends ConsumerWidget {
     if (exercise.type == ExerciseType.single) {
       if (index == currentIndex) {
         onAddWarmupSets();
+        return;
+      }
+      currentIndex++;
+
+      // Change counting mode
+      if (index == currentIndex) {
+        onShowCountingModePicker();
         return;
       }
       currentIndex++;
@@ -530,12 +538,6 @@ class ExerciseListItemHeader extends ConsumerWidget {
         currentIndex++;
       }
 
-      // Change counting mode
-      if (index == currentIndex) {
-        onShowCountingModePicker();
-        return;
-      }
-      currentIndex++;
     }
 
     // Insights (if enabled)

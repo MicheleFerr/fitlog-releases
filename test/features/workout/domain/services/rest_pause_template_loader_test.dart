@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_pause_template_loader.dart';
@@ -21,10 +20,8 @@ void main() {
       });
 
       test('returns cached data on subsequent calls', () async {
-        final first =
-            await RestPauseTemplateLoader.loadPredefinedTemplates();
-        final second =
-            await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final first = await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final second = await RestPauseTemplateLoader.loadPredefinedTemplates();
 
         expect(identical(first, second), isTrue);
       });
@@ -62,11 +59,9 @@ void main() {
 
     group('clearCache', () {
       test('clears cached data so next load fetches again', () async {
-        final first =
-            await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final first = await RestPauseTemplateLoader.loadPredefinedTemplates();
         RestPauseTemplateLoader.clearCache();
-        final second =
-            await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final second = await RestPauseTemplateLoader.loadPredefinedTemplates();
 
         expect(identical(first, second), isFalse);
         expect(first.length, second.length);
@@ -152,8 +147,7 @@ void main() {
       });
 
       test('returns all templates with high time limit', () async {
-        final all =
-            await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final all = await RestPauseTemplateLoader.loadPredefinedTemplates();
         final efficient = await RestPauseTemplateLoader.loadTimeEfficient(
           maxMinutes: 100,
         );
@@ -170,8 +164,7 @@ void main() {
       });
 
       test('boundary: returns templates exactly at limit', () async {
-        final all =
-            await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final all = await RestPauseTemplateLoader.loadPredefinedTemplates();
         // Find the minimum time
         final minTime = all
             .map((t) => t.estimatedTimeMinutes)
@@ -191,34 +184,27 @@ void main() {
     group('filter methods use cache', () {
       test('all filter methods share the same cache', () async {
         await RestPauseTemplateLoader.loadBeginner();
-        final intermediate =
-            await RestPauseTemplateLoader.loadIntermediate();
+        final intermediate = await RestPauseTemplateLoader.loadIntermediate();
         final advanced = await RestPauseTemplateLoader.loadAdvanced();
-        final efficient =
-            await RestPauseTemplateLoader.loadTimeEfficient();
+        final efficient = await RestPauseTemplateLoader.loadTimeEfficient();
 
         expect(intermediate, isNotEmpty);
         expect(advanced, isNotEmpty);
         expect(efficient, isNotEmpty);
       });
 
-      test(
-        'sum of difficulty filters covers all templates '
-        '(excluding intermediateAdvanced)',
-        () async {
-          final all =
-              await RestPauseTemplateLoader.loadPredefinedTemplates();
-          final beginner = await RestPauseTemplateLoader.loadBeginner();
-          final intermediate =
-              await RestPauseTemplateLoader.loadIntermediate();
-          final advanced = await RestPauseTemplateLoader.loadAdvanced();
+      test('sum of difficulty filters covers all templates '
+          '(excluding intermediateAdvanced)', () async {
+        final all = await RestPauseTemplateLoader.loadPredefinedTemplates();
+        final beginner = await RestPauseTemplateLoader.loadBeginner();
+        final intermediate = await RestPauseTemplateLoader.loadIntermediate();
+        final advanced = await RestPauseTemplateLoader.loadAdvanced();
 
-          final totalFiltered =
-              beginner.length + intermediate.length + advanced.length;
+        final totalFiltered =
+            beginner.length + intermediate.length + advanced.length;
 
-          expect(totalFiltered, lessThanOrEqualTo(all.length));
-        },
-      );
+        expect(totalFiltered, lessThanOrEqualTo(all.length));
+      });
     });
 
     group('template data integrity', () {

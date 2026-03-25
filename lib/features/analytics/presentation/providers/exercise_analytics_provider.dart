@@ -13,7 +13,11 @@
 ///
 /// **Usage**:
 /// ```dart
-/// final analytics = ref.watch(exerciseAnalyticsProvider(exerciseId));
+/// final analytics = ref.watch(
+///   exerciseAnalyticsProvider(
+///     (exerciseName: exerciseName, exerciseId: exerciseId),
+///   ),
+/// );
 /// analytics.when(
 ///   data: (data) => _buildCharts(data),
 ///   loading: () => LoadingIndicator(),
@@ -31,18 +35,22 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 
+typedef ExerciseAnalyticsRequest = ({String exerciseName, String? exerciseId});
+
 /// Provider for exercise analytics data with cached correlations
 ///
 /// Uses FutureProvider.family to compute analytics per exercise.
 /// Correlations are calculated ONCE when the provider is first accessed,
 /// not on each bottom sheet open (Critical Fix #2 from design doc).
 final exerciseAnalyticsProvider =
-    FutureProvider.family<ExerciseAnalyticsData?, String>((
+    FutureProvider.family<ExerciseAnalyticsData?, ExerciseAnalyticsRequest>((
       ref,
-      exerciseId,
+      request,
     ) async {
+      final exerciseName = request.exerciseName;
+
       // Get exercise metrics from existing provider
-      final metrics = ref.watch(exerciseMetricsProvider(exerciseId));
+      final metrics = ref.watch(exerciseMetricsProvider(exerciseName));
 
       if (metrics == null || metrics.totalSessions < 1) {
         return null;
@@ -149,7 +157,7 @@ final exerciseAnalyticsProvider =
       final dataSpanDays = lastDate.difference(firstDate).inDays;
 
       return ExerciseAnalyticsData(
-        exerciseId: exerciseId,
+        exerciseId: request.exerciseId ?? exerciseName,
         exerciseName: metrics.exerciseName,
         weightHistory: weightHistory,
         volumeHistory: volumeHistory,

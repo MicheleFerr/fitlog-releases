@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/privacy/consent_dialog.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_shared_helpers.dart';
@@ -114,6 +117,51 @@ class SettingsHelpSection extends ConsumerWidget {
 
             const Divider(),
 
+            buildSettingTile(
+              context,
+              title: context.l10n.privacyDataUsageTitle,
+              subtitle: context.l10n.privacyDataUsageDescription,
+              leading: const SemanticIcon(
+                icon: AppIcons.privacyTipRounded,
+                semanticLabel: 'App privacy preferences',
+              ),
+              onTap: () => showConsentDialog(context),
+            ),
+
+            const Divider(),
+
+            FutureBuilder<PrivacyOptionsRequirementStatus>(
+              future: ConsentService().getPrivacyOptionsRequirementStatus(),
+              builder: (context, snapshot) {
+                final requirement = snapshot.data;
+                final isRequired =
+                    requirement == PrivacyOptionsRequirementStatus.required;
+                final subtitle = isRequired
+                    ? context.l10n.privacyOptionsDesc
+                    : context.l10n.privacyOptionsUnavailableDesc;
+
+                return buildSettingTile(
+                  context,
+                  title: context.l10n.privacyOptions,
+                  subtitle: subtitle,
+                  leading: const SemanticIcon(
+                    icon: AppIcons.shield,
+                    semanticLabel: 'Privacy options',
+                  ),
+                  trailing: snapshot.connectionState == ConnectionState.waiting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : null,
+                  onTap: () => _openPrivacyOptions(context, requirement),
+                );
+              },
+            ),
+
+            const Divider(),
+
             // Open Source Licenses
             buildSettingTile(
               context,
@@ -162,6 +210,42 @@ class SettingsHelpSection extends ConsumerWidget {
   }
 
   // --- Dialogs ---
+
+  Future<void> _openPrivacyOptions(
+    BuildContext context,
+    PrivacyOptionsRequirementStatus? requirement,
+  ) async {
+    final consentService = ConsentService();
+
+    try {
+      final resolvedRequirement =
+          requirement ??
+          await consentService.getPrivacyOptionsRequirementStatus();
+
+      if (resolvedRequirement != PrivacyOptionsRequirementStatus.required) {
+        if (context.mounted) {
+          SnackBarService.showInfo(
+            context,
+            context.l10n.privacyOptionsUnavailableDesc,
+          );
+        }
+        return;
+      }
+
+      await consentService.showPrivacyOptionsForm();
+
+      if (context.mounted) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.privacyOptionsUpdated,
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        SnackBarService.showError(context, context.l10n.privacyOptionsError);
+      }
+    }
+  }
 
   void _showExerciseDbAttributionDialog(BuildContext context) {
     showDialog(
@@ -226,16 +310,16 @@ class SettingsHelpSection extends ConsumerWidget {
   }
 
   Future<void> _launchBetaFeedbackEmail(BuildContext context) async {
+    final platform = Theme.of(context).platform;
+    final l10n = context.l10n;
     final packageInfo = await PackageInfo.fromPlatform();
     final version = '${packageInfo.version}+${packageInfo.buildNumber}';
-    final device = Theme.of(context).platform.name;
-    final os = Theme.of(context).platform == TargetPlatform.iOS
-        ? 'iOS'
-        : 'Android';
+    final device = platform.name;
+    final os = platform == TargetPlatform.iOS ? 'iOS' : 'Android';
 
-    final subject = Uri.encodeComponent(context.l10n.betaFeedbackSubject);
+    final subject = Uri.encodeComponent(l10n.betaFeedbackSubject);
     final body = Uri.encodeComponent(
-      context.l10n.betaFeedbackBody(version, device, os),
+      l10n.betaFeedbackBody(version, device, os),
     );
 
     final uri = Uri.parse(

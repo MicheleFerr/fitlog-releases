@@ -46,9 +46,7 @@ class _FakeAuthController extends AuthController {
 
 Widget _buildTestableRegisterScreen() {
   return ProviderScope(
-    overrides: [
-      authControllerProvider.overrideWith(_FakeAuthController.new),
-    ],
+    overrides: [authControllerProvider.overrideWith(_FakeAuthController.new)],
     child: MaterialApp.router(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -124,8 +122,9 @@ void main() {
         expect(find.text('Continue with Google'), findsOneWidget);
       });
 
-      testWidgets('Google button is disabled when TOS not accepted',
-          (tester) async {
+      testWidgets('Google button is disabled when TOS not accepted', (
+        tester,
+      ) async {
         await tester.pumpWidget(_buildTestableRegisterScreen());
         await tester.pumpAndSettle();
 
@@ -134,10 +133,6 @@ void main() {
         expect(googleButton, findsOneWidget);
 
         // Try to find the ancestor FilledButton and check it's disabled
-        final filledButtons = find.ancestor(
-          of: googleButton,
-          matching: find.byType(FilledButton),
-        );
         // BrandedGoogleAuthButton uses FilledButton.icon which creates _FilledButtonWithIcon
         // Just verify the text exists - the button's onPressed is null when TOS unchecked
       });
@@ -205,8 +200,9 @@ void main() {
         expect(find.text('Register Quickly'), findsOneWidget);
       });
 
-      testWidgets('has name, email, password, confirm password fields',
-          (tester) async {
+      testWidgets('has name, email, password, confirm password fields', (
+        tester,
+      ) async {
         await _openEmailForm(tester);
 
         // 4 TextFormField widgets: name, email, password, confirm password
@@ -355,10 +351,7 @@ void main() {
           find.byType(TextFormField).at(1),
           'test@example.com',
         );
-        await tester.enterText(
-          find.byType(TextFormField).at(2),
-          'Password1!',
-        );
+        await tester.enterText(find.byType(TextFormField).at(2), 'Password1!');
 
         final createButtons = find.text('Create Account');
         await tester.tap(createButtons.last);
@@ -378,10 +371,7 @@ void main() {
           find.byType(TextFormField).at(1),
           'test@example.com',
         );
-        await tester.enterText(
-          find.byType(TextFormField).at(2),
-          'Password1!',
-        );
+        await tester.enterText(find.byType(TextFormField).at(2), 'Password1!');
         await tester.enterText(
           find.byType(TextFormField).at(3),
           'DifferentPw!',
@@ -405,14 +395,8 @@ void main() {
           find.byType(TextFormField).at(1),
           'test@example.com',
         );
-        await tester.enterText(
-          find.byType(TextFormField).at(2),
-          'Password1!',
-        );
-        await tester.enterText(
-          find.byType(TextFormField).at(3),
-          'Password1!',
-        );
+        await tester.enterText(find.byType(TextFormField).at(2), 'Password1!');
+        await tester.enterText(find.byType(TextFormField).at(3), 'Password1!');
 
         final createButtons = find.text('Create Account');
         await tester.tap(createButtons.last);

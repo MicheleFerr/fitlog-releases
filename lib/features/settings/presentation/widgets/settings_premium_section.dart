@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/purchase_providers.dart';
+import 'package:gymbro_flutter_new/features/premium/domain/entities/subscription_status.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -14,8 +16,15 @@ class SettingsPremiumSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statusAsync = ref.watch(subscriptionStatusProvider);
-    final isActive = statusAsync.value?.isActive ?? false;
+    final premiumAccess = ref.watch(effectivePremiumAccessProvider);
+    final isRevenueCatConfigured = ref.watch(revenueCatConfiguredProvider);
+    final effectiveStatus = premiumAccess.subscriptionStatus;
+    final isActive = premiumAccess.isActive;
+    final subtitle = isActive
+        ? _buildStatusLabel(context, effectiveStatus)
+        : isRevenueCatConfigured
+        ? context.l10n.premiumTagline
+        : context.l10n.allFeaturesFreeInBeta;
 
     return Card(
       child: Padding(
@@ -44,9 +53,7 @@ class SettingsPremiumSection extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        isActive
-                            ? context.l10n.subscriptionLifetime
-                            : context.l10n.allFeaturesFreeInBeta,
+                        subtitle,
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.colors.primary,
                           fontWeight: FontWeight.w600,
@@ -64,14 +71,20 @@ class SettingsPremiumSection extends ConsumerWidget {
               context,
               title: isActive
                   ? context.l10n.manageSubscription
+                  : isRevenueCatConfigured
+                  ? context.l10n.unlockGymbroPremium
                   : context.l10n.betaEarlyAdopterTitle,
               subtitle: isActive
-                  ? context.l10n.subscriptionLifetime
+                  ? subtitle
+                  : isRevenueCatConfigured
+                  ? context.l10n.getUnlimitedAccess
                   : context.l10n.betaEarlyAdopterMessage,
               leading: SemanticIcon(
                 icon: isActive ? AppIcons.complete : AppIcons.unlock,
                 semanticLabel: isActive
                     ? context.l10n.manageSubscription
+                    : isRevenueCatConfigured
+                    ? context.l10n.unlockGymbroPremium
                     : context.l10n.betaEarlyAdopterTitle,
               ),
               onTap: () => context.pushNamed('premium'),
@@ -94,5 +107,16 @@ class SettingsPremiumSection extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _buildStatusLabel(BuildContext context, SubscriptionStatus status) {
+    if (status.isLifetime) return context.l10n.subscriptionLifetime;
+    if (status.expirationDate != null) {
+      final expiration = status.expirationDate!;
+      return context.l10n.subscriptionActiveUntil(
+        '${expiration.day}/${expiration.month}/${expiration.year}',
+      );
+    }
+    return context.l10n.premiumMembership;
   }
 }

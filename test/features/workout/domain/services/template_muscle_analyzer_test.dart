@@ -121,7 +121,9 @@ void main() {
 
     group('category-based fallback distribution', () {
       test('chest exercise maps to PETT', () {
-        final exercises = [_makeExercise('Custom Chest', ExerciseCategory.chest)];
+        final exercises = [
+          _makeExercise('Custom Chest', ExerciseCategory.chest),
+        ];
 
         final result = TemplateMuscleAnalyzer.analyze(exercises);
 
@@ -200,9 +202,7 @@ void main() {
       });
 
       test('other category produces empty muscle percentages', () {
-        final exercises = [
-          _makeExercise('Xyzzy Zzzz', ExerciseCategory.other),
-        ];
+        final exercises = [_makeExercise('Xyzzy Zzzz', ExerciseCategory.other)];
 
         final result = TemplateMuscleAnalyzer.analyze(exercises);
 
@@ -278,7 +278,11 @@ void main() {
 
       test('primary only muscles get 100% of volume', () {
         final exercises = [
-          _makeExercise('Isolation Exercise', ExerciseCategory.other, setCount: 4),
+          _makeExercise(
+            'Isolation Exercise',
+            ExerciseCategory.other,
+            setCount: 4,
+          ),
         ];
         final muscleMap = {
           'Isolation Exercise': const ExerciseMuscleData(
@@ -448,10 +452,7 @@ void main() {
           _makeExercise('Plank', ExerciseCategory.abs, setCount: 3),
         ];
         final muscleMap = {
-          'Plank': const ExerciseMuscleData(
-            primary: ['CORE'],
-            secondary: [],
-          ),
+          'Plank': const ExerciseMuscleData(primary: ['CORE'], secondary: []),
         };
 
         final result = TemplateMuscleAnalyzer.analyze(
@@ -475,10 +476,7 @@ void main() {
             primary: ['PETT'],
             secondary: [],
           ),
-          'Squat': const ExerciseMuscleData(
-            primary: ['QUAD'],
-            secondary: [],
-          ),
+          'Squat': const ExerciseMuscleData(primary: ['QUAD'], secondary: []),
         };
 
         final result = TemplateMuscleAnalyzer.analyze(
@@ -493,7 +491,11 @@ void main() {
       test('upper-heavy gives warning', () {
         final exercises = [
           _makeExercise('Bench Press', ExerciseCategory.chest, setCount: 5),
-          _makeExercise('Shoulder Press', ExerciseCategory.shoulders, setCount: 5),
+          _makeExercise(
+            'Shoulder Press',
+            ExerciseCategory.shoulders,
+            setCount: 5,
+          ),
           _makeExercise('Squat', ExerciseCategory.legs, setCount: 1),
         ];
         final muscleMap = {
@@ -505,10 +507,7 @@ void main() {
             primary: ['DELT_ANT'],
             secondary: [],
           ),
-          'Squat': const ExerciseMuscleData(
-            primary: ['QUAD'],
-            secondary: [],
-          ),
+          'Squat': const ExerciseMuscleData(primary: ['QUAD'], secondary: []),
         };
 
         final result = TemplateMuscleAnalyzer.analyze(
@@ -605,17 +604,6 @@ void main() {
           muscleMap: muscleMap,
         );
 
-        if (result.coveredMuscles.length > 1) {
-          for (int i = 0; i < result.coveredMuscles.length - 1; i++) {
-            final current =
-                result.musclePercentages[result.coveredMuscles[i]] ?? 0;
-            final next =
-                result.musclePercentages[result.coveredMuscles[i + 1]] ?? 0;
-            // Note: musclePercentages uses heatmap keys, coveredMuscles uses canonical
-            // So we just verify the list is not empty
-          }
-        }
-
         expect(result.coveredMuscles, isNotEmpty);
       });
     });
@@ -631,10 +619,7 @@ void main() {
             primary: ['PETT'],
             secondary: [],
           ),
-          'Squat': const ExerciseMuscleData(
-            primary: ['QUAD'],
-            secondary: [],
-          ),
+          'Squat': const ExerciseMuscleData(primary: ['QUAD'], secondary: []),
         };
 
         final result = TemplateMuscleAnalyzer.analyze(
@@ -659,10 +644,7 @@ void main() {
             primary: ['PETT'],
             secondary: [],
           ),
-          'Squat': const ExerciseMuscleData(
-            primary: ['QUAD'],
-            secondary: [],
-          ),
+          'Squat': const ExerciseMuscleData(primary: ['QUAD'], secondary: []),
         };
 
         final result = TemplateMuscleAnalyzer.analyze(
@@ -764,7 +746,11 @@ void main() {
           _makeExercise('Bench Press', ExerciseCategory.chest, setCount: 3),
           _makeExercise('Barbell Row', ExerciseCategory.back, setCount: 3),
           _makeExercise('Squat', ExerciseCategory.legs, setCount: 3),
-          _makeExercise('Overhead Press', ExerciseCategory.shoulders, setCount: 3),
+          _makeExercise(
+            'Overhead Press',
+            ExerciseCategory.shoulders,
+            setCount: 3,
+          ),
         ];
         final muscleMap = {
           'Bench Press': const ExerciseMuscleData(

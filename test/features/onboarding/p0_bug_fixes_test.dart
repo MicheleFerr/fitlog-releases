@@ -4,73 +4,64 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_t
 void main() {
   group('P0 Bug Fixes - Onboarding System', () {
     group('P0-1: Session Step Reset on App Resume', () {
-      test(
-        'resetSessionSteps can be called without errors',
-        () {
-          // This test verifies the method exists and is callable
-          // Full integration test would require ProviderContainer + Riverpod setup
-          expect(
-            () => 'resetSessionSteps implemented',
-            returnsNormally,
-          );
-        },
-      );
+      test('resetSessionSteps can be called without errors', () {
+        // This test verifies the method exists and is callable
+        // Full integration test would require ProviderContainer + Riverpod setup
+        expect(() => 'resetSessionSteps implemented', returnsNormally);
+      });
     });
 
     group('P0-2: Tour Pause/Resume for Modal Navigation', () {
-      test(
-        'WorkoutTutorialState includes isPaused flag',
-        () {
-          const state = WorkoutTutorialState(
-            isActive: true,
-            currentStep: WorkoutTutorialStep.addExercise,
-            hasCompletedTutorial: false,
-            hasStartedTutorial: true,
-            isPaused: false,
-          );
+      test('WorkoutTutorialState includes isPaused flag', () {
+        const state = WorkoutTutorialState(
+          isActive: true,
+          currentStep: WorkoutTutorialStep.addExercise,
+          hasCompletedTutorial: false,
+          hasStartedTutorial: true,
+          isPaused: false,
+        );
 
-          expect(state.isPaused, isFalse);
-          expect(state.isActive, isTrue);
-        },
-      );
+        expect(state.isPaused, isFalse);
+        expect(state.isActive, isTrue);
+      });
 
-      test(
-        'WorkoutTutorialState copyWith can set isPaused',
-        () {
-          const initialState = WorkoutTutorialState(
-            isActive: true,
-            currentStep: WorkoutTutorialStep.addExercise,
-            hasCompletedTutorial: false,
-            hasStartedTutorial: true,
-            isPaused: false,
-          );
+      test('WorkoutTutorialState copyWith can set isPaused', () {
+        const initialState = WorkoutTutorialState(
+          isActive: true,
+          currentStep: WorkoutTutorialStep.addExercise,
+          hasCompletedTutorial: false,
+          hasStartedTutorial: true,
+          isPaused: false,
+        );
 
-          final pausedState = initialState.copyWith(isPaused: true);
+        final pausedState = initialState.copyWith(isPaused: true);
 
-          expect(pausedState.isPaused, isTrue);
-          expect(pausedState.isActive, isTrue);
-          expect(pausedState.currentStep, equals(WorkoutTutorialStep.addExercise));
-        },
-      );
+        expect(pausedState.isPaused, isTrue);
+        expect(pausedState.isActive, isTrue);
+        expect(
+          pausedState.currentStep,
+          equals(WorkoutTutorialStep.addExercise),
+        );
+      });
 
-      test(
-        'WorkoutTutorialState preserves step when paused',
-        () {
-          const state = WorkoutTutorialState(
-            isActive: true,
-            currentStep: WorkoutTutorialStep.tapSet,
-            hasCompletedTutorial: false,
-            hasStartedTutorial: true,
-            isPaused: true,
-          );
+      test('WorkoutTutorialState preserves step when paused', () {
+        const state = WorkoutTutorialState(
+          isActive: true,
+          currentStep: WorkoutTutorialStep.editSetGestures,
+          hasCompletedTutorial: false,
+          hasStartedTutorial: true,
+          isPaused: true,
+        );
 
-          final resumedState = state.copyWith(isPaused: false);
+        final resumedState = state.copyWith(isPaused: false);
 
-          // Step should be preserved after resume
-          expect(resumedState.currentStep, equals(WorkoutTutorialStep.tapSet));
-          expect(resumedState.isPaused, isFalse);
-        },
-      );
+        // Step should be preserved after resume
+        expect(
+          resumedState.currentStep,
+          equals(WorkoutTutorialStep.editSetGestures),
+        );
+        expect(resumedState.isPaused, isFalse);
+      });
     });
 
     group('P0-3: Weight Input Validation Regex', () {
@@ -134,55 +125,52 @@ void main() {
     });
 
     group('P0 Bug Fixes - Integration Scenarios', () {
-      test(
-        'Scenario: Tour pause/resume during exercise selection',
-        () {
-          // Scenario: User is on addExercise step
-          const startState = WorkoutTutorialState(
-            isActive: true,
-            currentStep: WorkoutTutorialStep.addExercise,
-            hasCompletedTutorial: false,
-            hasStartedTutorial: true,
-            isPaused: false,
-          );
+      test('Scenario: Tour pause/resume during exercise selection', () {
+        // Scenario: User is on addExercise step
+        const startState = WorkoutTutorialState(
+          isActive: true,
+          currentStep: WorkoutTutorialStep.addExercise,
+          hasCompletedTutorial: false,
+          hasStartedTutorial: true,
+          isPaused: false,
+        );
 
-          // User taps FAB - modal opens, tutorial pauses
-          final pausedState = startState.copyWith(isPaused: true);
-          expect(pausedState.isPaused, isTrue);
-          expect(pausedState.isActive, isTrue);
+        // User taps FAB - modal opens, tutorial pauses
+        final pausedState = startState.copyWith(isPaused: true);
+        expect(pausedState.isPaused, isTrue);
+        expect(pausedState.isActive, isTrue);
 
-          // User selects exercise and modal closes - tutorial resumes
-          final resumedState = pausedState.copyWith(isPaused: false);
-          expect(resumedState.isPaused, isFalse);
-          expect(resumedState.isActive, isTrue);
-          expect(resumedState.currentStep, equals(WorkoutTutorialStep.addExercise));
-        },
-      );
+        // User selects exercise and modal closes - tutorial resumes
+        final resumedState = pausedState.copyWith(isPaused: false);
+        expect(resumedState.isPaused, isFalse);
+        expect(resumedState.isActive, isTrue);
+        expect(
+          resumedState.currentStep,
+          equals(WorkoutTutorialStep.addExercise),
+        );
+      });
 
-      test(
-        'Scenario: Weight input with different user inputs',
-        () {
-          final regex = RegExp(r'^\d+\.?\d*');
+      test('Scenario: Weight input with different user inputs', () {
+        final regex = RegExp(r'^\d+\.?\d*');
 
-          // User types "7"
-          expect(regex.hasMatch('7'), isTrue);
+        // User types "7"
+        expect(regex.hasMatch('7'), isTrue);
 
-          // User types "75"
-          expect(regex.hasMatch('75'), isTrue);
+        // User types "75"
+        expect(regex.hasMatch('75'), isTrue);
 
-          // User types "75."
-          expect(regex.hasMatch('75.'), isTrue);
+        // User types "75."
+        expect(regex.hasMatch('75.'), isTrue);
 
-          // User types "75.5"
-          expect(regex.hasMatch('75.5'), isTrue);
+        // User types "75.5"
+        expect(regex.hasMatch('75.5'), isTrue);
 
-          // If user types something like ".5" (bad leading dot)
-          expect(regex.hasMatch('.5'), isFalse);
+        // If user types something like ".5" (bad leading dot)
+        expect(regex.hasMatch('.5'), isFalse);
 
-          // The FilteringTextInputFormatter will prevent this from being entered
-          // because the regex doesn't match
-        },
-      );
+        // The FilteringTextInputFormatter will prevent this from being entered
+        // because the regex doesn't match
+      });
     });
   });
 }

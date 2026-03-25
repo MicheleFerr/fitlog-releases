@@ -75,6 +75,10 @@ abstract class ExerciseHistory with _$ExerciseHistory {
         .reduce((a, b) => a > b ? a : b);
   }
 
+  DateTime _dateOnly(DateTime dateTime) {
+    return DateTime(dateTime.year, dateTime.month, dateTime.day);
+  }
+
   /// Weekly volume progression (% change: this week vs last week)
   ///
   /// **Formula**: ((thisWeekVolume - lastWeekVolume) / lastWeekVolume) × 100
@@ -88,18 +92,27 @@ abstract class ExerciseHistory with _$ExerciseHistory {
   /// - No sessions in last 2 weeks
   /// - Previous week had 0 volume (no baseline)
   double get weeklyVolumeProgression {
-    final now = DateTime.now();
-    final lastWeek = now.subtract(const Duration(days: 7));
-    final twoWeeksAgo = now.subtract(const Duration(days: 14));
+    final today = _dateOnly(DateTime.now());
+    final thisWeekStart = today.subtract(const Duration(days: 6));
+    final previousWeekStart = today.subtract(const Duration(days: 13));
+    final previousWeekEnd = today.subtract(const Duration(days: 7));
 
     // Calculate this week's volume
     final thisWeekVolume = sessions
-        .where((s) => s.date.isAfter(lastWeek))
+        .where((s) {
+          final sessionDate = _dateOnly(s.date);
+          return !sessionDate.isBefore(thisWeekStart) &&
+              !sessionDate.isAfter(today);
+        })
         .fold<double>(0, (sum, s) => sum + s.totalVolume);
 
     // Calculate last week's volume
     final previousWeekVolume = sessions
-        .where((s) => s.date.isAfter(twoWeeksAgo) && s.date.isBefore(lastWeek))
+        .where((s) {
+          final sessionDate = _dateOnly(s.date);
+          return !sessionDate.isBefore(previousWeekStart) &&
+              !sessionDate.isAfter(previousWeekEnd);
+        })
         .fold<double>(0, (sum, s) => sum + s.totalVolume);
 
     // No baseline → can't calculate progression
@@ -122,10 +135,14 @@ abstract class ExerciseHistory with _$ExerciseHistory {
   ///
   /// Returns sessions where: start <= session.date <= end
   List<ExerciseSession> getSessionsByTimeframe(DateTime start, DateTime end) {
-    return sessions
-        .where((s) => s.date.isAfter(start) && s.date.isBefore(end))
-        .toList()
-      ..sort((a, b) => a.date.compareTo(b.date)); // Sort by date ascending
+    final startDate = _dateOnly(start);
+    final endDate = _dateOnly(end);
+    return sessions.where((s) {
+      final sessionDate = _dateOnly(s.date);
+      return !sessionDate.isBefore(startDate) && !sessionDate.isAfter(endDate);
+    }).toList()..sort(
+      (a, b) => a.date.compareTo(b.date),
+    ); // Sort by date ascending
   }
 
   /// Get all sessions sorted by date (newest first)

@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart'
     as wt;
@@ -15,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_save_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_completion_celebration.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/achievement.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
@@ -24,6 +28,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/achie
 import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
 import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 part 'workout_screen_controller.freezed.dart';
@@ -58,6 +63,8 @@ abstract class WorkoutScreenState with _$WorkoutScreenState {
 /// It separates business logic from UI, making the screen more testable
 /// and maintainable.
 class WorkoutScreenController extends Notifier<WorkoutScreenState> {
+  final Set<String> _guidedTestTrackedSteps = <String>{};
+
   @override
   WorkoutScreenState build() => const WorkoutScreenState();
 
@@ -72,6 +79,8 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
     wt.WorkoutTemplate? template,
     String? sessionId,
   }) async {
+    _guidedTestTrackedSteps.clear();
+
     if (kDebugMode) {
       debugPrint(
         '🏋️ [WorkoutScreenController] Starting workout${template != null ? ' from template: ${template.name}' : ' (empty)'}',
@@ -82,26 +91,16 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
 
       if (template != null) {
-        // Start from template
-        // Convert template exercises to workout exercises
-        final exercises = template.exercises
-            .map((et) => et.toWorkoutExercise())
-            .toList();
-
-        await workoutNotifier.createWorkoutFromRoutine(
-          routineName: template.name,
-          exercises: exercises,
+        await workoutNotifier.startFromTemplate(
+          template,
           sessionId:
               sessionId ?? DateTime.now().millisecondsSinceEpoch.toString(),
-          templateId: template.id,
         );
       } else {
-        // Start empty workout
-        workoutNotifier.createWorkout('Quick Workout');
+        // Start free workout
+        workoutNotifier.createWorkout(context.l10n.startNow);
+        await workoutNotifier.startWorkout();
       }
-
-      // Activate workout
-      unawaited(workoutNotifier.startWorkout());
 
       // Clear template selection
       state = state.copyWith(selectedTemplateId: null);
@@ -134,6 +133,19 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
     }
 
     try {
+      final workoutAtStart = ref.read(currentWorkoutProvider);
+      final choiceService = ref.read(onboardingChoiceServiceProvider);
+      final isGuidedTestWorkout =
+          workoutAtStart != null &&
+          choiceService?.isGuidedActiveTestWorkout(workoutAtStart.id) == true;
+
+      if (isGuidedTestWorkout) {
+        await _trackGuidedTestStepIfNeeded('close_test_session');
+        if (!context.mounted) return;
+        await _completeGuidedTestFlow(context: context);
+        return;
+      }
+
       // Track first workout completion for onboarding
       final onboardingState = ref.read(onboardingProvider);
       if (onboardingState.isInGuidedFirstWorkout) {
@@ -213,7 +225,18 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
       // 💾 CRITICAL: Save workout FIRST - everything else is optional
       if (context.mounted) {
-        ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
+        try {
+          await ref
+              .read(currentWorkoutProvider.notifier)
+              .completeWorkout(context);
+        } catch (saveError) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [WorkoutScreenController] Workout save failed, staying on screen: $saveError',
+            );
+          }
+          return;
+        }
       }
 
       // Re-read workout before optional post-save operations
@@ -323,8 +346,8 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       }
 
       // Show interstitial ad after workout completion (only for non-premium users)
-      final isPremium = ref.read(isPremiumUserProvider);
-      if (!isPremium && context.mounted) {
+      final shouldShowAds = ref.read(shouldShowAdsProvider);
+      if (shouldShowAds && context.mounted) {
         await Future.delayed(const Duration(milliseconds: 500));
 
         unawaited(
@@ -377,6 +400,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
     try {
       ref.read(currentWorkoutProvider.notifier).clearWorkout();
+      _guidedTestTrackedSteps.clear();
 
       if (context.mounted) {
         context.goNamed('home');
@@ -440,6 +464,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
     try {
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
+      unawaited(_trackGuidedTestStepIfNeeded('add_exercise'));
 
       if (kDebugMode) {
         debugPrint('✅ [WorkoutScreenController] Exercise added');
@@ -463,6 +488,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
     try {
       ref.read(currentWorkoutProvider.notifier).removeExercise(exerciseId);
+      unawaited(_trackGuidedTestStepIfNeeded('delete_exercise'));
 
       if (kDebugMode) {
         debugPrint('✅ [WorkoutScreenController] Exercise removed');
@@ -487,22 +513,10 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
     }
 
     try {
-      final currentWorkout = ref.read(currentWorkoutProvider);
-      if (currentWorkout == null) return;
-
-      final exercises = List<Exercise>.from(currentWorkout.exercises);
-
-      // Adjust indices for drag-and-drop behavior
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-
-      final exercise = exercises.removeAt(oldIndex);
-      exercises.insert(newIndex, exercise);
-
-      // Update workout with reordered exercises
-      final updatedWorkout = currentWorkout.copyWith(exercises: exercises);
-      ref.read(currentWorkoutProvider.notifier).state = updatedWorkout;
+      ref
+          .read(currentWorkoutProvider.notifier)
+          .reorderExercises(oldIndex, newIndex);
+      unawaited(_trackGuidedTestStepIfNeeded('reorder_exercise'));
 
       if (kDebugMode) {
         debugPrint('✅ [WorkoutScreenController] Exercises reordered');
@@ -541,6 +555,11 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   /// Toggle welcome view visibility
   void toggleWelcome(bool show) {
     state = state.copyWith(showWelcome: show);
+  }
+
+  /// Track guided test "edit set/exercise" step from workout UI callbacks.
+  void trackGuidedSetEdited() {
+    unawaited(_trackGuidedTestStepIfNeeded('edit_set'));
   }
 
   /// Toggle change workout banner visibility
@@ -594,8 +613,141 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
     _interstitialAdService.preloadWorkoutCompleteAd();
   }
 
+  Future<void> _completeGuidedTestFlow({required BuildContext context}) async {
+    final analytics = ref.read(analyticsServiceProvider);
+
+    await ref.read(currentWorkoutProvider.notifier).completeGuidedTestWorkout();
+    _guidedTestTrackedSteps.clear();
+
+    if (!context.mounted) return;
+
+    final action = await showModalBottomSheet<_GuidedPostTestAction>(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Test completato',
+                style: Theme.of(sheetContext).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Hai imparato il flusso base. Vuoi iniziare subito un workout reale?',
+                style: Theme.of(sheetContext).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => Navigator.of(
+                    sheetContext,
+                  ).pop(_GuidedPostTestAction.startRealNow),
+                  child: const Text('Inizia workout reale ora'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(
+                    sheetContext,
+                  ).pop(_GuidedPostTestAction.later),
+                  child: const Text('Più tardi'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final choiceService = ref.read(onboardingChoiceServiceProvider);
+    if (action == _GuidedPostTestAction.startRealNow) {
+      await analytics.logEvent(
+        name: AnalyticsEvents.guidedSoftGateCta,
+        parameters: {
+          AnalyticsParameters.source: 'post_test',
+          AnalyticsParameters.action: 'start_real_now',
+        },
+      );
+      if (!context.mounted) return;
+      await _startGuidedRealWorkout(context: context, source: 'post_test');
+      return;
+    }
+
+    await analytics.logEvent(
+      name: AnalyticsEvents.guidedSoftGateCta,
+      parameters: {
+        AnalyticsParameters.source: 'post_test',
+        AnalyticsParameters.action: 'later',
+      },
+    );
+    await choiceService?.deferGuidedRealReminder();
+
+    if (context.mounted) {
+      context.goNamed('home');
+    }
+  }
+
+  Future<void> _startGuidedRealWorkout({
+    required BuildContext context,
+    required String source,
+  }) async {
+    final choiceService = ref.read(onboardingChoiceServiceProvider);
+    final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
+    final analytics = ref.read(analyticsServiceProvider);
+
+    await choiceService?.startGuidedRealMode();
+
+    workoutNotifier.createWorkout('Quick Workout');
+    final workout = ref.read(currentWorkoutProvider);
+    await workoutNotifier.startWorkout();
+
+    await analytics.logEvent(
+      name: AnalyticsEvents.guidedRealStarted,
+      parameters: {
+        AnalyticsParameters.source: source,
+        if (workout != null) AnalyticsParameters.workoutId: workout.id,
+      },
+    );
+
+    if (context.mounted) {
+      context.go('/workout');
+    }
+  }
+
+  Future<void> _trackGuidedTestStepIfNeeded(String stepId) async {
+    if (_guidedTestTrackedSteps.contains(stepId)) return;
+    final workout = ref.read(currentWorkoutProvider);
+    if (workout == null) return;
+
+    final choiceService = ref.read(onboardingChoiceServiceProvider);
+    if (choiceService == null ||
+        !choiceService.isGuidedActiveTestWorkout(workout.id)) {
+      return;
+    }
+
+    _guidedTestTrackedSteps.add(stepId);
+    final analytics = ref.read(analyticsServiceProvider);
+    await analytics.logEvent(
+      name: AnalyticsEvents.guidedTestStepCompleted,
+      parameters: {
+        AnalyticsParameters.workoutId: workout.id,
+        AnalyticsParameters.stepId: stepId,
+      },
+    );
+  }
+
   // Note: Notifier doesn't have dispose() - cleanup handled automatically
 }
+
+enum _GuidedPostTestAction { startRealNow, later }
 
 /// Provider for WorkoutScreenController
 final workoutScreenControllerProvider =

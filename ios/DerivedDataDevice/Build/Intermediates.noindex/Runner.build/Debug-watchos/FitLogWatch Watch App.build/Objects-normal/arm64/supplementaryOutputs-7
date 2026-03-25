@@ -1,0 +1,23 @@
+{
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Views/EditRepsSheetView.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EditRepsSheetView.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EditRepsSheetView.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EditRepsSheetView.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EditRepsSheetView.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EditRepsSheetView.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Views/EffortPickerView.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EffortPickerView.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EffortPickerView.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EffortPickerView.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EffortPickerView.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/EffortPickerView.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/FitLogWatch Watch App/Views/ExerciseControlView.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ExerciseControlView.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ExerciseControlView.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ExerciseControlView.dia",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ExerciseControlView.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-watchos/FitLogWatch Watch App.build/Objects-normal/arm64/ExerciseControlView.swiftdeps"
+  }
+}

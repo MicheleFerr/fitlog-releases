@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: test/widget
 /// 🎯 Feature: auth migration simple
 /// 🔧 Type: widget test
 /// 🌍 Localization: ✅ AppLocalizations tested
 /// 🎨 Theme: ✅ Both light and dark themes tested
 /// 📱 Platform: Universal
-/// 
+///
 /// SIMPLIFIED MIGRATION TESTS for Settings Screen
 /// Tests UI behavior with new UserProfile system without complex dependencies
 library;
@@ -17,10 +17,7 @@ import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class UserProfileFactory {
-  static UserProfile createFreeUser({
-    String? email,
-    String? displayName,
-  }) {
+  static UserProfile createFreeUser({String? email, String? displayName}) {
     return UserProfile(
       uid: 'test-free-user',
       email: email ?? 'free@gymbro.app',
@@ -34,10 +31,7 @@ class UserProfileFactory {
     );
   }
 
-  static UserProfile createPremiumUser({
-    String? email,
-    String? displayName,
-  }) {
+  static UserProfile createPremiumUser({String? email, String? displayName}) {
     return UserProfile(
       uid: 'test-premium-user',
       email: email ?? 'premium@gymbro.app',
@@ -54,12 +48,8 @@ class UserProfileFactory {
 
 void main() {
   group('Settings Screen Migration Simple Tests', () {
-
     /// Creates test widget with localization
-    Widget createTestWidget({
-      String locale = 'en',
-      Widget? child,
-    }) {
+    Widget createTestWidget({String locale = 'en', Widget? child}) {
       return MaterialApp(
         locale: Locale(locale),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -75,23 +65,25 @@ void main() {
           email: 'free@gymbro.app',
           displayName: 'Free User',
         );
-        
+
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Card(
-              child: Column(
-                children: [
-                  const Text('Account'),
-                  Text(freeUser.displayName),
-                  Text(freeUser.email),
-                  if (freeUser.accountTier == AccountTier.free)
-                    const Text('FREE'),
-                ],
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Card(
+                child: Column(
+                  children: [
+                    const Text('Account'),
+                    Text(freeUser.displayName),
+                    Text(freeUser.email),
+                    if (freeUser.accountTier == AccountTier.free)
+                      const Text('FREE'),
+                  ],
+                ),
               ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: User info displays correctly
@@ -101,7 +93,9 @@ void main() {
         expect(find.text('FREE'), findsOneWidget);
       });
 
-      testWidgets('displays premium user profile with premium badge', (tester) async {
+      testWidgets('displays premium user profile with premium badge', (
+        tester,
+      ) async {
         // Arrange
         final premiumUser = UserProfileFactory.createPremiumUser(
           email: 'premium@gymbro.app',
@@ -109,23 +103,25 @@ void main() {
         );
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Card(
-              child: Column(
-                children: [
-                  const Text('Account'),
-                  Text(premiumUser.displayName),
-                  Text(premiumUser.email),
-                  if (premiumUser.accountTier == AccountTier.premium) ...[
-                    const Text('PREMIUM'),
-                    const Icon(Icons.cloud_sync),
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Card(
+                child: Column(
+                  children: [
+                    const Text('Account'),
+                    Text(premiumUser.displayName),
+                    Text(premiumUser.email),
+                    if (premiumUser.accountTier == AccountTier.premium) ...[
+                      const Text('PREMIUM'),
+                      const Icon(Icons.cloud_sync),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Premium user info displays
@@ -141,25 +137,29 @@ void main() {
           email: 'michele.cozzolino93@gmail.com', // Admin email
           displayName: 'Michele (Admin)',
         );
-        
-        final isAdmin = adminUser.email.contains('michele.cozzolino93@gmail.com');
+
+        final isAdmin = adminUser.email.contains(
+          'michele.cozzolino93@gmail.com',
+        );
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Card(
-              child: Column(
-                children: [
-                  Text(adminUser.displayName),
-                  if (isAdmin) ...[
-                    const Text('ADMIN'),
-                    const Text('🔧 Admin Tools'),
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Card(
+                child: Column(
+                  children: [
+                    Text(adminUser.displayName),
+                    if (isAdmin) ...[
+                      const Text('ADMIN'),
+                      const Text('🔧 Admin Tools'),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Admin features visible
@@ -175,17 +175,19 @@ void main() {
         ).copyWith(photoURL: 'https://example.com/photo.jpg');
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Column(
-              children: [
-                // Test the logic without actually loading the image
-                Text('Has Photo: ${userWithPhoto.photoURL != null}'),
-                Text(userWithPhoto.displayName),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  // Test the logic without actually loading the image
+                  Text('Has Photo: ${userWithPhoto.photoURL != null}'),
+                  Text(userWithPhoto.displayName),
+                ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Photo URL logic works
@@ -197,21 +199,24 @@ void main() {
     group('User State Handling Components', () {
       testWidgets('shows loading state correctly', (tester) async {
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: const Scaffold(
-            body: Column(
-              children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(),
-                ),
-                Text('Loading'),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            child: const Scaffold(
+              body: Column(
+                children: [
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(),
+                  ),
+                  Text('Loading'),
+                ],
+              ),
             ),
           ),
-        ));
-        await tester.pump(); // Use pump instead of pumpAndSettle to avoid timeout
+        );
+        await tester
+            .pump(); // Use pump instead of pumpAndSettle to avoid timeout
 
         // Assert: Loading state displayed
         expect(find.text('Loading'), findsOneWidget);
@@ -220,11 +225,9 @@ void main() {
 
       testWidgets('shows unauthenticated state correctly', (tester) async {
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: const Scaffold(
-            body: Text('Not logged in'),
-          ),
-        ));
+        await tester.pumpWidget(
+          createTestWidget(child: const Scaffold(body: Text('Not logged in'))),
+        );
         await tester.pumpAndSettle();
 
         // Assert: Not logged in message
@@ -233,16 +236,15 @@ void main() {
 
       testWidgets('shows error state correctly', (tester) async {
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: const Scaffold(
-            body: Column(
-              children: [
-                Icon(Icons.error),
-                Text('Error loading user'),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            child: const Scaffold(
+              body: Column(
+                children: [Icon(Icons.error), Text('Error loading user')],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Error message displayed
@@ -254,19 +256,21 @@ void main() {
     group('Localization Testing', () {
       testWidgets('displays English text correctly', (tester) async {
         // Act
-        await tester.pumpWidget(createTestWidget(
-          locale: 'en',
-          child: Scaffold(
-            appBar: AppBar(title: const Text('Settings')),
-            body: const Column(
-              children: [
-                Text('Account'),
-                Text('Appearance'),
-                Text('Sign Out'),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            locale: 'en',
+            child: Scaffold(
+              appBar: AppBar(title: const Text('Settings')),
+              body: const Column(
+                children: [
+                  Text('Account'),
+                  Text('Appearance'),
+                  Text('Sign Out'),
+                ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: English text
@@ -278,19 +282,21 @@ void main() {
 
       testWidgets('displays Italian text correctly', (tester) async {
         // Act
-        await tester.pumpWidget(createTestWidget(
-          locale: 'it',
-          child: Scaffold(
-            appBar: AppBar(title: const Text('Impostazioni')),
-            body: const Column(
-              children: [
-                Text('Account'),
-                Text('Aspetto'),
-                Text('Disconnetti'),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            locale: 'it',
+            child: Scaffold(
+              appBar: AppBar(title: const Text('Impostazioni')),
+              body: const Column(
+                children: [
+                  Text('Account'),
+                  Text('Aspetto'),
+                  Text('Disconnetti'),
+                ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Italian text
@@ -304,15 +310,15 @@ void main() {
     group('Theme Testing', () {
       testWidgets('displays correctly in light theme', (tester) async {
         // Act
-        await tester.pumpWidget(MaterialApp(
-          theme: ThemeData.light(),
-          home: Scaffold(
-            appBar: AppBar(title: const Text('Settings')),
-            body: const Card(
-              child: Text('Content'),
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData.light(),
+            home: Scaffold(
+              appBar: AppBar(title: const Text('Settings')),
+              body: const Card(child: Text('Content')),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Light theme elements
@@ -324,15 +330,15 @@ void main() {
 
       testWidgets('displays correctly in dark theme', (tester) async {
         // Act
-        await tester.pumpWidget(MaterialApp(
-          theme: ThemeData.dark(),
-          home: Scaffold(
-            appBar: AppBar(title: const Text('Settings')),
-            body: const Card(
-              child: Text('Content'),
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData.dark(),
+            home: Scaffold(
+              appBar: AppBar(title: const Text('Settings')),
+              body: const Card(child: Text('Content')),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Dark theme elements
@@ -342,25 +348,29 @@ void main() {
     });
 
     group('Premium Features Visibility Logic', () {
-      testWidgets('free user should not have cloud sync features', (tester) async {
+      testWidgets('free user should not have cloud sync features', (
+        tester,
+      ) async {
         // Arrange
         final freeUser = UserProfileFactory.createFreeUser();
         final canSync = freeUser.accountTier == AccountTier.premium;
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Column(
-              children: [
-                Text(freeUser.displayName),
-                if (canSync) ...[
-                  const Text('Cloud Sync'),
-                  const Icon(Icons.cloud_sync),
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Text(freeUser.displayName),
+                  if (canSync) ...[
+                    const Text('Cloud Sync'),
+                    const Icon(Icons.cloud_sync),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Cloud sync section not visible
@@ -368,26 +378,30 @@ void main() {
         expect(find.byIcon(Icons.cloud_sync), findsNothing);
       });
 
-      testWidgets('premium user should have cloud sync features', (tester) async {
+      testWidgets('premium user should have cloud sync features', (
+        tester,
+      ) async {
         // Arrange
         final premiumUser = UserProfileFactory.createPremiumUser();
         final canSync = premiumUser.accountTier == AccountTier.premium;
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Column(
-              children: [
-                Text(premiumUser.displayName),
-                if (canSync) ...[
-                  const Text('Cloud Sync'),
-                  const Icon(Icons.cloud_sync),
-                  const Text('Sync from Cloud'),
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Text(premiumUser.displayName),
+                  if (canSync) ...[
+                    const Text('Cloud Sync'),
+                    const Icon(Icons.cloud_sync),
+                    const Text('Sync from Cloud'),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Cloud sync section visible
@@ -396,32 +410,40 @@ void main() {
         expect(find.text('Sync from Cloud'), findsOneWidget);
       });
 
-      testWidgets('template quota information is properly calculated', (tester) async {
+      testWidgets('template quota information is properly calculated', (
+        tester,
+      ) async {
         // Arrange: User with some template usage
         final user = UserProfileFactory.createFreeUser().copyWith(
           templateQuota: TemplateQuota.forTier(
             AccountTier.free,
-            usedPrivate: 5,
-            usedPublic: 1,
+            usedLibrary: 3,
+            distributedCount: 1,
           ),
         );
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Column(
-              children: [
-                Text('Templates: ${user.templateQuota.usedPrivateTemplates}/${user.templateQuota.maxPrivateTemplates}'),
-                Text('Public: ${user.templateQuota.usedPublicTemplates}/${user.templateQuota.maxPublicTemplates}'),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Text(
+                    'Templates: ${user.templateQuota.usedPrivateTemplates}/${user.templateQuota.maxPrivateTemplates}',
+                  ),
+                  Text(
+                    'Public: ${user.templateQuota.usedPublicTemplates}/${user.templateQuota.maxPublicTemplates}',
+                  ),
+                ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Template quota displays (check actual free tier limits)
-        expect(find.text('Templates: 5/10'), findsOneWidget); // Free tier limits
-        expect(find.text('Public: 1/2'), findsOneWidget); // Free tier public limit is 2
+        expect(find.text('Templates: 3/4'), findsOneWidget);
+        expect(find.text('Public: 1/999'), findsOneWidget);
       });
     });
 
@@ -441,16 +463,22 @@ void main() {
         );
 
         // Act
-        await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
-            body: Column(
-              children: [
-                Text(minimalUser.displayName),
-                Text(minimalUser.email.isNotEmpty ? minimalUser.email : 'No Email'),
-              ],
+        await tester.pumpWidget(
+          createTestWidget(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Text(minimalUser.displayName),
+                  Text(
+                    minimalUser.email.isNotEmpty
+                        ? minimalUser.email
+                        : 'No Email',
+                  ),
+                ],
+              ),
             ),
           ),
-        ));
+        );
         await tester.pumpAndSettle();
 
         // Assert: Should not crash, displays what's available

@@ -481,99 +481,105 @@ void main() {
     // -------------------------------------------------------------------
     // Auto-detection of countingMode
     // -------------------------------------------------------------------
-    group('_autoDetectCountingMode (via fromJson without countingMode field)', () {
-      ExerciseDefinition fromJsonAutoDetect({
-        required String nome,
-        String attrezzatura = '',
-        String tipoEsercizio = '',
-      }) {
-        return ExerciseDefinition.fromJson({
-          'nome': nome,
-          'focus': '',
-          'muscoliSecondari': '',
-          'difficolta': '',
-          'tipoEsercizio': tipoEsercizio,
-          'attrezzatura': attrezzatura,
-          'patternMovimento': '',
-          'rangeRipetizioni': '',
+    group(
+      '_autoDetectCountingMode (via fromJson without countingMode field)',
+      () {
+        ExerciseDefinition fromJsonAutoDetect({
+          required String nome,
+          String attrezzatura = '',
+          String tipoEsercizio = '',
+        }) {
+          return ExerciseDefinition.fromJson({
+            'nome': nome,
+            'focus': '',
+            'muscoliSecondari': '',
+            'difficolta': '',
+            'tipoEsercizio': tipoEsercizio,
+            'attrezzatura': attrezzatura,
+            'patternMovimento': '',
+            'rangeRipetizioni': '',
+          });
+        }
+
+        test('plank name → time mode', () {
+          final ex = fromJsonAutoDetect(nome: 'Plank');
+          expect(ex.countingMode, ExerciseCountingMode.time);
         });
-      }
 
-      test('plank name → time mode', () {
-        final ex = fromJsonAutoDetect(nome: 'Plank');
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('hold name → time mode', () {
+          final ex = fromJsonAutoDetect(nome: 'Bar Hold');
+          expect(ex.countingMode, ExerciseCountingMode.time);
+        });
 
-      test('hold name → time mode', () {
-        final ex = fromJsonAutoDetect(nome: 'Bar Hold');
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('hollow keyword → time mode', () {
+          final ex = fromJsonAutoDetect(nome: 'Hollow Body Hold');
+          expect(ex.countingMode, ExerciseCountingMode.time);
+        });
 
-      test('hollow keyword → time mode', () {
-        final ex = fromJsonAutoDetect(nome: 'Hollow Body Hold');
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('wall sit → time mode', () {
+          final ex = fromJsonAutoDetect(nome: 'Wall Sit');
+          expect(ex.countingMode, ExerciseCountingMode.time);
+        });
 
-      test('wall sit → time mode', () {
-        final ex = fromJsonAutoDetect(nome: 'Wall Sit');
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('dead hang → time mode', () {
+          final ex = fromJsonAutoDetect(nome: 'Dead Hang');
+          expect(ex.countingMode, ExerciseCountingMode.time);
+        });
 
-      test('dead hang → time mode', () {
-        final ex = fromJsonAutoDetect(nome: 'Dead Hang');
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('l-sit → time mode', () {
+          final ex = fromJsonAutoDetect(nome: 'L-Sit');
+          expect(ex.countingMode, ExerciseCountingMode.time);
+        });
 
-      test('l-sit → time mode', () {
-        final ex = fromJsonAutoDetect(nome: 'L-Sit');
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('stretching tipo → time mode', () {
+          final ex = fromJsonAutoDetect(
+            nome: 'Quadriceps Stretch',
+            tipoEsercizio: 'Stretching',
+          );
+          expect(ex.countingMode, ExerciseCountingMode.time);
+        });
 
-      test('stretching tipo → time mode', () {
-        final ex = fromJsonAutoDetect(
-          nome: 'Quadriceps Stretch',
-          tipoEsercizio: 'Stretching',
-        );
-        expect(ex.countingMode, ExerciseCountingMode.time);
-      });
+        test('corpo libero equipment → reps mode', () {
+          final ex = fromJsonAutoDetect(
+            nome: 'Push Up',
+            attrezzatura: 'Corpo Libero',
+          );
+          expect(ex.countingMode, ExerciseCountingMode.reps);
+        });
 
-      test('corpo libero equipment → reps mode', () {
-        final ex = fromJsonAutoDetect(
-          nome: 'Push Up',
-          attrezzatura: 'Corpo Libero',
-        );
-        expect(ex.countingMode, ExerciseCountingMode.reps);
-      });
+        test('bodyweight equipment → reps mode', () {
+          final ex = fromJsonAutoDetect(
+            nome: 'Pull Up',
+            attrezzatura: 'Bodyweight',
+          );
+          expect(ex.countingMode, ExerciseCountingMode.reps);
+        });
 
-      test('bodyweight equipment → reps mode', () {
-        final ex = fromJsonAutoDetect(
-          nome: 'Pull Up',
-          attrezzatura: 'Bodyweight',
-        );
-        expect(ex.countingMode, ExerciseCountingMode.reps);
-      });
+        test('nessuno equipment → reps mode', () {
+          final ex = fromJsonAutoDetect(
+            nome: 'Air Squat',
+            attrezzatura: 'Nessuno',
+          );
+          expect(ex.countingMode, ExerciseCountingMode.reps);
+        });
 
-      test('nessuno equipment → reps mode', () {
-        final ex = fromJsonAutoDetect(
-          nome: 'Air Squat',
-          attrezzatura: 'Nessuno',
-        );
-        expect(ex.countingMode, ExerciseCountingMode.reps);
-      });
+        test('bilanciere equipment → weighted mode (default)', () {
+          final ex = fromJsonAutoDetect(
+            nome: 'Squat',
+            attrezzatura: 'Bilanciere',
+          );
+          expect(ex.countingMode, ExerciseCountingMode.weighted);
+        });
 
-      test('bilanciere equipment → weighted mode (default)', () {
-        final ex = fromJsonAutoDetect(
-          nome: 'Squat',
-          attrezzatura: 'Bilanciere',
-        );
-        expect(ex.countingMode, ExerciseCountingMode.weighted);
-      });
-
-      test('unknown equipment defaults to weighted', () {
-        final ex = fromJsonAutoDetect(nome: 'Cable Fly', attrezzatura: 'Cavi');
-        expect(ex.countingMode, ExerciseCountingMode.weighted);
-      });
-    });
+        test('unknown equipment defaults to weighted', () {
+          final ex = fromJsonAutoDetect(
+            nome: 'Cable Fly',
+            attrezzatura: 'Cavi',
+          );
+          expect(ex.countingMode, ExerciseCountingMode.weighted);
+        });
+      },
+    );
 
     // -------------------------------------------------------------------
     // toJson
@@ -665,17 +671,17 @@ void main() {
     // -------------------------------------------------------------------
     group('parseCommaSeparated', () {
       test('parses comma-separated string', () {
-        expect(
-          ExerciseDefinition.parseCommaSeparated('QUAD, GLUT'),
-          ['QUAD', 'GLUT'],
-        );
+        expect(ExerciseDefinition.parseCommaSeparated('QUAD, GLUT'), [
+          'QUAD',
+          'GLUT',
+        ]);
       });
 
       test('parses list directly', () {
-        expect(
-          ExerciseDefinition.parseCommaSeparated(['PETT', 'TRIC']),
-          ['PETT', 'TRIC'],
-        );
+        expect(ExerciseDefinition.parseCommaSeparated(['PETT', 'TRIC']), [
+          'PETT',
+          'TRIC',
+        ]);
       });
 
       test('returns empty list for null', () {
@@ -1125,7 +1131,9 @@ void main() {
       });
 
       test('all keys are unique', () {
-        final keys = HealthDataType.values.map((t) => t.displayNameKey).toList();
+        final keys = HealthDataType.values
+            .map((t) => t.displayNameKey)
+            .toList();
         final uniqueKeys = keys.toSet();
         expect(keys.length, uniqueKeys.length);
       });
@@ -1136,13 +1144,14 @@ void main() {
   // PermissionState
   // =========================================================================
   group('PermissionState', () {
-    test('has 4 values', () {
-      expect(PermissionState.values.length, 4);
+    test('has 5 values', () {
+      expect(PermissionState.values.length, 5);
     });
 
     test('contains all expected states', () {
       expect(PermissionState.values, contains(PermissionState.notDetermined));
       expect(PermissionState.values, contains(PermissionState.authorized));
+      expect(PermissionState.values, contains(PermissionState.unverified));
       expect(PermissionState.values, contains(PermissionState.denied));
       expect(
         PermissionState.values,
@@ -1158,13 +1167,13 @@ void main() {
     group('construction', () {
       test('creates entity with permission map', () {
         const status = HealthPermissionStatus(
-          permissions: {
-            HealthDataType.workout: PermissionState.authorized,
-          },
+          permissions: {HealthDataType.workout: PermissionState.authorized},
         );
 
-        expect(status.permissions[HealthDataType.workout],
-            PermissionState.authorized);
+        expect(
+          status.permissions[HealthDataType.workout],
+          PermissionState.authorized,
+        );
       });
 
       test('healthConnectAvailable defaults to false', () {
@@ -1198,9 +1207,7 @@ void main() {
 
       test('returns false when permission is notDetermined', () {
         const status = HealthPermissionStatus(
-          permissions: {
-            HealthDataType.workout: PermissionState.notDetermined,
-          },
+          permissions: {HealthDataType.workout: PermissionState.notDetermined},
         );
         expect(status.canSync(HealthDataType.workout), isFalse);
       });
@@ -1371,9 +1378,7 @@ void main() {
 
       test('notDetermined is not included in denied types', () {
         const status = HealthPermissionStatus(
-          permissions: {
-            HealthDataType.workout: PermissionState.notDetermined,
-          },
+          permissions: {HealthDataType.workout: PermissionState.notDetermined},
         );
         expect(status.deniedDataTypes, isEmpty);
       });
@@ -1381,16 +1386,17 @@ void main() {
 
     group('needsSequentialPermission', () {
       test(
-          'true when workout authorized and bodyWeight notDetermined (iOS flow)',
-          () {
-        const status = HealthPermissionStatus(
-          permissions: {
-            HealthDataType.workout: PermissionState.authorized,
-            HealthDataType.bodyWeight: PermissionState.notDetermined,
-          },
-        );
-        expect(status.needsSequentialPermission, isTrue);
-      });
+        'true when workout authorized and bodyWeight notDetermined (iOS flow)',
+        () {
+          const status = HealthPermissionStatus(
+            permissions: {
+              HealthDataType.workout: PermissionState.authorized,
+              HealthDataType.bodyWeight: PermissionState.notDetermined,
+            },
+          );
+          expect(status.needsSequentialPermission, isTrue);
+        },
+      );
 
       test('false when both workout and bodyWeight are authorized', () {
         const status = HealthPermissionStatus(
@@ -1434,9 +1440,7 @@ void main() {
 
       test('false when bodyWeight key is absent entirely', () {
         const status = HealthPermissionStatus(
-          permissions: {
-            HealthDataType.workout: PermissionState.authorized,
-          },
+          permissions: {HealthDataType.workout: PermissionState.authorized},
         );
         // bodyWeight absent → null != notDetermined → false
         expect(status.needsSequentialPermission, isFalse);
@@ -1597,7 +1601,9 @@ void main() {
       });
 
       test('true when last sync was more than 24 hours ago', () {
-        final thirtyHoursAgo = DateTime.now().subtract(const Duration(hours: 30));
+        final thirtyHoursAgo = DateTime.now().subtract(
+          const Duration(hours: 30),
+        );
         final status = HealthSyncStatus(
           dataType: HealthDataType.workout,
           lastSyncTime: thirtyHoursAgo,
@@ -1617,8 +1623,9 @@ void main() {
       });
 
       test('false when last sync was exactly 23 hours ago', () {
-        final twentyThreeHoursAgo =
-            DateTime.now().subtract(const Duration(hours: 23));
+        final twentyThreeHoursAgo = DateTime.now().subtract(
+          const Duration(hours: 23),
+        );
         final status = HealthSyncStatus(
           dataType: HealthDataType.workout,
           lastSyncTime: twentyThreeHoursAgo,

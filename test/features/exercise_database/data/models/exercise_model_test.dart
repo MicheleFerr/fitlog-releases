@@ -3,7 +3,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers

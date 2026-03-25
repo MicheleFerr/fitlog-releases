@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/scheduling/data/services/scheduling_notification_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/models/scheduling_ui_state.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/providers/scheduling_provider.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/multi_select_calendar.dart';
@@ -31,7 +33,8 @@ class ScheduleBottomSheet extends ConsumerStatefulWidget {
     required String templateId,
     required String templateName,
   }) {
-    return ModalService.showSheet<bool>(context,
+    return ModalService.showSheet<bool>(
+      context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -52,6 +55,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
   late ScheduleBottomSheetState _state;
   List<DateTime> _disabledDates = [];
   bool _isLoading = false;
+  bool _addToCalendar = false;
 
   @override
   void initState() {
@@ -86,11 +90,16 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
   Future<void> _onConfirm() async {
     if (_state.selectedDates.isEmpty) return;
 
+    if (_hasPastReminderForToday()) {
+      SnackBarService.showError(context, _reminderTimeInPastMessage());
+      return;
+    }
+
     setState(() => _isLoading = true);
     unawaited(HapticFeedback.mediumImpact());
 
     try {
-      await ref
+      final scheduledWorkouts = await ref
           .read(schedulingProvider.notifier)
           .scheduleWorkouts(
             templateId: widget.templateId,
@@ -99,6 +108,15 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
             reminderTime: _state.reminderTime,
             l10n: context.l10n,
           );
+
+      if (_addToCalendar) {
+        await ref
+            .read(schedulingCalendarExportServiceProvider)
+            .shareCalendarFile(
+              workouts: scheduledWorkouts,
+              templateName: widget.templateName,
+            );
+      }
 
       if (mounted) {
         SnackBarService.showSuccess(
@@ -113,9 +131,60 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        SnackBarService.showError(context, e.toString());
+        SnackBarService.showError(
+          context,
+          _buildErrorMessage(e),
+          actionLabel: e is SchedulingNotificationException
+              ? context.l10n.openSettings
+              : null,
+          onAction: e is SchedulingNotificationException
+              ? () => unawaited(openAppSettings())
+              : null,
+        );
       }
     }
+  }
+
+  String _buildErrorMessage(Object error) {
+    if (error is SchedulingNotificationException) {
+      switch (error.type) {
+        case SchedulingNotificationExceptionType.notificationsDisabled:
+          return context.l10n.notificationPermissionsNotGranted;
+        case SchedulingNotificationExceptionType.reminderTimeInPast:
+          return _reminderTimeInPastMessage();
+      }
+    }
+
+    return error.toString();
+  }
+
+  bool _hasPastReminderForToday() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    return _state.selectedDates.any((date) {
+      final normalized = DateTime(date.year, date.month, date.day);
+      if (normalized != today) {
+        return false;
+      }
+
+      final reminderDateTime = DateTime(
+        normalized.year,
+        normalized.month,
+        normalized.day,
+        _state.reminderHour,
+        _state.reminderMinute,
+      );
+      return reminderDateTime.isBefore(now);
+    });
+  }
+
+  String _reminderTimeInPastMessage() {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    if (languageCode == 'it') {
+      return 'Se scegli oggi, imposta un orario futuro per il promemoria.';
+    }
+    return 'If you schedule for today, choose a reminder time in the future.';
   }
 
   @override
@@ -275,6 +344,31 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                     selectedTime: _state.reminderTime,
                     onTimeChanged: _onTimeChanged,
                   ),
+
+                  if (_state.selectedDates.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.md,
+                        0,
+                        AppSpacing.md,
+                        AppSpacing.sm,
+                      ),
+                      child: SwitchListTile.adaptive(
+                        value: _addToCalendar,
+                        onChanged: _isLoading
+                            ? null
+                            : (value) {
+                                HapticFeedback.selectionClick();
+                                setState(() => _addToCalendar = value);
+                              },
+                        contentPadding: EdgeInsets.zero,
+                        secondary: Icon(
+                          AppIcons.calendar,
+                          color: context.colors.primary,
+                        ),
+                        title: Text(context.l10n.addTo(context.l10n.calendar)),
+                      ),
+                    ),
 
                   const SizedBox(height: AppSpacing.md),
                 ],

@@ -33,7 +33,9 @@ mixin WorkoutCoreMixin on Notifier<Workout?> {
 
     // 💾 BUG FIX #5: Also save to draft repository for crash recovery
     // This prevents losing workout data if app crashes or is killed
-    if (state != null && state!.status == WorkoutStatus.inProgress) {
+    if (state != null &&
+        (state!.status == WorkoutStatus.inProgress ||
+            state!.status == WorkoutStatus.paused)) {
       ref.read(workoutAutoSaveProvider.notifier).triggerSave(state!);
     }
   }

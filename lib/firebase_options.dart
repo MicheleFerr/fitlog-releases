@@ -53,6 +53,13 @@ class DefaultFirebaseOptions {
     return FirebaseConfig.fromEnvironment();
   }
 
+  /// Returns environment-based options only when the current platform has a
+  /// complete runtime config. Otherwise callers should use native Firebase
+  /// configuration files for mobile platforms.
+  static FirebaseOptions? get maybeCurrentPlatform {
+    return FirebaseConfig.maybeCurrentPlatform;
+  }
+
   // ══════════════════════════════════════════════════════════════════════
   // DEPRECATED: Hardcoded options removed (security vulnerability)
   // ══════════════════════════════════════════════════════════════════════

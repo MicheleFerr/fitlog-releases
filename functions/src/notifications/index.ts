@@ -10,7 +10,7 @@ import { logger } from 'firebase-functions';
 import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { NotificationQueue } from './queue/NotificationQueue';
+import { NotificationQueue, type QueuedNotification } from './queue/NotificationQueue';
 import { NotificationAnalytics } from './analytics/NotificationAnalytics';
 import { NotificationPersonalization } from './personalization/NotificationPersonalization';
 import { NotificationPrivacy } from './privacy/NotificationPrivacy';
@@ -23,7 +23,7 @@ import { SystemMonitor } from './monitoring/SystemMonitor';
  * Generates achievement and progress notifications
  */
 export const onWorkoutCompleted = onDocumentCreated(
-  'sessionWorkouts/{workoutId}',
+  'users/{userId}/workouts/{workoutId}',
   async (event) => {
     const snapshot = event.data;
     if (!snapshot) {
@@ -33,8 +33,7 @@ export const onWorkoutCompleted = onDocumentCreated(
 
     try {
       const workoutData = snapshot.data();
-      const userId = workoutData.userId || workoutData.uid;
-      const workoutId = event.params.workoutId;
+      const { userId, workoutId } = event.params;
 
       if (!userId) {
         logger.warn('Workout completed without userId', { workoutId });
@@ -68,7 +67,7 @@ export const onWorkoutCompleted = onDocumentCreated(
         data: {
           workoutId,
           workoutType: workoutData.type || 'strength',
-          volume: workoutData.totalVolume || 0
+          volume: workoutData.totalVolume || workoutData.volume || 0
         },
         priority: 'low',
         source: 'system',
@@ -94,7 +93,7 @@ export const onWorkoutCompleted = onDocumentCreated(
  * Sends high-priority achievement notification
  */
 export const onPersonalRecord = onDocumentCreated(
-  'users/{userId}/personalRecords/{recordId}',
+  'personalRecords/{recordId}',
   async (event) => {
     const snapshot = event.data;
     if (!snapshot) {
@@ -102,9 +101,22 @@ export const onPersonalRecord = onDocumentCreated(
       return;
     }
 
+    const recordData = snapshot.data();
+    const { recordId } = event.params;
+    const userId = recordData.userId as string | undefined;
+
     try {
-      const recordData = snapshot.data();
-      const { userId, recordId } = event.params;
+      if (!userId) {
+        logger.warn('Personal record created without userId', { recordId });
+        return;
+      }
+
+      const currentValue = Number(recordData.value || 0);
+      const previousValue = Number(recordData.previousValue || 0);
+      const formattedValue =
+        recordData.type === 'weight' || recordData.type === 'oneRM'
+          ? `${currentValue}kg`
+          : `${currentValue}`;
 
       logger.info('Processing personal record', { userId, recordId });
 
@@ -112,12 +124,13 @@ export const onPersonalRecord = onDocumentCreated(
         type: 'personal_record',
         userId,
         title: '🏆 New Personal Record!',
-        message: `Amazing! You just hit a new PR: ${recordData.weight}kg on ${recordData.exerciseName}!`,
+        message: `Amazing! You just hit a new PR: ${formattedValue} on ${recordData.exerciseName}!`,
         data: {
           exercise: recordData.exerciseName,
-          weight: recordData.weight,
-          previousRecord: recordData.previousWeight || 0,
-          improvement: recordData.weight - (recordData.previousWeight || 0)
+          value: currentValue,
+          previousRecord: previousValue,
+          improvement: currentValue - previousValue,
+          type: recordData.type || 'weight'
         },
         priority: 'high',
         source: 'system'
@@ -127,15 +140,16 @@ export const onPersonalRecord = onDocumentCreated(
       await NotificationAnalytics.recordTrigger('personal_record', userId, {
         recordId,
         exercise: recordData.exerciseName,
-        weight: recordData.weight
+        value: currentValue,
+        type: recordData.type || 'weight'
       });
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error('Error processing personal record', {
         error: errorMessage,
-        userId: event.params.userId,
-        recordId: event.params.recordId
+        userId,
+        recordId
       });
       throw error;
     }
@@ -166,9 +180,11 @@ export const onStreakMilestone = onDocumentUpdated(
       if (afterStreak > beforeStreak && afterStreak > 0) {
         logger.info('Processing streak milestone', { userId, streak: afterStreak });
 
-        let notificationData: Record<string, unknown> = {
+        let notificationData: Omit<QueuedNotification, 'id' | 'queuedAt' | 'status' | 'attempts'> = {
           type: 'streak_milestone',
           userId,
+          title: '',
+          message: '',
           data: {
             streak: afterStreak,
             previousStreak: beforeStreak

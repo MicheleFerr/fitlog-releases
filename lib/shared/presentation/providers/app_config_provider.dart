@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_icon_variant.dart'
 import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/shared/data/services/ios_timer_sound_preference_service.dart';
 
 // App Configuration State Provider
 final appConfigProvider = NotifierProvider<AppConfigNotifier, AppConfig>(
@@ -18,6 +19,8 @@ final appConfigProvider = NotifierProvider<AppConfigNotifier, AppConfig>(
 class AppConfigNotifier extends Notifier<AppConfig> {
   static const String _boxName = 'app_config';
   Box<AppConfig>? _configBox;
+  final _iosTimerSoundPreferenceService =
+      IOSTimerSoundPreferenceService.instance;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // 🔧 DEBUG FLAG: Force onboarding to show on every app start
@@ -244,7 +247,8 @@ class AppConfigNotifier extends Notifier<AppConfig> {
           final effectiveConfig = savedConfig.languageChangedByUser
               ? savedConfig
               : savedConfig.copyWith(
-                  languageCode: _getDefaultConfigWithDeviceLocale().languageCode,
+                  languageCode:
+                      _getDefaultConfigWithDeviceLocale().languageCode,
                   countryCode: _getDefaultConfigWithDeviceLocale().countryCode,
                 );
           state = effectiveConfig;
@@ -272,6 +276,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       _isInitialized = true;
       _initRetryCount = 0;
       _initCompleter?.complete();
+      await _syncTimerSoundPreference();
 
       if (kDebugMode) {
         debugPrint('✅ [AppConfig] Initialization completed successfully');
@@ -296,6 +301,10 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     } finally {
       _isInitializing = false; // P0 FIX: Release lock
     }
+  }
+
+  Future<void> _syncTimerSoundPreference() async {
+    await _iosTimerSoundPreferenceService.syncPreferredSound(state.timerSound);
   }
 
   /// CRITICAL: Ensure initialization before operations
@@ -649,6 +658,27 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  Future<void> setTimerNotificationEnabled(bool enabled) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(timerNotificationEnabled: enabled);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ [AppConfig] Timer notification enabled set to: $enabled',
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting timer notification: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
   Future<void> setTimerSound(String soundName) async {
     try {
       await _ensureInitialized();
@@ -656,6 +686,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
       state = state.copyWith(timerSound: soundName);
       await _saveConfig();
+      await _syncTimerSoundPreference();
 
       if (kDebugMode) {
         debugPrint('✅ [AppConfig] Timer sound set to: $soundName');
@@ -887,7 +918,10 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       await _ensureInitialized();
       if (_isDisposed) return;
 
-      state = state.copyWith(autoStartTimer: autoStart);
+      state = state.copyWith(
+        autoStartTimer: autoStart,
+        autoRestTimer: autoStart,
+      );
       await _saveConfig();
 
       if (kDebugMode) {
@@ -1114,6 +1148,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       if (_isDisposed) return;
 
       state = state.copyWith(
+        autoStartTimer: autoRestTimer ?? state.autoStartTimer,
         rpeTracking: rpeTracking,
         autoRestTimer: autoRestTimer,
         setDurationTracking: setDurationTracking,
@@ -1319,6 +1354,7 @@ final fontSizeProvider = Provider<double>((ref) {
 /// Returns InterfaceSize.medium if not set (backward compatibility)
 final interfaceSizeProvider = Provider<InterfaceSize>((ref) {
   final config = ref.watch(appConfigProvider);
+  // ignore: deprecated_member_use_from_same_package
   return config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 });
 

@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 
 /// Add Exercise to Template Sheet
 ///
@@ -434,9 +435,14 @@ class _AddExerciseToTemplateSheetState
         countingMode: widget.suggestion.countingMode,
       );
 
-      // Add exercise to template
-      final updatedExercises = [...selectedTemplate.exercises, newExercise];
-      final updatedTemplate = selectedTemplate.copyWith(
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate = await repository.ensureEditableTemplate(
+        selectedTemplate,
+      );
+
+      // Add exercise to template or to a newly-created private draft.
+      final updatedExercises = [...editableTemplate.exercises, newExercise];
+      final updatedTemplate = editableTemplate.copyWith(
         exercises: updatedExercises,
         updatedAt: DateTime.now(),
       );
@@ -451,6 +457,12 @@ class _AddExerciseToTemplateSheetState
       widget.onExerciseAdded();
 
       if (mounted) {
+        if (editableTemplate.id != selectedTemplate.id) {
+          SnackBarService.showInfo(
+            context,
+            context.l10n.templatePrivateDraftCreated(selectedTemplate.name),
+          );
+        }
         Navigator.of(context).pop();
 
         // Show success snackbar with personalized volume details
@@ -467,7 +479,10 @@ class _AddExerciseToTemplateSheetState
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.errorAddingExercise);
+        SnackBarService.showError(
+          context,
+          localizeTemplateErrorMessage(context, e),
+        );
       }
     } finally {
       if (mounted) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +16,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_list.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
 
@@ -82,6 +83,8 @@ class WorkoutView extends ConsumerStatefulWidget {
 }
 
 class _WorkoutViewState extends ConsumerState<WorkoutView> {
+  static const int _inlineAdEveryNExercises = 3;
+
   final GlobalKey _headerKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
 
@@ -116,45 +119,76 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     return _scrollController.offset < 50;
   }
 
-  /// First tap: scroll to top. Second tap (already at top): scroll to first incomplete exercise.
-  void _handleSameTabTap() {
-    if (!_scrollController.hasClients) return;
-
-    if (_isNearTop) {
-      _scrollToFirstIncomplete();
-    } else {
-      _scrollToTop();
+  ({int index, GlobalKey key})? _firstUsefulExerciseTarget() {
+    for (var index = 0; index < widget.workout.exercises.length; index++) {
+      final exercise = widget.workout.exercises[index];
+      if (!exercise.isCompleted) {
+        return (index: index, key: _keyForExercise(exercise.id));
+      }
     }
+    return null;
   }
 
-  void _scrollToTop() {
-    _scrollController.animateTo(
+  double _estimatedOffsetForExerciseIndex(int index) {
+    const estimatedCollapsedCardHeight = 132.0;
+    const estimatedAdBlockHeight = 58.0;
+    final adsBefore = index ~/ _inlineAdEveryNExercises;
+
+    return (index * estimatedCollapsedCardHeight) +
+        (adsBefore * estimatedAdBlockHeight);
+  }
+
+  /// Same-tab tap: normalize the list near the top, then jump to the first
+  /// still-useful exercise if there is one.
+  Future<void> _handleSameTabTap() async {
+    if (!_scrollController.hasClients) return;
+
+    final target = _firstUsefulExerciseTarget();
+
+    if (!_isNearTop) {
+      await _scrollToTop();
+      if (!mounted || target == null) return;
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+    }
+
+    if (target != null) {
+      if (target.key.currentContext == null) {
+        final estimatedOffset = _estimatedOffsetForExerciseIndex(target.index);
+        final clampedOffset = estimatedOffset.clamp(
+          0.0,
+          _scrollController.position.maxScrollExtent,
+        );
+
+        await _scrollController.animateTo(
+          clampedOffset,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+        );
+
+        if (!mounted) return;
+        await Future<void>.delayed(const Duration(milliseconds: 60));
+      }
+
+      if (target.key.currentContext != null) {
+        await Scrollable.ensureVisible(
+          target.key.currentContext!,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutCubic,
+          alignment: 0.1,
+        );
+        return;
+      }
+    }
+
+    await _scrollToTop();
+  }
+
+  Future<void> _scrollToTop() {
+    return _scrollController.animateTo(
       0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
-  }
-
-  void _scrollToFirstIncomplete() {
-    // Find first exercise with incomplete sets
-    final exercises = widget.workout.exercises;
-    for (final exercise in exercises) {
-      final hasIncomplete = exercise.sets.any((s) => !s.isCompleted);
-      if (hasIncomplete) {
-        final key = _exerciseKeys[exercise.id];
-        if (key?.currentContext != null) {
-          Scrollable.ensureVisible(
-            key!.currentContext!,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeOutCubic,
-            alignment: 0.1, // Slight offset from top
-          );
-        }
-        return;
-      }
-    }
-    // All complete — just scroll to top
-    _scrollToTop();
   }
 
   /// Get or create a GlobalKey for the exercise card
@@ -162,13 +196,23 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     return _exerciseKeys.putIfAbsent(exerciseId, () => GlobalKey());
   }
 
+  bool _shouldShowInlineAd(int index, int totalItems) {
+    if (widget.isReorderMode) return false;
+    if (totalItems < 2) return false;
+
+    final isNotLastItem = index < totalItems - 1;
+    final shouldInsertAfterItem = (index + 1) % _inlineAdEveryNExercises == 0;
+
+    return isNotLastItem && shouldInsertAfterItem;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    // Listen for same-tab tap: first tap → top, second tap → first incomplete exercise
+    // Listen for same-tab tap on the workout tab.
     ref.listen(sameTabTapSignalProvider, (previous, next) {
-      _handleSameTabTap();
+      unawaited(_handleSameTabTap());
     });
 
     // Debug logging in development mode
@@ -221,101 +265,17 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
           Expanded(
             child: widget.workout.exercises.isEmpty
                 ? const EmptyExerciseList()
-                : widget.isReorderMode
-                ? _buildReorderableList(context, ref)
-                : _buildNormalList(context, ref),
+                : _buildReorderableList(context, ref),
           ),
-
-          // Banner Ad at bottom
-          if (widget.workout.exercises.isNotEmpty)
-            RepaintBoundary(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xs,
-                  vertical: AppSpacing.xxs,
-                ),
-                child: AdaptiveBannerAd(
-                  adUnitId: AdMobConfig.bannerAnalytics,
-                  height: 50,
-                ),
-              ),
-            ),
         ],
       ),
     );
   }
 
-  /// Builds the normal (non-reorderable) exercise list with material-like physics
-  Widget _buildNormalList(BuildContext context, WidgetRef ref) {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: MaterialScrollList(
-      controller: _scrollController,
-      itemCount: widget.workout.exercises.length,
-      // List is now below header in Column, no need for header padding
-      padding: EdgeInsets.only(
-        left: AppSpacing.md,
-        right: AppSpacing.md,
-        top: AppSpacing.sm,
-        bottom: AppSpacing.md + 60 + context.tabBarInset, // FAB + tab bar
-      ),
-      itemBuilder: (context, index) {
-        final exercise = widget.workout.exercises[index];
-
-        return Padding(
-          key: _keyForExercise(exercise.id),
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          // RepaintBoundary isolates each exercise card from repaints
-          // in other parts of the list (e.g., timer tick updates)
-          child: RepaintBoundary(
-            child:
-                exercise.type == ExerciseType.superset &&
-                    exercise is SupersetExercise
-                ? SupersetCard(
-                    superset: exercise,
-                    index: index,
-                    isReorderMode: false,
-                    onTap: () => widget.onEditExercise(exercise),
-                    onDelete: () => widget.onDeleteExercise(exercise.id),
-                    onEdit: () => widget.onEditExercise(exercise),
-                    onReplace: () => widget.onReplaceExercise(exercise),
-                    onSetUpdate: (updatedSet) =>
-                        widget.onUpdateExerciseSet(exercise.id, updatedSet),
-                    onSetToggleComplete: (updatedSet) =>
-                        widget.onUpdateExerciseSet(exercise.id, updatedSet),
-                    onExerciseUpdate: widget.onUpdateExercise,
-                    onSupersetSetUpdate: (supersetSet) =>
-                        widget.onUpdateSupersetSet(exercise.id, supersetSet),
-                  )
-                : ExerciseListItem(
-                    exercise: exercise,
-                    isReorderMode: false,
-                    onTap: () => widget.onEditExercise(exercise),
-                    onDelete: () => widget.onDeleteExercise(exercise.id),
-                    onEdit: () => widget.onEditExercise(exercise),
-                    onReplace: () => widget.onReplaceExercise(exercise),
-                    onSetUpdate: (updatedSet) =>
-                        widget.onUpdateExerciseSet(exercise.id, updatedSet),
-                    onSetToggleComplete: (updatedSet) =>
-                        widget.onUpdateExerciseSet(exercise.id, updatedSet),
-                    onExerciseUpdate: widget.onUpdateExercise,
-                    // Pass tutorial keys only to the first exercise
-                    tutorialFirstSetKey: index == 0
-                        ? widget.tutorialFirstSetKey
-                        : null,
-                    tutorialExerciseMenuKey: index == 0
-                        ? widget.tutorialExerciseMenuKey
-                        : null,
-                  ),
-          ),
-        );
-      },
-      ),
-    );
-  }
-
-  /// Builds the reorderable exercise list for drag-and-drop
+  /// Builds the exercise list with long-press drag-and-drop.
   Widget _buildReorderableList(BuildContext context, WidgetRef ref) {
+    final compactMode = widget.isReorderMode;
+
     return Theme(
       data: context.theme.copyWith(
         canvasColor: context.colors.surface.withValues(alpha: 0),
@@ -324,102 +284,231 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
         child: ReorderableListView.builder(
-        padding: EdgeInsets.only(
-          left: AppSpacing.md,
-          right: AppSpacing.md,
-          top: AppSpacing.sm,
-          bottom: AppSpacing.md + 60 + context.tabBarInset, // FAB + tab bar
-        ),
-        itemCount: widget.workout.exercises.length,
-        onReorder: (oldIndex, newIndex) {
-          widget.onReorderExercises(oldIndex, newIndex);
-          HapticFeedback.mediumImpact();
-        },
-        proxyDecorator: (child, index, animation) {
-          return AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              final double animValue = Curves.easeInOut.transform(
-                animation.value,
-              );
-              final double scale = 1 + (animValue * 0.05);
-              final double elevation = 4 + (animValue * 12);
+          scrollController: _scrollController,
+          buildDefaultDragHandles: false,
+          padding: EdgeInsets.only(
+            left: AppSpacing.md,
+            right: AppSpacing.md,
+            top: AppSpacing.sm,
+            bottom: AppSpacing.md + 60 + context.tabBarInset, // FAB + tab bar
+          ),
+          itemCount: widget.workout.exercises.length,
+          onReorder: (oldIndex, newIndex) {
+            widget.onReorderExercises(oldIndex, newIndex);
+            HapticFeedback.mediumImpact();
+          },
+          proxyDecorator: (child, index, animation) {
+            final exercise = widget.workout.exercises[index];
+            final proxyChild = _buildCompactDragProxy(context, exercise);
 
-              return Transform.scale(
-                scale: scale,
-                child: Material(
-                  elevation: elevation,
-                  borderRadius: BorderRadius.circular(16),
-                  color: context.colors.surface,
-                  child: child,
-                ),
-              );
-            },
-            child: child,
-          );
-        },
-        itemBuilder: (context, index) {
-          final exercise = widget.workout.exercises[index];
-          return Padding(
-            key: ValueKey(exercise.id),
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: Row(
-              children: [
-                // Drag handle with slide-in animation
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOutCubic,
-                  width: 40,
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 200),
-                    opacity: 1.0,
-                    child: SemanticIcon(
-                      icon: AppIcons.dragIndicator,
-                      semanticLabel: 'Drag to reorder',
-                      size: AppIconSize.medium,
-                      color: context.colors.onSurfaceVariant,
-                    ),
+            return AnimatedBuilder(
+              animation: animation,
+              builder: (context, _) {
+                final double animValue = Curves.easeInOut.transform(
+                  animation.value,
+                );
+                final double scale = 1 + (animValue * 0.05);
+                final double elevation = 4 + (animValue * 12);
+
+                return Transform.scale(
+                  scale: scale,
+                  child: Material(
+                    elevation: elevation,
+                    borderRadius: BorderRadius.circular(16),
+                    color: context.colors.surface,
+                    child: proxyChild,
                   ),
-                ),
-                // Exercise item (disabled interactions in reorder mode)
-                Expanded(
-                  child:
-                      exercise.type == ExerciseType.superset &&
-                          exercise is SupersetExercise
-                      ? SupersetCard(
-                          superset: exercise,
-                          index: index,
-                          isReorderMode: true,
-                          onTap: () {}, // Disabled in reorder mode
-                          onDelete: () {}, // Disabled in reorder mode
-                          onEdit: () {}, // Disabled in reorder mode
-                          onReplace: () {}, // Disabled in reorder mode
-                          onSetUpdate: (_) {}, // Disabled in reorder mode
-                          onSetToggleComplete:
-                              (_) {}, // Disabled in reorder mode
-                          onExerciseUpdate: (_) {}, // Disabled in reorder mode
-                          onSupersetSetUpdate:
-                              (_) {}, // Disabled in reorder mode
-                        )
-                      : ExerciseListItem(
-                          exercise: exercise,
-                          isReorderMode: true,
-                          onTap: () {}, // Disabled in reorder mode
-                          onDelete: () {}, // Disabled in reorder mode
-                          onEdit: () {}, // Disabled in reorder mode
-                          onReplace: () {}, // Disabled in reorder mode
-                          onSetUpdate: (_) {}, // Disabled in reorder mode
-                          onSetToggleComplete:
-                              (_) {}, // Disabled in reorder mode
-                          onExerciseUpdate: (_) {}, // Disabled in reorder mode
+                );
+              },
+            );
+          },
+          itemBuilder: (context, index) {
+            final exercise = widget.workout.exercises[index];
+            final card = RepaintBoundary(
+              child:
+                  exercise.type == ExerciseType.superset &&
+                      exercise is SupersetExercise
+                  ? SupersetCard(
+                      superset: exercise,
+                      index: index,
+                      isReorderMode: compactMode,
+                      onTap: compactMode
+                          ? () {}
+                          : () => widget.onEditExercise(exercise),
+                      onDelete: compactMode
+                          ? () {}
+                          : () => widget.onDeleteExercise(exercise.id),
+                      onEdit: compactMode
+                          ? () {}
+                          : () => widget.onEditExercise(exercise),
+                      onReplace: compactMode
+                          ? () {}
+                          : () => widget.onReplaceExercise(exercise),
+                      onSetUpdate: compactMode
+                          ? (_) {}
+                          : (updatedSet) => widget.onUpdateExerciseSet(
+                              exercise.id,
+                              updatedSet,
+                            ),
+                      onSetToggleComplete: compactMode
+                          ? (_) {}
+                          : (updatedSet) => widget.onUpdateExerciseSet(
+                              exercise.id,
+                              updatedSet,
+                            ),
+                      onExerciseUpdate: compactMode
+                          ? (_) {}
+                          : widget.onUpdateExercise,
+                      onSupersetSetUpdate: compactMode
+                          ? (_) {}
+                          : (supersetSet) => widget.onUpdateSupersetSet(
+                              exercise.id,
+                              supersetSet,
+                            ),
+                    )
+                  : ExerciseListItem(
+                      exercise: exercise,
+                      isReorderMode: compactMode,
+                      onTap: compactMode
+                          ? () {}
+                          : () => widget.onEditExercise(exercise),
+                      onDelete: compactMode
+                          ? () {}
+                          : () => widget.onDeleteExercise(exercise.id),
+                      onEdit: compactMode
+                          ? () {}
+                          : () => widget.onEditExercise(exercise),
+                      onReplace: compactMode
+                          ? () {}
+                          : () => widget.onReplaceExercise(exercise),
+                      onSetUpdate: compactMode
+                          ? (_) {}
+                          : (updatedSet) => widget.onUpdateExerciseSet(
+                              exercise.id,
+                              updatedSet,
+                            ),
+                      onSetToggleComplete: compactMode
+                          ? (_) {}
+                          : (updatedSet) => widget.onUpdateExerciseSet(
+                              exercise.id,
+                              updatedSet,
+                            ),
+                      onExerciseUpdate: compactMode
+                          ? (_) {}
+                          : widget.onUpdateExercise,
+                      tutorialFirstSetKey: !compactMode && index == 0
+                          ? widget.tutorialFirstSetKey
+                          : null,
+                      tutorialExerciseMenuKey: !compactMode && index == 0
+                          ? widget.tutorialExerciseMenuKey
+                          : null,
+                    ),
+            );
+
+            final animatedCard = AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              switchInCurve: Curves.easeOutCubic,
+              switchOutCurve: Curves.easeInCubic,
+              child: KeyedSubtree(
+                key: ValueKey('exercise-${exercise.id}-compact-$compactMode'),
+                child: card,
+              ),
+            );
+
+            final content = widget.isReorderMode
+                ? Row(
+                    children: [
+                      ReorderableDragStartListener(
+                        index: index,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutCubic,
+                          width: 40,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.lg,
+                          ),
+                          child: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 200),
+                            opacity: 1.0,
+                            child: SemanticIcon(
+                              icon: AppIcons.dragIndicator,
+                              semanticLabel: 'Drag to reorder',
+                              size: AppIconSize.medium,
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                          ),
                         ),
+                      ),
+                      Expanded(child: animatedCard),
+                    ],
+                  )
+                : ReorderableDelayedDragStartListener(
+                    index: index,
+                    child: Semantics(
+                      hint: 'Long press and drag to reorder',
+                      child: animatedCard,
+                    ),
+                  );
+
+            final totalItems = widget.workout.exercises.length;
+            final showInlineAd = _shouldShowInlineAd(index, totalItems);
+
+            return Padding(
+              key: ValueKey(exercise.id),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: KeyedSubtree(
+                key: _keyForExercise(exercise.id),
+                child: Column(
+                  children: [
+                    content,
+                    if (showInlineAd) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      RepaintBoundary(
+                        child: AdaptiveBannerAd(
+                          adUnitId: AdMobConfig.bannerAnalytics,
+                          height: 50,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
+              ),
+            );
+          },
+        ),
       ),
+    );
+  }
+
+  Widget _buildCompactDragProxy(BuildContext context, Exercise exercise) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainer,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: context.colors.outlineVariant.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Icon(AppIcons.dragHandle, color: context.colors.onSurfaceVariant),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  exercise.name,
+                  style: context.textTheme.bodyLarge,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

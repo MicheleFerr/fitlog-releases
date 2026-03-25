@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -45,7 +46,8 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
     required Function(SupersetSet completedRound) onRoundCompleted,
     VoidCallback? onAllRoundsCompleted,
   }) {
-    return ModalService.showSheet<void>(context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
@@ -131,7 +133,8 @@ class _SupersetSequentialExecutionSheetState
         _handleRoundCompletion(completeDataMap);
         // Avvia timer con variabili pre-catturate: il widget è già smontato
         // quindi non possiamo usare mounted/ref qui
-        if (!isLastRound) {
+        if (!isLastRound &&
+            ref.read(appConfigProvider).isAutoRestTimerEnabled) {
           timerActions.startExerciseRest(
             seconds: restDuration,
             exerciseName: restLabel,
@@ -421,8 +424,9 @@ class _SupersetSequentialExecutionSheetState
                         children: [
                           Text(
                             exercise.name,
-                            style: context.textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           if (exerciseData != null)
                             Text(

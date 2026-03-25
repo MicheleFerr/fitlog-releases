@@ -154,13 +154,14 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((
       });
     }
 
-    // Apply premium history cutoff for free users
+    // Apply premium history cutoff for free users. Premium users should load
+    // the full history, so we intentionally avoid a hard workout-count cap.
     final historyCutoff = ref.watch(historyCutoffDateProvider);
 
     // Fetch completed workouts for analytics (this will trigger sync if needed)
     final workouts = await analyticsRepo.getHistoricalWorkouts(
       user.uid,
-      limit: 100,
+      limit: null,
       since: historyCutoff,
     );
 
@@ -258,8 +259,8 @@ class AnalyticsState {
 class AnalyticsNotifier extends Notifier<AnalyticsState> {
   @override
   AnalyticsState build() {
-    final userId = _getUserId();
-    if (userId != null) {
+    final user = ref.watch(firebaseUserProvider).value;
+    if (user?.uid != null) {
       loadAnalytics();
     }
     return AnalyticsState.initial();
@@ -270,16 +271,20 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   PRTracker get _prTracker => PRTracker();
   AnalyticsCalculationService get _calculationService =>
       ref.read(analyticsCalculationServiceProvider);
-  String? get _userId => _getUserId();
 
-  String? _getUserId() {
-    return ref.watch(firebaseUserProvider).value?.email;
+  String? get _activityUserKey {
+    final user = ref.read(firebaseUserProvider).value;
+    final email = user?.email?.toLowerCase().trim();
+    return email?.isNotEmpty == true ? email : user?.uid;
   }
+
+  String? get _firestoreUserId => ref.read(firebaseUserProvider).value?.uid;
 
   /// Load all analytics data
   Future<void> loadAnalytics({bool forceRefresh = false}) async {
-    final userId = _userId;
-    if (userId == null) return;
+    final activityUserKey = _activityUserKey;
+    final firestoreUserId = _firestoreUserId;
+    if (activityUserKey == null || firestoreUserId == null) return;
 
     state = state.copyWith(isLoading: true, error: null);
 
@@ -287,20 +292,20 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
       // Load activities with increased limit to ensure we capture recent workouts
       // Use forceRefresh to bypass any caching in the repository
       final activities = await _activityRepository.getUserActivities(
-        userEmail: userId,
+        userEmail: activityUserKey,
         limit: 100, // SYNC FIX: Increased from 50 to capture recent workouts
       );
 
       // DEBUG: Log activity count for troubleshooting
       if (kDebugMode) {
         debugPrint(
-          '📊 Analytics: Loaded ${activities.length} activities for user $userId',
+          '📊 Analytics: Loaded ${activities.length} activities for user $activityUserKey',
         );
       }
 
       // Load personal records
-      final personalRecords = await _prTracker.getUserPRs(userId);
-      final recentPRs = await _prTracker.getRecentPRs(userId);
+      final personalRecords = await _prTracker.getUserPRs(firestoreUserId);
+      final recentPRs = await _prTracker.getRecentPRs(firestoreUserId);
 
       // Calculate analytics
       final volumeProgression = VolumeCalculator.calculateProgression(
@@ -312,7 +317,7 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
       final insights = InsightsEngine.generateInsights(
         activities: activities,
         recentPRs: recentPRs,
-        userId: userId,
+        userId: firestoreUserId,
       );
 
       // Calculate trends for top exercises (delegated to service)
@@ -360,20 +365,20 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
 
   /// Check for new PRs after workout completion
   Future<List<PersonalRecord>> checkForNewPRs(ExerciseActivity activity) async {
-    final userId = _userId;
-    if (userId == null) return [];
+    final firestoreUserId = _firestoreUserId;
+    if (firestoreUserId == null) return [];
 
     try {
       // ✅ FIX: Pass Firebase UID for correct Firestore permissions
       final newPRs = await _prTracker.checkAndUpdatePRs(
         activity,
-        userId: userId,
+        userId: firestoreUserId,
       );
 
       if (newPRs.isNotEmpty) {
         // Reload PRs to update state
-        final personalRecords = await _prTracker.getUserPRs(userId);
-        final recentPRs = await _prTracker.getRecentPRs(userId);
+        final personalRecords = await _prTracker.getUserPRs(firestoreUserId);
+        final recentPRs = await _prTracker.getRecentPRs(firestoreUserId);
 
         state = state.copyWith(
           personalRecords: personalRecords,

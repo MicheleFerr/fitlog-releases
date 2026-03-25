@@ -67,9 +67,7 @@ class CompactProfileHeader extends ConsumerWidget {
 
               // Mini avatar with tier gradient border
               _MiniTierAvatar(
-                initial: userName.isNotEmpty
-                    ? userName[0].toUpperCase()
-                    : '?',
+                initial: userName.isNotEmpty ? userName[0].toUpperCase() : '?',
                 tier: currentTier,
                 hideTier: shouldHideTier,
               ),
@@ -112,6 +110,11 @@ class CompactProfileHeader extends ConsumerWidget {
                   HapticFeedback.lightImpact();
                   onSettingsTap();
                 },
+                padding: const EdgeInsets.all(14),
+                constraints: const BoxConstraints.tightFor(
+                  width: 56,
+                  height: 56,
+                ),
                 tooltip: context.l10n.settings,
               ),
             ],

@@ -48,6 +48,9 @@ class ExerciseDefinition extends Equatable {
     this.noteTecniche,
     this.mobilitaPre,
     this.attivazionePre,
+    this.warmupSets,
+    this.prevenzioneInfortuni,
+    this.cooldownConsigliato,
     // Fuzzy matching fields
     this.aliases = const [],
     String? normalizedNome,
@@ -92,6 +95,15 @@ class ExerciseDefinition extends Equatable {
       attivazionePre: json['attivazionePre']?.isEmpty == true
           ? null
           : json['attivazionePre'],
+      warmupSets: json['warmupSets']?.isEmpty == true
+          ? null
+          : json['warmupSets'],
+      prevenzioneInfortuni: json['prevenzioneInfortuni']?.isEmpty == true
+          ? null
+          : json['prevenzioneInfortuni'],
+      cooldownConsigliato: json['cooldownConsigliato']?.isEmpty == true
+          ? null
+          : json['cooldownConsigliato'],
       // Fuzzy matching fields
       aliases: (json['aliases'] as List<dynamic>?)?.cast<String>() ?? [],
       warmupSuggestions: (json['warmupSuggestions'] as List<dynamic>?)
@@ -196,6 +208,15 @@ class ExerciseDefinition extends Equatable {
 
   @HiveField(12)
   final String? attivazionePre;
+
+  @HiveField(13)
+  final String? warmupSets;
+
+  @HiveField(14)
+  final String? prevenzioneInfortuni;
+
+  @HiveField(15)
+  final String? cooldownConsigliato;
 
   // Fuzzy matching fields
   @HiveField(21)
@@ -324,6 +345,9 @@ class ExerciseDefinition extends Equatable {
       'noteTecniche': noteTecniche,
       'mobilitaPre': mobilitaPre,
       'attivazionePre': attivazionePre,
+      'warmupSets': warmupSets,
+      'prevenzioneInfortuni': prevenzioneInfortuni,
+      'cooldownConsigliato': cooldownConsigliato,
       // Fuzzy matching fields
       'aliases': aliases,
       'normalizedNome': normalizedNome,
@@ -350,6 +374,9 @@ class ExerciseDefinition extends Equatable {
     noteTecniche,
     mobilitaPre,
     attivazionePre,
+    warmupSets,
+    prevenzioneInfortuni,
+    cooldownConsigliato,
     // Fuzzy matching fields
     aliases,
     normalizedNome,

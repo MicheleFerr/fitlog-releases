@@ -1689,6 +1689,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unlimitedTemplates => 'Unlimited templates';
 
   @override
+  String get unlimitedTemplatesDescription =>
+      'Save more than 4 editable workout templates in your Library';
+
+  @override
   String get welcomeToGymBro => 'Welcome to your new fitness companion!';
 
   @override
@@ -3213,7 +3217,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tosAcceptanceRequired =>
-      'You must accept the Terms of Service to continue';
+      'You must accept the Terms of Use to continue';
 
   @override
   String get iAcceptThe => 'I accept the ';
@@ -14058,7 +14062,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legalDisclaimerContent =>
-      '⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.';
+      '⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Use and Privacy Policy.';
 
   @override
   String get legalDisclaimerAccept => 'I Accept';
@@ -14077,7 +14081,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'How we handle your data (GDPR compliant)';
 
   @override
-  String get termsOfService => 'Terms of Service';
+  String get termsOfUseEula => 'Terms of Use (EULA)';
+
+  @override
+  String get termsOfService => 'Terms of Use';
+
+  @override
+  String get serviceTerms => 'Service Terms';
 
   @override
   String get coachAgreement => 'Coach Agreement';
@@ -26340,7 +26350,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicyDesc => 'Read our privacy policy';
 
   @override
-  String get termsOfServiceDesc => 'Read our terms of service';
+  String get termsOfServiceDesc => 'Read our terms of use';
 
   @override
   String get betaFeedback => 'Send Feedback';
@@ -28094,6 +28104,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWithPremium => 'Continue with Premium';
+
+  @override
+  String continueWithPremiumMonthlyPlan(String productName) {
+    return '$productName 1 Month';
+  }
+
+  @override
+  String continueWithPremiumYearlyPlan(String productName) {
+    return '$productName 1 Year';
+  }
+
+  @override
+  String continueWithPremiumLifetimePlan(String productName) {
+    return '$productName Lifetime';
+  }
 
   @override
   String get everythingInFree => 'Everything in Free, plus:';

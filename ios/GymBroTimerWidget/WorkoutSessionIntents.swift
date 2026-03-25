@@ -1,11 +1,10 @@
 import AppIntents
 import ActivityKit
 import Foundation
-import UserNotifications
 
 // MARK: - Shared UserDefaults Keys
 private let workoutEventKey = "workout_session_event"
-private let sharedSuiteName = "group.com.michele.gymbro.flutter"
+private let sharedSuiteName = RestTimerNotificationSupport.sharedSuiteName
 private let currentRestDurationKey = "current_exercise_rest_duration"
 private let rpeEnabledKey = "rpe_tracking_enabled"
 private let defaultRestDuration = 90 // Default 90 seconds if not set
@@ -18,11 +17,6 @@ private let nextExerciseWeightKey = "next_exercise_weight"
 private let nextExerciseTargetRepsKey = "next_exercise_target_reps"
 private let nextExerciseRestDurationKey = "next_exercise_rest_duration"
 private let isLastSetOfExerciseKey = "is_last_set_of_exercise"
-
-// MARK: - Timer Completion Notification
-private let timerNotificationIdentifier = "com.gymbro.rest_timer_completion"
-private let preferredSoundKey = "timer_notification_sound"
-private let defaultTimerSound = "sound" // sound.caf
 
 // MARK: - Event Types
 enum WorkoutSessionEventType: String {
@@ -529,95 +523,61 @@ public struct WorkoutPauseResumeIntent: LiveActivityIntent {
 /// This is called directly from Intent when REST timer starts
 /// iOS delivers the notification with sound even if app is killed
 /// NOTE: Awaited directly from perform() to guarantee completion before iOS terminates the extension.
-@available(iOS 17.0, *)
-private func scheduleRestTimerNotification(duration: Int, exerciseName: String = "Set") async {
+@available(iOS 16.1, *)
+func scheduleRestTimerNotification(duration: Int, exerciseName: String = "Set") async {
     print("🔔 [INTENT-NOTIFICATION] Scheduling timer notification for \(duration)s")
 
-    let userDefaults = UserDefaults(suiteName: sharedSuiteName)
-    let soundName = userDefaults?.string(forKey: preferredSoundKey) ?? defaultTimerSound
-
-    // 🔔 DUPLICATE FIX: Cancel ALL pending timer notifications FIRST (await for order guarantee)
-    // This prevents duplicates when app already scheduled a notification with different UUID
-    let center = UNUserNotificationCenter.current()
-    let pendingRequests = await center.pendingNotificationRequests()
-
-    let timerNotificationIds = pendingRequests
-        .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
-        .map { $0.identifier }
-
-    if !timerNotificationIds.isEmpty {
-        center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
-        print("🗑️ [INTENT-NOTIFICATION] Cancelled \(timerNotificationIds.count) existing timer notification(s)")
-    }
-
-    // Create notification content
-    let content = UNMutableNotificationContent()
-    content.title = "⏱️ Rest Complete"
-    content.body = "Time to start your next set!"
-    content.categoryIdentifier = "TIMER_COMPLETE"
-
-    // Use custom sound file (sound.caf)
-    // Note: Sound files are included in BOTH Runner and Widget extension bundles
-    // iOS looks for sounds in the extension's bundle when scheduling from Intent
-    let soundFileName = "\(soundName).caf"
-    content.sound = UNNotificationSound(named: UNNotificationSoundName(soundFileName))
-
-    // Add userInfo for identification
-    content.userInfo = [
+    let userDefaults = UserDefaults(suiteName: RestTimerNotificationSupport.sharedSuiteName)
+    let soundName = RestTimerNotificationSupport.preferredSoundName(from: userDefaults)
+    let userInfo: [AnyHashable: Any] = [
         "type": "rest_timer_completion",
         "exercise": exerciseName,
         "scheduledAt": Date().timeIntervalSince1970,
         "duration": duration,
-        "source": "intent_direct" // Mark that this came from Intent, not Flutter
+        "source": "intent_direct"
     ]
 
-    // Schedule for timer duration
-    let trigger = UNTimeIntervalNotificationTrigger(
-        timeInterval: TimeInterval(duration),
-        repeats: false
-    )
-
-    let request = UNNotificationRequest(
-        identifier: timerNotificationIdentifier,
-        content: content,
-        trigger: trigger
-    )
-
-    do {
-        try await center.add(request)
-        print("✅ [INTENT-NOTIFICATION] Scheduled successfully!")
-        print("   - Duration: \(duration)s")
-        print("   - Sound: \(soundFileName)")
-        print("   - ID: \(timerNotificationIdentifier)")
-        print("   - This notification fires even if app is killed!")
-    } catch {
-        print("❌ [INTENT-NOTIFICATION] Failed to schedule: \(error.localizedDescription)")
+    let identifier = RestTimerNotificationSupport.scheduleCompletion(
+        after: TimeInterval(duration),
+        soundName: soundName,
+        title: "⏱️ Rest Complete",
+        body: "Time to start your next set!",
+        userInfo: userInfo
+    ) { error in
+        if let error {
+            print("❌ [INTENT-NOTIFICATION] Failed to schedule: \(error.localizedDescription)")
+        }
     }
+
+    let resolvedFileName =
+        RestTimerNotificationSupport.resolvedSoundFileName(for: soundName) ??
+        RestTimerNotificationSupport.defaultSoundName
+
+    print("✅ [INTENT-NOTIFICATION] Scheduled successfully!")
+    print("   - Duration: \(duration)s")
+    print("   - Sound: \(resolvedFileName)")
+    print("   - ID: \(identifier)")
+    print("   - This notification fires even if app is killed!")
 }
 
 /// Cancel ALL pending timer completion notifications (called when user skips/pauses rest)
 /// Cancels both by fixed ID and by category to catch app-scheduled notifications too
 /// NOTE: Awaited directly from perform() to guarantee completion before iOS terminates the extension.
-@available(iOS 17.0, *)
-private func cancelRestTimerNotification() async {
-    print("🗑️ [INTENT-NOTIFICATION] Cancelling ALL timer notifications")
+@available(iOS 16.1, *)
+func cancelRestTimerNotification() async {
+    RestTimerNotificationSupport.cancelCompletion()
+    print("🗑️ [INTENT-NOTIFICATION] Cancelled rest timer notification")
+}
 
-    let center = UNUserNotificationCenter.current()
-
-    // Get all pending and cancel by category (catches app notifications with UUID)
-    let pendingRequests = await center.pendingNotificationRequests()
-    let timerNotificationIds = pendingRequests
-        .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
-        .map { $0.identifier }
-
-    if !timerNotificationIds.isEmpty {
-        center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
-        print("🗑️ [INTENT-NOTIFICATION] Cancelled \(timerNotificationIds.count) timer notification(s) by category")
-    }
-
-    // Also cancel by our known ID (redundant but explicit)
-    center.removePendingNotificationRequests(withIdentifiers: [timerNotificationIdentifier])
-    print("🗑️ [INTENT-NOTIFICATION] Cancelled notification with fixed ID")
+@available(iOS 16.1, *)
+func rescheduleRestTimerNotification(
+    remainingSeconds: Int,
+    exerciseName: String = "Set"
+) async {
+    await scheduleRestTimerNotification(
+        duration: remainingSeconds,
+        exerciseName: exerciseName
+    )
 }
 
 // MARK: - Helper Function

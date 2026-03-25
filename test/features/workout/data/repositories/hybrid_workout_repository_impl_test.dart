@@ -12,12 +12,17 @@ import '../../../../helpers/test_setup.dart';
 
 // Mocks
 class MockHiveWorkoutDataSource extends Mock implements HiveWorkoutDataSource {}
-class MockFirebaseWorkoutDataSource extends Mock implements FirebaseWorkoutDataSource {}
+
+class MockFirebaseWorkoutDataSource extends Mock
+    implements FirebaseWorkoutDataSource {}
+
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockUser extends Mock implements User {}
 
 // Fakes for registerFallbackValue
 class FakeWorkoutModel extends Fake implements WorkoutModel {}
+
 class FakeExercise extends Fake implements Exercise {}
 
 void main() {
@@ -42,7 +47,9 @@ void main() {
     when(() => mockAuth.currentUser).thenReturn(mockUser);
     when(() => mockUser.uid).thenReturn('test-user-id');
     when(() => mockUser.email).thenReturn('test@example.com');
-    when(() => mockAuth.authStateChanges()).thenAnswer((_) => Stream.value(mockUser));
+    when(
+      () => mockAuth.authStateChanges(),
+    ).thenAnswer((_) => Stream.value(mockUser));
 
     repository = HybridWorkoutRepositoryImpl(
       localDataSource: mockLocalDataSource,
@@ -56,11 +63,16 @@ void main() {
   });
 
   group('HybridWorkoutRepositoryImpl - saveWorkout', () {
+    test('should treat missing cached profile as non-premium', () {
+      expect(repository.isPremiumUser, isFalse);
+    });
+
     test('should save workout locally and return success', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.saveWorkout(any(), any()))
-          .thenAnswer((_) async => 'workout-id');
+      when(
+        () => mockLocalDataSource.saveWorkout(any(), any()),
+      ).thenAnswer((_) async => 'workout-id');
 
       // Act
       final result = await repository.saveWorkout(workout);
@@ -71,7 +83,9 @@ void main() {
         (failure) => fail('Expected Right but got Left'),
         (id) => expect(id, equals('workout-id')),
       );
-      verify(() => mockLocalDataSource.saveWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.saveWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when user not authenticated', () async {
@@ -94,8 +108,9 @@ void main() {
     test('should save locally first for instant response', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.saveWorkout(any(), any()))
-          .thenAnswer((_) async => 'workout-id');
+      when(
+        () => mockLocalDataSource.saveWorkout(any(), any()),
+      ).thenAnswer((_) async => 'workout-id');
 
       // Act
       final stopwatch = Stopwatch()..start();
@@ -104,14 +119,17 @@ void main() {
 
       // Assert - Should be fast (< 100ms for local save)
       expect(stopwatch.elapsedMilliseconds, lessThan(100));
-      verify(() => mockLocalDataSource.saveWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.saveWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should handle save errors gracefully', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.saveWorkout(any(), any()))
-          .thenThrow(Exception('Database error'));
+      when(
+        () => mockLocalDataSource.saveWorkout(any(), any()),
+      ).thenThrow(Exception('Database error'));
 
       // Act
       final result = await repository.saveWorkout(workout);
@@ -119,7 +137,8 @@ void main() {
       // Assert
       expect(result.isLeft, isTrue);
       result.fold(
-        (failure) => expect(failure.toString(), contains('Failed to save workout')),
+        (failure) =>
+            expect(failure.toString(), contains('Failed to save workout')),
         (_) => fail('Expected Left but got Right'),
       );
     });
@@ -129,15 +148,18 @@ void main() {
     test('should update workout locally', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.updateWorkout(any(), any()))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.updateWorkout(any(), any()),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await repository.updateWorkout(workout);
 
       // Assert
       expect(result.isRight, isTrue);
-      verify(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when user not authenticated', () async {
@@ -156,8 +178,9 @@ void main() {
     test('should handle update errors', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.updateWorkout(any(), any()))
-          .thenThrow(Exception('Update failed'));
+      when(
+        () => mockLocalDataSource.updateWorkout(any(), any()),
+      ).thenThrow(Exception('Update failed'));
 
       // Act
       final result = await repository.updateWorkout(workout);
@@ -171,8 +194,9 @@ void main() {
     test('should get workout from local storage first', () async {
       // Arrange
       final workoutModel = _createTestWorkoutModel();
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => workoutModel);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => workoutModel);
 
       // Act
       final result = await repository.getWorkout('workout-id');
@@ -183,13 +207,16 @@ void main() {
         (_) => fail('Expected Right but got Left'),
         (workout) => expect(workout.id, equals('workout-id')),
       );
-      verify(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when workout not found locally', () async {
       // Arrange
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await repository.getWorkout('workout-id');
@@ -216,8 +243,9 @@ void main() {
 
     test('should handle get errors gracefully', () async {
       // Arrange
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenThrow(Exception('Database error'));
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenThrow(Exception('Database error'));
 
       // Act
       final result = await repository.getWorkout('workout-id');
@@ -231,12 +259,14 @@ void main() {
     test('should get workouts from local storage', () async {
       // Arrange
       final workouts = [_createTestWorkoutModel(), _createTestWorkoutModel()];
-      when(() => mockLocalDataSource.getWorkouts(
-        'test-user-id',
-        limit: any(named: 'limit'),
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      )).thenAnswer((_) async => workouts);
+      when(
+        () => mockLocalDataSource.getWorkouts(
+          'test-user-id',
+          limit: any(named: 'limit'),
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).thenAnswer((_) async => workouts);
 
       // Act
       final result = await repository.getWorkouts();
@@ -252,56 +282,66 @@ void main() {
     test('should apply limit filter correctly', () async {
       // Arrange
       final workouts = [_createTestWorkoutModel()];
-      when(() => mockLocalDataSource.getWorkouts(
-        'test-user-id',
-        limit: 10,
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      )).thenAnswer((_) async => workouts);
+      when(
+        () => mockLocalDataSource.getWorkouts(
+          'test-user-id',
+          limit: 10,
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).thenAnswer((_) async => workouts);
 
       // Act
       await repository.getWorkouts(limit: 10);
 
       // Assert
-      verify(() => mockLocalDataSource.getWorkouts(
-        'test-user-id',
-        limit: 10,
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      )).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkouts(
+          'test-user-id',
+          limit: 10,
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).called(1);
     });
 
     test('should apply date range filters', () async {
       // Arrange
       final startDate = DateTime(2024, 1, 1);
       final endDate = DateTime(2024, 12, 31);
-      when(() => mockLocalDataSource.getWorkouts(
-        'test-user-id',
-        limit: any(named: 'limit'),
-        startDate: startDate,
-        endDate: endDate,
-      )).thenAnswer((_) async => []);
+      when(
+        () => mockLocalDataSource.getWorkouts(
+          'test-user-id',
+          limit: any(named: 'limit'),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenAnswer((_) async => []);
 
       // Act
       await repository.getWorkouts(startDate: startDate, endDate: endDate);
 
       // Assert
-      verify(() => mockLocalDataSource.getWorkouts(
-        'test-user-id',
-        limit: any(named: 'limit'),
-        startDate: startDate,
-        endDate: endDate,
-      )).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkouts(
+          'test-user-id',
+          limit: any(named: 'limit'),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).called(1);
     });
 
     test('should return empty list when no workouts found', () async {
       // Arrange
-      when(() => mockLocalDataSource.getWorkouts(
-        'test-user-id',
-        limit: any(named: 'limit'),
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      )).thenAnswer((_) async => []);
+      when(
+        () => mockLocalDataSource.getWorkouts(
+          'test-user-id',
+          limit: any(named: 'limit'),
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).thenAnswer((_) async => []);
 
       // Act
       final result = await repository.getWorkouts();
@@ -323,27 +363,32 @@ void main() {
 
       // Assert
       expect(result.isLeft, isTrue);
-      verifyNever(() => mockLocalDataSource.getWorkouts(
-        any(),
-        limit: any(named: 'limit'),
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      ));
+      verifyNever(
+        () => mockLocalDataSource.getWorkouts(
+          any(),
+          limit: any(named: 'limit'),
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      );
     });
   });
 
   group('HybridWorkoutRepositoryImpl - deleteWorkout', () {
     test('should delete workout from local storage', () async {
       // Arrange
-      when(() => mockLocalDataSource.deleteWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.deleteWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await repository.deleteWorkout('workout-id');
 
       // Assert
       expect(result.isRight, isTrue);
-      verify(() => mockLocalDataSource.deleteWorkout('workout-id', 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.deleteWorkout('workout-id', 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when user not authenticated', () async {
@@ -360,8 +405,9 @@ void main() {
 
     test('should handle delete errors', () async {
       // Arrange
-      when(() => mockLocalDataSource.deleteWorkout('workout-id', 'test-user-id'))
-          .thenThrow(Exception('Delete failed'));
+      when(
+        () => mockLocalDataSource.deleteWorkout('workout-id', 'test-user-id'),
+      ).thenThrow(Exception('Delete failed'));
 
       // Act
       final result = await repository.deleteWorkout('workout-id');
@@ -375,8 +421,9 @@ void main() {
     test('should save completed workout to local storage', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.saveWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async => 'workout-id');
+      when(
+        () => mockLocalDataSource.saveWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async => 'workout-id');
 
       // Act
       final result = await repository.saveCompletedWorkout(
@@ -386,14 +433,17 @@ void main() {
 
       // Assert
       expect(result.isRight, isTrue);
-      verify(() => mockLocalDataSource.saveWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.saveWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return empty activity IDs list', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.saveWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async => 'workout-id');
+      when(
+        () => mockLocalDataSource.saveWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async => 'workout-id');
 
       // Act
       final result = await repository.saveCompletedWorkout(
@@ -415,8 +465,9 @@ void main() {
       final workout = _createTestWorkout();
       var callCount = 0;
 
-      when(() => mockLocalDataSource.saveWorkout(any(), any()))
-          .thenAnswer((_) async {
+      when(() => mockLocalDataSource.saveWorkout(any(), any())).thenAnswer((
+        _,
+      ) async {
         callCount++;
         await Future.delayed(const Duration(milliseconds: 50));
         return 'workout-id-$callCount';
@@ -441,8 +492,9 @@ void main() {
       final workout = _createTestWorkout();
       var updateCount = 0;
 
-      when(() => mockLocalDataSource.updateWorkout(any(), any()))
-          .thenAnswer((_) async {
+      when(() => mockLocalDataSource.updateWorkout(any(), any())).thenAnswer((
+        _,
+      ) async {
         updateCount++;
         await Future.delayed(const Duration(milliseconds: 50));
       });
@@ -464,8 +516,9 @@ void main() {
     test('should return UnexpectedFailure for unknown errors', () async {
       // Arrange
       final workout = _createTestWorkout();
-      when(() => mockLocalDataSource.saveWorkout(any(), any()))
-          .thenThrow(Exception('Unknown error'));
+      when(
+        () => mockLocalDataSource.saveWorkout(any(), any()),
+      ).thenThrow(Exception('Unknown error'));
 
       // Act
       final result = await repository.saveWorkout(workout);
@@ -473,7 +526,8 @@ void main() {
       // Assert
       expect(result.isLeft, isTrue);
       result.fold(
-        (failure) => expect(failure.toString(), contains('Failed to save workout')),
+        (failure) =>
+            expect(failure.toString(), contains('Failed to save workout')),
         (_) => fail('Expected Left but got Right'),
       );
     });
@@ -483,8 +537,14 @@ void main() {
       when(() => mockAuth.currentUser).thenReturn(null);
 
       // Act & Assert - All methods should fail gracefully
-      expect((await repository.saveWorkout(_createTestWorkout())).isLeft, isTrue);
-      expect((await repository.updateWorkout(_createTestWorkout())).isLeft, isTrue);
+      expect(
+        (await repository.saveWorkout(_createTestWorkout())).isLeft,
+        isTrue,
+      );
+      expect(
+        (await repository.updateWorkout(_createTestWorkout())).isLeft,
+        isTrue,
+      );
       expect((await repository.getWorkout('id')).isLeft, isTrue);
       expect((await repository.getWorkouts()).isLeft, isTrue);
       expect((await repository.deleteWorkout('id')).isLeft, isTrue);
@@ -521,29 +581,30 @@ void main() {
         averageWorkoutDuration: 45.0, // minutes as double
         exercisesByCategory: {},
       );
-      when(() => mockLocalDataSource.getWorkoutStats(
-        'test-user-id',
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      )).thenAnswer((_) async => stats);
+      when(
+        () => mockLocalDataSource.getWorkoutStats(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).thenAnswer((_) async => stats);
 
       // Act
       final result = await repository.getWorkoutStats();
 
       // Assert
       expect(result.isRight, isTrue);
-      result.fold(
-        (_) => fail('Expected Right but got Left'),
-        (returnedStats) {
-          expect(returnedStats.totalWorkouts, equals(10));
-          expect(returnedStats.totalExercises, equals(50));
-        },
-      );
-      verify(() => mockLocalDataSource.getWorkoutStats(
-        'test-user-id',
-        startDate: any(named: 'startDate'),
-        endDate: any(named: 'endDate'),
-      )).called(1);
+      result.fold((_) => fail('Expected Right but got Left'), (returnedStats) {
+        expect(returnedStats.totalWorkouts, equals(10));
+        expect(returnedStats.totalExercises, equals(50));
+      });
+      verify(
+        () => mockLocalDataSource.getWorkoutStats(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).called(1);
     });
 
     test('should apply date filters to stats', () async {
@@ -558,21 +619,25 @@ void main() {
         averageWorkoutDuration: 40.0, // minutes as double
         exercisesByCategory: {},
       );
-      when(() => mockLocalDataSource.getWorkoutStats(
-        'test-user-id',
-        startDate: startDate,
-        endDate: endDate,
-      )).thenAnswer((_) async => stats);
+      when(
+        () => mockLocalDataSource.getWorkoutStats(
+          'test-user-id',
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenAnswer((_) async => stats);
 
       // Act
       await repository.getWorkoutStats(startDate: startDate, endDate: endDate);
 
       // Assert
-      verify(() => mockLocalDataSource.getWorkoutStats(
-        'test-user-id',
-        startDate: startDate,
-        endDate: endDate,
-      )).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkoutStats(
+          'test-user-id',
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).called(1);
     });
 
     test('should return failure when user not authenticated', () async {
@@ -591,8 +656,9 @@ void main() {
     test('should stream active workout from local storage', () async {
       // Arrange
       final workoutModel = _createTestWorkoutModel();
-      when(() => mockLocalDataSource.getActiveWorkout('test-user-id'))
-          .thenAnswer((_) async => workoutModel);
+      when(
+        () => mockLocalDataSource.getActiveWorkout('test-user-id'),
+      ).thenAnswer((_) async => workoutModel);
 
       // Act
       final stream = repository.watchActiveWorkout();
@@ -605,8 +671,9 @@ void main() {
 
     test('should stream null when no active workout', () async {
       // Arrange
-      when(() => mockLocalDataSource.getActiveWorkout('test-user-id'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockLocalDataSource.getActiveWorkout('test-user-id'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final stream = repository.watchActiveWorkout();
@@ -641,25 +708,26 @@ void main() {
         currentPage: 1,
         hasMore: true,
       );
-      when(() => mockLocalDataSource.getWorkoutHistory(
-        'test-user-id',
-        page: 1,
-        limit: 10,
-      )).thenAnswer((_) async => history);
+      when(
+        () => mockLocalDataSource.getWorkoutHistory(
+          'test-user-id',
+          page: 1,
+          limit: 10,
+        ),
+      ).thenAnswer((_) async => history);
 
       // Act
       final result = await repository.getWorkoutHistory(page: 1, limit: 10);
 
       // Assert
       expect(result.isRight, isTrue);
-      result.fold(
-        (_) => fail('Expected Right but got Left'),
-        (returnedHistory) {
-          expect(returnedHistory.workouts.length, equals(2));
-          expect(returnedHistory.totalCount, equals(20));
-          expect(returnedHistory.hasMore, isTrue);
-        },
-      );
+      result.fold((_) => fail('Expected Right but got Left'), (
+        returnedHistory,
+      ) {
+        expect(returnedHistory.workouts.length, equals(2));
+        expect(returnedHistory.totalCount, equals(20));
+        expect(returnedHistory.hasMore, isTrue);
+      });
     });
 
     test('should handle different page numbers', () async {
@@ -670,21 +738,25 @@ void main() {
         currentPage: 2,
         hasMore: false,
       );
-      when(() => mockLocalDataSource.getWorkoutHistory(
-        'test-user-id',
-        page: 2,
-        limit: 10,
-      )).thenAnswer((_) async => history);
+      when(
+        () => mockLocalDataSource.getWorkoutHistory(
+          'test-user-id',
+          page: 2,
+          limit: 10,
+        ),
+      ).thenAnswer((_) async => history);
 
       // Act
       await repository.getWorkoutHistory(page: 2, limit: 10);
 
       // Assert
-      verify(() => mockLocalDataSource.getWorkoutHistory(
-        'test-user-id',
-        page: 2,
-        limit: 10,
-      )).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkoutHistory(
+          'test-user-id',
+          page: 2,
+          limit: 10,
+        ),
+      ).called(1);
     });
 
     test('should return failure when user not authenticated', () async {
@@ -713,10 +785,12 @@ void main() {
         isCompleted: true,
       );
 
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => workoutModel);
-      when(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => workoutModel);
+      when(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await repository.updateExerciseSet(
@@ -727,8 +801,12 @@ void main() {
 
       // Assert
       expect(result.isRight, isTrue);
-      verify(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id')).called(1);
-      verify(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).called(1);
+      verify(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when workout not found', () async {
@@ -741,8 +819,9 @@ void main() {
         restTime: 60,
         isCompleted: false,
       );
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await repository.updateExerciseSet(
@@ -767,10 +846,12 @@ void main() {
       final workoutModel = WorkoutModel.fromDomain(workout);
       final newExercise = _createTestExercise();
 
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => workoutModel);
-      when(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => workoutModel);
+      when(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await repository.addExerciseToWorkout(
@@ -780,15 +861,20 @@ void main() {
 
       // Assert
       expect(result.isRight, isTrue);
-      verify(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id')).called(1);
-      verify(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).called(1);
+      verify(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when workout not found', () async {
       // Arrange
       final exercise = _createTestExercise();
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await repository.addExerciseToWorkout(
@@ -807,10 +893,12 @@ void main() {
       final workout = _createTestWorkoutWithExercise();
       final workoutModel = WorkoutModel.fromDomain(workout);
 
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => workoutModel);
-      when(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => workoutModel);
+      when(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await repository.removeExerciseFromWorkout(
@@ -820,14 +908,19 @@ void main() {
 
       // Assert
       expect(result.isRight, isTrue);
-      verify(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id')).called(1);
-      verify(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).called(1);
+      verify(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when workout not found', () async {
       // Arrange
-      when(() => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-id', 'test-user-id'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await repository.removeExerciseFromWorkout(

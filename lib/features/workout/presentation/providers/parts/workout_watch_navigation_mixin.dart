@@ -1,6 +1,7 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutWatchNavigationMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatchNotifyMixin {
+mixin WorkoutWatchNavigationMixin
+    on Notifier<Workout?>, WorkoutCoreMixin, WorkoutWatchNotifyMixin {
   /// ⌚ Jump to a specific exercise when triggered from Apple Watch
   /// - exerciseIndex: 0-indexed position in the exercises list
   void _jumpToExerciseFromWatch(int exerciseIndex) {
@@ -134,6 +135,7 @@ mixin WorkoutWatchNavigationMixin on Notifier<Workout?>, WorkoutCoreMixin, Worko
 
     // Send a targeted update so Watch actually shows the selected set.
     _getFormCuesAndNotifyWatch(
+      workoutId: workout.id,
       exerciseName: currentExercise.name,
       exerciseId: currentExercise.id,
       currentSet: setNumber,
@@ -209,7 +211,7 @@ mixin WorkoutWatchNavigationMixin on Notifier<Workout?>, WorkoutCoreMixin, Worko
     // Update ALL sets with the new weight and reps (for non-superset exercises)
     if (currentExercise is! SupersetExercise) {
       final updatedSets = currentExercise.sets.map((set) {
-        return set.copyWith(weight: weight, reps: reps);
+        return set.copyWithExactTarget(weight: weight, reps: reps);
       }).toList();
 
       final updatedExercise = currentExercise.copyWith(sets: updatedSets);
@@ -279,11 +281,9 @@ mixin WorkoutWatchNavigationMixin on Notifier<Workout?>, WorkoutCoreMixin, Worko
     final previousSet = currentExercise.sets[firstIncompleteIndex - 1];
     final currentSet = currentExercise.sets[firstIncompleteIndex];
 
-    // Copy weight and reps from previous set
-    final updatedSet = currentSet.copyWith(
-      weight: previousSet.weight,
-      reps: previousSet.reps,
-    );
+    // Copy the full rep target from the previous set so exact reps and ranges
+    // stay consistent on both iPhone and Watch.
+    final updatedSet = currentSet.copyWeightAndRepTargetFrom(previousSet);
 
     final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
     updatedSets[firstIncompleteIndex] = updatedSet;
@@ -298,7 +298,7 @@ mixin WorkoutWatchNavigationMixin on Notifier<Workout?>, WorkoutCoreMixin, Worko
     );
 
     debugPrint(
-      '⌚ [FLUTTER] ✅ Copied ${previousSet.weight}kg × ${previousSet.reps} from set $firstIncompleteIndex to set ${firstIncompleteIndex + 1}',
+      '⌚ [FLUTTER] ✅ Copied ${previousSet.weight}kg × ${previousSet.repsDisplay} from set $firstIncompleteIndex to set ${firstIncompleteIndex + 1}',
     );
 
     // Auto-save

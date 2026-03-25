@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/progress/presentation/providers/cach
 import 'package:gymbro_flutter_new/features/scheduling/presentation/providers/scheduling_provider.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/cloud_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
+import 'package:gymbro_flutter_new/features/premium/presentation/providers/purchase_providers.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
@@ -128,29 +129,51 @@ class AuthController extends Notifier<AsyncValue<void>> {
       final hasRemoteOnboardingFlag =
           data?.containsKey('onboardingCompleted') == true;
       final hasCompletedOnboarding = data?['onboardingCompleted'] == true;
+      final hasRemoteResetMarker = data?['onboardingLastResetAt'] != null;
+
+      // Admin panel can explicitly reset onboarding for existing users.
+      // In that case, remote reset must take precedence over local cache.
+      if (!hasCompletedOnboarding && hasRemoteResetMarker) {
+        if (kDebugMode) {
+          debugPrint(
+            '[Auth] 🔄 Remote onboarding reset detected - forcing local reset',
+          );
+        }
+        if (localCompleted) {
+          await appConfigNotifier.setInitialOnboardingCompleted(false);
+        }
+        await OnboardingCompletionIdentityStore.clearCompletedUserId();
+        return;
+      }
 
       if (!hasRemoteOnboardingFlag) {
         // Remote flag missing:
-        // - preserve local completion for the same local owner
-        // - reset only when completion clearly belongs to another user
-        if (localCompleted &&
-            completedForUserId != null &&
-            completedForUserId != uid) {
+        // - preserve local completion only when we can prove it belongs to
+        //   this same user and repair Firestore
+        // - otherwise treat onboarding as incomplete and reset local state
+        if (localCompleted && completedForUserId == uid) {
           if (kDebugMode) {
             debugPrint(
-              '[Auth] 🔄 onboardingCompleted missing remotely and local completion belongs to another user → reset local flag',
+              '[Auth] ♻️ onboardingCompleted missing remotely but local completion belongs to same user - repairing remote flag',
             );
           }
-          await appConfigNotifier.setInitialOnboardingCompleted(false);
-          await OnboardingCompletionIdentityStore.clearCompletedUserId();
+          await _tryRepairRemoteOnboardingFlag(uid);
           return;
         }
 
         if (kDebugMode) {
           debugPrint(
-            '[Auth] ℹ️ onboardingCompleted missing in Firestore - preserving local flag: $localCompleted',
+            '[Auth] 🔄 onboardingCompleted missing in Firestore - treating user as incomplete and initializing remote flag',
           );
         }
+
+        if (localCompleted) {
+          await appConfigNotifier.setInitialOnboardingCompleted(false);
+        }
+        if (completedForUserId != null) {
+          await OnboardingCompletionIdentityStore.clearCompletedUserId();
+        }
+        await _tryInitializeRemoteOnboardingFlag(uid);
         return;
       }
 
@@ -209,6 +232,8 @@ class AuthController extends Notifier<AsyncValue<void>> {
       await _authService.updateUserDocument(uid, {
         'onboardingCompleted': true,
         'onboardingCompletedAt': FieldValue.serverTimestamp(),
+        // Clear explicit reset marker after local completion recovery.
+        'onboardingLastResetAt': FieldValue.delete(),
       });
       if (kDebugMode) {
         debugPrint('[Auth] ✅ Repaired remote onboardingCompleted flag');
@@ -216,6 +241,24 @@ class AuthController extends Notifier<AsyncValue<void>> {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[Auth] ⚠️ Failed to repair remote onboarding flag: $e');
+      }
+    }
+  }
+
+  Future<void> _tryInitializeRemoteOnboardingFlag(String uid) async {
+    try {
+      await _authService.updateUserDocument(uid, {
+        'onboardingCompleted': false,
+        'onboardingCompletedAt': null,
+      });
+      if (kDebugMode) {
+        debugPrint('[Auth] ✅ Initialized missing remote onboarding flag');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[Auth] ⚠️ Failed to initialize missing remote onboarding flag: $e',
+        );
       }
     }
   }
@@ -280,9 +323,15 @@ class AuthController extends Notifier<AsyncValue<void>> {
         forceAccountSelection: forceAccountSelection,
       );
 
+      if (credential == null) {
+        throw Exception(
+          'Google Sign In did not complete. On Android this can indicate a Google/Firebase OAuth configuration problem.',
+        );
+      }
+
       // 🔧 FIX: Check and reset onboarding for new users
-      if (credential?.user != null) {
-        await _checkAndResetOnboardingForNewUser(credential!.user!.uid);
+      if (credential.user != null) {
+        await _checkAndResetOnboardingForNewUser(credential.user!.uid);
       }
 
       state = const AsyncValue.data(null);
@@ -318,6 +367,14 @@ class AuthController extends Notifier<AsyncValue<void>> {
       // 🔐 SECURITY: Clear ALL user data before sign out
       // This prevents the next user from seeing previous user's cached data
       await _clearAllUserCaches();
+
+      try {
+        await ref.read(purchaseRepositoryProvider).logout();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[Auth] ⚠️ RevenueCat logout failed during sign-out: $e');
+        }
+      }
 
       await _authService.signOut();
       state = const AsyncValue.data(null);

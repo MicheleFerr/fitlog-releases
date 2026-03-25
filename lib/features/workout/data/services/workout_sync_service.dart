@@ -16,6 +16,7 @@ library;
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
@@ -28,12 +29,15 @@ class WorkoutSyncService {
     required HiveWorkoutDataSource localDataSource,
     required FirebaseWorkoutDataSource remoteDataSource,
     required FirebaseAuth auth,
+    FirebaseFirestore? firestore,
   }) : _localDataSource = localDataSource,
        _remoteDataSource = remoteDataSource,
-       _auth = auth;
+       _auth = auth,
+       _firestore = firestore ?? FirebaseFirestore.instance;
   final HiveWorkoutDataSource _localDataSource;
   final FirebaseWorkoutDataSource _remoteDataSource;
   final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
 
   Timer? _syncTimer;
   bool _isSyncing = false;
@@ -41,6 +45,7 @@ class WorkoutSyncService {
 
   // Sync status tracking
   final Map<String, SyncStatus> _syncStatuses = {};
+  static const String _lastSyncKeyPrefix = 'workout_sync_last_sync_';
 
   /// Initialize sync service
   Future<void> initialize() async {
@@ -63,10 +68,7 @@ class WorkoutSyncService {
   /// Load user profile to check premium status
   Future<void> _loadUserProfile(String userId) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
+      final doc = await _firestore.collection('users').doc(userId).get();
 
       if (doc.exists) {
         _userProfile = UserProfile.fromFirestore(doc);
@@ -80,7 +82,8 @@ class WorkoutSyncService {
 
   /// Check if user is premium
   bool get _isPremiumUser {
-    return _userProfile?.accountTier != AccountTier.free;
+    final accountTier = _userProfile?.accountTier;
+    return accountTier != null && accountTier != AccountTier.free;
   }
 
   /// Start periodic sync for premium users
@@ -108,14 +111,19 @@ class WorkoutSyncService {
       return SyncResult(success: false, message: 'Sync already in progress');
     }
 
+    final userId = _auth.currentUser?.uid;
+    if (userId != null) {
+      await _loadUserProfile(userId);
+    }
+
     if (!_isPremiumUser) {
+      stopPeriodicSync();
       return SyncResult(
         success: false,
         message: 'Sync available for premium users only',
       );
     }
 
-    final userId = _auth.currentUser?.uid;
     if (userId == null) {
       return SyncResult(success: false, message: 'User not authenticated');
     }
@@ -200,12 +208,13 @@ class WorkoutSyncService {
   Future<void> _pullFromCloud(String userId, SyncResult result) async {
     try {
       // Get last sync time (for incremental sync)
-      final lastSyncTime = _getLastSyncTime();
+      final lastSyncTime = await _getLastSyncTime(userId);
 
       // Get all cloud workouts (modified after last sync if available)
       final cloudWorkouts = await _remoteDataSource.getWorkouts(
         userId,
         startDate: lastSyncTime,
+        useUpdatedAt: true,
       );
 
       // Update local storage with cloud data
@@ -228,7 +237,7 @@ class WorkoutSyncService {
         }
       }
 
-      _saveLastSyncTime(DateTime.now());
+      await _saveLastSyncTime(userId, DateTime.now());
     } catch (e) {
       result.errors.add('Failed to pull from cloud: $e');
     }
@@ -254,15 +263,36 @@ class WorkoutSyncService {
   }
 
   /// Get last sync time from preferences
-  DateTime? _getLastSyncTime() {
-    // TODO: Implement using shared_preferences
-    // For now, return null to sync all
-    return null;
+  Future<DateTime?> _getLastSyncTime(String userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final storedValue = prefs.getString('$_lastSyncKeyPrefix$userId');
+      if (storedValue == null || storedValue.isEmpty) {
+        return null;
+      }
+
+      return DateTime.tryParse(storedValue);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to load workout sync timestamp: $e');
+      }
+      return null;
+    }
   }
 
   /// Save last sync time to preferences
-  void _saveLastSyncTime(DateTime time) {
-    // TODO: Implement using shared_preferences
+  Future<void> _saveLastSyncTime(String userId, DateTime time) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        '$_lastSyncKeyPrefix$userId',
+        time.toIso8601String(),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to persist workout sync timestamp: $e');
+      }
+    }
   }
 
   /// Force conflict resolution for a specific workout

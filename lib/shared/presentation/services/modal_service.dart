@@ -47,7 +47,10 @@ class ModalService {
 
   /// Calcola la dimensione massima sicura per DraggableScrollableSheet
   /// che evita notch/Dynamic Island.
-  static double safeMaxChildSize(BuildContext context, {double preferredMax = 0.95}) {
+  static double safeMaxChildSize(
+    BuildContext context, {
+    double preferredMax = 0.95,
+  }) {
     final screenHeight = MediaQuery.of(context).size.height;
     final topPadding = MediaQuery.of(context).viewPadding.top;
     final maxSize = (screenHeight - topPadding - 8) / screenHeight;
@@ -70,6 +73,7 @@ class ModalService {
     bool isDismissible = true,
     bool enableDrag = true,
     bool isScrollControlled = true,
+    bool useRootNavigator = false,
     Color? backgroundColor,
     ShapeBorder? shape,
     bool showDragHandle = false,
@@ -83,6 +87,7 @@ class ModalService {
         isDismissible: isDismissible,
         enableDrag: enableDrag,
         isScrollControlled: isScrollControlled,
+        useRootNavigator: useRootNavigator,
         backgroundColor: backgroundColor,
         shape: shape,
         showDragHandle: showDragHandle,
@@ -108,6 +113,7 @@ class ModalService {
     required Widget child,
     bool isDismissible = true,
     bool enableDrag = true,
+    bool useRootNavigator = false,
     double? height,
     Color? backgroundColor,
   }) {
@@ -122,11 +128,10 @@ class ModalService {
       context,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
+      useRootNavigator: useRootNavigator,
       builder: (_) => Container(
         height: safeHeight,
-        padding: EdgeInsets.only(
-          bottom: context.mediaQuery.viewInsets.bottom,
-        ),
+        padding: EdgeInsets.only(bottom: context.mediaQuery.viewInsets.bottom),
         decoration: BoxDecoration(
           color: backgroundColor ?? context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -155,12 +160,14 @@ class ModalService {
     BuildContext context, {
     required Widget child,
     bool isDismissible = true,
+    bool useRootNavigator = false,
     Color? backgroundColor,
   }) {
     return showSheet<T>(
       context,
       isDismissible: isDismissible,
       enableDrag: false,
+      useRootNavigator: useRootNavigator,
       backgroundColor: backgroundColor ?? context.colors.surface,
       useSafeArea: true,
       builder: (_) => child,
@@ -178,9 +185,7 @@ class ModalService {
       barrierDismissible: barrierDismissible,
       builder: (_) => Dialog(
         backgroundColor: context.colors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: child,
       ),
     );
@@ -238,7 +243,9 @@ class ModalService {
     return showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        icon: icon != null ? Icon(icon, size: 48, color: context.colors.primary) : null,
+        icon: icon != null
+            ? Icon(icon, size: 48, color: context.colors.primary)
+            : null,
         title: Text(title),
         content: Text(message),
         actions: [
@@ -385,7 +392,9 @@ class ModalService {
                 child: Text(
                   action.label,
                   style: action.isDangerous
-                      ? context.textTheme.labelLarge?.copyWith(color: context.colors.error)
+                      ? context.textTheme.labelLarge?.copyWith(
+                          color: context.colors.error,
+                        )
                       : null,
                 ),
               );
@@ -404,7 +413,6 @@ class ModalService {
 
 /// Rappresenta un'azione in un dialog con azioni multiple
 class DialogAction {
-
   const DialogAction({
     required this.label,
     required this.onPressed,

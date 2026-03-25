@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/domain/entities/progress_data.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/firestore_workout_history_reader.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 
 /// ✅ MIGRATED: Removed ExerciseActivityRepository dependency
@@ -49,16 +50,16 @@ final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((
   }
 
   try {
-    final firestore = FirebaseFirestore.instance;
-    final query = await firestore
-        .collection('workouts')
-        .where('userId', isEqualTo: currentUser!.uid)
-        .where('status', isEqualTo: 'completed')
-        .orderBy('endTime', descending: true)
-        .limit(1)
-        .get();
+    final reader = FirestoreWorkoutHistoryReader(
+      firestore: FirebaseFirestore.instance,
+    );
+    final workouts = await reader.getRecentCompletedWorkouts(
+      userId: currentUser!.uid,
+      limit: 1,
+      scanLimit: 50,
+    );
 
-    if (query.docs.isEmpty) {
+    if (workouts.isEmpty) {
       if (kDebugMode) {
         debugPrint(
           '⚠️ [RecentActivity] No workouts found for userId: ${currentUser.uid}',
@@ -67,10 +68,7 @@ final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((
       return null;
     }
 
-    final doc = query.docs.first;
-    final data = doc.data();
-    final timestamp = data['endTime'] as Timestamp?;
-    final date = timestamp?.toDate();
+    final date = workouts.first.completedAt;
 
     if (kDebugMode) {
       debugPrint('✅ [RecentActivity] Last workout: $date');

@@ -4,7 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart'
-    show WorkoutTemplate, ExerciseTemplate;
+    show
+        WorkoutTemplate,
+        ExerciseTemplate,
+        TemplateVisibility,
+        TemplateLineageType,
+        TemplateDistributionStatus;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
@@ -15,6 +20,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/template_name_generator.dart';
 
 // Repository provider - Firebase se utente autenticato, altrimenti locale
 final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
@@ -77,21 +83,49 @@ final allWorkoutTemplatesProvider =
 // Solo template personalizzati
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final customWorkoutTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((
-  ref,
-) async {
-  // 1. Prendi i template dal repository legacy (esistenti)
-  final repository = ref.watch(workoutTemplateRepositoryProvider);
-  final legacyTemplates = await repository.getCustomTemplates();
-  return legacyTemplates;
-});
+final customWorkoutTemplatesProvider =
+    FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
+      // 1. Prendi i template dal repository legacy (esistenti)
+      final repository = ref.watch(workoutTemplateRepositoryProvider);
+      final legacyTemplates = await repository.getCustomTemplates();
+      return legacyTemplates;
+    });
+
+/// Editable private templates that belong to the user's Library.
+final libraryWorkoutTemplatesProvider =
+    FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
+      final templates = await ref.watch(customWorkoutTemplatesProvider.future);
+      return templates.where((template) => template.isLibraryTemplate).toList();
+    });
+
+/// Public templates shared by the community.
+///
+/// Only available when using the Firebase-backed repository.
+final publicWorkoutTemplatesProvider =
+    FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
+      final repository = ref.watch(workoutTemplateRepositoryProvider);
+      if (repository is! FirebaseWorkoutTemplateRepository) {
+        return [];
+      }
+
+      final publicTemplates = await repository.getPublicTemplates();
+      return publicTemplates;
+    });
+
+/// Store templates available from the public catalog.
+final storeWorkoutTemplatesProvider =
+    FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
+      return ref.watch(publicWorkoutTemplatesProvider.future);
+    });
 
 // Categoria dominante tra i template dell'utente (per PersonalizedContentCard)
 /// Calcola la categoria più frequente tra i template custom dell'utente.
 /// Usato per colorare dinamicamente il widget "Le mie schede" nella home.
 final dominantTemplateCategoryProvider =
     FutureProvider.autoDispose<TemplateCategory?>((ref) async {
-      final templatesAsync = await ref.watch(customWorkoutTemplatesProvider.future);
+      final templatesAsync = await ref.watch(
+        customWorkoutTemplatesProvider.future,
+      );
 
       if (templatesAsync.isEmpty) {
         return null; // Nessun template, usa colore default
@@ -424,8 +458,14 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
     await _ensureInitialized();
 
     try {
+      final resolvedName = name.trim().isNotEmpty
+          ? name.trim()
+          : TemplateNameGenerator.generateFromExercises(exercises);
+
       if (kDebugMode) {
-        debugPrint('🆕 PROVIDER: Creating template from workout: "$name"');
+        debugPrint(
+          '🆕 PROVIDER: Creating template from workout: "$resolvedName"',
+        );
         debugPrint('   - Source exercises: ${exercises.length}');
         debugPrint('   - Using Cloud Function for quota enforcement');
       }
@@ -433,7 +473,7 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       // 🔐 SECURITY: Use Cloud Function for server-side quota enforcement
       // Direct Firestore writes are BLOCKED by Security Rules
       final result = await TemplateCloudService.createTemplate(
-        name: name,
+        name: resolvedName,
         description: description,
         exercises: exercises,
         tags: tags ?? [],
@@ -448,7 +488,7 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
         debugPrint('🆕 PROVIDER: Template created via Cloud Function');
         debugPrint('   - Template ID: ${result.templateId}');
         debugPrint(
-          '   - Quota: ${result.quota.privateUsed}/${result.quota.privateMax} private templates',
+          '   - Library: ${result.quota.libraryUsed}/${result.quota.libraryMax} editable templates',
         );
       }
 
@@ -462,7 +502,7 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       // This is needed for the return value and local state
       final template = WorkoutTemplate(
         id: result.templateId,
-        name: name,
+        name: resolvedName,
         description: description,
         exercises: exerciseTemplates,
         tags: tags ?? [],
@@ -495,7 +535,7 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       if (kDebugMode) {
         debugPrint('✅ PROVIDER: Template creation completed');
         debugPrint(
-          '   - Remaining quota: ${result.quota.privateRemaining} private templates',
+          '   - Remaining Library slots: ${result.quota.libraryRemaining}',
         );
       }
 
@@ -504,7 +544,7 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       if (kDebugMode) {
         debugPrint('🚨 PROVIDER: Template quota exceeded!');
         debugPrint(
-          '   - ${e.quota.privateUsed}/${e.quota.privateMax} private templates',
+          '   - ${e.quota.libraryUsed}/${e.quota.libraryMax} Library templates',
         );
         debugPrint('   - Account tier: ${e.quota.accountTier}');
       }
@@ -559,22 +599,51 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
         debugPrint('📋 PROVIDER: Duplicating template "${template.name}"');
       }
 
-      // Create a new template with the same content but new ID
+      final currentUserId = ref.read(currentUserIdProvider);
+
+      // Create a new private copy with reset distribution metadata.
       final duplicatedTemplate = WorkoutTemplate(
-        // id is auto-generated, createdAt/updatedAt are auto-set to now
         name: '${template.name} (Copy)',
         description: template.description,
         imageUrl: template.imageUrl,
-        exercises: List.from(template.exercises), // Copy the list
+        exercises: List.from(template.exercises),
         estimatedDuration: template.estimatedDuration,
-        tags: List.from(template.tags), // Copy the list
-        isCustom: true, // Always custom since user duplicated it
-        usageCount: 0, // Reset usage count for the copy
-        isPublic: false, // Not public by default
-        userId: template.userId,
+        tags: List.from(template.tags),
+        isCustom: true,
+        usageCount: 0,
+        isPublic: false,
+        visibility: TemplateVisibility.private,
+        lineageType: template.isForkTemplate
+            ? TemplateLineageType.fork
+            : TemplateLineageType.original,
+        parentTemplateId: template.isForkTemplate
+            ? (template.parentTemplateId ?? template.id)
+            : null,
+        rootTemplateId: template.isForkTemplate
+            ? template.effectiveRootTemplateId
+            : null,
+        distributionStatus: TemplateDistributionStatus.active,
+        publishedAt: null,
+        versionNumber: 1,
+        userId: currentUserId ?? template.userId,
+        authorName: null,
+        authorPhotoUrl: null,
+        downloadCount: 0,
+        forkCount: 0,
+        averageRating: 0.0,
+        reviewCount: 0,
         difficulty: template.difficulty,
+        category: template.category,
         defaultAutoAdjustmentType: template.defaultAutoAdjustmentType,
         defaultApreProtocol: template.defaultApreProtocol,
+        isAnonymous: false,
+        forkedFromTemplateId: template.isForkTemplate
+            ? (template.forkedFromTemplateId ?? template.id)
+            : null,
+        originalAuthorName: template.isForkTemplate
+            ? (template.originalAuthorName ?? template.authorName)
+            : null,
+        supersededByTemplateId: null,
       );
 
       // Save the duplicated template
@@ -1024,41 +1093,42 @@ final templateQuotaProvider = FutureProvider.autoDispose<TemplateQuotaInfo>((
 ///
 /// Restituisce la lista dei template in attesa di sincronizzazione con il cloud.
 /// Si aggiorna periodicamente per riflettere i cambiamenti dello stato di sync.
-final pendingTemplateSyncProvider = FutureProvider.autoDispose<List<PendingTemplateSyncInfo>>((
-  ref,
-) async {
-  // Watch auth stream - invalidate when user changes
-  final userAsync = ref.watch(currentUserProvider);
+final pendingTemplateSyncProvider =
+    FutureProvider.autoDispose<List<PendingTemplateSyncInfo>>((ref) async {
+      // Watch auth stream - invalidate when user changes
+      final userAsync = ref.watch(currentUserProvider);
 
-  if (userAsync.value == null) {
-    // Not authenticated - no pending syncs
-    return [];
-  }
+      if (userAsync.value == null) {
+        // Not authenticated - no pending syncs
+        return [];
+      }
 
-  // Aggiorna ogni 5 secondi (in sync con il timer del TemplateCloudSyncService)
-  await Future.delayed(const Duration(seconds: 5));
+      // Aggiorna ogni 5 secondi (in sync con il timer del TemplateCloudSyncService)
+      await Future.delayed(const Duration(seconds: 5));
 
-  // Recupera i template in sync dal service
-  final pendingTemplates = TemplateCloudSyncService.getAllPending();
+      // Recupera i template in sync dal service
+      final pendingTemplates = TemplateCloudSyncService.getAllPending();
 
-  if (kDebugMode) {
-    debugPrint(
-      '🔄 [SYNC] Found ${pendingTemplates.length} pending templates for sync',
-    );
-  }
+      if (kDebugMode) {
+        debugPrint(
+          '🔄 [SYNC] Found ${pendingTemplates.length} pending templates for sync',
+        );
+      }
 
-  // Converte in info readability per la UI
-  return pendingTemplates
-      .map((p) => PendingTemplateSyncInfo(
-            templateId: p.templateId,
-            templateName: p.templateData['name'] as String? ?? 'Unknown',
-            attemptCount: p.attemptCount,
-            maxAttempts: 5,
-            lastError: p.lastError,
-            nextRetryTime: p.nextRetryTime,
-          ))
-      .toList();
-});
+      // Converte in info readability per la UI
+      return pendingTemplates
+          .map(
+            (p) => PendingTemplateSyncInfo(
+              templateId: p.templateId,
+              templateName: p.templateData['name'] as String? ?? 'Unknown',
+              attemptCount: p.attemptCount,
+              maxAttempts: 5,
+              lastError: p.lastError,
+              nextRetryTime: p.nextRetryTime,
+            ),
+          )
+          .toList();
+    });
 
 /// Info di un template in attesa di sincronizzazione (per UI)
 class PendingTemplateSyncInfo {
@@ -1181,8 +1251,8 @@ class TemplateDiagnosticNotifier extends Notifier<TemplateDiagnosticState> {
       );
 
       // Fetch all templates from Firebase
-      final firebaseTemplates =
-          await repository.fetchAllTemplatesFromFirebaseDirect();
+      final firebaseTemplates = await repository
+          .fetchAllTemplatesFromFirebaseDirect();
 
       state = state.copyWith(
         isLoading: false,
@@ -1190,10 +1260,7 @@ class TemplateDiagnosticNotifier extends Notifier<TemplateDiagnosticState> {
         firebaseTemplates: firebaseTemplates,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -1273,8 +1340,8 @@ class TemplateDiagnosticState {
 /// Provider for template diagnostic notifier
 final templateDiagnosticNotifierProvider =
     NotifierProvider<TemplateDiagnosticNotifier, TemplateDiagnosticState>(
-  TemplateDiagnosticNotifier.new,
-);
+      TemplateDiagnosticNotifier.new,
+    );
 
 /// 🔧 Diagnostic info class
 class TemplateDiagnosticInfo {

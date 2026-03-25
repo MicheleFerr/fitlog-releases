@@ -44,14 +44,8 @@ final pendingDraftInfoProvider = FutureProvider<PendingDraftInfo?>((ref) async {
   return PendingDraftInfo(
     workoutName: workout.name,
     exerciseCount: workout.exercises.length,
-    completedSets: workout.exercises.fold(
-      0,
-      (sum, e) => sum + e.sets.where((s) => s.isCompleted).length,
-    ),
-    totalSets: workout.exercises.fold(
-      0,
-      (sum, e) => sum + e.sets.length,
-    ),
+    completedSets: workout.completedSets,
+    totalSets: workout.totalSets,
     startTime: workout.startTime,
     lastSaved: draft.lastSaved,
   );

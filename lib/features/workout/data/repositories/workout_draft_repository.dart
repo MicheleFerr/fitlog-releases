@@ -128,6 +128,7 @@ class WorkoutDraftRepository {
       if (kDebugMode) {
         debugPrint('❌ Failed to save workout draft: $e');
       }
+      rethrow;
     }
   }
 
@@ -232,6 +233,7 @@ class WorkoutDraftRepository {
     try {
       await init();
       await _draftBox?.delete(_currentDraftKey);
+      await _draftBox?.flush();
       if (kDebugMode) {
         debugPrint('✅ Workout draft cleared');
       }

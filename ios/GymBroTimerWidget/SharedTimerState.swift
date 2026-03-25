@@ -19,7 +19,7 @@ struct TimerStateData: Codable {
 }
 
 class SharedTimerState {
-    private static let groupID = "group.com.michele.gymbro.flutter"
+    private static let groupID = RestTimerNotificationSupport.sharedSuiteName
     private static let stateKey = "current_timer_state"
     private static let eventKey = "timer_event"
     private static let changeKey = "timer_last_change"

@@ -1,16 +1,12 @@
 library;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_config.dart';
 
 void main() {
   group('NotificationConfig constants', () {
     test('globalCooldown is 24 hours', () {
-      expect(
-        NotificationConfig.globalCooldown,
-        const Duration(hours: 24),
-      );
+      expect(NotificationConfig.globalCooldown, const Duration(hours: 24));
     });
 
     test('maxNotificationsPerWeek is 3', () {
@@ -62,10 +58,15 @@ void main() {
     });
 
     test('streakMilestones contains expected values', () {
-      expect(
-        NotificationConfig.streakMilestones,
-        [7, 14, 30, 60, 90, 180, 365],
-      );
+      expect(NotificationConfig.streakMilestones, [
+        7,
+        14,
+        30,
+        60,
+        90,
+        180,
+        365,
+      ]);
     });
 
     test('volumeIncreaseThreshold is 0.20', () {

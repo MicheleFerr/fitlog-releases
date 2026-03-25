@@ -17,8 +17,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
-import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_background_sync_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -40,15 +40,11 @@ class _HealthSyncSettingsScreenState
   @override
   Widget build(BuildContext context) {
     final permissionStatusAsync = ref.watch(healthPermissionStatusProvider);
-    final backgroundSyncState = ref.watch(
-      healthBackgroundSyncControllerProvider,
-    );
 
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.healthSyncSettings)),
       body: permissionStatusAsync.when(
-        data: (permissionStatus) =>
-            _buildContent(context, permissionStatus, backgroundSyncState),
+        data: (permissionStatus) => _buildContent(context, permissionStatus),
         loading: () => const Center(child: LoadingIndicator()),
         error: (err, stack) => _buildNotAvailableState(context),
       ),
@@ -57,17 +53,18 @@ class _HealthSyncSettingsScreenState
 
   Widget _buildContent(
     BuildContext context,
-    dynamic permissionStatus,
-    BackgroundSyncState backgroundSyncState,
+    HealthPermissionStatus permissionStatus,
   ) {
-    final permissions = permissionStatus.permissions as Map;
-    final isConnected =
-        permissions[HealthDataType.workout] == PermissionState.authorized ||
-        permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
+    final permissions = permissionStatus.permissions;
+    final hasConfirmedConnection =
+        permissionStatus.authorizedDataTypes.isNotEmpty;
+    final hasPendingVerification =
+        !hasConfirmedConnection &&
+        permissionStatus.unverifiedDataTypes.isNotEmpty;
+    final isConnected = permissionStatus.hasAnySyncAccess;
 
     // Android: Check if Health Connect is installed
-    final healthConnectAvailable =
-        permissionStatus.healthConnectAvailable as bool;
+    final healthConnectAvailable = permissionStatus.healthConnectAvailable;
     if (Platform.isAndroid && !healthConnectAvailable) {
       return _buildHealthConnectInstallState(context);
     }
@@ -78,7 +75,11 @@ class _HealthSyncSettingsScreenState
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Hero section with connection status
-          _buildHeroSection(context, isConnected),
+          _buildHeroSection(
+            context,
+            isConnected: isConnected,
+            hasPendingVerification: hasPendingVerification,
+          ),
           const SizedBox(height: 32),
 
           // Data types section
@@ -91,11 +92,30 @@ class _HealthSyncSettingsScreenState
     );
   }
 
-  Widget _buildHeroSection(BuildContext context, bool isConnected) {
+  Widget _buildHeroSection(
+    BuildContext context, {
+    required bool isConnected,
+    required bool hasPendingVerification,
+  }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
     final platformName = Platform.isIOS ? 'Apple Health' : 'Health Connect';
+    final statusLabel = hasPendingVerification
+        ? l10n.pending
+        : isConnected
+        ? l10n.connected
+        : l10n.notConnected;
+    final statusColor = hasPendingVerification
+        ? colorScheme.tertiary
+        : isConnected
+        ? context.successColor
+        : colorScheme.onSurface.withValues(alpha: 0.5);
+    final statusIcon = hasPendingVerification
+        ? AppIcons.refresh
+        : isConnected
+        ? AppIcons.checkCircle
+        : AppIcons.block;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -174,20 +194,12 @@ class _HealthSyncSettingsScreenState
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  isConnected ? AppIcons.checkCircle : AppIcons.block,
-                  size: 18,
-                  color: isConnected
-                      ? context.successColor
-                      : colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
+                Icon(statusIcon, size: 18, color: statusColor),
                 const SizedBox(width: 8),
                 Text(
-                  isConnected ? l10n.connected : l10n.notConnected,
+                  statusLabel,
                   style: theme.textTheme.labelLarge?.copyWith(
-                    color: isConnected
-                        ? context.successColor
-                        : colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: statusColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -253,8 +265,9 @@ class _HealthSyncSettingsScreenState
           icon: AppIcons.workout,
           title: l10n.healthDataWorkouts,
           description: l10n.healthSyncWorkoutsDescription,
-          isEnabled:
-              permissions[HealthDataType.workout] == PermissionState.authorized,
+          state:
+              permissions[HealthDataType.workout] ??
+              PermissionState.notDetermined,
           dataType: HealthDataType.workout,
         ),
         const SizedBox(height: 8),
@@ -263,21 +276,10 @@ class _HealthSyncSettingsScreenState
           icon: AppIcons.scale,
           title: l10n.healthDataBodyWeight,
           description: l10n.healthSyncBodyWeightDescription,
-          isEnabled:
-              permissions[HealthDataType.bodyWeight] ==
-              PermissionState.authorized,
+          state:
+              permissions[HealthDataType.bodyWeight] ??
+              PermissionState.notDetermined,
           dataType: HealthDataType.bodyWeight,
-        ),
-        const SizedBox(height: 8),
-        _buildDataTypeTile(
-          context,
-          icon: AppIcons.bedtime,
-          title: l10n.sleepData,
-          description: l10n.sleepTrackingDescription,
-          isEnabled:
-              permissions[HealthDataType.workout] == PermissionState.authorized,
-          dataType: null, // Sleep is read via workout permission
-          isReadOnly: true,
         ),
       ],
     );
@@ -288,12 +290,17 @@ class _HealthSyncSettingsScreenState
     required IconData icon,
     required String title,
     required String description,
-    required bool isEnabled,
+    required PermissionState state,
     HealthDataType? dataType,
     bool isReadOnly = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isEnabled = state.isSyncAttemptable;
+    final isPendingVerification = state.isPendingVerification;
+    final accentColor = isPendingVerification
+        ? colorScheme.tertiary
+        : context.successColor;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -301,7 +308,7 @@ class _HealthSyncSettingsScreenState
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isEnabled
-              ? context.successColor.withValues(alpha: 0.3)
+              ? accentColor.withValues(alpha: 0.3)
               : colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
@@ -312,14 +319,14 @@ class _HealthSyncSettingsScreenState
           height: 44,
           decoration: BoxDecoration(
             color: isEnabled
-                ? context.successColor.withValues(alpha: 0.15)
+                ? accentColor.withValues(alpha: 0.15)
                 : colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             icon,
             color: isEnabled
-                ? context.successColor
+                ? accentColor
                 : colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
@@ -341,7 +348,7 @@ class _HealthSyncSettingsScreenState
             ? Icon(
                 isEnabled ? AppIcons.checkCircle : AppIcons.remove,
                 color: isEnabled
-                    ? context.successColor
+                    ? accentColor
                     : colorScheme.onSurface.withValues(alpha: 0.3),
               )
             : CNSwitch(
@@ -507,18 +514,21 @@ class _HealthSyncSettingsScreenState
 
     unawaited(
       result.fold(
-      (failure) {
-        if (mounted) {
-          SnackBarService.showError(context, failure.message);
-        }
-        return null;
-      },
-      (_) {
-        if (mounted) {
-          SnackBarService.showInfo(context, context.l10n.healthConnectInstall);
-        }
-        return null;
-      },
+        (failure) {
+          if (mounted) {
+            SnackBarService.showError(context, failure.message);
+          }
+          return null;
+        },
+        (_) {
+          if (mounted) {
+            SnackBarService.showInfo(
+              context,
+              context.l10n.healthConnectInstall,
+            );
+          }
+          return null;
+        },
       ),
     );
   }
@@ -534,6 +544,11 @@ class _HealthSyncSettingsScreenState
     try {
       final controller = ref.read(healthPermissionControllerProvider.notifier);
       await controller.requestPermissionsSequential();
+      final backgroundController = ref.read(
+        healthBackgroundSyncControllerProvider.notifier,
+      );
+      await backgroundController.enableBackgroundSync();
+      await backgroundController.triggerBackgroundSync();
 
       if (mounted) {
         SnackBarService.showSuccess(context, context.l10n.healthKitConnected);
@@ -569,6 +584,10 @@ class _HealthSyncSettingsScreenState
 
     final controller = ref.read(healthPermissionControllerProvider.notifier);
     await controller.requestPermissions(dataTypes: [dataType]);
+    final backgroundController = ref.read(
+      healthBackgroundSyncControllerProvider.notifier,
+    );
+    await backgroundController.enableBackgroundSync();
+    await backgroundController.triggerBackgroundSync();
   }
-
 }

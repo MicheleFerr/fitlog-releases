@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/template_query_executor.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
@@ -21,19 +20,14 @@ import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 class MockTemplateRepository extends Mock implements TemplateRepository {}
 
-class MockExerciseSearchService extends Mock
-    implements ExerciseSearchService {}
+class MockExerciseSearchService extends Mock implements ExerciseSearchService {}
 
 // ---------------------------------------------------------------------------
 // Test fixture helpers
 // ---------------------------------------------------------------------------
 
 ExerciseSet _makeSet({int? reps, double? weight}) {
-  return ExerciseSet(
-    setNumber: 1,
-    reps: reps ?? 10,
-    weight: weight ?? 80.0,
-  );
+  return ExerciseSet(setNumber: 1, reps: reps ?? 10, weight: weight ?? 80.0);
 }
 
 Exercise _makeExercise({
@@ -98,49 +92,54 @@ void main() {
       expect(decoded['count'], equals(0));
     });
 
-    test('returns valid JSON with template list when templates exist', () async {
-      final templates = [
-        _makeTemplate(
-          name: 'Push Day',
-          exercises: [
-            _makeExercise(
-              name: 'Bench Press',
-              category: ExerciseCategory.chest,
-              setCount: 4,
-            ),
-            _makeExercise(
-              name: 'Military Press',
-              category: ExerciseCategory.shoulders,
-              setCount: 3,
-            ),
-          ],
-          targetMuscles: ['chest', 'shoulders'],
-        ),
-        _makeTemplate(
-          name: 'Leg Day',
-          exercises: [
-            _makeExercise(
-              name: 'Squat',
-              category: ExerciseCategory.legs,
-              setCount: 5,
-            ),
-          ],
-        ),
-      ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
-      final executor = TemplateQueryExecutor(
-        templateRepo: mockRepo,
-        exerciseSearchService: mockSearchService,
-      );
+    test(
+      'returns valid JSON with template list when templates exist',
+      () async {
+        final templates = [
+          _makeTemplate(
+            name: 'Push Day',
+            exercises: [
+              _makeExercise(
+                name: 'Bench Press',
+                category: ExerciseCategory.chest,
+                setCount: 4,
+              ),
+              _makeExercise(
+                name: 'Military Press',
+                category: ExerciseCategory.shoulders,
+                setCount: 3,
+              ),
+            ],
+            targetMuscles: ['chest', 'shoulders'],
+          ),
+          _makeTemplate(
+            name: 'Leg Day',
+            exercises: [
+              _makeExercise(
+                name: 'Squat',
+                category: ExerciseCategory.legs,
+                setCount: 5,
+              ),
+            ],
+          ),
+        ];
+        when(
+          () => mockRepo.getUserTemplates(),
+        ).thenAnswer((_) async => templates);
+        final executor = TemplateQueryExecutor(
+          templateRepo: mockRepo,
+          exerciseSearchService: mockSearchService,
+        );
 
-      final result = await executor.getUserTemplates({}, userId);
-      final decoded = jsonDecode(result) as Map<String, dynamic>;
+        final result = await executor.getUserTemplates({}, userId);
+        final decoded = jsonDecode(result) as Map<String, dynamic>;
 
-      expect(decoded['templates'], isList);
-      expect(decoded['count'], equals(2));
-      expect(decoded['showing'], greaterThan(0));
-      expect(decoded['aggregateBalanceAllTemplates'], isMap);
-    });
+        expect(decoded['templates'], isList);
+        expect(decoded['count'], equals(2));
+        expect(decoded['showing'], greaterThan(0));
+        expect(decoded['aggregateBalanceAllTemplates'], isMap);
+      },
+    );
 
     test('filters by category when category arg is provided', () async {
       final templates = [
@@ -153,16 +152,17 @@ void main() {
           category: TemplateCategory.cardio,
         ),
       ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
+      when(
+        () => mockRepo.getUserTemplates(),
+      ).thenAnswer((_) async => templates);
       final executor = TemplateQueryExecutor(
         templateRepo: mockRepo,
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getUserTemplates(
-        {'category': 'strength'},
-        userId,
-      );
+      final result = await executor.getUserTemplates({
+        'category': 'strength',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
 
       // Total count reflects all templates
@@ -178,27 +178,29 @@ void main() {
     });
 
     test(
-        'returns no-match message when category filter yields empty result',
-        () async {
-      final templates = [
-        _makeTemplate(name: 'Push Day', category: TemplateCategory.strength),
-      ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
-      final executor = TemplateQueryExecutor(
-        templateRepo: mockRepo,
-        exerciseSearchService: mockSearchService,
-      );
+      'returns no-match message when category filter yields empty result',
+      () async {
+        final templates = [
+          _makeTemplate(name: 'Push Day', category: TemplateCategory.strength),
+        ];
+        when(
+          () => mockRepo.getUserTemplates(),
+        ).thenAnswer((_) async => templates);
+        final executor = TemplateQueryExecutor(
+          templateRepo: mockRepo,
+          exerciseSearchService: mockSearchService,
+        );
 
-      final result = await executor.getUserTemplates(
-        {'category': 'cardio'},
-        userId,
-      );
-      final decoded = jsonDecode(result) as Map<String, dynamic>;
+        final result = await executor.getUserTemplates({
+          'category': 'cardio',
+        }, userId);
+        final decoded = jsonDecode(result) as Map<String, dynamic>;
 
-      expect(decoded['count'], equals(0));
-      expect(decoded['message'], isNotNull);
-      expect(decoded['availableCategories'], isList);
-    });
+        expect(decoded['count'], equals(0));
+        expect(decoded['message'], isNotNull);
+        expect(decoded['availableCategories'], isList);
+      },
+    );
 
     test('returns count 0 when repository returns empty list', () async {
       // Verifies the empty-result error path (no-throw, no Firebase needed).
@@ -232,56 +234,62 @@ void main() {
     });
 
     test(
-        'setDistribution and primaryFocus fields are present per template',
-        () async {
-      final templates = [
-        _makeTemplate(
-          name: 'Chest Day',
-          exercises: [
-            _makeExercise(
-              name: 'Panca',
-              category: ExerciseCategory.chest,
-              setCount: 4,
-            ),
-          ],
-        ),
-      ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
-      final executor = TemplateQueryExecutor(
-        templateRepo: mockRepo,
-        exerciseSearchService: mockSearchService,
-      );
+      'setDistribution and primaryFocus fields are present per template',
+      () async {
+        final templates = [
+          _makeTemplate(
+            name: 'Chest Day',
+            exercises: [
+              _makeExercise(
+                name: 'Panca',
+                category: ExerciseCategory.chest,
+                setCount: 4,
+              ),
+            ],
+          ),
+        ];
+        when(
+          () => mockRepo.getUserTemplates(),
+        ).thenAnswer((_) async => templates);
+        final executor = TemplateQueryExecutor(
+          templateRepo: mockRepo,
+          exerciseSearchService: mockSearchService,
+        );
 
-      final result = await executor.getUserTemplates({}, userId);
-      final decoded = jsonDecode(result) as Map<String, dynamic>;
-      final templateList = decoded['templates'] as List<dynamic>;
+        final result = await executor.getUserTemplates({}, userId);
+        final decoded = jsonDecode(result) as Map<String, dynamic>;
+        final templateList = decoded['templates'] as List<dynamic>;
 
-      expect(templateList, hasLength(1));
-      final template = templateList.first as Map<String, dynamic>;
-      expect(template['setDistribution'], isMap);
-      expect(template['primaryFocus'], isList);
-      expect(template['totalSets'], equals(4));
-    });
+        expect(templateList, hasLength(1));
+        final template = templateList.first as Map<String, dynamic>;
+        expect(template['setDistribution'], isMap);
+        expect(template['primaryFocus'], isList);
+        expect(template['totalSets'], equals(4));
+      },
+    );
 
-    test('splitDetected true when templates have upper and lower names',
-        () async {
-      final templates = [
-        _makeTemplate(name: 'Upper Push'),
-        _makeTemplate(name: 'Lower Legs'),
-      ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
-      final executor = TemplateQueryExecutor(
-        templateRepo: mockRepo,
-        exerciseSearchService: mockSearchService,
-      );
+    test(
+      'splitDetected true when templates have upper and lower names',
+      () async {
+        final templates = [
+          _makeTemplate(name: 'Upper Push'),
+          _makeTemplate(name: 'Lower Legs'),
+        ];
+        when(
+          () => mockRepo.getUserTemplates(),
+        ).thenAnswer((_) async => templates);
+        final executor = TemplateQueryExecutor(
+          templateRepo: mockRepo,
+          exerciseSearchService: mockSearchService,
+        );
 
-      final result = await executor.getUserTemplates({}, userId);
-      final decoded = jsonDecode(result) as Map<String, dynamic>;
-      final framework =
-          decoded['analysisFramework'] as Map<String, dynamic>;
+        final result = await executor.getUserTemplates({}, userId);
+        final decoded = jsonDecode(result) as Map<String, dynamic>;
+        final framework = decoded['analysisFramework'] as Map<String, dynamic>;
 
-      expect(framework['splitDetected'], isTrue);
-    });
+        expect(framework['splitDetected'], isTrue);
+      },
+    );
 
     test('aggregateBalanceAllTemplates has upperLowerRatio field', () async {
       final templates = [
@@ -306,7 +314,9 @@ void main() {
           ],
         ),
       ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
+      when(
+        () => mockRepo.getUserTemplates(),
+      ).thenAnswer((_) async => templates);
       final executor = TemplateQueryExecutor(
         templateRepo: mockRepo,
         exerciseSearchService: mockSearchService,
@@ -314,8 +324,8 @@ void main() {
 
       final result = await executor.getUserTemplates({}, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
-      final aggregate = decoded['aggregateBalanceAllTemplates']
-          as Map<String, dynamic>;
+      final aggregate =
+          decoded['aggregateBalanceAllTemplates'] as Map<String, dynamic>;
 
       expect(aggregate.containsKey('upperLowerStatus'), isTrue);
       expect(aggregate.containsKey('totalSets'), isTrue);
@@ -330,7 +340,9 @@ void main() {
         _makeTemplate(name: 'Chest Day'),
         _makeTemplate(name: 'Leg Day'),
       ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
+      when(
+        () => mockRepo.getUserTemplates(),
+      ).thenAnswer((_) async => templates);
       final executor = TemplateQueryExecutor(
         templateRepo: mockRepo,
         exerciseSearchService: mockSearchService,
@@ -340,8 +352,7 @@ void main() {
       final decoded = jsonDecode(result) as Map<String, dynamic>;
 
       expect(
-        decoded.containsKey('disambiguation') ||
-            decoded.containsKey('error'),
+        decoded.containsKey('disambiguation') || decoded.containsKey('error'),
         isTrue,
       );
     });
@@ -353,8 +364,9 @@ void main() {
         exerciseSearchService: mockSearchService,
       );
 
-      final result =
-          await executor.getTemplateDetails({'templateName': ''}, userId);
+      final result = await executor.getTemplateDetails({
+        'templateName': '',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
 
       expect(decoded.containsKey('error'), isTrue);
@@ -382,16 +394,17 @@ void main() {
           targetMuscles: ['chest', 'legs'],
         ),
       ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
+      when(
+        () => mockRepo.getUserTemplates(),
+      ).thenAnswer((_) async => templates);
       final executor = TemplateQueryExecutor(
         templateRepo: mockRepo,
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'Full Body Alpha'},
-        userId,
-      );
+      final result = await executor.getTemplateDetails({
+        'templateName': 'Full Body Alpha',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
 
       expect(decoded['templateName'], equals('Full Body Alpha'));
@@ -404,45 +417,48 @@ void main() {
     });
 
     test('returns details for partial name match (case-insensitive)', () async {
-      final templates = [
-        _makeTemplate(name: 'Upper Body Push'),
-      ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
+      final templates = [_makeTemplate(name: 'Upper Body Push')];
+      when(
+        () => mockRepo.getUserTemplates(),
+      ).thenAnswer((_) async => templates);
       final executor = TemplateQueryExecutor(
         templateRepo: mockRepo,
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'upper body'},
-        userId,
-      );
+      final result = await executor.getTemplateDetails({
+        'templateName': 'upper body',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
 
       expect(decoded.containsKey('error'), isFalse);
       expect(decoded['templateName'], equals('Upper Body Push'));
     });
 
-    test('returns error with available templates when name not found', () async {
-      final templates = [
-        _makeTemplate(name: 'Push Day'),
-        _makeTemplate(name: 'Pull Day'),
-      ];
-      when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => templates);
-      final executor = TemplateQueryExecutor(
-        templateRepo: mockRepo,
-        exerciseSearchService: mockSearchService,
-      );
+    test(
+      'returns error with available templates when name not found',
+      () async {
+        final templates = [
+          _makeTemplate(name: 'Push Day'),
+          _makeTemplate(name: 'Pull Day'),
+        ];
+        when(
+          () => mockRepo.getUserTemplates(),
+        ).thenAnswer((_) async => templates);
+        final executor = TemplateQueryExecutor(
+          templateRepo: mockRepo,
+          exerciseSearchService: mockSearchService,
+        );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'Leg Day XYZ'},
-        userId,
-      );
-      final decoded = jsonDecode(result) as Map<String, dynamic>;
+        final result = await executor.getTemplateDetails({
+          'templateName': 'Leg Day XYZ',
+        }, userId);
+        final decoded = jsonDecode(result) as Map<String, dynamic>;
 
-      expect(decoded.containsKey('error'), isTrue);
-      expect(decoded['availableTemplates'], isList);
-    });
+        expect(decoded.containsKey('error'), isTrue);
+        expect(decoded['availableTemplates'], isList);
+      },
+    );
 
     test('returns error when no templates exist at all', () async {
       when(() => mockRepo.getUserTemplates()).thenAnswer((_) async => []);
@@ -451,28 +467,26 @@ void main() {
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'Anything'},
-        userId,
-      );
+      final result = await executor.getTemplateDetails({
+        'templateName': 'Anything',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
 
       expect(decoded.containsKey('error'), isTrue);
     });
 
     test('result is always valid JSON', () async {
-      when(() => mockRepo.getUserTemplates()).thenAnswer(
-        (_) async => [_makeTemplate(name: 'Test Template')],
-      );
+      when(
+        () => mockRepo.getUserTemplates(),
+      ).thenAnswer((_) async => [_makeTemplate(name: 'Test Template')]);
       final executor = TemplateQueryExecutor(
         templateRepo: mockRepo,
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'Test Template'},
-        userId,
-      );
+      final result = await executor.getTemplateDetails({
+        'templateName': 'Test Template',
+      }, userId);
       expect(() => jsonDecode(result), returnsNormally);
     });
 
@@ -484,10 +498,9 @@ void main() {
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'NonExistent'},
-        userId,
-      );
+      final result = await executor.getTemplateDetails({
+        'templateName': 'NonExistent',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
       expect(decoded.containsKey('error'), isTrue);
     });
@@ -515,10 +528,9 @@ void main() {
         exerciseSearchService: mockSearchService,
       );
 
-      final result = await executor.getTemplateDetails(
-        {'templateName': 'Chest Session'},
-        userId,
-      );
+      final result = await executor.getTemplateDetails({
+        'templateName': 'Chest Session',
+      }, userId);
       final decoded = jsonDecode(result) as Map<String, dynamic>;
       final exerciseList = decoded['exercises'] as List<dynamic>;
 

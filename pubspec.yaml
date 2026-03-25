@@ -106,7 +106,7 @@ dependencies:
   json_annotation: ^4.8.1
   rxdart: ^0.28.0
   fl_chart: ^1.1.0
-  wakelock_plus: ^1.4.0
+  wakelock_plus: ^1.5.1
   crypto: ^3.0.6
   table_calendar: ^3.1.2
 
@@ -202,6 +202,7 @@ dev_dependencies:
   state_notifier: ^1.0.0
   cloud_firestore_platform_interface: ^7.0.4
   firebase_auth_platform_interface: ^8.1.4
+  flutter_launcher_icons: ^0.14.4
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -212,10 +213,11 @@ flutter:
   assets:
     - assets/sounds/
     - assets/images/
+    - assets/images/equipment/
     - assets/animations/
     - assets/i18n/
+    - assets/legal/
     # .env REMOVED - was exposing API keys in compiled app binary
-    # Legal docs moved to separate bundle - not included in app assets
     # - docs/legal/PRIVACY_POLICY_IT.md
     # - docs/legal/PRIVACY_POLICY_EN.md
     # - docs/legal/TERMS_OF_SERVICE_IT.md
@@ -283,3 +285,10 @@ flutter_native_splash:
 
   # Fullscreen for immersive splash experience
   fullscreen: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"

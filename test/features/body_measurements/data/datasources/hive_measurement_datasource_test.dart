@@ -25,8 +25,10 @@ class FakeLazyBox implements LazyBox<Map<String, dynamic>> {
   bool containsKey(dynamic key) => _store.containsKey(key);
 
   @override
-  Future<Map<String, dynamic>?> get(dynamic key,
-      {Map<String, dynamic>? defaultValue}) async {
+  Future<Map<String, dynamic>?> get(
+    dynamic key, {
+    Map<String, dynamic>? defaultValue,
+  }) async {
     return _store[key] ?? defaultValue;
   }
 
@@ -82,7 +84,6 @@ class FakeLazyBox implements LazyBox<Map<String, dynamic>> {
   @override
   Stream<BoxEvent> watch({dynamic key}) => const Stream.empty();
 
-  @override
   Map<dynamic, Map<String, dynamic>> toMap() => Map.from(_store);
 
   @override
@@ -121,7 +122,6 @@ class FakeLazyBox implements LazyBox<Map<String, dynamic>> {
   @override
   Future<void> compact() async {}
 
-  @override
   Iterable<Map<String, dynamic>> get values => _store.values;
 
   @override
@@ -237,7 +237,9 @@ class FakeHiveMeasurementDatasource implements MeasurementLocalDatasource {
   }) async {
     final allResult = await getAllMeasurements(userId);
     return allResult.map((measurements) {
-      return measurements.where((m) => m.metricType == metricType.name).toList();
+      return measurements
+          .where((m) => m.metricType == metricType.name)
+          .toList();
     });
   }
 
@@ -251,8 +253,9 @@ class FakeHiveMeasurementDatasource implements MeasurementLocalDatasource {
     final allResult = await getAllMeasurements(userId);
     return allResult.map((measurements) {
       return measurements.where((m) {
-        return m.timestamp
-                .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+        return m.timestamp.isAfter(
+              startDate.subtract(const Duration(seconds: 1)),
+            ) &&
             m.timestamp.isBefore(endDate.add(const Duration(days: 1)));
       }).toList();
     });
@@ -313,7 +316,10 @@ class FakeHiveMeasurementDatasource implements MeasurementLocalDatasource {
     if (result.isLeft()) {
       return left(result.fold((f) => f, (_) => throw Exception('unreachable')));
     }
-    final measurements = result.fold((_) => throw Exception('unreachable'), (m) => m);
+    final measurements = result.fold(
+      (_) => throw Exception('unreachable'),
+      (m) => m,
+    );
     int deleted = 0;
     for (final m in measurements) {
       final del = await deleteMeasurement(userId: userId, measurementId: m.id);
@@ -323,7 +329,9 @@ class FakeHiveMeasurementDatasource implements MeasurementLocalDatasource {
   }
 
   @override
-  Future<Either<LocalStorageFailure, int>> getMeasurementCount(String userId) async {
+  Future<Either<LocalStorageFailure, int>> getMeasurementCount(
+    String userId,
+  ) async {
     if (!_initialized) return left(const HiveNotInitializedFailure());
     int count = 0;
     for (final key in _box.keys) {
@@ -449,18 +457,21 @@ void main() {
       );
     });
 
-    test('returns MeasurementNotFoundFailure for missing measurement', () async {
-      await datasource.initialize();
-      final result = await datasource.getMeasurement(
-        userId: 'user-1',
-        measurementId: 'nonexistent',
-      );
-      expect(result.isLeft(), isTrue);
-      result.fold(
-        (f) => expect(f, isA<MeasurementNotFoundFailure>()),
-        (_) => fail('Expected failure'),
-      );
-    });
+    test(
+      'returns MeasurementNotFoundFailure for missing measurement',
+      () async {
+        await datasource.initialize();
+        final result = await datasource.getMeasurement(
+          userId: 'user-1',
+          measurementId: 'nonexistent',
+        );
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (f) => expect(f, isA<MeasurementNotFoundFailure>()),
+          (_) => fail('Expected failure'),
+        );
+      },
+    );
 
     test('returns saved measurement', () async {
       await datasource.initialize();
@@ -472,13 +483,10 @@ void main() {
         measurementId: 'found-meas',
       );
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (m) {
-          expect(m.id, equals('found-meas'));
-          expect(m.userId, equals('user-a'));
-        },
-      );
+      result.fold((_) => fail('Expected success'), (m) {
+        expect(m.id, equals('found-meas'));
+        expect(m.userId, equals('user-a'));
+      });
     });
 
     test('cannot retrieve other user measurement', () async {
@@ -503,10 +511,7 @@ void main() {
       await datasource.initialize();
       final result = await datasource.getAllMeasurements('user-empty');
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) => expect(ms, isEmpty),
-      );
+      result.fold((_) => fail('Expected success'), (ms) => expect(ms, isEmpty));
     });
 
     test('returns only measurements for the specified user', () async {
@@ -523,13 +528,10 @@ void main() {
 
       final result = await datasource.getAllMeasurements('user-1');
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) {
-          expect(ms.length, equals(2));
-          expect(ms.every((m) => m.userId == 'user-1'), isTrue);
-        },
-      );
+      result.fold((_) => fail('Expected success'), (ms) {
+        expect(ms.length, equals(2));
+        expect(ms.every((m) => m.userId == 'user-1'), isTrue);
+      });
     });
 
     test('returns measurements sorted by timestamp descending', () async {
@@ -546,13 +548,10 @@ void main() {
       await datasource.saveMeasurement(newer);
 
       final result = await datasource.getAllMeasurements('user-1');
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) {
-          expect(ms.first.id, equals('m-new'));
-          expect(ms.last.id, equals('m-old'));
-        },
-      );
+      result.fold((_) => fail('Expected success'), (ms) {
+        expect(ms.first.id, equals('m-new'));
+        expect(ms.last.id, equals('m-old'));
+      });
     });
   });
 
@@ -577,13 +576,10 @@ void main() {
         metricType: MetricType.weight,
       );
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) {
-          expect(ms.length, equals(2));
-          expect(ms.every((m) => m.metricType == 'weight'), isTrue);
-        },
-      );
+      result.fold((_) => fail('Expected success'), (ms) {
+        expect(ms.length, equals(2));
+        expect(ms.every((m) => m.metricType == 'weight'), isTrue);
+      });
     });
 
     test('returns empty list when no measurements of metric type', () async {
@@ -597,10 +593,7 @@ void main() {
         metricType: MetricType.height,
       );
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) => expect(ms, isEmpty),
-      );
+      result.fold((_) => fail('Expected success'), (ms) => expect(ms, isEmpty));
     });
   });
 
@@ -627,13 +620,10 @@ void main() {
       );
 
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) {
-          expect(ms.length, equals(1));
-          expect(ms.first.id, equals('m-mar'));
-        },
-      );
+      result.fold((_) => fail('Expected success'), (ms) {
+        expect(ms.length, equals(1));
+        expect(ms.first.id, equals('m-mar'));
+      });
     });
 
     test('returns empty list when no measurements in range', () async {
@@ -649,10 +639,7 @@ void main() {
       );
 
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected success'),
-        (ms) => expect(ms, isEmpty),
-      );
+      result.fold((_) => fail('Expected success'), (ms) => expect(ms, isEmpty));
     });
 
     test('includes measurements on boundary dates', () async {
@@ -693,17 +680,20 @@ void main() {
       );
     });
 
-    test('returns MeasurementNotFoundFailure for missing measurement', () async {
-      await datasource.initialize();
-      final result = await datasource.updateMeasurement(
-        makeEncrypted(id: 'nonexistent'),
-      );
-      expect(result.isLeft(), isTrue);
-      result.fold(
-        (f) => expect(f, isA<MeasurementNotFoundFailure>()),
-        (_) => fail('Expected failure'),
-      );
-    });
+    test(
+      'returns MeasurementNotFoundFailure for missing measurement',
+      () async {
+        await datasource.initialize();
+        final result = await datasource.updateMeasurement(
+          makeEncrypted(id: 'nonexistent'),
+        );
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (f) => expect(f, isA<MeasurementNotFoundFailure>()),
+          (_) => fail('Expected failure'),
+        );
+      },
+    );
 
     test('updates existing measurement', () async {
       await datasource.initialize();
@@ -742,19 +732,21 @@ void main() {
       );
     });
 
-    test('returns MeasurementNotFoundFailure for nonexistent measurement',
-        () async {
-      await datasource.initialize();
-      final result = await datasource.deleteMeasurement(
-        userId: 'user-1',
-        measurementId: 'ghost',
-      );
-      expect(result.isLeft(), isTrue);
-      result.fold(
-        (f) => expect(f, isA<MeasurementNotFoundFailure>()),
-        (_) => fail('Expected failure'),
-      );
-    });
+    test(
+      'returns MeasurementNotFoundFailure for nonexistent measurement',
+      () async {
+        await datasource.initialize();
+        final result = await datasource.deleteMeasurement(
+          userId: 'user-1',
+          measurementId: 'ghost',
+        );
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (f) => expect(f, isA<MeasurementNotFoundFailure>()),
+          (_) => fail('Expected failure'),
+        );
+      },
+    );
 
     test('deletes measurement successfully', () async {
       await datasource.initialize();
@@ -787,8 +779,12 @@ void main() {
 
     test('deletes all measurements for user', () async {
       await datasource.initialize();
-      await datasource.saveMeasurement(makeEncrypted(id: 'm1', userId: 'user-del'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'm2', userId: 'user-del'));
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm1', userId: 'user-del'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm2', userId: 'user-del'),
+      );
       await datasource.saveMeasurement(
         makeEncrypted(id: 'm3', userId: 'user-other'), // should NOT be deleted
       );
@@ -826,8 +822,12 @@ void main() {
   group('deleteMeasurementsByMetric', () {
     test('deletes only measurements of specified metric type', () async {
       await datasource.initialize();
-      await datasource.saveMeasurement(makeEncrypted(id: 'w1', metricType: 'weight'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'w2', metricType: 'weight'));
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'w1', metricType: 'weight'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'w2', metricType: 'weight'),
+      );
       await datasource.saveMeasurement(
         makeEncrypted(id: 'h1', metricType: 'height'),
       );
@@ -845,18 +845,17 @@ void main() {
 
       // height measurement still exists
       final remaining = await datasource.getAllMeasurements('user-1');
-      remaining.fold(
-        (_) => fail('Expected success'),
-        (ms) {
-          expect(ms.length, equals(1));
-          expect(ms.first.metricType, equals('height'));
-        },
-      );
+      remaining.fold((_) => fail('Expected success'), (ms) {
+        expect(ms.length, equals(1));
+        expect(ms.first.metricType, equals('height'));
+      });
     });
 
     test('returns 0 when no measurements of metric type', () async {
       await datasource.initialize();
-      await datasource.saveMeasurement(makeEncrypted(id: 'w1', metricType: 'weight'));
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'w1', metricType: 'weight'),
+      );
 
       final result = await datasource.deleteMeasurementsByMetric(
         userId: 'user-1',
@@ -905,9 +904,15 @@ void main() {
 
     test('counts only measurements for specified user', () async {
       await datasource.initialize();
-      await datasource.saveMeasurement(makeEncrypted(id: 'u1m1', userId: 'user-1'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'u2m1', userId: 'user-2'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'u2m2', userId: 'user-2'));
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'u1m1', userId: 'user-1'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'u2m1', userId: 'user-2'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'u2m2', userId: 'user-2'),
+      );
 
       final u1Count = await datasource.getMeasurementCount('user-1');
       final u2Count = await datasource.getMeasurementCount('user-2');
@@ -928,9 +933,15 @@ void main() {
 
     test('clears all data including other users', () async {
       await datasource.initialize();
-      await datasource.saveMeasurement(makeEncrypted(id: 'm1', userId: 'user-1'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'm2', userId: 'user-2'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'm3', userId: 'user-3'));
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm1', userId: 'user-1'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm2', userId: 'user-2'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm3', userId: 'user-3'),
+      );
 
       final result = await datasource.clearAllData();
       expect(result.isRight(), isTrue);
@@ -973,9 +984,15 @@ void main() {
 
     test('deleteAllMeasurements does not affect other users', () async {
       await datasource.initialize();
-      await datasource.saveMeasurement(makeEncrypted(id: 'm1', userId: 'user-a'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'm2', userId: 'user-a'));
-      await datasource.saveMeasurement(makeEncrypted(id: 'm3', userId: 'user-b'));
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm1', userId: 'user-a'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm2', userId: 'user-a'),
+      );
+      await datasource.saveMeasurement(
+        makeEncrypted(id: 'm3', userId: 'user-b'),
+      );
 
       await datasource.deleteAllMeasurements('user-a');
 

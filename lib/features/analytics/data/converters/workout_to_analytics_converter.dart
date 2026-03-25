@@ -159,7 +159,7 @@ class WorkoutToAnalyticsConverter {
       // Add to result list
       analyticsDataList.add(
         ExerciseAnalyticsData(
-          exerciseId: exercise.id,
+          exerciseId: exercise.stableExerciseId,
           exerciseName: exercise.name,
           muscleGroup: exercise.category.name,
           session: session,

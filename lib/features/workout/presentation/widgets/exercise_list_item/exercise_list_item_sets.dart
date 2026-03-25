@@ -82,6 +82,8 @@ class ExerciseListItemSets extends ConsumerStatefulWidget {
 }
 
 class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
+  static const Duration _warmupAutoRecompactDelay = Duration(seconds: 5);
+
   // ✅ OPTIMIZATION: Cache counting mode to avoid calling service for every set
   // Previous implementation called ExerciseCountingModeService.getModeFromWorkoutExercise()
   // inside _buildSetDetailsForMode() which was executed for EVERY set on EVERY rebuild.
@@ -89,6 +91,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
   /// Whether the compact warmup summary is expanded to show individual rows
   bool _warmupExpanded = false;
+  Timer? _warmupRecompactTimer;
 
   // NOTE: _firstSetManuallyStarted removed - we now use setStartedAt from the set itself
   // This makes the state persistent across widget rebuilds
@@ -196,9 +199,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     final startTime = DateTime.now();
 
     // ✅ FIX: Save setStartedAt directly to the set for persistence
-    final updatedSet = firstIncompleteSet.copyWith(
-      setStartedAt: startTime,
-    );
+    final updatedSet = firstIncompleteSet.copyWith(setStartedAt: startTime);
 
     // Update the exercise with the modified set
     final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
@@ -225,6 +226,51 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     HapticFeedback.mediumImpact();
   }
 
+  ExerciseSet? _firstIncompleteTrackableSet() {
+    for (final set in widget.exercise.sets) {
+      if (!set.isCompleted && !set.isWarmup) {
+        return set;
+      }
+    }
+    return null;
+  }
+
+  bool _hasTrackedStartForSet(ExerciseSet set) {
+    if (set.setStartedAt != null) {
+      return true;
+    }
+
+    final durationTracker = ref.read(setDurationTrackerProvider);
+    return durationTracker.getSetStartTime(widget.exercise.id, set.setNumber) !=
+        null;
+  }
+
+  bool _shouldShowStartSetHint(AppConfig config) {
+    if (!(config.setDurationTracking ?? false)) {
+      return false;
+    }
+
+    final firstIncompleteSet = _firstIncompleteTrackableSet();
+    if (firstIncompleteSet == null) {
+      return false;
+    }
+
+    return !_hasTrackedStartForSet(firstIncompleteSet);
+  }
+
+  bool _shouldShowMissedStartReminder(ExerciseSet set, AppConfig config) {
+    if (!(config.setDurationTracking ?? false) || set.isWarmup) {
+      return false;
+    }
+
+    final firstIncompleteSet = _firstIncompleteTrackableSet();
+    if (firstIncompleteSet == null || firstIncompleteSet.id != set.id) {
+      return false;
+    }
+
+    return !_hasTrackedStartForSet(set);
+  }
+
   @override
   void didUpdateWidget(ExerciseListItemSets oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -245,6 +291,32 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       // New sets were added - ensure tracking is active for first incomplete
       _initializeDurationTracking();
     }
+
+    // If warmup is no longer fully completed, keep rows expanded and stop auto-collapse timer.
+    if (!_areAllWarmupSetsCompleted()) {
+      _warmupRecompactTimer?.cancel();
+    }
+  }
+
+  @override
+  void dispose() {
+    _warmupRecompactTimer?.cancel();
+    super.dispose();
+  }
+
+  bool _areAllWarmupSetsCompleted() {
+    final warmupSets = widget.exercise.sets.where((s) => s.isWarmup).toList();
+    return warmupSets.isNotEmpty && warmupSets.every((s) => s.isCompleted);
+  }
+
+  void _scheduleWarmupRecompact() {
+    _warmupRecompactTimer?.cancel();
+    _warmupRecompactTimer = Timer(_warmupAutoRecompactDelay, () {
+      if (!mounted) return;
+      if (!_warmupExpanded) return;
+      if (!_areAllWarmupSetsCompleted()) return;
+      setState(() => _warmupExpanded = false);
+    });
   }
 
   /// Localized label for a [PrefillSource].
@@ -406,11 +478,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcons.add,
-              size: 16,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.add, size: 16, color: context.colors.primary),
             const SizedBox(width: 4),
             Text(
               context.l10n.addSet,
@@ -466,8 +534,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   List<Widget> _buildSetRows(BuildContext context, AppConfig config) {
     final sets = widget.exercise.sets;
     final warmupSets = sets.where((s) => s.isWarmup).toList();
-    final allWarmupCompleted = warmupSets.isNotEmpty &&
-        warmupSets.every((s) => s.isCompleted);
+    final allWarmupCompleted =
+        warmupSets.isNotEmpty && warmupSets.every((s) => s.isCompleted);
     final shouldCompact = allWarmupCompleted && !_warmupExpanded;
 
     final widgets = <Widget>[];
@@ -503,6 +571,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     return GestureDetector(
       onTap: () {
         setState(() => _warmupExpanded = true);
+        _scheduleWarmupRecompact();
         HapticFeedback.lightImpact();
       },
       child: Container(
@@ -541,9 +610,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             // Summary text
             Expanded(
               child: Text(
-                context.l10n.warmupCompactSummary(
-                  warmupSets.length.toString(),
-                ),
+                context.l10n.warmupCompactSummary(warmupSets.length.toString()),
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.warningColor,
                   fontWeight: FontWeight.w500,
@@ -664,8 +731,11 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       ),
       // ✅ IMPROVED UX: Larger row with visible action icons
       child: Semantics(
-        label: 'Set ${index + 1}${isWarmup ? ' warmup' : ''}${set.isCompleted ? ' completed' : ''}',
-        hint: set.isCompleted ? 'Tap to mark as incomplete' : 'Tap to mark as complete',
+        label:
+            'Set ${index + 1}${isWarmup ? ' warmup' : ''}${set.isCompleted ? ' completed' : ''}',
+        hint: set.isCompleted
+            ? 'Tap to mark as incomplete'
+            : 'Tap to mark as complete',
         button: true,
         child: GestureDetector(
           onTap: () => _toggleSetCompletionWithFeedback(context, set),
@@ -678,165 +748,176 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               vertical: displayMode.verticalPadding,
             ),
             decoration: BoxDecoration(
-            color: isWarmup
-                ? context.warningContainer
-                : set.isCompleted
-                ? context.colors.tertiary.withValues(alpha: 0.1)
-                : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(displayMode.borderRadius),
-            border: isWarmup
-                ? Border.all(color: context.warningColor.withValues(alpha: 0.3))
-                : set.isCompleted
-                ? Border.all(
-                    color: context.colors.tertiary.withValues(alpha: 0.3),
-                  )
-                : null,
-          ),
-          child: Row(
-            children: [
-              // Set number with warmup indicator
-              Container(
-                width: displayMode.circleSize,
-                height: displayMode.circleSize,
-                decoration: BoxDecoration(
-                  color: isWarmup
-                      ? context.warningColor.withValues(alpha: 0.3)
-                      : set.isCompleted
-                      ? context.colors.tertiary
-                      : context.colors.outline.withValues(alpha: 0.3),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: isWarmup
-                      ? SemanticIcon(
-                          icon: AppIcons.streak,
-                          semanticLabel: 'Warmup set',
-                          size: AppIconSize.tiny,
-                          color: context.warningColor,
-                        )
-                      : Text(
-                          '${index + 1}',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: set.isCompleted
-                                ? context.colors.onTertiary
-                                : context.colors.onSurfaceVariant,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                ),
-              ),
-              const SizedBox(width: 8),
-
-              // Warmup badge
-              if (isWarmup) ...[
+              color: isWarmup
+                  ? context.warningContainer
+                  : set.isCompleted
+                  ? context.colors.tertiary.withValues(alpha: 0.1)
+                  : context.colors.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
+              borderRadius: BorderRadius.circular(displayMode.borderRadius),
+              border: isWarmup
+                  ? Border.all(
+                      color: context.warningColor.withValues(alpha: 0.3),
+                    )
+                  : set.isCompleted
+                  ? Border.all(
+                      color: context.colors.tertiary.withValues(alpha: 0.3),
+                    )
+                  : null,
+            ),
+            child: Row(
+              children: [
+                // Set number with warmup indicator
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
+                  width: displayMode.circleSize,
+                  height: displayMode.circleSize,
                   decoration: BoxDecoration(
-                    color: context.warningContainer,
-                    borderRadius: BorderRadius.circular(8),
+                    color: isWarmup
+                        ? context.warningColor.withValues(alpha: 0.3)
+                        : set.isCompleted
+                        ? context.colors.tertiary
+                        : context.colors.outline.withValues(alpha: 0.3),
+                    shape: BoxShape.circle,
                   ),
-                  child: Text(
-                    'W',
-                    style: context.textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.warningColor,
-                    ),
+                  child: Center(
+                    child: isWarmup
+                        ? SemanticIcon(
+                            icon: AppIcons.streak,
+                            semanticLabel: 'Warmup set',
+                            size: AppIconSize.tiny,
+                            color: context.warningColor,
+                          )
+                        : Text(
+                            '${index + 1}',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: set.isCompleted
+                                  ? context.colors.onTertiary
+                                  : context.colors.onSurfaceVariant,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                   ),
                 ),
-                const SizedBox(width: 6),
-              ],
+                const SizedBox(width: 8),
 
-              // Set details (adapted based on counting mode) + RPE + duration — all left-aligned
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ..._buildSetDetailsForMode(set, config),
-                  // RPE indicator — with spacing
-                  if (set.isCompleted)
-                    const SizedBox(width: 6),
-                  if (set.isCompleted)
-                    GestureDetector(
-                      onTap: () => _showQuickRpePicker(context, set),
-                      child: set.rpe != null
-                          ? RpeIndicator(rpe: set.rpe!)
-                          : Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: context.colors.primary.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: context.colors.primary.withValues(alpha: 0.3),
-                                ),
-                              ),
-                              child: Text(
-                                '+RPE',
-                                style: context.textTheme.labelSmall?.copyWith(
-                                  color: context.colors.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
+                // Warmup badge
+                if (isWarmup) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
                     ),
-                  // Set duration chip — with spacing
-                  if (set.isCompleted &&
-                      set.setDurationMillis != null &&
-                      (config.setDurationTracking ?? false)) ...[
-                    const SizedBox(width: 4),
-                    _buildSetDurationChip(set.setDurationMillis!),
-                  ],
-                ],
-              ),
-
-              // Flexible spacer
-              const Expanded(child: SizedBox.shrink()),
-
-              // Right: metronome + checkmark + edit
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Metronome button — only for incomplete sets when enabled in settings
-                  if (!set.isCompleted && ref.watch(appConfigProvider).metronomeEnabled)
-                    _buildMetronomeButton(context, set),
-                  // Completion checkmark — fixed width
-                  SizedBox(
-                    width: 20,
-                    child: set.isCompleted
-                        ? SemanticIcon(
-                            icon: AppIcons.checkCircle,
-                            semanticLabel: 'Completed',
-                            size: AppIconSize.small,
-                            color: context.colors.tertiary,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  const SizedBox(width: 8),
-                  // Edit button
-                  Semantics(
-                    label: context.l10n.edit,
-                    button: true,
-                    child: InkWell(
-                      onTap: () => _quickEditSet(context, set),
+                    decoration: BoxDecoration(
+                      color: context.warningContainer,
                       borderRadius: BorderRadius.circular(8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: SemanticIcon(
-                          icon: AppIcons.edit,
-                          semanticLabel: context.l10n.edit,
-                          size: AppIconSize.small,
-                          color: context.colors.primary,
-                        ),
+                    ),
+                    child: Text(
+                      'W',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.warningColor,
                       ),
                     ),
                   ),
+                  const SizedBox(width: 6),
                 ],
-              ),
-            ],
+
+                // Set details (adapted based on counting mode) + RPE + duration — all left-aligned
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ..._buildSetDetailsForMode(set, config),
+                    // RPE indicator — with spacing
+                    if (set.isCompleted) const SizedBox(width: 6),
+                    if (set.isCompleted)
+                      GestureDetector(
+                        onTap: () => _showQuickRpePicker(context, set),
+                        child: set.rpe != null
+                            ? RpeIndicator(rpe: set.rpe!)
+                            : Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.colors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: context.colors.primary.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  '+RPE',
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: context.colors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                      ),
+                    // Set duration chip — with spacing
+                    if (set.isCompleted &&
+                        set.setDurationMillis != null &&
+                        (config.setDurationTracking ?? false)) ...[
+                      const SizedBox(width: 4),
+                      _buildSetDurationChip(set.setDurationMillis!),
+                    ],
+                  ],
+                ),
+
+                // Flexible spacer
+                const Expanded(child: SizedBox.shrink()),
+
+                // Right: metronome + checkmark + edit
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Metronome button — only for incomplete sets when enabled in settings
+                    if (!set.isCompleted &&
+                        ref.watch(appConfigProvider).metronomeEnabled)
+                      _buildMetronomeButton(context, set),
+                    // Completion checkmark — fixed width
+                    SizedBox(
+                      width: 20,
+                      child: set.isCompleted
+                          ? SemanticIcon(
+                              icon: AppIcons.checkCircle,
+                              semanticLabel: 'Completed',
+                              size: AppIconSize.small,
+                              color: context.colors.tertiary,
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                    const SizedBox(width: 8),
+                    // Edit button
+                    Semantics(
+                      label: context.l10n.edit,
+                      button: true,
+                      child: InkWell(
+                        onTap: () => _quickEditSet(context, set),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: SemanticIcon(
+                            icon: AppIcons.edit,
+                            semanticLabel: context.l10n.edit,
+                            size: AppIconSize.small,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
         ),
       ),
     );
@@ -845,7 +926,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   /// Build metronome toggle button for TUT tempo tracking
   Widget _buildMetronomeButton(BuildContext context, ExerciseSet set) {
     final metronome = ref.watch(metronomeProvider);
-    final isActive = metronome.isRunning &&
+    final isActive =
+        metronome.isRunning &&
         metronome.exerciseId == widget.exercise.id &&
         metronome.setNumber == set.setNumber;
 
@@ -856,10 +938,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           if (isActive) {
             ref.read(metronomeProvider.notifier).stop();
           } else {
-            ref.read(metronomeProvider.notifier).start(
-                  widget.exercise.id,
-                  set.setNumber,
-                );
+            ref
+                .read(metronomeProvider.notifier)
+                .start(widget.exercise.id, set.setNumber);
           }
         },
         child: AnimatedContainer(
@@ -940,9 +1021,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
         return [
           Text(
-            hasWeight
-                ? set.weight!.formatWeight(config.measurementUnit)
-                : '--',
+            hasWeight ? set.weight!.formatWeight(config.measurementUnit) : '--',
             style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
               fontFeatures: [const FontFeature.tabularFigures()],
             ),
@@ -954,8 +1033,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           Text(
             hasReps
                 ? (set.actualReps != null && set.isCompleted
-                    ? '${set.actualReps}/${set.repsDisplay} reps'
-                    : '${set.repsDisplay} reps')
+                      ? '${set.actualReps}/${set.repsDisplay} reps'
+                      : '${set.repsDisplay} reps')
                 : '-- reps',
             style: hasReps ? valueStyle : placeholderStyle,
             overflow: TextOverflow.ellipsis,
@@ -969,8 +1048,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           Text(
             hasReps
                 ? (set.actualReps != null && set.isCompleted
-                    ? '${set.actualReps}/${set.repsDisplay} reps'
-                    : '${set.repsDisplay} reps')
+                      ? '${set.actualReps}/${set.repsDisplay} reps'
+                      : '${set.repsDisplay} reps')
                 : '-- reps',
             style: hasReps ? valueStyle : placeholderStyle,
           ),
@@ -980,12 +1059,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // Time-based: Show duration (isometric exercises)
         // ✅ FIX: Prioritize seconds field for time mode, fallback to reps for backward compatibility
         final duration = set.seconds ?? set.reps ?? 60;
-        return [
-          Text(
-            _formatDuration(duration),
-            style: valueStyle,
-          ),
-        ];
+        return [Text(_formatDuration(duration), style: valueStyle)];
     }
   }
 
@@ -1255,6 +1329,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       // Apply to all sets (first set only)
       onApplyToAll: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
+          if (s.isWarmup) return s;
           return s.copyWith(
             weight: updatedSet.weight,
             reps: updatedSet.reps,
@@ -1329,7 +1404,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: sheetContext.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                        color: sheetContext.colors.onSurfaceVariant.withValues(
+                          alpha: 0.3,
+                        ),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -1363,20 +1440,30 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? color.withValues(alpha: 0.2)
-                                  : sheetContext.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                                  : sheetContext.colors.surfaceContainerHighest
+                                        .withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                color: isSelected ? color : sheetContext.colors.outlineVariant,
+                                color: isSelected
+                                    ? color
+                                    : sheetContext.colors.outlineVariant,
                                 width: isSelected ? 2 : 1,
                               ),
                             ),
                             child: Center(
                               child: Text(
                                 '$rpe',
-                                style: sheetContext.textTheme.titleLarge?.copyWith(
-                                  color: isSelected ? color : sheetContext.colors.onSurfaceVariant,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                ),
+                                style: sheetContext.textTheme.titleLarge
+                                    ?.copyWith(
+                                      color: isSelected
+                                          ? color
+                                          : sheetContext
+                                                .colors
+                                                .onSurfaceVariant,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
+                                    ),
                               ),
                             ),
                           ),
@@ -1501,14 +1588,17 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     final config = widget.config;
     final rpeEnabled = config.rpeTracking ?? true;
     final isWarmupSet = set.isWarmup;
+    final shouldShowMissedStartReminder = _shouldShowMissedStartReminder(
+      set,
+      config,
+    );
 
     if (!wasCompleted) {
       // Auto-stop metronome if active for this set
       if (ref.read(metronomeProvider).isRunning &&
-          ref.read(metronomeProvider.notifier).isRunningForSet(
-                widget.exercise.id,
-                set.setNumber,
-              )) {
+          ref
+              .read(metronomeProvider.notifier)
+              .isRunningForSet(widget.exercise.id, set.setNumber)) {
         ref.read(metronomeProvider.notifier).stop();
       }
 
@@ -1610,10 +1700,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           }
         }
 
-        // Start rest timer for next set (if not warmup)
-        if (!isWarmupSet) {
-          widget.onStartRestTimer(context, updatedSet);
-        }
+        // Rest/inter-exercise timer is started by CurrentWorkoutNotifier.completeSet
+        // via the parent screen so UI, Watch and Live Activity share one policy.
 
         // ✅ FIX: Start duration tracking for NEXT set immediately
         // This ensures accurate tracking even if user doesn't use the rest timer
@@ -1625,6 +1713,11 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             context,
             message: '🔥 Warmup set ${set.setNumber} completed!',
             backgroundColor: context.warningColor,
+          );
+        } else if (shouldShowMissedStartReminder) {
+          SnackBarService.showWarning(
+            context,
+            context.l10n.setDurationMissedStartNotice,
           );
         } else {
           SnackBarService.showInfo(
@@ -1649,9 +1742,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       if (set.setStartedAt != null) {
         setStartTime = set.setStartedAt;
         if (kDebugMode) {
-          debugPrint(
-            '⏱️ [TUT+RPE] Using setStartedAt from set: $setStartTime',
-          );
+          debugPrint('⏱️ [TUT+RPE] Using setStartedAt from set: $setStartTime');
         }
       } else {
         // Check in-memory tracker
@@ -1674,9 +1765,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         }
 
         if (kDebugMode) {
-          debugPrint(
-            '⏱️ [TUT+RPE] Calculated duration: ${setDuration}ms',
-          );
+          debugPrint('⏱️ [TUT+RPE] Calculated duration: ${setDuration}ms');
         }
       }
 
@@ -1706,7 +1795,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           // Mirrors the auto-adjust behavior of rest timer in _handleStartRestTimer
           if (rpe > 0 && actualWeight > 0) {
             _autoAdjustWeightFromRpe(
-              completedSetId: set.id,
+              completedSet: updatedSet,
               actualWeight: actualWeight,
               actualRpe: rpe.toDouble(),
             );
@@ -1721,12 +1810,19 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             }
           }
 
-          // Start rest timer
-          widget.onStartRestTimer(context, updatedSet);
+          // Rest/inter-exercise timer is started by CurrentWorkoutNotifier.completeSet
+          // via the parent screen so UI, Watch and Live Activity share one policy.
 
           // ✅ FIX: Start duration tracking for NEXT set immediately
           // This ensures accurate tracking even if user doesn't use the rest timer
           _startTrackingNextSet(set.setNumber);
+
+          if (mounted && shouldShowMissedStartReminder) {
+            SnackBarService.showWarning(
+              context,
+              context.l10n.setDurationMissedStartNotice,
+            );
+          }
         },
       );
     } else {
@@ -1773,7 +1869,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   /// adjustment using RPEAutoregulationService and applies to all remaining
   /// incomplete sets.
   void _autoAdjustWeightFromRpe({
-    required String completedSetId,
+    required ExerciseSet completedSet,
     required double actualWeight,
     required double actualRpe,
   }) {
@@ -1822,7 +1918,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     bool hasUpdated = false;
 
     for (int i = 0; i < updatedSets.length; i++) {
-      if (!updatedSets[i].isCompleted && updatedSets[i].id != completedSetId) {
+      if (updatedSets[i].id == completedSet.id) {
+        // Preserve the freshly completed set instead of reusing the stale
+        // pre-confirmation version from widget.exercise.
+        updatedSets[i] = completedSet;
+        continue;
+      }
+
+      if (!updatedSets[i].isCompleted) {
         updatedSets[i] = updatedSets[i].copyWith(
           weight: adjustment.adjustedWeight,
         );
@@ -1884,74 +1987,82 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   /// ✅ FIX: Now uses setStartedAt from the set itself (persistent) instead of
   /// a local widget state variable that would be lost on rebuild.
   Widget _buildStartSetButtonIfNeeded(BuildContext context, AppConfig config) {
-    final setDurationTracking = config.setDurationTracking ?? false;
-
-    // Don't show if tracking is disabled
-    if (!setDurationTracking) {
-      return const SizedBox.shrink();
-    }
-
-    // Don't show if all sets are completed
-    final hasIncompleteSet = widget.exercise.sets.any((s) => !s.isCompleted);
-    if (!hasIncompleteSet) {
-      return const SizedBox.shrink();
-    }
-
-    // Find first incomplete non-warmup set
-    final firstIncompleteSet = widget.exercise.sets.firstWhere(
-      (s) => !s.isCompleted && !s.isWarmup,
-      orElse: () => widget.exercise.sets.firstWhere(
-        (s) => !s.isCompleted,
-        orElse: () => widget.exercise.sets.first,
-      ),
-    );
-
-    // ✅ FIX: Check if set already has setStartedAt (persistent, survives rebuild)
-    // This is the source of truth - not the in-memory tracker
-    if (firstIncompleteSet.setStartedAt != null) {
-      return const SizedBox.shrink();
-    }
-
-    // Also check in-memory tracker for backward compatibility
-    final durationTracker = ref.read(setDurationTrackerProvider);
-    final existingStartTime = durationTracker.getSetStartTime(
-      widget.exercise.id,
-      firstIncompleteSet.setNumber,
-    );
-
-    // If tracking already started in memory (e.g., from rest timer), don't show button
-    if (existingStartTime != null) {
+    if (!_shouldShowStartSetHint(config)) {
       return const SizedBox.shrink();
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Tooltip(
-          message: 'Prima di iniziare a tracciare il tuo tempo di un set, '
-              'premi questo pulsante per registrare la durata delle tue esecuzioni.',
-          preferBelow: true,
-          child: TextButton.icon(
-            onPressed: _onStartFirstSet,
-            icon: SemanticIcon(
-              icon: AppIcons.playArrow,
-              semanticLabel: 'Start',
-              size: AppIconSize.small,
-              color: context.colors.secondary,
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: context.infoContainer.withValues(alpha: 0.55),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: context.infoColor.withValues(alpha: 0.18)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: SemanticIcon(
+                    icon: AppIcons.timer,
+                    semanticLabel: context.l10n.startTrackingDuration,
+                    size: AppIconSize.small,
+                    color: context.infoColor,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.startTrackingDuration,
+                        style: context.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: context.colors.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        context.l10n.setDurationStartHintBody,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            label: Text(context.l10n.startSet),
-            style: TextButton.styleFrom(
-              foregroundColor: context.colors.secondary,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 8,
+            const SizedBox(height: 10),
+            TextButton.icon(
+              onPressed: _onStartFirstSet,
+              icon: SemanticIcon(
+                icon: AppIcons.playArrow,
+                semanticLabel: context.l10n.startSet,
+                size: AppIconSize.small,
+                color: context.colors.secondary,
               ),
-              textStyle: context.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w500,
+              label: Text(context.l10n.startSet),
+              style: TextButton.styleFrom(
+                foregroundColor: context.colors.secondary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                textStyle: context.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -2095,56 +2206,56 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-              color: allCompleted
-                  ? context.colors.surfaceContainerHighest.withValues(
-                      alpha: 0.5,
-                    )
-                  : context.colors.tertiaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
                 color: allCompleted
-                    ? context.colors.outline.withValues(alpha: 0.3)
-                    : context.colors.tertiary.withValues(alpha: 0.5),
-                style: BorderStyle.solid,
-              ),
-            ),
-            child: Row(
-              children: [
-                SemanticIcon(
-                  icon: allCompleted
-                      ? AppIcons.refresh
-                      : AppIcons.playCircleOutline,
-                  semanticLabel: context.l10n.executeDropset,
-                  size: AppIconSize.small,
+                    ? context.colors.surfaceContainerHighest.withValues(
+                        alpha: 0.5,
+                      )
+                    : context.colors.tertiaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
                   color: allCompleted
-                      ? context.colors.onSurfaceVariant
-                      : context.colors.tertiary,
+                      ? context.colors.outline.withValues(alpha: 0.3)
+                      : context.colors.tertiary.withValues(alpha: 0.5),
+                  style: BorderStyle.solid,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    allCompleted
-                        ? context.l10n.rerunDropset
-                        : context.l10n.executeDropset,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: allCompleted
-                          ? context.colors.onSurfaceVariant
-                          : context.colors.tertiary,
-                      fontWeight: FontWeight.w600,
+              ),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: allCompleted
+                        ? AppIcons.refresh
+                        : AppIcons.playCircleOutline,
+                    semanticLabel: context.l10n.executeDropset,
+                    size: AppIconSize.small,
+                    color: allCompleted
+                        ? context.colors.onSurfaceVariant
+                        : context.colors.tertiary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      allCompleted
+                          ? context.l10n.rerunDropset
+                          : context.l10n.executeDropset,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: allCompleted
+                            ? context.colors.onSurfaceVariant
+                            : context.colors.tertiary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                SemanticIcon(
-                  icon: AppIcons.forwardIos,
-                  semanticLabel: context.l10n.executeDropset,
-                  size: AppIconSize.tiny,
-                  color: allCompleted
-                      ? context.colors.onSurfaceVariant
-                      : context.colors.tertiary,
-                ),
-              ],
+                  SemanticIcon(
+                    icon: AppIcons.forwardIos,
+                    semanticLabel: context.l10n.executeDropset,
+                    size: AppIconSize.tiny,
+                    color: allCompleted
+                        ? context.colors.onSurfaceVariant
+                        : context.colors.tertiary,
+                  ),
+                ],
+              ),
             ),
-          ),
           ),
         ),
 
@@ -2157,37 +2268,40 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             child: GestureDetector(
               onTap: () => _onAddDropSetStage(context, dropsetExercise),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.5),
-                  style: BorderStyle.solid,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.add,
-                    semanticLabel: context.l10n.addDropsetStage,
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: context.colors.primary.withValues(alpha: 0.5),
+                    style: BorderStyle.solid,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    context.l10n.addDropsetStage,
-                    style: context.textTheme.bodySmall?.copyWith(
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.add,
+                      semanticLabel: context.l10n.addDropsetStage,
+                      size: AppIconSize.small,
                       color: context.colors.primary,
-                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.addDropsetStage,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         ],
       ],
     );
@@ -2489,10 +2603,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                       duration: const Duration(milliseconds: 400),
                       curve: Curves.elasticOut,
                       tween: Tween(begin: 0.0, end: 1.0),
-                      builder: (context, scale, child) => Transform.scale(
-                        scale: scale,
-                        child: child,
-                      ),
+                      builder: (context, scale, child) =>
+                          Transform.scale(scale: scale, child: child),
                       child: SemanticIcon(
                         icon: AppIcons.complete,
                         semanticLabel: 'Completed',
@@ -2645,7 +2757,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
         // Execute/Re-run button
         Semantics(
-          label: allCompleted ? context.l10n.rerunRestPause : context.l10n.executeRestPause,
+          label: allCompleted
+              ? context.l10n.rerunRestPause
+              : context.l10n.executeRestPause,
           button: true,
           child: GestureDetector(
             onTap: () => widget.onExecuteRestPause(restPauseExercise),
@@ -2714,7 +2828,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             child: GestureDetector(
               onTap: () => _onAddRestPauseSet(context, restPauseExercise),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: context.colors.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),

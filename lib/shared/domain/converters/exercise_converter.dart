@@ -40,20 +40,29 @@ class ExerciseConverter {
   static WorkoutExercise.Exercise fromDatabaseExercise(
     DatabaseExercise.Exercise exercise, {
     ExerciseCountingMode? countingModeOverride,
+    int initialSetCount = 3,
   }) {
+    final safeInitialSetCount = initialSetCount < 1 ? 1 : initialSetCount;
+
     return WorkoutExercise.Exercise(
-      id: exercise.id, // ✅ Preserve original database exercise ID
+      databaseExerciseId: exercise.id,
       name: exercise.nome,
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
       notes: null, // Note utente separate - non mappare noteTecniche qui
-      countingMode: countingModeOverride ?? exercise.countingMode, // ✅ Use override if provided, otherwise database
+      countingMode:
+          countingModeOverride ??
+          exercise
+              .countingMode, // ✅ Use override if provided, otherwise database
       tut: exercise.tempoEsecuzione, // ✅ Pass TUT from database
-      sets: [
-        WorkoutExercise.ExerciseSet(setNumber: 1, weight: 0, reps: 10),
-        WorkoutExercise.ExerciseSet(setNumber: 2, weight: 0, reps: 10),
-        WorkoutExercise.ExerciseSet(setNumber: 3, weight: 0, reps: 10),
-      ],
+      sets: List.generate(
+        safeInitialSetCount,
+        (index) => WorkoutExercise.ExerciseSet(
+          setNumber: index + 1,
+          weight: 0,
+          reps: 10,
+        ),
+      ),
     );
   }
 
@@ -78,12 +87,14 @@ class ExerciseConverter {
     ExerciseCountingMode? countingModeOverride,
   }) {
     return WorkoutExercise.Exercise(
-      id: exercise.id, // ✅ Preserve original database exercise ID
+      databaseExerciseId: exercise.id,
       name: exercise.nome,
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
       notes: null, // Note utente separate - non mappare noteTecniche qui
-      countingMode: countingModeOverride ?? exercise.countingMode, // ✅ Use override if provided
+      countingMode:
+          countingModeOverride ??
+          exercise.countingMode, // ✅ Use override if provided
       tut: exercise.tempoEsecuzione, // ✅ Pass TUT from database
       sets: sets,
     );

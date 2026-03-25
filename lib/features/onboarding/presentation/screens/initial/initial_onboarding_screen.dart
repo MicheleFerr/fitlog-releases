@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/initial/initial_onboarding_completion_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/welcome_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/goal_selection_step.dart';
@@ -11,6 +12,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/init
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/body_data_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/experience_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/frequency_summary_step.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -135,6 +137,12 @@ class _InitialOnboardingScreenState
       debugPrint('   - isComplete (state): ${state.isComplete}');
     }
 
+    final legalAccepted = await _ensureLegalDisclaimerAccepted();
+    if (!legalAccepted) {
+      _isHandlingCompletion = false;
+      return;
+    }
+
     // Get onboarding data
     final data = state.toOnboardingData();
     if (data == null) {
@@ -142,6 +150,7 @@ class _InitialOnboardingScreenState
         debugPrint('❌ [Onboarding] Data incomplete - cannot proceed');
       }
       notifier.setError(l10n.errorInvalidInput);
+      _isHandlingCompletion = false;
       return;
     }
 
@@ -193,6 +202,43 @@ class _InitialOnboardingScreenState
         debugPrint('Stack: $stack');
       }
       notifier.setError(l10n.errorSaving(e.toString()));
+    }
+  }
+
+  Future<bool> _ensureLegalDisclaimerAccepted() async {
+    final l10n = context.l10n;
+    final onboardingState = ref.read(onboardingStateProvider);
+    if (onboardingState.hasAcceptedLegalDisclaimer) {
+      return true;
+    }
+
+    if (!mounted || !context.mounted) {
+      return false;
+    }
+
+    var accepted = false;
+    await LegalDisclaimerModal.show(
+      context: context,
+      onAccept: () {
+        accepted = true;
+      },
+    );
+
+    if (!accepted) {
+      return false;
+    }
+
+    try {
+      await ref.read(onboardingStateProvider.notifier).acceptLegalDisclaimer();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [Onboarding] Failed to persist legal disclaimer: $e');
+      }
+      ref
+          .read(initialOnboardingNotifierProvider.notifier)
+          .setError(l10n.errorSaving(e.toString()));
+      return false;
     }
   }
 }

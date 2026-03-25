@@ -2141,6 +2141,10 @@
   "@unlimitedTemplates": {
     "description": "Premium feature: unlimited templates"
   },
+  "unlimitedTemplatesDescription": "Save more than 4 editable workout templates in your Library",
+  "@unlimitedTemplatesDescription": {
+    "description": "Premium feature description for unlimited editable templates"
+  },
   "welcomeToGymBro": "Welcome to your new fitness companion!",
   "@welcomeToGymBro": {
     "description": "Welcome message on login screen"
@@ -4202,7 +4206,7 @@
   "@offlineMode": {
     "description": "Banner shown when viewing local fallback content"
   },
-  "tosAcceptanceRequired": "You must accept the Terms of Service to continue",
+  "tosAcceptanceRequired": "You must accept the Terms of Use to continue",
   "@tosAcceptanceRequired": {
     "description": "Error message when ToS not accepted"
   },
@@ -17016,7 +17020,7 @@
   "@legalDisclaimerTitle": {
     "description": "Title for the legal disclaimer modal"
   },
-  "legalDisclaimerContent": "⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.",
+  "legalDisclaimerContent": "⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Use and Privacy Policy.",
   "@legalDisclaimerContent": {
     "description": "Content text for the legal disclaimer modal"
   },
@@ -17040,9 +17044,17 @@
   "@privacyPolicySubtitle": {
     "description": "Privacy Policy subtitle"
   },
-  "termsOfService": "Terms of Service",
+  "termsOfUseEula": "Terms of Use (EULA)",
+  "@termsOfUseEula": {
+    "description": "Apple standard terms of use label"
+  },
+  "termsOfService": "Terms of Use",
   "@termsOfService": {
-    "description": "Terms of Service title"
+    "description": "Terms of Use title"
+  },
+  "serviceTerms": "Service Terms",
+  "@serviceTerms": {
+    "description": "App-specific service terms label"
   },
   "coachAgreement": "Coach Agreement",
   "@coachAgreement": {
@@ -32358,7 +32370,7 @@
   "openSourceLicenses": "Open Source Licenses",
   "openSourceLicensesDesc": "View third-party licenses",
   "privacyPolicyDesc": "Read our privacy policy",
-  "termsOfServiceDesc": "Read our terms of service",
+  "termsOfServiceDesc": "Read our terms of use",
   "betaFeedback": "Send Feedback",
   "@betaFeedback": {
     "description": "Beta feedback tile title in settings"
@@ -34506,6 +34518,33 @@
   "continueWithPremium": "Continue with Premium",
   "@continueWithPremium": {
     "description": "Purchase CTA button label"
+  },
+  "continueWithPremiumMonthlyPlan": "{productName} 1 Month",
+  "@continueWithPremiumMonthlyPlan": {
+    "description": "Purchase CTA button label for monthly plan",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "continueWithPremiumYearlyPlan": "{productName} 1 Year",
+  "@continueWithPremiumYearlyPlan": {
+    "description": "Purchase CTA button label for yearly plan",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "continueWithPremiumLifetimePlan": "{productName} Lifetime",
+  "@continueWithPremiumLifetimePlan": {
+    "description": "Purchase CTA button label for lifetime plan",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
   },
   "everythingInFree": "Everything in Free, plus:",
   "@everythingInFree": {

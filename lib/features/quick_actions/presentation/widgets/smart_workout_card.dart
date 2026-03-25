@@ -8,13 +8,17 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/domain/services/split_detection_service.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/providers/next_workout_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/from_template_popup.dart';
+import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/recent_workouts_popup.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Smart workout suggestion card for the Quick Actions overlay
@@ -22,12 +26,16 @@ class SmartWorkoutCard extends ConsumerWidget {
   const SmartWorkoutCard({
     required this.onStartSuggested,
     required this.onTemplateSelected,
+    required this.onRecentWorkoutSelected,
     required this.onViewAllTemplates,
+    required this.onViewHistory,
     required this.onEmpty,
     this.onResumeDraft,
     this.onDiscardDraft,
     super.key,
   });
+
+  static const double _contentIndent = AppSpacing.xxl + AppSpacing.xs;
 
   /// Called when user taps INIZIA with the suggested workout
   final void Function(String? templateId) onStartSuggested;
@@ -35,8 +43,14 @@ class SmartWorkoutCard extends ConsumerWidget {
   /// Called when user selects a template from the popup
   final void Function(WorkoutTemplate template) onTemplateSelected;
 
+  /// Called when user selects a recent workout to repeat
+  final void Function(WorkoutHistoryDetail workout) onRecentWorkoutSelected;
+
   /// Called when user taps "View all templates..."
   final VoidCallback onViewAllTemplates;
+
+  /// Called when user opens full workout history
+  final VoidCallback onViewHistory;
 
   /// Called when user taps "Vuoto"
   final VoidCallback onEmpty;
@@ -66,9 +80,8 @@ class SmartWorkoutCard extends ConsumerWidget {
 
     // Show draft recovery card above suggestion card if draft exists
     final draftCard = draftAsync.whenOrNull(
-      data: (info) => info != null
-          ? _buildDraftRecoveryCard(context, info)
-          : null,
+      data: (info) =>
+          info != null ? _buildDraftRecoveryCard(context, info) : null,
     );
 
     if (draftCard != null) {
@@ -76,7 +89,7 @@ class SmartWorkoutCard extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           draftCard,
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           suggestionCard,
         ],
       );
@@ -85,10 +98,10 @@ class SmartWorkoutCard extends ConsumerWidget {
     return suggestionCard;
   }
 
-  Widget _buildDraftRecoveryCard(
-    BuildContext context,
-    PendingDraftInfo info,
-  ) {
+  Widget _buildDraftRecoveryCard(BuildContext context, PendingDraftInfo info) {
+    final warningColor = context.warningColor;
+    final onWarningContainer = context.colors.onWarningContainer;
+
     // Minutes since workout started
     final minutesAgo = info.startTime != null
         ? DateTime.now().difference(info.startTime!).inMinutes
@@ -96,13 +109,11 @@ class SmartWorkoutCard extends ConsumerWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: Colors.amber.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.amber.withValues(alpha: 0.3),
-        ),
+        color: context.warningContainer,
+        borderRadius: AppBorderRadius.lgRadius,
+        border: Border.all(color: warningColor.withValues(alpha: 0.28)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,17 +122,13 @@ class SmartWorkoutCard extends ConsumerWidget {
           // Header row: icon + title
           Row(
             children: [
-              Icon(
-                Icons.pause_circle_filled,
-                color: Colors.amber.shade300,
-                size: 28,
-              ),
-              const SizedBox(width: 10),
+              Icon(Icons.pause_circle_filled, color: warningColor, size: 28),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   context.l10n.pendingWorkout,
                   style: context.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: warningColor,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -129,22 +136,22 @@ class SmartWorkoutCard extends ConsumerWidget {
             ],
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
 
           // Info: name + stats
           Padding(
-            padding: const EdgeInsets.only(left: 38),
+            padding: const EdgeInsets.only(left: _contentIndent),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   info.workoutName,
                   style: context.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: onWarningContainer,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xxs),
                 Text(
                   context.l10n.pendingWorkoutInfo(
                     info.exerciseCount,
@@ -152,15 +159,15 @@ class SmartWorkoutCard extends ConsumerWidget {
                     info.totalSets,
                   ),
                   style: context.textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: onWarningContainer.withValues(alpha: 0.8),
                   ),
                 ),
                 if (minutesAgo != null) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.xxs),
                   Text(
                     context.l10n.pendingWorkoutStartedAgo(minutesAgo),
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: onWarningContainer.withValues(alpha: 0.65),
                     ),
                   ),
                 ],
@@ -168,17 +175,19 @@ class SmartWorkoutCard extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
 
           // Resume button
           _buildCTAButton(
             context,
             label: context.l10n.resumeWorkout,
             filled: true,
+            filledBackgroundColor: warningColor,
+            filledForegroundColor: context.textOnWarning,
             onTap: () => onResumeDraft?.call(),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
 
           // Discard button (subtle)
           Center(
@@ -188,13 +197,13 @@ class SmartWorkoutCard extends ConsumerWidget {
                 onDiscardDraft?.call();
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
                 child: Text(
                   context.l10n.discard,
                   style: context.textTheme.labelSmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.4),
+                    color: warningColor.withValues(alpha: 0.85),
                     decoration: TextDecoration.underline,
-                    decorationColor: Colors.white.withValues(alpha: 0.4),
+                    decorationColor: warningColor.withValues(alpha: 0.85),
                   ),
                 ),
               ),
@@ -224,30 +233,19 @@ class SmartWorkoutCard extends ConsumerWidget {
           Text(
             context.l10n.quickActionStartWorkout,
             style: context.textTheme.titleMedium?.copyWith(
-              color: Colors.white,
+              color: context.colors.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: FromTemplatePopup(
-                  onTemplateSelected: onTemplateSelected,
-                  onViewAll: onViewAllTemplates,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildCTAButton(
-                  context,
-                  label: context.l10n.quickActionStart,
-                  filled: true,
-                  onTap: () => onStartSuggested(null),
-                ),
-              ),
-            ],
+          const SizedBox(height: AppSpacing.md),
+          _buildCTAButton(
+            context,
+            label: context.l10n.quickActionStart,
+            filled: true,
+            onTap: () => onStartSuggested(null),
           ),
+          const SizedBox(height: AppSpacing.sm),
+          _buildSecondaryActions(context),
         ],
       ),
     );
@@ -275,11 +273,11 @@ class SmartWorkoutCard extends ConsumerWidget {
           // Header: "Basato sulla tua split:"
           if (suggestion.type == SplitDetectionType.patternDetected)
             Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
               child: Text(
                 context.l10n.quickActionBasedOnSplit,
                 style: context.textTheme.labelSmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.6),
+                  color: context.colors.onSurfaceVariant,
                   fontSize: 11,
                 ),
               ),
@@ -289,12 +287,12 @@ class SmartWorkoutCard extends ConsumerWidget {
           Row(
             children: [
               Text(emoji, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   title,
                   style: context.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: context.colors.onSurface,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -305,16 +303,19 @@ class SmartWorkoutCard extends ConsumerWidget {
           // Subtitle
           if (subtitle != null)
             Padding(
-              padding: const EdgeInsets.only(top: 4, left: 38),
+              padding: const EdgeInsets.only(
+                top: AppSpacing.xxs,
+                left: _contentIndent,
+              ),
               child: Text(
                 subtitle,
                 style: context.textTheme.bodySmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
             ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
 
           // CTA: INIZIA button (full width)
           _buildCTAButton(
@@ -324,30 +325,42 @@ class SmartWorkoutCard extends ConsumerWidget {
             onTap: () => onStartSuggested(suggestion.templateId),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.sm),
 
-          // Secondary row: Da Template + Vuoto
-          Row(
-            children: [
-              Expanded(
-                child: FromTemplatePopup(
-                  onTemplateSelected: onTemplateSelected,
-                  onViewAll: onViewAllTemplates,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildCTAButton(
-                  context,
-                  label: context.l10n.quickActionEmptyWorkout,
-                  filled: false,
-                  onTap: onEmpty,
-                ),
-              ),
-            ],
-          ),
+          _buildSecondaryActions(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildSecondaryActions(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: FromTemplatePopup(
+                onTemplateSelected: onTemplateSelected,
+                onViewAll: onViewAllTemplates,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: RecentWorkoutsPopup(
+                onWorkoutSelected: onRecentWorkoutSelected,
+                onViewHistory: onViewHistory,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        _buildCTAButton(
+          context,
+          label: context.l10n.quickActionEmptyWorkout,
+          filled: false,
+          onTap: onEmpty,
+        ),
+      ],
     );
   }
 
@@ -383,12 +396,12 @@ class SmartWorkoutCard extends ConsumerWidget {
   Widget _buildCardContainer(BuildContext context, {required Widget child}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        color: context.colors.surfaceContainerHigh.withValues(alpha: 0.92),
+        borderRadius: AppBorderRadius.lgRadius,
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.15),
+          color: context.colors.outline.withValues(alpha: 0.2),
         ),
       ),
       child: child,
@@ -400,6 +413,8 @@ class SmartWorkoutCard extends ConsumerWidget {
     required String label,
     required bool filled,
     required VoidCallback onTap,
+    Color? filledBackgroundColor,
+    Color? filledForegroundColor,
   }) {
     return GestureDetector(
       onTap: () {
@@ -411,17 +426,24 @@ class SmartWorkoutCard extends ConsumerWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: filled
-              ? context.colors.primary
-              : Colors.white.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
+              ? (filledBackgroundColor ?? context.colors.primary)
+              : context.colors.surfaceContainerHighest.withValues(alpha: 0.72),
+          borderRadius: AppBorderRadius.buttonRadius,
           border: filled
               ? null
-              : Border.all(color: Colors.white.withValues(alpha: 0.2)),
+              : Border.all(
+                  color: context.colors.outline.withValues(alpha: 0.25),
+                ),
         ),
         child: Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: context.textTheme.labelLarge?.copyWith(
-            color: filled ? Colors.white : Colors.white.withValues(alpha: 0.9),
+            color: filled
+                ? (filledForegroundColor ?? context.colors.onPrimary)
+                : context.colors.onSurface,
             fontWeight: FontWeight.w600,
           ),
         ),

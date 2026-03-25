@@ -27,7 +27,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
     super.firestore,
     super.auth,
     required this.locale,
-  }) : _cacheManager = cacheManager ?? ExerciseCacheManager(),
+  }) : _ownsCacheManager = cacheManager == null,
+       _ownsVersionService = versionService == null,
+       _cacheManager = cacheManager ?? ExerciseCacheManager(),
        _versionService = versionService ?? ExerciseVersionService(),
        super(
          featureName: 'exercises',
@@ -37,6 +39,8 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
        ) {
     _initialize();
   }
+  final bool _ownsCacheManager;
+  final bool _ownsVersionService;
   final ExerciseCacheManager _cacheManager;
   final ExerciseVersionService _versionService;
   final Locale locale;
@@ -546,8 +550,12 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   Future<void> dispose() async {
     _syncTimer?.cancel();
     await _syncStatusController.close();
-    await _cacheManager.dispose();
-    await _versionService.dispose();
+    if (_ownsCacheManager) {
+      await _cacheManager.dispose();
+    }
+    if (_ownsVersionService) {
+      await _versionService.dispose();
+    }
     super.dispose();
   }
 }

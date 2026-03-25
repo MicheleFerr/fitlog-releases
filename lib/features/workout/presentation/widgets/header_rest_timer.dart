@@ -41,14 +41,21 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   Widget build(BuildContext context) {
     // PERF: Watch 1 - Timer state flags only (structural changes, rare updates)
     final timerFlags = ref.watch(
-      unifiedTimerProvider.select((state) => (
-        isTimerActive: state != null,
-        isIdle: state == null || state.isIdle,
-        isRunning: state?.isActive ?? false,
-        isPaused: state?.isPaused ?? false,
-        isCompleted: state?.isCompleted ?? false,
-        isInterExercise: state?.type == TimerType.interExercise,
-      )),
+      unifiedTimerProvider.select(
+        (state) => (
+          isTimerActive: state != null,
+          isIdle: state == null || state.isIdle,
+          isRunning: state?.isActive ?? false,
+          isPaused: state?.isPaused ?? false,
+          isCompleted: state?.isCompleted ?? false,
+          isInterExercise: state?.type == TimerType.interExercise,
+          isSkipped: state?.skipped ?? false,
+          audioPlayed: state?.audioPlayed ?? false,
+          completionDeliveryStrategy:
+              state?.completionDeliveryStrategy ??
+              TimerCompletionDeliveryStrategy.foregroundAudio,
+        ),
+      ),
     );
 
     // PERF: Watch 2 - Config (separate provider, rare changes)
@@ -58,15 +65,21 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     final timerNotifier = ref.read(unifiedTimerProvider.notifier);
 
     // Extract flags
-    final isTimerActive = timerFlags.isTimerActive;
     final isIdle = timerFlags.isIdle;
     final isRunning = timerFlags.isRunning;
     final isPaused = timerFlags.isPaused;
-    final isCompleted = timerFlags.isCompleted;
     final isInterExercise = timerFlags.isInterExercise;
+    final shouldAutoReset = _shouldAutoReset(
+      isTimerActive: timerFlags.isTimerActive,
+      isCompleted: timerFlags.isCompleted,
+      isSkipped: timerFlags.isSkipped,
+      audioPlayed: timerFlags.audioPlayed,
+      completionDeliveryStrategy: timerFlags.completionDeliveryStrategy,
+    );
 
-    // Auto-reset quando completa
-    if (isTimerActive && isCompleted) {
+    // Auto-reset only after the completion pipeline is actually done.
+    // On iOS the native audio path may still be in flight when the timer reaches 0.
+    if (shouldAutoReset) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           ref.read(unifiedTimerProvider.notifier).resetTimer();
@@ -100,19 +113,19 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
           color: isIdle
               ? context.colors.surfaceContainerHighest.withValues(alpha: 0.8)
               : isPaused
-                  ? context.colors.secondaryContainer.withValues(alpha: 0.5)
-                  : isInterExercise
-                      ? context.colors.tertiaryContainer.withValues(alpha: 0.5)
-                      : context.colors.primaryContainer.withValues(alpha: 0.5),
+              ? context.colors.secondaryContainer.withValues(alpha: 0.5)
+              : isInterExercise
+              ? context.colors.tertiaryContainer.withValues(alpha: 0.5)
+              : context.colors.primaryContainer.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(widget.compact ? 10 : 12),
           border: Border.all(
             color: isIdle
                 ? context.colors.outline.withValues(alpha: 0.3)
                 : isPaused
-                    ? context.colors.secondary.withValues(alpha: 0.5)
-                    : isInterExercise
-                        ? context.colors.tertiary.withValues(alpha: 0.5)
-                        : context.colors.primary.withValues(alpha: 0.5),
+                ? context.colors.secondary.withValues(alpha: 0.5)
+                : isInterExercise
+                ? context.colors.tertiary.withValues(alpha: 0.5)
+                : context.colors.primary.withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -123,14 +136,14 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
               isInterExercise
                   ? AppIcons.skipNext
                   : (isRunning
-                      ? AppIcons.timer
-                      : (isPaused ? AppIcons.pause : AppIcons.timer)),
+                        ? AppIcons.timer
+                        : (isPaused ? AppIcons.pause : AppIcons.timer)),
               size: widget.compact ? AppIconSize.tiny : AppIconSize.small,
               color: isIdle
                   ? context.colors.onSurfaceVariant
                   : isPaused
-                      ? context.colors.secondary
-                      : context.colors.primary,
+                  ? context.colors.secondary
+                  : context.colors.primary,
             ),
             SizedBox(width: widget.compact ? 4 : 6),
             if (isIdle)
@@ -147,17 +160,6 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
               ValueListenableBuilder<int>(
                 valueListenable: timerNotifier.remainingSecondsNotifier,
                 builder: (context, remainingSeconds, _) {
-                  // Check for auto-reset via ValueNotifier
-                  if (remainingSeconds <= 0 && isTimerActive && !isIdle) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (mounted) {
-                        ref
-                            .read(unifiedTimerProvider.notifier)
-                            .resetTimer();
-                      }
-                    });
-                  }
-
                   final totalDuration = ref.read(
                     unifiedTimerProvider.select(
                       (s) => s?.totalDurationSeconds ?? 1,
@@ -181,6 +183,29 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
         ),
       ),
     );
+  }
+
+  bool _shouldAutoReset({
+    required bool isTimerActive,
+    required bool isCompleted,
+    required bool isSkipped,
+    required bool audioPlayed,
+    required TimerCompletionDeliveryStrategy completionDeliveryStrategy,
+  }) {
+    if (!isTimerActive || !isCompleted) {
+      return false;
+    }
+
+    if (isSkipped) {
+      return true;
+    }
+
+    if (completionDeliveryStrategy ==
+        TimerCompletionDeliveryStrategy.foregroundAudio) {
+      return true;
+    }
+
+    return audioPlayed;
   }
 
   /// Countdown grande e leggibile
@@ -243,15 +268,17 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   /// Mostra modal per selezione timer personalizzato
   // 🔧 PERF FIX: Accept timerSound directly instead of entire config
   void _showTimerModal(BuildContext context, String timerSound) {
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
+      useRootNavigator: true,
       // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.transparent
       backgroundColor: Theme.of(
         context,
       ).colorScheme.surface.withValues(alpha: 0),
       isScrollControlled: true,
-      builder: (context) => _CustomTimerModal(
+      builder: (sheetContext) => _CustomTimerModal(
         onSelectDuration: (seconds) {
-          Navigator.pop(context);
+          Navigator.of(sheetContext).pop();
           ref
               .read(unifiedTimerProvider.notifier)
               .startTimer(

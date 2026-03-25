@@ -16,14 +16,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/firestore_workout_history_reader.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 class WorkoutHistoryService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  WorkoutHistoryService({
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+    FirestoreWorkoutHistoryReader? historyReader,
+  }) : _auth = auth ?? FirebaseAuth.instance,
+       _historyReader =
+           historyReader ?? FirestoreWorkoutHistoryReader(firestore: firestore);
 
-  static const String _workoutsCollection = 'workouts';
+  final FirebaseAuth _auth;
+  final FirestoreWorkoutHistoryReader _historyReader;
 
   /// Ottiene l'ultima attività per un esercizio specifico
   /// Rimpiazza il metodo getActivitiesByExercise dell'ExerciseActivityRepository
@@ -37,19 +44,15 @@ class WorkoutHistoryService {
 
       final uid = currentUser.uid;
 
-      // Query per trovare workout che contengono l'esercizio
-      final querySnapshot = await _firestore
-          .collection(_workoutsCollection)
-          .where('userId', isEqualTo: uid)
-          .orderBy('completedAt', descending: true)
-          .limit(50) // Prendiamo più workout per cercare l'esercizio
-          .get();
+      final workouts = await _historyReader.getRecentCompletedWorkouts(
+        userId: uid,
+        limit: 50,
+        scanLimit: 100,
+      );
 
       // Cerca l'esercizio nei workout
-      for (final doc in querySnapshot.docs) {
+      for (final workoutData in workouts) {
         try {
-          final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
-
           // Trova l'esercizio nel workout
           final exercise = workoutData.exercises
               .where((ex) => _isExerciseMatch(ex.name, exerciseName))
@@ -87,19 +90,15 @@ class WorkoutHistoryService {
       final uid = currentUser.uid;
       final activities = <ExerciseActivity>[];
 
-      // Query per trovare workout che contengono l'esercizio
-      final querySnapshot = await _firestore
-          .collection(_workoutsCollection)
-          .where('userId', isEqualTo: uid)
-          .orderBy('completedAt', descending: true)
-          .limit(100) // Prendiamo più workout per cercare l'esercizio
-          .get();
+      final workouts = await _historyReader.getRecentCompletedWorkouts(
+        userId: uid,
+        limit: 100,
+        scanLimit: 160,
+      );
 
       // Cerca l'esercizio nei workout
-      for (final doc in querySnapshot.docs) {
+      for (final workoutData in workouts) {
         try {
-          final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
-
           // Trova l'esercizio nel workout
           final exercise = workoutData.exercises
               .where((ex) => _isExerciseMatch(ex.name, exerciseName))
@@ -136,19 +135,15 @@ class WorkoutHistoryService {
     try {
       final history = <ExerciseHistoryData>[];
 
-      // Query per trovare workout che contengono l'esercizio
-      final querySnapshot = await _firestore
-          .collection(_workoutsCollection)
-          .where('userId', isEqualTo: userId)
-          .orderBy('completedAt', descending: true)
-          .limit(100) // Prendiamo più workout per cercare l'esercizio
-          .get();
+      final workouts = await _historyReader.getRecentCompletedWorkouts(
+        userId: userId,
+        limit: 100,
+        scanLimit: 160,
+      );
 
       // Cerca l'esercizio nei workout
-      for (final doc in querySnapshot.docs) {
+      for (final workoutData in workouts) {
         try {
-          final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
-
           // Trova l'esercizio nel workout
           final exercise = workoutData.exercises
               .where((ex) => _isExerciseMatch(ex.name, exerciseName))
@@ -163,6 +158,9 @@ class WorkoutHistoryService {
                     weight: set.weight > 0 ? set.weight : null,
                     reps: set.reps > 0 ? set.reps : null,
                     rpe: set.rpe, // ✅ FIX: Include RPE from set
+                    notes: set.notes?.trim().isNotEmpty == true
+                        ? set.notes!.trim()
+                        : null,
                     date: workoutData.completedAt,
                     workoutName: workoutData.name,
                   ),
@@ -197,19 +195,15 @@ class WorkoutHistoryService {
     try {
       final historyWithSets = <Map<String, dynamic>>[];
 
-      // Query per trovare workout che contengono l'esercizio
-      final querySnapshot = await _firestore
-          .collection(_workoutsCollection)
-          .where('userId', isEqualTo: userId)
-          .orderBy('completedAt', descending: true)
-          .limit(100) // Prendiamo più workout per cercare l'esercizio
-          .get();
+      final workouts = await _historyReader.getRecentCompletedWorkouts(
+        userId: userId,
+        limit: 100,
+        scanLimit: 160,
+      );
 
       // Cerca l'esercizio nei workout
-      for (final doc in querySnapshot.docs) {
+      for (final workoutData in workouts) {
         try {
-          final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
-
           // Trova l'esercizio nel workout
           final exercise = workoutData.exercises
               .where((ex) => _isExerciseMatch(ex.name, exerciseName))
@@ -370,7 +364,9 @@ class WorkoutHistoryService {
     return ExerciseActivity(
       id: '${workout.id}_${exercise.id}',
       email: '', // Non più necessario nel nuovo formato
-      exerciseId: exercise.id,
+      exerciseId:
+          (exercise.exerciseData['databaseExerciseId'] as String?) ??
+          exercise.id,
       exerciseName: exercise.name,
       exerciseImage: (exercise.exerciseData['image'] as String?) ?? '',
       schedaName: workout.name,

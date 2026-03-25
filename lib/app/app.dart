@@ -23,9 +23,11 @@ import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.da
 import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_background_sync_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
 import 'package:gymbro_flutter_new/features/splash/presentation/screens/animated_splash_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
+import 'package:gymbro_flutter_new/features/premium/presentation/providers/purchase_providers.dart';
 
 /// Provider for async notification initialization
 final notificationInitProvider = FutureProvider<void>((ref) async {
@@ -51,9 +53,7 @@ class AnimatedSplashNotifier extends Notifier<bool> {
 /// Provider to track if animated splash has completed
 /// Set to true after 3-second animation finishes
 final animatedSplashCompletedProvider =
-    NotifierProvider<AnimatedSplashNotifier, bool>(
-      AnimatedSplashNotifier.new,
-    );
+    NotifierProvider<AnimatedSplashNotifier, bool>(AnimatedSplashNotifier.new);
 
 /// Provider to handle app lifecycle events (background/foreground)
 /// P0 FIX: Reset onboarding session step counter when app resumes from background
@@ -107,7 +107,9 @@ class FitLogApp extends ConsumerWidget {
     // Before: ANY config change → full MaterialApp rebuild → blank screen flash
     // After: ONLY fontSize/primaryColor changes → rebuild
     final fontSize = ref.watch(appConfigProvider.select((c) => c.fontSize));
-    final primaryColor = ref.watch(appConfigProvider.select((c) => c.primaryColor));
+    final primaryColor = ref.watch(
+      appConfigProvider.select((c) => c.primaryColor),
+    );
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
     final appThemeMode = ref.watch(appThemeModeProvider);
@@ -115,28 +117,47 @@ class FitLogApp extends ConsumerWidget {
     // 🔥 CRITICAL: Load fitness questionnaire at app startup
     // This ensures weight suggestions work immediately without needing to visit settings first
     // ✅ FIX: Don't block UI if loading fails - use .whenOrNull to handle error states
-    ref.watch(fitnessProfileAutoLoadProvider).whenOrNull(
-      error: (error, stack) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [APP] Fitness profile auto-load failed: $error');
-        }
-      },
-    );
+    ref
+        .watch(fitnessProfileAutoLoadProvider)
+        .whenOrNull(
+          error: (error, stack) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [APP] Fitness profile auto-load failed: $error');
+            }
+          },
+        );
 
     // 📊 ANALYTICS: Initialize analytics and set user properties
     // This runs once at app startup and whenever user settings change
     // ✅ FIX: Don't block UI if analytics fails - gracefully degrade
-    ref.watch(analyticsInitializationProvider).whenOrNull(
-      error: (error, stack) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [APP] Analytics initialization failed: $error');
-        }
-      },
-    );
+    ref
+        .watch(analyticsInitializationProvider)
+        .whenOrNull(
+          error: (error, stack) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [APP] Analytics initialization failed: $error');
+            }
+          },
+        );
+
+    // 💳 PREMIUM: Initialize RevenueCat early so premium access can resolve
+    // before premium-gated UI renders for the current session.
+    ref
+        .watch(revenueCatInitProvider)
+        .whenOrNull(
+          error: (error, stack) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [APP] Premium initialization failed: $error');
+            }
+          },
+        );
 
     // 🔒 SECURITY: Initialize session timeout monitoring
     // Auto-logout after 30 minutes of inactivity (GDPR compliance)
     ref.watch(sessionTimeoutServiceProvider);
+
+    // Ensure Health sync startup refresh runs app-wide when enabled.
+    ref.watch(healthBackgroundSyncControllerProvider);
 
     // ⏱️ TIMER FIX: Pre-initialize timer provider at app startup
     // This prevents the 10+ second delay on first timer use
@@ -145,26 +166,32 @@ class FitLogApp extends ConsumerWidget {
 
     // 🏋️ EXERCISE SYNC: Initialize sync service for auto-updates
     // This enables automatic exercise database updates when new version is available
-    ref.watch(exerciseSyncInitProvider).whenOrNull(
-      error: (error, stack) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [APP] Exercise sync initialization failed: $error');
-        }
-      },
-    );
+    ref
+        .watch(exerciseSyncInitProvider)
+        .whenOrNull(
+          error: (error, stack) {
+            if (kDebugMode) {
+              debugPrint(
+                '⚠️ [APP] Exercise sync initialization failed: $error',
+              );
+            }
+          },
+        );
 
     // 🔄 APP LIFECYCLE: P0 FIX - Reset onboarding session steps on app resume
     ref.watch(appLifecycleProvider);
 
     // 🔔 NOTIFICATIONS: Initialize notification system for retention reminders
     // This enables workout forgotten, inactivity, and insight notifications
-    ref.watch(notificationInitProvider).whenOrNull(
-      error: (error, stack) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [APP] Notification initialization failed: $error');
-        }
-      },
-    );
+    ref
+        .watch(notificationInitProvider)
+        .whenOrNull(
+          error: (error, stack) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [APP] Notification initialization failed: $error');
+            }
+          },
+        );
 
     // 🔒 SECURITY: Listen for session timeout events
     ref.listen(sessionTimeoutEventsProvider, (previous, next) {
@@ -192,8 +219,14 @@ class FitLogApp extends ConsumerWidget {
     if (authState == AuthState.loading) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(primaryColor), fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(primaryColor), fontSize),
+        theme: _buildThemeWithFontSize(
+          AppTheme.buildLightTheme(primaryColor),
+          fontSize,
+        ),
+        darkTheme: _buildThemeWithFontSize(
+          AppTheme.buildDarkTheme(primaryColor),
+          fontSize,
+        ),
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
@@ -206,7 +239,9 @@ class FitLogApp extends ConsumerWidget {
                   builder: (context) => Text(
                     'Loading FitLog Pro...',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ),
@@ -222,7 +257,11 @@ class FitLogApp extends ConsumerWidget {
     // NOTE: _AppLifecycleObserver REMOVED - lifecycle handled by AppLifecycleManager (centralized)
     try {
       // Compute effective themes based on AppThemeMode
-      final effectiveThemes = _resolveThemes(appThemeMode, primaryColor, fontSize);
+      final effectiveThemes = _resolveThemes(
+        appThemeMode,
+        primaryColor,
+        fontSize,
+      );
 
       return MaterialApp.router(
         title: 'FitLog Pro',
@@ -236,10 +275,7 @@ class FitLogApp extends ConsumerWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('it', 'IT'),
-        ],
+        supportedLocales: const [Locale('en', 'US'), Locale('it', 'IT')],
         routerConfig: router,
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
@@ -262,8 +298,14 @@ class FitLogApp extends ConsumerWidget {
 
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(primaryColor), fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(primaryColor), fontSize),
+        theme: _buildThemeWithFontSize(
+          AppTheme.buildLightTheme(primaryColor),
+          fontSize,
+        ),
+        darkTheme: _buildThemeWithFontSize(
+          AppTheme.buildDarkTheme(primaryColor),
+          fontSize,
+        ),
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
@@ -276,8 +318,8 @@ class FitLogApp extends ConsumerWidget {
                     AppIcons.error,
                     size: AppIconSize.xxlarge,
                     color: appThemeMode.isDark
-                      ? const Color(0xFFE57373)
-                      : const Color(0xFFD32F2F),
+                        ? const Color(0xFFE57373)
+                        : const Color(0xFFD32F2F),
                   ),
                   const SizedBox(height: 24),
                   Builder(
@@ -292,11 +334,11 @@ class FitLogApp extends ConsumerWidget {
                   const SizedBox(height: 16),
                   Builder(
                     builder: (ctx) => Text(
-                      kDebugMode
-                        ? 'Error: $e'
-                        : 'Please restart the app',
+                      kDebugMode ? 'Error: $e' : 'Please restart the app',
                       style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: Theme.of(
+                          ctx,
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -433,4 +475,3 @@ class _ResolvedThemes {
 // - Batch queue flush
 // - Workout forgotten notification
 // - Draft recovery
-

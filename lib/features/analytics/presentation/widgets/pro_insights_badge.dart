@@ -5,8 +5,8 @@
 /// Replaces inline ProAnalyticsSection in analytics overview.
 ///
 /// Design:
-/// - FREE users: Lock badge + "Unlock" text + tap to upgrade
-/// - PREMIUM users: PRO badge + quick preview + tap to view details
+/// - All users: quick preview + tap to view details
+/// - Free users: data is still limited to the recent history window
 library;
 
 import 'package:flutter/material.dart';
@@ -14,17 +14,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 /// Compact Pro Insights Badge - Clickable card with PRO badge
 ///
-/// Shows different content based on premium status:
-/// - Free: Lock icon + upgrade CTA
-/// - Premium: Quick stats preview + "View Details"
+/// Shows quick stats preview and opens the detailed analytics screen.
 class ProInsightsBadge extends ConsumerWidget {
   const ProInsightsBadge({super.key, required this.exerciseHistories});
 
@@ -32,7 +30,7 @@ class ProInsightsBadge extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isPremium = ref.watch(isPremiumUserProvider);
+    final hasProAnalytics = ref.watch(hasProAnalyticsProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
@@ -43,7 +41,7 @@ class ProInsightsBadge extends ConsumerWidget {
     return InkWell(
       onTap: () {
         HapticFeedback.mediumImpact();
-        if (isPremium) {
+        if (hasProAnalytics) {
           // Navigate to Pro Analytics screen
           context.push(AppRoutes.proAnalyticsPath);
         } else {
@@ -94,7 +92,7 @@ class ProInsightsBadge extends ConsumerWidget {
               child: Column(
                 children: [
                   Icon(
-                    isPremium ? AppIcons.premium : AppIcons.lock,
+                    hasProAnalytics ? AppIcons.premium : AppIcons.lock,
                     size: AppIconSize.large,
                     color: colorScheme.onTertiary,
                   ),
@@ -126,9 +124,7 @@ class ProInsightsBadge extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
 
-                  // Subtitle (different for free/premium)
-                  if (isPremium) ...[
-                    // Premium: Show quick stats
+                  if (hasProAnalytics) ...[
                     Text(
                       l10n.proInsightsPreview(
                         stats.strengthPercent,
@@ -140,7 +136,6 @@ class ProInsightsBadge extends ConsumerWidget {
                       ),
                     ),
                   ] else ...[
-                    // Free: Show unlock message
                     Text(
                       l10n.proInsightsSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(

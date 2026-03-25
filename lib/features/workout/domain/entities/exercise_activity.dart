@@ -65,7 +65,7 @@ class ExerciseActivity {
     return ExerciseActivity(
       id: '${exercise.id}-${activityDate.millisecondsSinceEpoch}',
       email: userEmail,
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       exerciseImage:
           exerciseImageUrl ?? _getDefaultExerciseImage(exercise.category),

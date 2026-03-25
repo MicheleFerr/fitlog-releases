@@ -13,15 +13,18 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget {
   // 🔥 FIX: Add callback parameter
@@ -45,6 +48,8 @@ class ExerciseCustomizationScreen extends ConsumerStatefulWidget {
 
 class _ExerciseCustomizationScreenState
     extends ConsumerState<ExerciseCustomizationScreen> {
+  static const int _tutorialTargetMaxRetries = 6;
+  final GlobalKey _tutorialCustomizeControlsKey = GlobalKey();
   late List<ExerciseCustomization> _customizations;
 
   List<_CustomizationPreset> _parsePresetCsv(
@@ -134,6 +139,49 @@ class _ExerciseCustomizationScreenState
         countingMode: countingMode,
       );
     }).toList();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showCustomizeStepTutorialIfNeeded();
+    });
+  }
+
+  void _showCustomizeStepTutorialIfNeeded({int attempt = 0}) {
+    if (!mounted) return;
+
+    final tutorialState = ref.read(workoutTutorialProvider);
+    if (!tutorialState.isActive ||
+        tutorialState.currentStep != WorkoutTutorialStep.customizeExercise) {
+      return;
+    }
+
+    if (_tutorialCustomizeControlsKey.currentContext == null) {
+      if (attempt >= _tutorialTargetMaxRetries) return;
+      Future.delayed(const Duration(milliseconds: 220), () {
+        if (mounted) {
+          _showCustomizeStepTutorialIfNeeded(attempt: attempt + 1);
+        }
+      });
+      return;
+    }
+
+    ref
+        .read(workoutTutorialProvider.notifier)
+        .showCurrentStep(
+          context: context,
+          targetKey: _tutorialCustomizeControlsKey,
+          onComplete: _handleCustomizeStepComplete,
+        );
+  }
+
+  void _handleCustomizeStepComplete() {
+    final tutorialState = ref.read(workoutTutorialProvider);
+    if (!tutorialState.isActive ||
+        tutorialState.currentStep != WorkoutTutorialStep.customizeExercise) {
+      return;
+    }
+    ref
+        .read(workoutTutorialProvider.notifier)
+        .advanceToStep(WorkoutTutorialStep.workoutSettings);
   }
 
   @override
@@ -245,45 +293,24 @@ class _ExerciseCustomizationScreenState
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        customization.exercise.focusDisplayName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
+                      if (customization.exercise.focus.isNotEmpty ||
+                          customization.exercise.muscoliSecondari.isNotEmpty)
+                        const SizedBox(height: 4),
+                      _buildExerciseMetadata(customization.exercise),
+                      if (customization.exercise.focus.isNotEmpty ||
+                          customization.exercise.muscoliSecondari.isNotEmpty)
+                        const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getDifficultyColor(
-                                customization.exercise.difficolta,
-                              ).withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              customization.exercise.difficolta,
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    color: _getDifficultyColor(
-                                      customization.exercise.difficolta,
-                                    ),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
+                          _buildDifficultyChip(
+                            customization.exercise.difficolta,
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            customization.exercise.attrezzatura,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
+                          if (customization.exercise.attrezzatura.isNotEmpty)
+                            _buildEquipmentChip(
+                              customization.exercise.attrezzatura,
+                            ),
                         ],
                       ),
                     ],
@@ -302,28 +329,35 @@ class _ExerciseCustomizationScreenState
 
             const SizedBox(height: 12),
 
-            // ✅ Counting Mode Selector - compatto
-            _buildCountingModeSelector(customization, exerciseIndex),
+            Container(
+              key: exerciseIndex == 0 ? _tutorialCustomizeControlsKey : null,
+              child: Column(
+                children: [
+                  // ✅ Counting Mode Selector - compatto
+                  _buildCountingModeSelector(customization, exerciseIndex),
 
-            const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-            // Rest Timers Row - Timer Recupero + Riposo Tra Esercizi affiancati
-            Row(
-              children: [
-                Expanded(
-                  child: _buildRestTimerPickerCompact(
-                    customization,
-                    exerciseIndex,
+                  // Rest Timers Row - Timer Recupero + Riposo Tra Esercizi
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildRestTimerPickerCompact(
+                          customization,
+                          exerciseIndex,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildRestAfterExercisePickerCompact(
+                          customization,
+                          exerciseIndex,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildRestAfterExercisePickerCompact(
-                    customization,
-                    exerciseIndex,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -1324,6 +1358,14 @@ class _ExerciseCustomizationScreenState
   }
 
   void _addAllToWorkout() {
+    final tutorialState = ref.read(workoutTutorialProvider);
+    if (tutorialState.isActive &&
+        tutorialState.currentStep == WorkoutTutorialStep.customizeExercise) {
+      ref
+          .read(workoutTutorialProvider.notifier)
+          .advanceToStep(WorkoutTutorialStep.workoutSettings);
+    }
+
     for (final customization in _customizations) {
       if (kDebugMode) {
         debugPrint(
@@ -1424,6 +1466,62 @@ class _ExerciseCustomizationScreenState
       default:
         return context.colors.surfaceContainerHighest;
     }
+  }
+
+  Widget _buildExerciseMetadata(Exercise exercise) {
+    final hasMuscleData =
+        exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+
+    if (!hasMuscleData) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: ExerciseTargetMuscleMap(
+        primaryMuscles: exercise.focus,
+        secondaryMuscles: exercise.muscoliSecondari,
+        previewWidth: 90,
+        previewHeight: 66,
+      ),
+    );
+  }
+
+  Widget _buildDifficultyChip(String difficulty) {
+    final color = _getDifficultyColor(difficulty);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        difficulty,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: color,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEquipmentChip(String equipment) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EquipmentIconBadge(equipment: equipment, size: 16),
+          const SizedBox(width: 6),
+          Text(equipment, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
   }
 
   void _showExerciseDetails(Exercise exercise) {

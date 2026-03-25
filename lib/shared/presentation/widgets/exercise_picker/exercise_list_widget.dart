@@ -12,18 +12,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Widget base che mostra una lista di esercizi filtrabili
 /// Usato come componente riutilizzabile da vari picker
 class ExerciseListWidget extends ConsumerStatefulWidget {
-
   const ExerciseListWidget({
     super.key,
     required this.exercises,
@@ -118,7 +119,9 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+            color: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             child: Text(
               '${_filteredExercises.length} ${l10n.exercisesFound}',
               style: Theme.of(context).textTheme.bodySmall,
@@ -131,7 +134,8 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
             itemCount: _filteredExercises.length,
             itemBuilder: (context, index) {
               final exercise = _filteredExercises[index];
-              final isSelected = widget.config.strategy is MultiSelectStrategy &&
+              final isSelected =
+                  widget.config.strategy is MultiSelectStrategy &&
                   (widget.config.strategy as MultiSelectStrategy)
                       .selectedExercises
                       .contains(exercise);
@@ -157,43 +161,18 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(exercise.focusDisplayName),
-            const SizedBox(height: 2),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    exercise.difficolta,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: _getDifficultyColor(exercise.difficolta),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  exercise.attrezzatura,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
-          ],
+          children: [_buildExerciseMetadata(exercise)],
         ),
         trailing: widget.config.strategy.showSelectionIndicator
             ? (isSelected
-                ? Icon(AppIcons.complete,
-                    color: Theme.of(context).colorScheme.primary)
-                : const SemanticIcon(
-  icon: AppIcons.radioButtonUnchecked,
-  semanticLabel: 'Radio button unchecked',
-))
+                  ? Icon(
+                      AppIcons.complete,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : const SemanticIcon(
+                      icon: AppIcons.radioButtonUnchecked,
+                      semanticLabel: 'Radio button unchecked',
+                    ))
             : null,
         onTap: () => widget.config.strategy.onExerciseTap(context, exercise),
       ),
@@ -237,9 +216,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
               width: 40,
               height: 40,
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: const Center(
-                child: LoadingIndicator(size: 16),
-              ),
+              child: const Center(child: LoadingIndicator(size: 16)),
             ),
           ),
         ),
@@ -252,17 +229,87 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
     }
   }
 
+  Widget _buildExerciseMetadata(Exercise exercise) {
+    final hasMuscleData =
+        exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasMuscleData)
+          ExerciseTargetMuscleMap(
+            primaryMuscles: exercise.focus,
+            secondaryMuscles: exercise.muscoliSecondari,
+            previewWidth: 82,
+            previewHeight: 60,
+            enableFullscreen: false,
+          ),
+        if (hasMuscleData) const SizedBox(height: 6),
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          children: [
+            _buildDifficultyBadge(exercise.difficolta),
+            if (exercise.attrezzatura.isNotEmpty)
+              _buildEquipmentChip(exercise.attrezzatura),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDifficultyBadge(String difficulty) {
+    final color = _getDifficultyColor(difficulty);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        difficulty,
+        style: TextStyle(
+          fontSize: 10,
+          color: color,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEquipmentChip(String equipment) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EquipmentIconBadge(equipment: equipment, size: 16),
+          const SizedBox(width: 6),
+          Text(equipment, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+
   Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.searchOff,
-  semanticLabel: 'Search off',
-  size: AppIconSize.medium,
-  color: Theme.of(context,
-).colorScheme.onSurface.withValues(alpha: 0.5),
+            icon: AppIcons.searchOff,
+            semanticLabel: 'Search off',
+            size: AppIconSize.medium,
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -273,8 +320,10 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
           Text(
             l10n.tryModifyingFilters,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
           ),
         ],
       ),

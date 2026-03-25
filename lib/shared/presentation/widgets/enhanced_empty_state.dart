@@ -45,7 +45,6 @@ enum EmptyStateType {
 /// - Diversi tipi predefiniti con colori appropriati
 /// - Animazioni di entrata smooth
 class EnhancedEmptyState extends StatelessWidget {
-
   const EnhancedEmptyState({
     super.key,
     this.type = EmptyStateType.info,
@@ -62,6 +61,7 @@ class EnhancedEmptyState extends StatelessWidget {
     this.primaryActionIcon,
     this.secondaryActionIcon,
   });
+
   /// Tipo di empty state (determina colori e stile)
   final EmptyStateType type;
 
@@ -123,9 +123,9 @@ class EnhancedEmptyState extends StatelessWidget {
             // Titolo
             Text(
               title,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
 
@@ -196,11 +196,7 @@ class EnhancedEmptyState extends StatelessWidget {
               color: color.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              size: 64,
-              color: color,
-            ),
+            child: Icon(icon, size: 64, color: color),
           ),
         );
       },
@@ -208,7 +204,10 @@ class EnhancedEmptyState extends StatelessWidget {
   }
 
   /// Costruisce la card con la quote motivazionale
-  Widget _buildMotivationalQuote(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildMotivationalQuote(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     final quoteColor = type == EmptyStateType.motivational
         ? colorScheme.secondary
         : _getEffectiveColor(colorScheme);
@@ -219,11 +218,7 @@ class EnhancedEmptyState extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Icon(
-              AppIcons.formatQuote,
-              color: quoteColor,
-              size: 24,
-            ),
+            Icon(AppIcons.formatQuote, color: quoteColor, size: 24),
             const SizedBox(height: 8),
             Text(
               motivationalQuote!,
@@ -241,18 +236,14 @@ class EnhancedEmptyState extends StatelessWidget {
 
   /// Costruisce la card con il pro tip
   Widget _buildProTip(BuildContext context, AppLocalizations l10n) {
-    final warningColor = Theme.of(context).colorScheme.secondary;
+    final warningColor = context.warningColor;
     return Card(
-      color: warningColor.withValues(alpha: 0.1),
+      color: context.warningContainer,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            Icon(
-              AppIcons.tip,
-              color: warningColor,
-              size: 20,
-            ),
+            Icon(AppIcons.tip, color: warningColor, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -267,7 +258,9 @@ class EnhancedEmptyState extends StatelessWidget {
                   ),
                   Text(
                     proTip!,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: context.colors.onWarningContainer,
+                    ),
                   ),
                 ],
               ),

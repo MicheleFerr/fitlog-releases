@@ -324,17 +324,8 @@ struct RestTimerView: View {
                 .foregroundColor(.secondary)
                 .tracking(1)
 
-            if connectivity.targetWeight > 0 {
-                HStack(spacing: 6) {
-                    Text("\(formatWeight(connectivity.targetWeight)) kg")
-                        .font(.system(size: 16, weight: .bold))
-                    Text("×")
-                        .font(.system(size: 14))
-                        .foregroundColor(.secondary)
-                    // ⌚ Show rep range if available
-                    Text("\(connectivity.repsDisplay) \(repsText)")
-                        .font(.system(size: 16, weight: .bold))
-                }
+            if connectivity.hasDisplayTarget {
+                nextSetTargetView
                 .foregroundColor(timerColor)
             } else {
                 Text("—")
@@ -354,15 +345,7 @@ struct RestTimerView: View {
                 .fill(timerColor.opacity(0.15))
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            connectivity.targetWeight > 0
-                ? WatchStrings.localized(
-                    locale,
-                    it: "Prossima serie: \(formatWeight(connectivity.targetWeight)) chilogrammi per \(connectivity.repsDisplay) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)",
-                    en: "Next set: \(formatWeight(connectivity.targetWeight)) kilograms for \(connectivity.repsDisplay) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)"
-                )
-                : WatchStrings.localized(locale, it: "Nessun obiettivo impostato", en: "No target set")
-        )
+        .accessibilityLabel(nextSetAccessibilityLabel)
     }
 
     // MARK: - Computed Properties
@@ -378,6 +361,58 @@ struct RestTimerView: View {
         if connectivity.isTimerPaused { return .yellow }
         if connectivity.restTimeRemaining <= 10 { return .orange }
         return .primary
+    }
+
+    @ViewBuilder
+    private var nextSetTargetView: some View {
+        if connectivity.isTimeMode {
+            Text(formatTime(connectivity.targetSeconds))
+                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .monospacedDigit()
+        } else if connectivity.isRepsMode {
+            HStack(spacing: 6) {
+                Text(connectivity.repsDisplay)
+                    .font(.system(size: 16, weight: .bold))
+                Text(repsText)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.secondary)
+            }
+        } else {
+            HStack(spacing: 6) {
+                Text("\(formatWeight(connectivity.targetWeight)) kg")
+                    .font(.system(size: 16, weight: .bold))
+                Text("×")
+                    .font(.system(size: 14))
+                    .foregroundColor(.secondary)
+                Text("\(connectivity.repsDisplay) \(repsText)")
+                    .font(.system(size: 16, weight: .bold))
+            }
+        }
+    }
+
+    private var nextSetAccessibilityLabel: String {
+        if !connectivity.hasDisplayTarget {
+            return WatchStrings.localized(locale, it: "Nessun obiettivo impostato", en: "No target set")
+        }
+        if connectivity.isTimeMode {
+            return WatchStrings.localized(
+                locale,
+                it: "Prossima serie: \(formatTime(connectivity.targetSeconds)). Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)",
+                en: "Next set: \(formatTime(connectivity.targetSeconds)). Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)"
+            )
+        }
+        if connectivity.isRepsMode {
+            return WatchStrings.localized(
+                locale,
+                it: "Prossima serie: \(connectivity.repsDisplay) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)",
+                en: "Next set: \(connectivity.repsDisplay) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)"
+            )
+        }
+        return WatchStrings.localized(
+            locale,
+            it: "Prossima serie: \(formatWeight(connectivity.targetWeight)) chilogrammi per \(connectivity.repsDisplay) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)",
+            en: "Next set: \(formatWeight(connectivity.targetWeight)) kilograms for \(connectivity.repsDisplay) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)"
+        )
     }
 
     private func formatTime(_ seconds: Int) -> String {

@@ -12,7 +12,8 @@ void main() {
   late NotificationStorageDatasource datasource;
 
   setUp(() async {
-    final dir = '${Directory.systemTemp.path}/hive_test_${DateTime.now().millisecondsSinceEpoch}';
+    final dir =
+        '${Directory.systemTemp.path}/hive_test_${DateTime.now().millisecondsSinceEpoch}';
     Hive.init(dir);
     datasource = NotificationStorageDatasource();
     await datasource.initialize();
@@ -74,9 +75,7 @@ void main() {
           messageKey: 'pr_1',
         ),
       );
-      await datasource.saveRecord(
-        createRecord(id: 'r3', messageKey: 'msg_2'),
-      );
+      await datasource.saveRecord(createRecord(id: 'r3', messageKey: 'msg_2'));
 
       final inactivityRecords = await datasource.getRecordsByType(
         NotificationType.inactivity,
@@ -91,16 +90,10 @@ void main() {
 
     test('records are sorted by sentAt descending', () async {
       await datasource.saveRecord(
-        createRecord(
-          id: 'old',
-          sentAt: DateTime(2026, 1, 1),
-        ),
+        createRecord(id: 'old', sentAt: DateTime(2026, 1, 1)),
       );
       await datasource.saveRecord(
-        createRecord(
-          id: 'new',
-          sentAt: DateTime(2026, 2, 1),
-        ),
+        createRecord(id: 'new', sentAt: DateTime(2026, 2, 1)),
       );
 
       final records = await datasource.getRecordsByType(
@@ -156,6 +149,20 @@ void main() {
     test('does nothing for non-existent record', () async {
       await datasource.markAsCanceled('nonexistent');
     });
+
+    test('removes canceled pending notifications from sent stats', () async {
+      await datasource.saveRecord(createRecord());
+
+      var stats = await datasource.getStats(NotificationType.inactivity);
+      expect(stats.totalSent, 1);
+      expect(stats.consecutiveIgnores, 1);
+
+      await datasource.markAsCanceled('r1');
+
+      stats = await datasource.getStats(NotificationType.inactivity);
+      expect(stats.totalSent, 0);
+      expect(stats.consecutiveIgnores, 0);
+    });
   });
 
   group('getRecordsSince', () {
@@ -187,6 +194,20 @@ void main() {
 
     test('returns empty when no records match', () async {
       final records = await datasource.getRecordsSince(DateTime.now());
+      expect(records, isEmpty);
+    });
+
+    test('excludes notifications scheduled for the future', () async {
+      await datasource.saveRecord(
+        createRecord(
+          id: 'future',
+          sentAt: DateTime.now().add(const Duration(hours: 6)),
+        ),
+      );
+
+      final records = await datasource.getRecordsSince(
+        DateTime.now().subtract(const Duration(days: 1)),
+      );
       expect(records, isEmpty);
     });
   });
@@ -325,6 +346,18 @@ void main() {
       final count = await datasource.getWeeklyNotificationCount();
       expect(count, 1);
     });
+
+    test('does not count future scheduled notifications', () async {
+      await datasource.saveRecord(
+        createRecord(
+          id: 'future',
+          sentAt: DateTime.now().add(const Duration(days: 1)),
+        ),
+      );
+
+      final count = await datasource.getWeeklyNotificationCount();
+      expect(count, 0);
+    });
   });
 
   group('cleanupOldRecords', () {
@@ -364,10 +397,7 @@ void main() {
 
   group('updateLastMessageKey', () {
     test('updates message key in stats', () async {
-      await datasource.updateLastMessageKey(
-        NotificationType.insightPr,
-        'pr_2',
-      );
+      await datasource.updateLastMessageKey(NotificationType.insightPr, 'pr_2');
       final stats = await datasource.getStats(NotificationType.insightPr);
       expect(stats.lastMessageKey, 'pr_2');
     });
@@ -376,10 +406,7 @@ void main() {
       await datasource.saveRecord(
         createRecord(type: NotificationType.insightPr, messageKey: 'pr_1'),
       );
-      await datasource.updateLastMessageKey(
-        NotificationType.insightPr,
-        'pr_2',
-      );
+      await datasource.updateLastMessageKey(NotificationType.insightPr, 'pr_2');
 
       final stats = await datasource.getStats(NotificationType.insightPr);
       expect(stats.totalSent, 1);

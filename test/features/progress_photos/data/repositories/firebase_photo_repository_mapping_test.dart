@@ -6,7 +6,6 @@
 // unit testing of the mapping without any Firebase infrastructure.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gymbro_flutter_new/features/progress_photos/data/repositories/firebase_photo_repository.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/progress_photo.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/repositories/progress_photo_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart' as base;
@@ -113,30 +112,40 @@ void main() {
       expect(result, isA<DatabaseFailure>());
     });
 
-    test('ServerFailure with storage/ prefix variants all map to StorageFailure',
-        () {
-      final codes = [
-        'storage/object-not-found',
-        'storage/unauthorized',
-        'storage/quota-exceeded',
-        'storage/canceled',
-      ];
+    test(
+      'ServerFailure with storage/ prefix variants all map to StorageFailure',
+      () {
+        final codes = [
+          'storage/object-not-found',
+          'storage/unauthorized',
+          'storage/quota-exceeded',
+          'storage/canceled',
+        ];
 
-      for (final code in codes) {
-        final failure = base.ServerFailure('Storage error', code: code);
+        for (final code in codes) {
+          final failure = base.ServerFailure('Storage error', code: code);
+          final result = mapToPhotoFailure(failure);
+          expect(
+            result,
+            isA<StorageFailure>(),
+            reason: 'code "$code" should map to StorageFailure',
+          );
+        }
+      },
+    );
+
+    test(
+      'non-storage ServerFailure maps to DatabaseFailure not StorageFailure',
+      () {
+        final failure = base.ServerFailure(
+          'db error',
+          code: 'firestore/permission-denied',
+        );
         final result = mapToPhotoFailure(failure);
-        expect(result, isA<StorageFailure>(),
-            reason: 'code "$code" should map to StorageFailure');
-      }
-    });
-
-    test('non-storage ServerFailure maps to DatabaseFailure not StorageFailure',
-        () {
-      final failure = base.ServerFailure('db error', code: 'firestore/permission-denied');
-      final result = mapToPhotoFailure(failure);
-      expect(result, isA<DatabaseFailure>());
-      expect(result, isNot(isA<StorageFailure>()));
-    });
+        expect(result, isA<DatabaseFailure>());
+        expect(result, isNot(isA<StorageFailure>()));
+      },
+    );
   });
 
   // =========================================================================
@@ -161,10 +170,7 @@ void main() {
       );
     }
 
-    ProgressPhoto makePhoto({
-      required String id,
-      required int fileSizeBytes,
-    }) {
+    ProgressPhoto makePhoto({required String id, required int fileSizeBytes}) {
       return ProgressPhoto(
         id: id,
         userId: 'user-1',

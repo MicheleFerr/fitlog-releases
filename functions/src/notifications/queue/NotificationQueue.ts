@@ -151,7 +151,12 @@ export class NotificationQueue {
             });
           } else {
             // Failed - handle retry logic
-            await this.handleFailedNotification(doc.ref, notification, result.error, batch);
+            await this.handleFailedNotification(
+              doc.ref,
+              notification,
+              result.error || 'unknown_processing_error',
+              batch
+            );
           }
 
         } catch (error) {
@@ -332,7 +337,7 @@ export class NotificationQueue {
         tokens: tokens
       };
 
-      const response = await messaging.sendMulticast(message);
+      const response = await messaging.sendEachForMulticast(message);
 
       functions.logger.info('FCM message sent', {
         userId: notification.userId,

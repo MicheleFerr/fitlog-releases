@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,7 @@ import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart'; /
 import 'package:gymbro_flutter_new/shared/data/hive_timestamp_adapter.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
+import 'package:gymbro_flutter_new/shared/data/services/tracking_authorization_service.dart';
 import 'package:gymbro_flutter_new/shared/data/models/weight_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/data/models/feedback_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/data/models/history_view_settings_model.dart';
@@ -53,6 +55,10 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/gym_equipmen
 import 'package:gymbro_flutter_new/shared/data/models/exercise_popularity_hive_model.dart'; // 📊 Exercise Popularity
 import 'package:gymbro_flutter_new/shared/data/services/exercise_popularity_cache.dart';
 import 'package:gymbro_flutter_new/shared/data/services/exercise_popularity_bundle_service.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
+import 'package:gymbro_flutter_new/features/health_sync/data/services/health_background_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart'
+    show extractNotificationDeepLink;
 import 'package:firebase_storage/firebase_storage.dart';
 
 void main() async {
@@ -70,7 +76,8 @@ void main() async {
     debugPrint('✅ VooLogger initialized (debug mode)');
   }
 
-  // NOTE: Timezone initialized by LocalNotificationDatasource.initialize()
+  // NOTE: Timezone is initialized lazily by LocalTimezoneService before any
+  // zoned notification scheduling occurs.
 
   // ========================================
   // 🔐 SECURITY: Load Environment Variables from .env
@@ -98,35 +105,56 @@ void main() async {
   // Detect if app was launched by tapping a notification.
   // Parse the payload to extract the deep link path for GoRouter.
   String? initialDeepLink;
-  try {
-    final notificationLaunchDetails = await FlutterLocalNotificationsPlugin()
-        .getNotificationAppLaunchDetails();
-    if (notificationLaunchDetails?.didNotificationLaunchApp == true) {
-      final payload = notificationLaunchDetails!.notificationResponse?.payload;
-      if (payload != null) {
-        final parts = payload.split(':');
-        if (parts.length >= 3) {
-          initialDeepLink = parts.sublist(2).join(':');
-          if (kDebugMode) {
-            debugPrint(
-              '🔔 [DeepLink] Cold-start from notification → $initialDeepLink',
-            );
-          }
-        }
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+    try {
+      const nativeChannel = MethodChannel(PlatformChannels.unified);
+      final nativePayload = await nativeChannel.invokeMethod<String>(
+        'consumePendingNotificationPayload',
+      );
+      initialDeepLink = extractNotificationDeepLink(nativePayload);
+
+      if (initialDeepLink != null && kDebugMode) {
+        debugPrint(
+          '🔔 [DeepLink] Cold-start from native notification → $initialDeepLink',
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [DeepLink] Failed to get native launch payload: $e');
       }
     }
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint('⚠️ [DeepLink] Failed to get launch details: $e');
+  }
+
+  if (initialDeepLink == null) {
+    try {
+      final notificationLaunchDetails = await FlutterLocalNotificationsPlugin()
+          .getNotificationAppLaunchDetails();
+      if (notificationLaunchDetails?.didNotificationLaunchApp == true) {
+        final payload =
+            notificationLaunchDetails!.notificationResponse?.payload;
+        initialDeepLink = extractNotificationDeepLink(payload);
+        if (initialDeepLink != null && kDebugMode) {
+          debugPrint(
+            '🔔 [DeepLink] Cold-start from notification → $initialDeepLink',
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [DeepLink] Failed to get launch details: $e');
+      }
     }
   }
 
   // Initialize Firebase only once (iOS AppDelegate/Android may already initialize)
   if (Firebase.apps.isEmpty) {
     try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      final firebaseOptions = DefaultFirebaseOptions.maybeCurrentPlatform;
+      if (firebaseOptions == null) {
+        await Firebase.initializeApp();
+      } else {
+        await Firebase.initializeApp(options: firebaseOptions);
+      }
     } catch (e) {
       // AppDelegate/SDK may have already configured [DEFAULT] before Dart boot.
       final isDuplicateApp = e is FirebaseException
@@ -398,6 +426,14 @@ void main() async {
   // ✅ NOW SAFE: Hive is initialized, can open consent box
   await PrivacyManager.initialize();
 
+  // App Store Guideline 5.1.2(i): request ATT before any tracking-capable
+  // analytics or ads flow runs on iOS.
+  final trackingStatus =
+      await TrackingAuthorizationService.requestAuthorizationIfNeeded();
+  if (kDebugMode && TrackingAuthorizationService.isSupported) {
+    debugPrint('📱 ATT status: $trackingStatus');
+  }
+
   // 🔐 PRIVACY: Initialize Privacy-Safe Analytics (EU-hosted, GDPR-compliant)
   // Only tracks if user has granted consent
   // ✅ NOW SAFE: Hive is initialized, can check consent
@@ -426,9 +462,15 @@ void main() async {
     cacheSizeBytes: 100 * 1024 * 1024, // 100MB (was CACHE_SIZE_UNLIMITED)
   );
 
-  // Initialize GDPR Consent (PRIMA delle ads!)
+  // Initialize GDPR/UMP consent after ATT so the App Review flow sees the
+  // platform tracking permission before any ads consent or ad SDK startup.
+  //
+  // On iOS we do not auto-present a second ad privacy prompt after ATT.
+  // Users can revisit ad privacy choices manually from Settings.
   final consentService = ConsentService();
-  await consentService.initialize();
+  await consentService.initialize(
+    autoShowConsentForm: !TrackingAuthorizationService.isSupported,
+  );
 
   // Initialize Google Mobile Ads (DOPO il consent)
   if (kDebugMode) {
@@ -455,6 +497,11 @@ void main() async {
 
   // Initialize SharedPreferences for notification settings v2.0
   final sharedPreferences = await SharedPreferences.getInstance();
+
+  // Register the native background sync entrypoint before the UI boots.
+  await HealthBackgroundService.instance.configure(
+    syncInterval: const Duration(hours: 24),
+  );
 
   // ========================================
   // 📊 EXERCISE POPULARITY RANKING: Initialize cache and sync bundle
@@ -571,16 +618,19 @@ Future<void> _openBox<T>(String boxName) async {
   final boxManager = HiveBoxManagerEnhanced();
   try {
     // 🔐 SECURITY: Use SecureLogger (debug-only, no production logs)
-    SecureLogger.debug('Opening box', data: {'boxName': boxName});
+    SecureLogger.debug('Opening box', metadata: {'boxName': boxName});
     await boxManager.openBox<T>(boxName);
-    SecureLogger.debug('Box opened successfully', data: {'boxName': boxName});
+    SecureLogger.debug(
+      'Box opened successfully',
+      metadata: {'boxName': boxName},
+    );
   } catch (e, stackTrace) {
     // 🔐 SECURITY: Use SecureLogger with structured error data
     SecureLogger.error(
       'Failed to open box',
       error: e,
       stackTrace: stackTrace,
-      data: {'boxName': boxName},
+      metadata: {'boxName': boxName},
     );
 
     // Handle corrupted boxes that need recovery

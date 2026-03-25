@@ -33,7 +33,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
@@ -70,20 +69,37 @@ class _WorkoutCompletionSummaryScreenState
   Future<void> _checkHealthKitPrompt() async {
     if (_hasShownHealthKitPrompt) return;
 
-    // Check if health integration tour should be shown (P1-2: after first workout)
-    final orchestrator = ref.read(onboardingOrchestratorProvider);
-    final canShow = orchestrator.canShowTour(TourType.healthIntegrationTour);
+    final orchestratorNotifier = ref.read(onboardingOrchestratorProvider.notifier);
+    final requested = orchestratorNotifier.requestTour(
+      TourType.healthIntegrationTour,
+    );
+    if (!requested) return;
 
-    if (canShow) {
-      _hasShownHealthKitPrompt = true;
-      await _showHealthKitPromptDialog();
+    _hasShownHealthKitPrompt = true;
+
+    try {
+      final shouldConnect = await _showHealthKitPromptDialog();
+
+      if (shouldConnect == true) {
+        await orchestratorNotifier.completeTour(TourType.healthIntegrationTour);
+        if (mounted) {
+          // Navigate to Health Sync settings for granular permission management
+          unawaited(context.pushNamed('health-sync'));
+        }
+        return;
+      }
+
+      await orchestratorNotifier.skipTour(TourType.healthIntegrationTour);
+    } catch (_) {
+      // Ensure orchestrator does not remain locked with an active tour
+      orchestratorNotifier.cancelTour();
     }
   }
 
-  Future<void> _showHealthKitPromptDialog() async {
-    if (!mounted) return;
+  Future<bool?> _showHealthKitPromptDialog() async {
+    if (!mounted) return false;
 
-    final result = await showDialog<bool>(
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
@@ -138,15 +154,6 @@ class _WorkoutCompletionSummaryScreenState
         ],
       ),
     );
-
-    // Mark tour as completed
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('health_integration_tour_completed', true);
-
-    if (result == true && mounted) {
-      // Navigate to Health Sync settings for granular permission management
-      unawaited(context.pushNamed('health-sync'));
-    }
   }
 
   @override

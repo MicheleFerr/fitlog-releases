@@ -7,7 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/data/providers/preset_servic
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/preset_selection_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 class RestTimePickerModal extends ConsumerStatefulWidget {
   const RestTimePickerModal({
@@ -35,7 +35,7 @@ class RestTimePickerModal extends ConsumerStatefulWidget {
 class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
   late int _selectedMinutes;
   late int _selectedSeconds;
-  late bool _hasRestTime;
+  late bool _useDefaultTimer;
   List<RestTimePreset>? _presets;
 
   // 🔧 FIX: Store controllers to allow programmatic scrolling when presets are selected
@@ -45,15 +45,12 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialRestTime != null) {
-      _selectedMinutes = widget.initialRestTime! ~/ 60;
-      _selectedSeconds = widget.initialRestTime! % 60;
-      _hasRestTime = true;
-    } else {
-      _selectedMinutes = 1;
-      _selectedSeconds = 30;
-      _hasRestTime = false;
-    }
+    final defaultRestTime = ref.read(defaultRestTimeProvider);
+    final initialRestTime = widget.initialRestTime ?? defaultRestTime;
+
+    _selectedMinutes = initialRestTime ~/ 60;
+    _selectedSeconds = initialRestTime % 60;
+    _useDefaultTimer = widget.initialRestTime == null;
 
     // Initialize scroll controllers
     _minutesController = FixedExtentScrollController(
@@ -96,6 +93,19 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
   Widget build(BuildContext context) {
     final analytics = ref.read(analyticsServiceProvider);
     final tracker = PresetSelectionTracker(analytics);
+    final defaultRestTime = ref.watch(defaultRestTimeProvider);
+    final previewSeconds = _useDefaultTimer
+        ? defaultRestTime
+        : _selectedTotalSeconds;
+    final previewLabel = _useDefaultTimer
+        ? context.l10n.exerciseListUsingDefaultTimer
+        : context.l10n.timerSet;
+    final previewColor = _useDefaultTimer
+        ? context.colors.secondary
+        : context.colors.primary;
+    final previewBackground = _useDefaultTimer
+        ? context.colors.secondaryContainer.withValues(alpha: 0.5)
+        : context.colors.primaryContainer.withValues(alpha: 0.5);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -142,45 +152,84 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
           ),
           const SizedBox(height: 16),
 
-          // Switch to enable/disable timer
-          CNSwitchListTile(
-            value: _hasRestTime,
-            onChanged: (value) {
-              setState(() => _hasRestTime = value);
-            },
-            title: Text(context.l10n.useCustomTimer),
-            subtitle: Text(
-              _hasRestTime
-                  ? context.l10n.timerActiveForExercise
-                  : context.l10n.noSpecificTimer,
-              style: context.textTheme.bodySmall,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: previewBackground,
+              borderRadius: BorderRadius.circular(12),
             ),
-            contentPadding: EdgeInsets.zero,
+            child: Row(
+              children: [
+                Icon(AppIcons.timer, size: 18, color: previewColor),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        previewLabel,
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: previewColor,
+                        ),
+                      ),
+                      Text(
+                        _useDefaultTimer
+                            ? '${context.l10n.defaultRestTimeShort}: ${_formatTime(defaultRestTime)}'
+                            : '${context.l10n.useCustomTimer}: ${_formatTime(_selectedTotalSeconds)}',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(height: 12),
 
-          if (_hasRestTime) ...[
-            const SizedBox(height: 12),
-
-            // Quick presets
-            Text(
-              context.l10n.quickPresets,
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          // Quick presets
+          Text(
+            context.l10n.quickPresets,
+            style: context.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 8),
+          ),
+          const SizedBox(height: 8),
 
-            if (_presets != null)
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _presets!.where((p) => p.seconds != null).map((
-                  preset,
-                ) {
+          if (_presets != null)
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                FilterChip(
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(AppIcons.timer, size: 14, color: previewColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        context.l10n.exerciseListUseDefaultTimer,
+                        style: context.textTheme.labelMedium,
+                      ),
+                    ],
+                  ),
+                  selected: _useDefaultTimer,
+                  onSelected: (selected) {
+                    if (!selected) return;
+                    _applyRestTime(defaultRestTime, useDefaultTimer: true);
+                  },
+                  selectedColor: context.colors.secondary.withValues(
+                    alpha: 0.2,
+                  ),
+                  checkmarkColor: context.colors.secondary,
+                ),
+                ..._presets!.where((p) => p.seconds != null).map((preset) {
                   final isSelected =
-                      _hasRestTime &&
-                      preset.seconds ==
-                          (_selectedMinutes * 60 + _selectedSeconds);
+                      !_useDefaultTimer &&
+                      preset.seconds == _selectedTotalSeconds;
 
                   return FilterChip(
                     label: Row(
@@ -197,7 +246,6 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                     selected: isSelected,
                     onSelected: (selected) async {
                       if (selected && preset.seconds != null) {
-                        // Track preset selection
                         await tracker.trackRestTimePresetSelected(
                           presetId: preset.id,
                           seconds: preset.seconds,
@@ -205,18 +253,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                           exerciseId: widget.exerciseId,
                         );
 
-                        final newMinutes = preset.seconds! ~/ 60;
-                        final newSeconds = preset.seconds! % 60;
-
-                        setState(() {
-                          _selectedMinutes = newMinutes;
-                          _selectedSeconds = newSeconds;
-                        });
-
-                        // 🔧 FIX: Animate pickers to new position so UI reflects selection
-                        // Use jumpToItem for instant update (no await needed)
-                        _minutesController.jumpToItem(newMinutes);
-                        _secondsController.jumpToItem(newSeconds ~/ 15);
+                        _applyRestTime(preset.seconds!);
                       }
                     },
                     selectedColor: context.colors.primary.withValues(
@@ -224,127 +261,128 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                     ),
                     checkmarkColor: context.colors.primary,
                   );
-                }).toList(),
-              ),
-
-            const SizedBox(height: 16),
-
-            // Compact custom picker
-            Container(
-              height: 120,
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  // Minutes
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            context.l10n.minutes,
-                            style: context.textTheme.labelSmall,
-                          ),
-                        ),
-                        Expanded(
-                          child: CupertinoPicker(
-                            itemExtent: 28,
-                            // 🔧 FIX: Use stored controller for programmatic scrolling
-                            scrollController: _minutesController,
-                            onSelectedItemChanged: (index) {
-                              setState(() => _selectedMinutes = index);
-                            },
-                            children: List.generate(11, (index) {
-                              return Center(
-                                child: Text(
-                                  '$index',
-                                  style: context.textTheme.titleMedium,
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Container(
-                    width: 1,
-                    margin: const EdgeInsets.symmetric(vertical: 16),
-                    color: context.colors.outline.withValues(alpha: 0.3),
-                  ),
-
-                  // Seconds
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            context.l10n.seconds,
-                            style: context.textTheme.labelSmall,
-                          ),
-                        ),
-                        Expanded(
-                          child: CupertinoPicker(
-                            itemExtent: 28,
-                            // 🔧 FIX: Use stored controller for programmatic scrolling
-                            scrollController: _secondsController,
-                            onSelectedItemChanged: (index) {
-                              setState(() => _selectedSeconds = index * 15);
-                            },
-                            children: List.generate(4, (index) {
-                              final seconds = index * 15;
-                              return Center(
-                                child: Text(
-                                  seconds.toString().padLeft(2, '0'),
-                                  style: context.textTheme.titleMedium,
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                }),
+              ],
             ),
 
-            const SizedBox(height: 8),
+          const SizedBox(height: 16),
 
-            // Preview of selected time - compact
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(AppIcons.timer, size: 18, color: context.colors.primary),
-                  const SizedBox(width: 6),
-                  Text(
-                    context.l10n.timerSet,
-                    style: context.textTheme.bodySmall,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    _formatTime(_selectedMinutes * 60 + _selectedSeconds),
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.primary,
-                    ),
-                  ),
-                ],
-              ),
+          // Compact custom picker
+          Container(
+            height: 120,
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
+            child: Row(
+              children: [
+                // Minutes
+                Expanded(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          context.l10n.minutes,
+                          style: context.textTheme.labelSmall,
+                        ),
+                      ),
+                      Expanded(
+                        child: CupertinoPicker(
+                          itemExtent: 28,
+                          scrollController: _minutesController,
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              _selectedMinutes = index;
+                              _useDefaultTimer = false;
+                            });
+                          },
+                          children: List.generate(11, (index) {
+                            return Center(
+                              child: Text(
+                                '$index',
+                                style: context.textTheme.titleMedium,
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Container(
+                  width: 1,
+                  margin: const EdgeInsets.symmetric(vertical: 16),
+                  color: context.colors.outline.withValues(alpha: 0.3),
+                ),
+
+                // Seconds
+                Expanded(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          context.l10n.seconds,
+                          style: context.textTheme.labelSmall,
+                        ),
+                      ),
+                      Expanded(
+                        child: CupertinoPicker(
+                          itemExtent: 28,
+                          scrollController: _secondsController,
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              _selectedSeconds = index * 15;
+                              _useDefaultTimer = false;
+                            });
+                          },
+                          children: List.generate(4, (index) {
+                            final seconds = index * 15;
+                            return Center(
+                              child: Text(
+                                seconds.toString().padLeft(2, '0'),
+                                style: context.textTheme.titleMedium,
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Preview of selected time - compact
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: previewBackground,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.timer, size: 18, color: previewColor),
+                const SizedBox(width: 6),
+                Text(previewLabel, style: context.textTheme.bodySmall),
+                const SizedBox(width: 4),
+                Text(
+                  _formatTime(previewSeconds),
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: previewColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
 
           const SizedBox(height: 16),
 
@@ -365,16 +403,15 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                 flex: 2,
                 child: FilledButton(
                   onPressed: () async {
-                    final restTime = _hasRestTime
-                        ? (_selectedMinutes * 60 + _selectedSeconds)
-                        : null;
+                    final restTime = _useDefaultTimer
+                        ? null
+                        : _selectedTotalSeconds;
 
                     // Track timer selection
                     if (restTime == null) {
-                      // No timer selected
                       await tracker.trackRestTimePresetSelected(
-                        presetId: 'no_timer',
-                        seconds: null,
+                        presetId: 'default_timer',
+                        seconds: defaultRestTime,
                         source: widget.source,
                         exerciseId: widget.exerciseId,
                       );
@@ -452,5 +489,21 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
     } else {
       return '$minutes:${seconds.toString().padLeft(2, '0')}';
     }
+  }
+
+  int get _selectedTotalSeconds => (_selectedMinutes * 60) + _selectedSeconds;
+
+  void _applyRestTime(int seconds, {bool useDefaultTimer = false}) {
+    final newMinutes = seconds ~/ 60;
+    final newSeconds = seconds % 60;
+
+    setState(() {
+      _selectedMinutes = newMinutes;
+      _selectedSeconds = newSeconds;
+      _useDefaultTimer = useDefaultTimer;
+    });
+
+    _minutesController.jumpToItem(newMinutes);
+    _secondsController.jumpToItem(newSeconds ~/ 15);
   }
 }

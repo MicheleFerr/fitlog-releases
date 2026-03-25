@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_config.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
@@ -212,6 +213,11 @@ class NotificationScheduler {
   /// Notification fires after [NotificationConfig.prNotificationDelay] (high value = fast).
   Future<void> schedulePrNotification({
     required String exerciseName,
+    String? exerciseId,
+    String? prTypeName,
+    double? prValue,
+    double? previousValue,
+    DateTime? achievedAt,
     required AppLocalizations l10n,
   }) async {
     // Check if we can send (anti-spam)
@@ -242,6 +248,14 @@ class NotificationScheduler {
       message: message,
       scheduledTime: scheduledTime,
       context: exerciseName,
+      deepLinkPath: _buildPrDeepLink(
+        exerciseName: exerciseName,
+        exerciseId: exerciseId,
+        prTypeName: prTypeName,
+        prValue: prValue,
+        previousValue: previousValue,
+        achievedAt: achievedAt,
+      ),
     );
 
     if (kDebugMode) {
@@ -249,6 +263,29 @@ class NotificationScheduler {
         '📅 PR notification for "$exerciseName" scheduled for $scheduledTime',
       );
     }
+  }
+
+  String _buildPrDeepLink({
+    required String exerciseName,
+    String? exerciseId,
+    String? prTypeName,
+    double? prValue,
+    double? previousValue,
+    DateTime? achievedAt,
+  }) {
+    return Uri(
+      path:
+          '${AppRoutes.statsPath}/analytics/exercise/'
+          '${Uri.encodeComponent(exerciseName)}',
+      queryParameters: {
+        'source': 'notification',
+        if (exerciseId != null && exerciseId.isNotEmpty) 'id': exerciseId,
+        if (prTypeName != null && prTypeName.isNotEmpty) 'prType': prTypeName,
+        if (prValue != null) 'prValue': prValue.toString(),
+        if (previousValue != null) 'previousValue': previousValue.toString(),
+        if (achievedAt != null) 'achievedAt': achievedAt.toIso8601String(),
+      },
+    ).toString();
   }
 
   /// Schedule a streak milestone notification.

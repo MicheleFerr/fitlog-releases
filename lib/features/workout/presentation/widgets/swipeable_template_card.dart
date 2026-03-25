@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,6 +76,20 @@ class SwipeableTemplateCard extends ConsumerWidget {
             ? ActionPane(
                 motion: const BehindMotion(),
                 extentRatio: leftExtentRatio,
+                // Full swipe right should open scheduling immediately without
+                // dismissing the card from the list.
+                dismissible: hasSchedule
+                    ? DismissiblePane(
+                        dismissThreshold: 0.45,
+                        onDismissed: () {},
+                        closeOnCancel: true,
+                        confirmDismiss: () async {
+                          unawaited(HapticFeedback.mediumImpact());
+                          onSchedule!();
+                          return false;
+                        },
+                      )
+                    : null,
                 children: [
                   if (hasSchedule)
                     _buildSlidableAction(

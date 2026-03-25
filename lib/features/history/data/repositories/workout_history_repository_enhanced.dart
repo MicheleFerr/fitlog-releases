@@ -16,10 +16,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
+import 'package:gymbro_flutter_new/features/premium/data/services/premium_entitlement_store.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 
 /// Enhanced repository for workout history with Firebase integration
 class WorkoutHistoryRepositoryEnhanced {
@@ -27,9 +29,17 @@ class WorkoutHistoryRepositoryEnhanced {
     required HiveBoxManagerEnhanced boxManager,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
+    PremiumEntitlementStore? entitlementStore,
+    bool enableRemoteSync = true,
   }) : _boxManager = boxManager,
        _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance {
+       _auth = auth ?? FirebaseAuth.instance,
+       _entitlementStore =
+           entitlementStore ??
+           PremiumEntitlementStore(
+             firestore: firestore ?? FirebaseFirestore.instance,
+           ),
+       _enableRemoteSync = enableRemoteSync {
     _initialize();
   }
   static const String _historyBoxName = 'workout_history_enhanced';
@@ -39,6 +49,8 @@ class WorkoutHistoryRepositoryEnhanced {
   final HiveBoxManagerEnhanced _boxManager;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final PremiumEntitlementStore _entitlementStore;
+  final bool _enableRemoteSync;
 
   Box? _historyBox;
   Box? _syncQueueBox;
@@ -104,8 +116,10 @@ class WorkoutHistoryRepositoryEnhanced {
       _isInitialized = true;
       _initCompleter!.complete();
 
-      // Trigger initial sync if needed
-      await _performInitialSyncIfNeeded();
+      if (_enableRemoteSync) {
+        // Trigger initial sync if needed only for the interactive app session.
+        await _performInitialSyncIfNeeded();
+      }
     } catch (e) {
       _initCompleter!.completeError(e);
       _initCompleter = null; // Allow retry on next call
@@ -127,6 +141,12 @@ class WorkoutHistoryRepositoryEnhanced {
     return hasSync == true;
   }
 
+  /// Check if a premium user has already backfilled the full remote history
+  bool get _hasFullHistorySync {
+    final hasSync = _metadataBox?.get('full_history_sync_done') as bool?;
+    return hasSync == true;
+  }
+
   /// Get last sync timestamp
   DateTime? get _lastSyncTimestamp {
     final timestamp = _metadataBox?.get('last_sync_timestamp') as String?;
@@ -135,49 +155,55 @@ class WorkoutHistoryRepositoryEnhanced {
 
   /// Perform initial sync if needed
   Future<void> _performInitialSyncIfNeeded() async {
-    if (_hasInitialSync) {
-      // Just do incremental sync
-      await _performIncrementalSync();
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    final accountTier = await _getCurrentAccountTier(userId);
+    final shouldSyncFullHistory = accountTier != AccountTier.free;
+
+    if (!_hasInitialSync) {
+      await _performInitialSync(fullHistory: shouldSyncFullHistory);
       return;
     }
 
-    await _performInitialSync();
+    if (shouldSyncFullHistory && !_hasFullHistorySync) {
+      await _performPremiumHistoryBackfill(userId);
+    }
+
+    await _performIncrementalSync();
   }
 
   /// Perform initial complete sync
-  Future<void> _performInitialSync() async {
+  Future<void> _performInitialSync({required bool fullHistory}) async {
     if (_auth.currentUser == null) return;
 
     _syncStatusController.add(SyncStatus.initialSyncing);
 
     try {
-      // Download last 3 months of workout history
+      // Free users only need the last 3 months locally.
+      // Premium users must receive the full remote history on first sync.
       final cutoffDate = DateTime.now().subtract(const Duration(days: 90));
       final userId = _auth.currentUser!.uid;
 
       if (kDebugMode) {
-        debugPrint('🔄 Starting initial sync for workout history...');
+        debugPrint(
+          fullHistory
+              ? '🔄 Starting full history sync for premium user...'
+              : '🔄 Starting initial 90-day sync for workout history...',
+        );
       }
 
-      // Query Firebase for workout history
-      // 🔧 FIX: Added 15s timeout to prevent infinite hanging on poor network
-      final querySnapshot = await _firestore
-          .collection('workouts')
-          .where('userId', isEqualTo: userId)
-          .where('completedAt', isGreaterThan: Timestamp.fromDate(cutoffDate))
-          .orderBy('completedAt', descending: true)
-          .limit(500) // Reasonable limit
-          .get()
-          .timeout(
-            const Duration(seconds: 15),
-            onTimeout: () =>
-                throw TimeoutException('Firestore initial sync timed out'),
-          );
+      final docs = fullHistory
+          ? await _fetchAllWorkoutDocs(userId)
+          : await _fetchRecentWorkoutDocs(
+              userId: userId,
+              cutoffDate: cutoffDate,
+            );
 
       // Convert and save to local storage
       final workouts = <WorkoutHistoryDetail>[];
 
-      for (var doc in querySnapshot.docs) {
+      for (final doc in docs) {
         try {
           final workout = WorkoutHistoryDetail.fromFirestore(doc);
           workouts.add(workout);
@@ -193,6 +219,7 @@ class WorkoutHistoryRepositoryEnhanced {
 
       // Mark initial sync as complete
       await _metadataBox!.put('initial_sync_done', true);
+      await _metadataBox!.put('full_history_sync_done', fullHistory);
       await _metadataBox!.put(
         'last_sync_timestamp',
         DateTime.now().toIso8601String(),
@@ -200,7 +227,8 @@ class WorkoutHistoryRepositoryEnhanced {
 
       if (kDebugMode) {
         debugPrint(
-          '✅ Initial sync completed: ${workouts.length} workouts downloaded from Firebase',
+          '✅ Initial sync completed: ${workouts.length} workouts downloaded from Firebase'
+          '${fullHistory ? ' (full history)' : ' (90-day window)'}',
         );
       }
 
@@ -226,6 +254,52 @@ class WorkoutHistoryRepositoryEnhanced {
     }
   }
 
+  Future<void> _performPremiumHistoryBackfill(String userId) async {
+    _syncStatusController.add(SyncStatus.syncing);
+
+    try {
+      if (kDebugMode) {
+        debugPrint(
+          '🔄 Starting premium history backfill to unlock workouts older than 90 days...',
+        );
+      }
+
+      final docs = await _fetchAllWorkoutDocs(userId);
+
+      for (final doc in docs) {
+        try {
+          final workout = WorkoutHistoryDetail.fromFirestore(doc);
+          await _saveWorkoutLocally(workout);
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('⚠️ Error backfilling workout ${doc.id}: $e');
+          }
+        }
+      }
+
+      await _metadataBox!.put('full_history_sync_done', true);
+      await _metadataBox!.put(
+        'last_sync_timestamp',
+        DateTime.now().toIso8601String(),
+      );
+
+      final allLocalWorkouts = await _getLocalWorkouts();
+      _workoutsController.add(allLocalWorkouts);
+      _syncStatusController.add(SyncStatus.synced);
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ Premium history backfill completed: ${docs.length} workouts scanned from Firebase',
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Premium history backfill failed: $e');
+      }
+      _syncStatusController.add(SyncStatus.error);
+    }
+  }
+
   /// Perform incremental sync
   Future<void> _performIncrementalSync() async {
     if (_auth.currentUser == null) return;
@@ -240,8 +314,9 @@ class WorkoutHistoryRepositoryEnhanced {
       // 🔧 PERF FIX: Add limit to prevent unbounded reads
       // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
       final querySnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
           .collection('workouts')
-          .where('userId', isEqualTo: userId)
           .where('updatedAt', isGreaterThan: Timestamp.fromDate(lastSync))
           .orderBy('updatedAt', descending: true)
           .limit(100) // Limit to prevent fetching thousands of documents
@@ -292,6 +367,15 @@ class WorkoutHistoryRepositoryEnhanced {
   Future<void> _saveWorkoutLocally(WorkoutHistoryDetail workout) async {
     await _ensureInitialized();
 
+    if (workout.isHealthImportedWorkout) {
+      if (kDebugMode) {
+        debugPrint(
+          '⏭️ [WorkoutHistoryRepo] Skipping health-imported workout ${workout.id}',
+        );
+      }
+      return;
+    }
+
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
@@ -314,6 +398,15 @@ class WorkoutHistoryRepositoryEnhanced {
   }) async {
     await _ensureInitialized();
 
+    if (workout.isHealthImportedWorkout) {
+      if (kDebugMode) {
+        debugPrint(
+          '⏭️ [WorkoutHistoryRepo] Ignoring health-imported workout ${workout.id} during saveAndNotify',
+        );
+      }
+      return;
+    }
+
     final key = 'workout_${userId}_${workout.id}';
     await _historyBox!.put(key, workout.toMap());
     await _historyBox!.flush();
@@ -335,6 +428,7 @@ class WorkoutHistoryRepositoryEnhanced {
     final workouts = <WorkoutHistoryDetail>[];
     final userPrefix = 'workout_${userId}_';
     final legacyKeysToMigrate = <String, WorkoutHistoryDetail>{};
+    final orphanedLegacyKeys = <String>[];
 
     for (var key in _historyBox!.keys) {
       final keyStr = key.toString();
@@ -348,6 +442,10 @@ class WorkoutHistoryRepositoryEnhanced {
 
         final workout = WorkoutHistoryDetail.fromMap(data);
 
+        if (workout.isHealthImportedWorkout) {
+          continue;
+        }
+
         // 🔐 SECURITY: Only include workouts belonging to current user
         // Case 1: New format key (workout_{userId}_{workoutId})
         if (keyStr.startsWith(userPrefix)) {
@@ -355,12 +453,18 @@ class WorkoutHistoryRepositoryEnhanced {
           continue;
         }
 
-        // Case 2: Legacy format key (workout_{workoutId}) - check userId in content
-        // Legacy keys don't have userId in key, so verify via workout.userId field
-        if (workout.userId == userId || workout.userId.isEmpty) {
+        // Case 2: Legacy format key (workout_{workoutId}) - only adopt if the
+        // payload already proves ownership. Empty userId is ambiguous and can
+        // leak another person's local history after account switch.
+        if (workout.userId == userId) {
           workouts.add(workout);
           // Queue for migration to new key format
           legacyKeysToMigrate[keyStr] = workout;
+          continue;
+        }
+
+        if (workout.userId.isEmpty) {
+          orphanedLegacyKeys.add(keyStr);
         }
         // Case 3: Different user's workout - skip silently
       } catch (e) {
@@ -381,7 +485,8 @@ class WorkoutHistoryRepositoryEnhanced {
     if (kDebugMode) {
       debugPrint(
         '📦 [WorkoutHistoryRepo] Loaded ${workouts.length} workouts for user $userId'
-        '${legacyKeysToMigrate.isNotEmpty ? ' (migrating ${legacyKeysToMigrate.length} legacy keys)' : ''}',
+        '${legacyKeysToMigrate.isNotEmpty ? ' (migrating ${legacyKeysToMigrate.length} legacy keys)' : ''}'
+        '${orphanedLegacyKeys.isNotEmpty ? ' (skipped ${orphanedLegacyKeys.length} orphaned legacy keys)' : ''}',
       );
     }
 
@@ -428,10 +533,12 @@ class WorkoutHistoryRepositoryEnhanced {
       await _ensureInitialized();
 
       // Always return local data first for instant loading
-      final localWorkouts = await _getLocalWorkouts();
+      final localWorkouts = await _applyHistoryAccessPolicy(
+        await _getLocalWorkouts(),
+      );
 
       // Trigger background sync if needed
-      if (_auth.currentUser != null) {
+      if (_enableRemoteSync && _auth.currentUser != null) {
         unawaited(_performIncrementalSync());
       }
 
@@ -448,12 +555,14 @@ class WorkoutHistoryRepositoryEnhanced {
       await _ensureInitialized();
 
       // Emit initial local data
-      final initialWorkouts = await _getLocalWorkouts();
+      final initialWorkouts = await _applyHistoryAccessPolicy(
+        await _getLocalWorkouts(),
+      );
       yield Right(initialWorkouts);
 
       // Listen for updates
       await for (final workouts in _workoutsController.stream) {
-        yield Right(workouts);
+        yield Right(await _applyHistoryAccessPolicy(workouts));
       }
     } catch (e) {
       yield Left(DatabaseFailure('Stream error: $e'));
@@ -473,8 +582,10 @@ class WorkoutHistoryRepositoryEnhanced {
       // Add to sync queue for cloud update
       await _addToSyncQueue('update', workout);
 
-      // Process sync queue if online
-      unawaited(_processSyncQueue());
+      if (_enableRemoteSync) {
+        // Process sync queue if online only when remote sync is enabled.
+        unawaited(_processSyncQueue());
+      }
 
       // Emit updated list
       final updatedWorkouts = await _getLocalWorkouts();
@@ -506,8 +617,10 @@ class WorkoutHistoryRepositoryEnhanced {
         WorkoutHistoryDetail.empty(id: workoutId),
       );
 
-      // Process sync queue if online
-      unawaited(_processSyncQueue());
+      if (_enableRemoteSync) {
+        // Process sync queue if online only when remote sync is enabled.
+        unawaited(_processSyncQueue());
+      }
 
       // Emit updated list
       final updatedWorkouts = await _getLocalWorkouts();
@@ -588,6 +701,8 @@ class WorkoutHistoryRepositoryEnhanced {
   /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<void> _updateWorkoutInFirestore(WorkoutHistoryDetail workout) async {
     await _firestore
+        .collection('users')
+        .doc(workout.userId)
         .collection('workouts')
         .doc(workout.id)
         .set(workout.toFirestoreMap(), SetOptions(merge: true))
@@ -601,7 +716,14 @@ class WorkoutHistoryRepositoryEnhanced {
   /// Delete workout from Firestore
   /// 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
   Future<void> _deleteWorkoutFromFirestore(String workoutId) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+
     await _firestore
+        .collection('users')
+        .doc(userId)
         .collection('workouts')
         .doc(workoutId)
         .delete()
@@ -616,12 +738,13 @@ class WorkoutHistoryRepositoryEnhanced {
   Future<void> forceSync() async {
     _syncStatusController.add(SyncStatus.syncing);
 
-    if (!_hasInitialSync) {
-      await _performInitialSync();
-    } else {
-      await _performIncrementalSync();
-      await _processSyncQueue();
+    if (!_enableRemoteSync) {
+      _syncStatusController.add(SyncStatus.synced);
+      return;
     }
+
+    await _performInitialSyncIfNeeded();
+    await _processSyncQueue();
 
     // 🔧 FIX: Always emit current local workouts after force sync
     // Ensures UI is updated even if no Firebase changes were found
@@ -660,6 +783,90 @@ class WorkoutHistoryRepositoryEnhanced {
   void dispose() {
     _workoutsController.close();
     _syncStatusController.close();
+  }
+
+  Future<AccountTier> _getCurrentAccountTier(String userId) async {
+    try {
+      return await _entitlementStore.getEffectiveAccountTier(userId);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [WorkoutHistoryRepo] Failed to load account tier: $e');
+      }
+    }
+
+    return AccountTier.free;
+  }
+
+  Future<List<WorkoutHistoryDetail>> _applyHistoryAccessPolicy(
+    List<WorkoutHistoryDetail> workouts,
+  ) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return [];
+
+    final accountTier = await _getCurrentAccountTier(userId);
+    if (accountTier != AccountTier.free) {
+      return workouts;
+    }
+
+    final cutoffDate = DateTime.now().subtract(const Duration(days: 90));
+    return workouts.where((w) => w.completedAt.isAfter(cutoffDate)).toList();
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+  _fetchRecentWorkoutDocs({
+    required String userId,
+    required DateTime cutoffDate,
+  }) async {
+    final querySnapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('workouts')
+        .where('endTime', isGreaterThan: Timestamp.fromDate(cutoffDate))
+        .orderBy('endTime', descending: true)
+        .limit(500)
+        .get()
+        .timeout(
+          const Duration(seconds: 15),
+          onTimeout: () =>
+              throw TimeoutException('Firestore initial sync timed out'),
+        );
+
+    return querySnapshot.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+  _fetchAllWorkoutDocs(String userId) async {
+    final docs = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDoc;
+
+    while (true) {
+      Query<Map<String, dynamic>> query = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workouts')
+          .orderBy(FieldPath.documentId)
+          .limit(500);
+
+      if (lastDoc != null) {
+        query = query.startAfterDocument(lastDoc);
+      }
+
+      final querySnapshot = await query.get().timeout(
+        const Duration(seconds: 15),
+        onTimeout: () =>
+            throw TimeoutException('Firestore full history sync timed out'),
+      );
+
+      docs.addAll(querySnapshot.docs);
+
+      if (querySnapshot.docs.length < 500) {
+        break;
+      }
+
+      lastDoc = querySnapshot.docs.last;
+    }
+
+    return docs;
   }
 }
 

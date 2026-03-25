@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
@@ -37,6 +39,30 @@ class PersonalRecord {
       metadata: data['metadata'] ?? {},
     );
   }
+
+  factory PersonalRecord.fromJson(Map<String, dynamic> json) {
+    final rawAchievedAt = json['achievedAt'];
+    final achievedAt = rawAchievedAt is Timestamp
+        ? rawAchievedAt.toDate()
+        : DateTime.parse(rawAchievedAt as String);
+
+    return PersonalRecord(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      exerciseId: json['exerciseId'] as String,
+      exerciseName: json['exerciseName'] as String,
+      type: PRType.values.firstWhere(
+        (t) => t.name == json['type'],
+        orElse: () => PRType.weight,
+      ),
+      value: (json['value'] as num).toDouble(),
+      previousValue: (json['previousValue'] as num?)?.toDouble(),
+      achievedAt: achievedAt,
+      metadata: Map<String, dynamic>.from(
+        json['metadata'] as Map? ?? const <String, dynamic>{},
+      ),
+    );
+  }
   final String id;
   final String userId;
   final String exerciseId;
@@ -69,6 +95,20 @@ class PersonalRecord {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'exerciseId': exerciseId,
+      'exerciseName': exerciseName,
+      'type': type.name,
+      'value': value,
+      'previousValue': previousValue,
+      'achievedAt': achievedAt.toIso8601String(),
+      'metadata': metadata,
+    };
+  }
+
   PersonalRecord copyWith({
     String? id,
     String? userId,
@@ -96,9 +136,62 @@ class PersonalRecord {
 
 /// Service for tracking and managing personal records
 class PRTracker {
-  PRTracker({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  PRTracker({
+    FirebaseFirestore? firestore,
+    HiveBoxManagerEnhanced? boxManager,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _boxManager = boxManager ?? HiveBoxManagerEnhanced();
   final FirebaseFirestore _firestore;
+  final HiveBoxManagerEnhanced _boxManager;
+  static const String _boxName = HiveBoxNames.personalRecordsData;
+
+  Future<void> _cachePRs(List<PersonalRecord> prs, String userId) async {
+    final box = await _boxManager.openBox<Map>(_boxName);
+    final staleKeys = box.keys
+        .where((key) => key.toString().startsWith('${userId}_'))
+        .toList();
+    if (staleKeys.isNotEmpty) {
+      await box.deleteAll(staleKeys);
+    }
+
+    if (prs.isEmpty) {
+      return;
+    }
+
+    final entries = <String, Map<String, dynamic>>{};
+    for (final pr in prs) {
+      entries['${userId}_${pr.id}'] = pr.toJson();
+    }
+    await box.putAll(entries);
+  }
+
+  Future<void> _cachePR(PersonalRecord pr) async {
+    final box = await _boxManager.openBox<Map>(_boxName);
+    await box.put('${pr.userId}_${pr.id}', pr.toJson());
+  }
+
+  Future<List<PersonalRecord>> _loadCachedPRs(String userId) async {
+    final box = await _boxManager.openBox<Map>(_boxName);
+    final prs = <PersonalRecord>[];
+
+    for (final key in box.keys) {
+      if (!key.toString().startsWith('${userId}_')) continue;
+
+      final data = box.get(key);
+      if (data == null) continue;
+
+      try {
+        prs.add(PersonalRecord.fromJson(Map<String, dynamic>.from(data)));
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('⚠️ Failed to parse cached PR $key: $e');
+        }
+      }
+    }
+
+    prs.sort((a, b) => b.achievedAt.compareTo(a.achievedAt));
+    return prs;
+  }
 
   /// Check and update PRs for a completed exercise
   ///
@@ -150,14 +243,16 @@ class PRTracker {
           .orderBy('achievedAt', descending: true)
           .get();
 
-      return snapshot.docs
+      final prs = snapshot.docs
           .map((doc) => PersonalRecord.fromFirestore(doc))
           .toList();
+      await _cachePRs(prs, userId);
+      return prs;
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('Error fetching user PRs: $e');
+        debugPrint('Error fetching user PRs, falling back to cache: $e');
       }
-      return [];
+      return _loadCachedPRs(userId);
     }
   }
 
@@ -188,9 +283,19 @@ class PRTracker {
       return prs;
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('Error fetching exercise PRs: $e');
+        debugPrint('Error fetching exercise PRs, falling back to cache: $e');
       }
-      return {};
+      final cached = await _loadCachedPRs(userId);
+      final prs = <PRType, PersonalRecord>{};
+
+      for (final pr in cached.where((pr) => pr.exerciseId == exerciseId)) {
+        final existing = prs[pr.type];
+        if (existing == null || pr.value > existing.value) {
+          prs[pr.type] = pr;
+        }
+      }
+
+      return prs;
     }
   }
 
@@ -211,16 +316,22 @@ class PRTracker {
           .toList();
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('Error fetching recent PRs: $e');
+        debugPrint('Error fetching recent PRs, falling back to cache: $e');
       }
-      return [];
+      final cached = await _loadCachedPRs(userId);
+      return cached
+          .where((pr) => pr.achievedAt.isAfter(thirtyDaysAgo))
+          .toList();
     }
   }
 
   /// Save a personal record
   Future<void> savePR(PersonalRecord pr) async {
     try {
-      await _firestore.collection('personalRecords').add(pr.toFirestore());
+      final docRef = await _firestore.collection('personalRecords').add(
+        pr.toFirestore(),
+      );
+      await _cachePR(pr.copyWith(id: docRef.id));
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error saving PR: $e');
@@ -232,6 +343,17 @@ class PRTracker {
   Future<void> deletePR(String prId) async {
     try {
       await _firestore.collection('personalRecords').doc(prId).delete();
+      final box = await _boxManager.openBox<Map>(_boxName);
+      Object? matchingKey;
+      for (final key in box.keys) {
+        if (key.toString().endsWith('_$prId')) {
+          matchingKey = key;
+          break;
+        }
+      }
+      if (matchingKey != null) {
+        await box.delete(matchingKey);
+      }
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error deleting PR: $e');

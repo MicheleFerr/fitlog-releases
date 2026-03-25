@@ -19,7 +19,11 @@
 ///
 /// **Usage**:
 /// ```dart
-/// final analytics = await ref.watch(exerciseAnalyticsProvider(exerciseId).future);
+/// final analytics = await ref.watch(
+///   exerciseAnalyticsProvider(
+///     (exerciseName: exerciseName, exerciseId: exerciseId),
+///   ).future,
+/// );
 /// print(analytics.trend.type);  // TrendType.improving
 /// print(analytics.correlations.weightRpe.rSquared);  // 0.72
 /// ```

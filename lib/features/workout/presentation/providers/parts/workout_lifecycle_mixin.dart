@@ -1,6 +1,24 @@
 part of '../workout_provider.dart';
 
-mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelpersMixin, WorkoutWatchNotifyMixin, WorkoutSaveMixin {
+mixin WorkoutLifecycleMixin
+    on
+        Notifier<Workout?>,
+        WorkoutCoreMixin,
+        WorkoutHelpersMixin,
+        WorkoutWatchNotifyMixin,
+        WorkoutSaveMixin {
+  bool _isCurrentWorkoutGuidedTest() {
+    final workout = state;
+    if (workout == null) return false;
+    return _isGuidedTestWorkout(workout);
+  }
+
+  bool _isGuidedTestWorkout(Workout workout) {
+    final choiceService = ref.read(onboardingChoiceServiceProvider);
+    if (choiceService == null) return false;
+    return choiceService.isGuidedActiveTestWorkout(workout.id);
+  }
+
   /// Creates workout from routine with pre-loaded exercises
   Future<void> createWorkoutFromRoutine({
     required String routineName,
@@ -83,7 +101,10 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
         templateId; // Set template ID for auto-save (null for manual workouts)
   }
 
-  void startFromTemplate(wt.WorkoutTemplate workoutTemplate) async {
+  Future<void> startFromTemplate(
+    wt.WorkoutTemplate workoutTemplate, {
+    String? sessionId,
+  }) async {
     try {
       // Store template ID for auto-save
       _currentTemplateId = workoutTemplate.id;
@@ -130,10 +151,12 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
         workout = workout.copyWith(exercises: localizedExercises);
       }
 
-      // Auto-fill weights from previous template session (silent, no UI feedback)
-      // NOTE: _fetchPreviousTemplateWorkout returns null for now because WorkoutModel
-      // does not persist templateId to Firestore, so querying by templateId is not
-      // yet possible. The service handles null gracefully (returns workout unchanged).
+      workout = workout.copyWith(
+        sessionId: sessionId ?? workout.sessionId,
+        templateId: workoutTemplate.id,
+      );
+
+      // Auto-fill weights from the most recent completed workout for this template.
       final userId = ref.read(authServiceProvider).currentUser?.uid;
       if (userId != null) {
         final previousWorkout = await _fetchPreviousTemplateWorkout(
@@ -160,18 +183,16 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
 
       unawaited(
         tracker.trackWorkoutStarted(
-        workoutId: workout.id,
-        workoutType: 'strength', // Default type
-        workoutName: workout.name,
-        source: 'template',
-        templateId: workoutTemplate.id,
+          workoutId: workout.id,
+          workoutType: 'strength', // Default type
+          workoutName: workout.name,
+          source: 'template',
+          templateId: workoutTemplate.id,
         ),
       );
 
       // Activate wakelock if enabled in settings
-      unawaited(
-        ref.read(screenWakelockProvider.notifier).startWakelock(),
-      );
+      unawaited(ref.read(screenWakelockProvider.notifier).startWakelock());
 
       // Notify Apple Watch about workout start
       _notifyWatchWorkoutStarted();
@@ -221,10 +242,7 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
           );
         }).toList();
 
-        return baseExercise.copyWith(
-          sets: freshSets,
-          updatedAt: now,
-        );
+        return baseExercise.copyWith(sets: freshSets, updatedAt: now);
       }).toList();
 
       final workout = Workout(
@@ -245,7 +263,9 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
 
       if (Platform.isIOS) {
         unawaited(
-          ref.read(workoutSessionLAProvider.notifier).startLiveActivity(workout),
+          ref
+              .read(workoutSessionLAProvider.notifier)
+              .startLiveActivity(workout),
         );
       }
 
@@ -274,26 +294,31 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
 
   Future<void> startWorkout() async {
     if (state != null) {
-      // Track workout started
-      final analytics = ref.read(analyticsServiceProvider);
-      final tracker = WorkoutEventTracker(analytics);
+      final isGuidedTest = _isCurrentWorkoutGuidedTest();
+      final templateId = state!.templateId;
+      final isTemplateStart = templateId != null && templateId.isNotEmpty;
 
-      unawaited(
-        tracker.trackWorkoutStarted(
-          workoutId: state!.id,
-          workoutType: 'strength', // Default type
-          workoutName: state!.name,
-          source: 'manual_start',
-        ),
-      );
+      if (!isGuidedTest) {
+        // Track workout started only for real workouts.
+        final analytics = ref.read(analyticsServiceProvider);
+        final tracker = WorkoutEventTracker(analytics);
+        unawaited(
+          tracker.trackWorkoutStarted(
+            workoutId: state!.id,
+            workoutType: 'strength', // Default type
+            workoutName: state!.name,
+            templateId: isTemplateStart ? templateId : null,
+            source: isTemplateStart ? 'template' : 'manual_start',
+          ),
+        );
+      }
 
       // Auto-fill weights from history for free workouts (silent)
       final userId = ref.read(authServiceProvider).currentUser?.uid;
-      if (userId != null && state!.templateId == null) {
-        state = await ref.read(weightAutoFillServiceProvider).fillFromHistory(
-          workout: state!,
-          userId: userId,
-        );
+      if (!isGuidedTest && userId != null && state!.templateId == null) {
+        state = await ref
+            .read(weightAutoFillServiceProvider)
+            .fillFromHistory(workout: state!, userId: userId);
       }
 
       state = state!.startWorkout();
@@ -385,8 +410,13 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
   ///
   /// Pass [context] to show sync status toasts during save flow.
   /// If [context] is null, saves silently without UI feedback.
-  void completeWorkout([BuildContext? context]) {
+  Future<void> completeWorkout([BuildContext? context]) async {
     if (state != null) {
+      if (_isCurrentWorkoutGuidedTest()) {
+        await completeGuidedTestWorkout();
+        return;
+      }
+
       final workout = state!;
 
       // Track workout completed with full stats
@@ -395,37 +425,23 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
 
       // Calculate stats
       final totalExercises = workout.exercises.length;
-      final totalSetsCount = workout.exercises.fold<int>(
-        0,
-        (total, ex) => total + ex.sets.length,
-      );
-      final completedSets = workout.exercises.fold<int>(
-        0,
-        (total, ex) => total + ex.sets.where((s) => s.isCompleted).length,
-      );
-      final totalWeight = workout.exercises.fold<double>(
-        0.0,
-        (total, ex) =>
-            total +
-            ex.sets.fold<double>(0.0, (exTotal, set) {
-              if (!set.isCompleted) return exTotal;
-              final weight = set.weight ?? 0;
-              final reps = set.reps ?? 0;
-              return exTotal + (weight.toDouble() * reps.toDouble());
-            }),
-      );
+      final totalSetsCount = workout.totalSets;
+      final completedSets = workout.completedSets;
+      final totalWeight = workout.completedVolume;
 
-      tracker.trackWorkoutCompleted(
-        workoutId: workout.id,
-        workoutType: 'strength',
-        exerciseCount: totalExercises,
-        totalSets: totalSetsCount,
-        totalWeight: totalWeight,
-        duration: workout.duration?.inSeconds ?? 0,
-        completionRate: totalSetsCount > 0
-            ? ((completedSets / totalSetsCount) * 100).round()
-            : 0,
-        sessionId: workout.sessionId,
+      unawaited(
+        tracker.trackWorkoutCompleted(
+          workoutId: workout.id,
+          workoutType: 'strength',
+          exerciseCount: totalExercises,
+          totalSets: totalSetsCount,
+          totalWeight: totalWeight,
+          duration: workout.duration?.inSeconds ?? 0,
+          completionRate: totalSetsCount > 0
+              ? ((completedSets / totalSetsCount) * 100).round()
+              : 0,
+          sessionId: workout.sessionId,
+        ),
       );
 
       // Track exercise usage for "Recent Exercises" in exercise picker
@@ -434,10 +450,12 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
       if (currentUser != null) {
         final usageTracker = ExerciseUsageTracker();
         for (final exercise in workout.exercises) {
-          usageTracker.incrementUsage(
-            exerciseId: exercise.id,
-            exerciseName: exercise.name,
-            userId: currentUser.uid,
+          unawaited(
+            usageTracker.incrementUsage(
+              exerciseId: exercise.stableExerciseId,
+              exerciseName: exercise.name,
+              userId: currentUser.uid,
+            ),
           );
         }
       }
@@ -445,17 +463,47 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
       state = state!.completeWorkout();
 
       // Stop rest timer to prevent ticks after workout ends
-      ref.read(unifiedTimerProvider.notifier).stopTimer();
+      await ref.read(unifiedTimerProvider.notifier).stopTimer();
 
       // Haptic feedback for workout completion
       HapticFeedbackService.workoutCompletion(ref);
 
+      // Keep orchestrator workout count in sync so post-first-workout
+      // onboarding prompts (e.g. health integration) can unlock correctly.
+      unawaited(
+        ref
+            .read(onboardingOrchestratorProvider.notifier)
+            .incrementWorkoutCount(),
+      );
+
+      // Keep contextual tutorial workout count in sync for hint policy.
+      unawaited(
+        ref.read(tutorialStateProvider.notifier).incrementWorkoutCount(),
+      );
+
+      // Guided real mode completion: first real completion after guided test.
+      final choiceService = ref.read(onboardingChoiceServiceProvider);
+      if (choiceService != null &&
+          choiceService.getChoice() == OnboardingChoice.guided &&
+          choiceService.isGuidedTestCompleted() &&
+          !choiceService.isGuidedRealCompleted()) {
+        final analytics = ref.read(analyticsServiceProvider);
+        unawaited(choiceService.completeGuidedRealMode());
+        ref.invalidate(shouldShowGuidedSoftGateReminderProvider);
+        unawaited(
+          analytics.logEvent(
+            name: AnalyticsEvents.guidedRealCompleted,
+            parameters: {AnalyticsParameters.workoutId: workout.id},
+          ),
+        );
+      }
+
       // Notify Apple Watch that workout ended
-      ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
+      await ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
 
       // End iOS 17+ Workout Session Live Activity (show completion for 5s)
       if (Platform.isIOS) {
-        ref
+        await ref
             .read(workoutSessionLAProvider.notifier)
             .endLiveActivity(dismissPolicy: 'after_5s');
       }
@@ -463,31 +511,86 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
       // Clear cache after workout completion (start fresh next time)
       if (_currentTemplateId != null) {
         final cacheService = ref.read(workoutTemplateCacheServiceProvider);
-        cacheService.clearCache(_currentTemplateId!);
+        await cacheService.clearCache(_currentTemplateId!);
         _currentTemplateId = null;
       }
 
-      // BUG FIX: Stop auto-save and clear draft after completion
-      // Workout is now saved to Firestore, so draft is no longer needed
-      ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
+      // Stop auto-save timer, but keep the recovery draft until local save succeeds.
+      ref
+          .read(workoutAutoSaveProvider.notifier)
+          .stopAutoSave(clearDraft: false);
 
       // Automatically save the completed workout to Firestore
-      _saveCompletedWorkoutToFirestore(context);
+      if (context != null && !context.mounted) {
+        return;
+      }
+      await _saveCompletedWorkoutToFirestore(context);
+
+      // Local save succeeded: the recovery draft is no longer needed.
+      ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
 
       // Deactivate wakelock when workout is completed
-      ref.read(screenWakelockProvider.notifier).stopWakelock();
+      await ref.read(screenWakelockProvider.notifier).stopWakelock();
     }
+  }
+
+  /// Complete a guided test workout without persisting any real workout data.
+  ///
+  /// This path intentionally avoids history/streak/xp/real workout analytics.
+  Future<void> completeGuidedTestWorkout() async {
+    final workout = state;
+    if (workout == null) return;
+    if (!_isGuidedTestWorkout(workout)) return;
+
+    // Stop runtime systems tied to the active workout.
+    await ref.read(unifiedTimerProvider.notifier).stopTimer();
+    ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
+    await ref.read(screenWakelockProvider.notifier).stopWakelock();
+    await ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
+
+    if (Platform.isIOS) {
+      await ref
+          .read(workoutSessionLAProvider.notifier)
+          .endLiveActivity(dismissPolicy: 'immediate');
+    }
+
+    // Clear template cache if present.
+    if (_currentTemplateId != null) {
+      final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+      await cacheService.clearCache(_currentTemplateId!);
+      _currentTemplateId = null;
+    }
+
+    // Clear workout state immediately.
+    state = null;
+
+    final analytics = ref.read(analyticsServiceProvider);
+    unawaited(
+      analytics.logEvent(
+        name: AnalyticsEvents.guidedTestCompleted,
+        parameters: {AnalyticsParameters.workoutId: workout.id},
+      ),
+    );
+
+    final choiceService = ref.read(onboardingChoiceServiceProvider);
+    await choiceService?.completeGuidedTestMode();
+    ref.invalidate(shouldShowGuidedSoftGateReminderProvider);
   }
 
   void pauseWorkout() {
     if (state != null) {
+      final pausedAt = DateTime.now();
+      final elapsedBeforePause = state!.startTime != null
+          ? pausedAt.difference(state!.startTime!).inSeconds
+          : 0;
+
       // Track workout paused
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
 
       tracker.trackWorkoutPaused(
         workoutId: state!.id,
-        elapsedSeconds: state!.duration?.inSeconds ?? 0,
+        elapsedSeconds: elapsedBeforePause,
       );
 
       state = state!.pauseWorkout();
@@ -499,13 +602,18 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
 
   void resumeWorkout() {
     if (state != null) {
+      final pausedSeconds =
+          state!.status == WorkoutStatus.paused && state!.endTime != null
+          ? DateTime.now().difference(state!.endTime!).inSeconds
+          : 0;
+
       // Track workout resumed
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
 
       tracker.trackWorkoutResumed(
         workoutId: state!.id,
-        pausedSeconds: state!.duration?.inSeconds ?? 0,
+        pausedSeconds: pausedSeconds,
       );
 
       state = state!.resumeWorkout();
@@ -547,6 +655,42 @@ mixin WorkoutLifecycleMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutHelp
 
   void clearWorkout() {
     try {
+      final workout = state;
+      final isGuidedTestWorkout =
+          workout != null && _isGuidedTestWorkout(workout);
+
+      if (isGuidedTestWorkout) {
+        // Guided test discard branch: no real workout analytics.
+        final analytics = ref.read(analyticsServiceProvider);
+        if (_currentTemplateId != null) {
+          final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+          cacheService.clearCache(_currentTemplateId!);
+          _currentTemplateId = null;
+        }
+        ref.read(unifiedTimerProvider.notifier).stopTimer();
+        ref
+            .read(workoutAutoSaveProvider.notifier)
+            .stopAutoSave(clearDraft: true);
+        ref.read(screenWakelockProvider.notifier).stopWakelock();
+        ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
+        if (Platform.isIOS) {
+          ref
+              .read(workoutSessionLAProvider.notifier)
+              .endLiveActivity(dismissPolicy: 'immediate');
+        }
+        state = null;
+        final choiceService = ref.read(onboardingChoiceServiceProvider);
+        unawaited(choiceService?.cancelGuidedTestMode());
+        ref.invalidate(shouldShowGuidedSoftGateReminderProvider);
+        unawaited(
+          analytics.logEvent(
+            name: AnalyticsEvents.guidedTestDiscarded,
+            parameters: {AnalyticsParameters.workoutId: workout.id},
+          ),
+        );
+        return;
+      }
+
       // DEFENSIVE FIX: Force save any pending template modifications before clearing
       // This acts as a safety net in case clearWorkout is called directly
       if (_currentTemplateId != null && state != null) {

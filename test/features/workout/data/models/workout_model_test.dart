@@ -75,17 +75,13 @@ void main() {
       });
 
       test('uses restSeconds field (Firebase format)', () {
-        final json = <String, dynamic>{
-          'restSeconds': 60,
-        };
+        final json = <String, dynamic>{'restSeconds': 60};
         final model = ExerciseSetModel.fromJson(json);
         expect(model.restTime, 60);
       });
 
       test('uses restTimeSeconds field (legacy format)', () {
-        final json = <String, dynamic>{
-          'restTimeSeconds': 90,
-        };
+        final json = <String, dynamic>{'restTimeSeconds': 90};
         final model = ExerciseSetModel.fromJson(json);
         expect(model.restTime, 90);
       });
@@ -100,9 +96,7 @@ void main() {
       });
 
       test('handles legacy completed without timestamp', () {
-        final json = <String, dynamic>{
-          'isCompleted': true,
-        };
+        final json = <String, dynamic>{'isCompleted': true};
         final model = ExerciseSetModel.fromJson(json);
         expect(model.completedAt, isNull);
         expect(model.isCompletedLegacy, true);
@@ -110,9 +104,7 @@ void main() {
       });
 
       test('handles not completed', () {
-        final json = <String, dynamic>{
-          'isCompleted': false,
-        };
+        final json = <String, dynamic>{'isCompleted': false};
         final model = ExerciseSetModel.fromJson(json);
         expect(model.completedAt, isNull);
         expect(model.isCompletedLegacy, false);
@@ -145,9 +137,7 @@ void main() {
 
       test('parses completedAt from ISO string', () {
         final date = DateTime(2024, 6, 15, 14, 30, 0);
-        final json = <String, dynamic>{
-          'completedAt': date.toIso8601String(),
-        };
+        final json = <String, dynamic>{'completedAt': date.toIso8601String()};
         final model = ExerciseSetModel.fromJson(json);
         expect(model.completedAt, date);
       });
@@ -204,10 +194,7 @@ void main() {
       });
 
       test('omits optional fields when null', () {
-        final model = ExerciseSetModel(
-          id: 'set-1',
-          setNumber: 1,
-        );
+        final model = ExerciseSetModel(id: 'set-1', setNumber: 1);
         final json = model.toJson();
 
         expect(json.containsKey('minReps'), false);
@@ -230,11 +217,7 @@ void main() {
       });
 
       test('returns 0 when weight is null', () {
-        final model = ExerciseSetModel(
-          id: 'set-1',
-          setNumber: 1,
-          reps: 10,
-        );
+        final model = ExerciseSetModel(id: 'set-1', setNumber: 1, reps: 10);
         expect(model.volume, 0.0);
       });
 
@@ -248,10 +231,7 @@ void main() {
       });
 
       test('returns 0 when both are null', () {
-        final model = ExerciseSetModel(
-          id: 'set-1',
-          setNumber: 1,
-        );
+        final model = ExerciseSetModel(id: 'set-1', setNumber: 1);
         expect(model.volume, 0.0);
       });
     });
@@ -276,10 +256,7 @@ void main() {
       });
 
       test('false when neither completedAt nor legacy', () {
-        final model = ExerciseSetModel(
-          id: 'set-1',
-          setNumber: 1,
-        );
+        final model = ExerciseSetModel(id: 'set-1', setNumber: 1);
         expect(model.isCompleted, false);
       });
     });
@@ -342,7 +319,10 @@ void main() {
         expect(modified.seconds, original.seconds);
         expect(modified.isWarmup, original.isWarmup);
         expect(modified.restTimerSkipped, original.restTimerSkipped);
-        expect(modified.restTimerSecondsRemaining, original.restTimerSecondsRemaining);
+        expect(
+          modified.restTimerSecondsRemaining,
+          original.restTimerSecondsRemaining,
+        );
       });
     });
 
@@ -449,10 +429,7 @@ void main() {
       });
 
       test('sets isCompletedLegacy when completed without timestamp', () {
-        final domain = ExerciseSet(
-          setNumber: 1,
-          isCompleted: true,
-        );
+        final domain = ExerciseSet(setNumber: 1, isCompleted: true);
         final model = ExerciseSetModel.fromDomain(domain);
         expect(model.isCompletedLegacy, true);
         expect(model.completedAt, isNull);
@@ -533,6 +510,7 @@ void main() {
       test('parses full single exercise JSON', () {
         final json = <String, dynamic>{
           'id': 'ex-1',
+          'databaseExerciseId': 'bench_press',
           'name': 'Bench Press',
           'type': 'single',
           'category': 'chest',
@@ -558,6 +536,7 @@ void main() {
         final model = ExerciseModel.fromJson(json);
 
         expect(model.id, 'ex-1');
+        expect(model.databaseExerciseId, 'bench_press');
         expect(model.name, 'Bench Press');
         expect(model.type, 'single');
         expect(model.category, 'chest');
@@ -577,18 +556,13 @@ void main() {
       });
 
       test('uses restTimeSeconds as legacy fallback', () {
-        final json = <String, dynamic>{
-          'restTimeSeconds': 60,
-        };
+        final json = <String, dynamic>{'restTimeSeconds': 60};
         final model = ExerciseModel.fromJson(json);
         expect(model.restTime, 60);
       });
 
       test('prefers restTime over restTimeSeconds', () {
-        final json = <String, dynamic>{
-          'restTime': 90,
-          'restTimeSeconds': 60,
-        };
+        final json = <String, dynamic>{'restTime': 90, 'restTimeSeconds': 60};
         final model = ExerciseModel.fromJson(json);
         expect(model.restTime, 90);
       });
@@ -599,6 +573,7 @@ void main() {
           'name': 'Outer Name',
           'exerciseData': {
             'id': 'inner-id',
+            'databaseExerciseId': 'bench_press',
             'name': 'Inner Name',
             'notes': 'Inner notes',
           },
@@ -606,6 +581,7 @@ void main() {
         final model = ExerciseModel.fromJson(json);
 
         expect(model.id, 'inner-id');
+        expect(model.databaseExerciseId, 'bench_press');
         expect(model.name, 'Inner Name');
         expect(model.notes, 'Inner notes');
       });
@@ -806,7 +782,9 @@ void main() {
               createdAt: fixedDate,
             ),
           ],
-          supersetSetsData: [{'setNumber': 1}],
+          supersetSetsData: [
+            {'setNumber': 1},
+          ],
         );
         final json = model.toJson();
 
@@ -824,7 +802,9 @@ void main() {
           category: 'arms',
           sets: [],
           createdAt: fixedDate,
-          dropSetStages: [{'weight': 20.0, 'reps': 10}],
+          dropSetStages: [
+            {'weight': 20.0, 'reps': 10},
+          ],
         );
         final json = model.toJson();
 
@@ -842,7 +822,9 @@ void main() {
           createdAt: fixedDate,
           restPauseWeight: 80.0,
           restPauseTargetReps: 15,
-          restPauseSetsData: [{'reps': 8}],
+          restPauseSetsData: [
+            {'reps': 8},
+          ],
         );
         final json = model.toJson();
 
@@ -931,9 +913,7 @@ void main() {
           name: 'Test',
           type: 'single',
           category: 'chest',
-          sets: [
-            _makeSet(id: 'set-1', weight: 100.0, reps: 10),
-          ],
+          sets: [_makeSet(id: 'set-1', weight: 100.0, reps: 10)],
           createdAt: fixedDate,
         );
         expect(model.totalVolume, 0.0);
@@ -944,6 +924,7 @@ void main() {
       test('converts single exercise to domain', () {
         final model = ExerciseModel(
           id: 'ex-1',
+          databaseExerciseId: 'bench_press',
           name: 'Bench Press',
           type: 'single',
           category: 'chest',
@@ -961,6 +942,8 @@ void main() {
         expect(domain, isA<Exercise>());
         expect(domain, isNot(isA<SupersetExercise>()));
         expect(domain.id, 'ex-1');
+        expect(domain.databaseExerciseId, 'bench_press');
+        expect(domain.stableExerciseId, 'bench_press');
         expect(domain.name, 'Bench Press');
         expect(domain.type, ExerciseType.single);
         expect(domain.category, ExerciseCategory.chest);
@@ -1038,6 +1021,7 @@ void main() {
       test('converts base Exercise from domain', () {
         final exercise = Exercise(
           id: 'ex-1',
+          databaseExerciseId: 'bench_press',
           name: 'Bench Press',
           type: ExerciseType.single,
           category: ExerciseCategory.chest,
@@ -1052,6 +1036,7 @@ void main() {
         final model = ExerciseModel.fromDomain(exercise);
 
         expect(model.id, 'ex-1');
+        expect(model.databaseExerciseId, 'bench_press');
         expect(model.name, 'Bench Press');
         expect(model.type, 'single');
         expect(model.category, 'chest');
@@ -1102,6 +1087,13 @@ void main() {
           'notes': 'Great workout',
           'createdAt': fixedDate.toIso8601String(),
           'updatedAt': fixedDate.toIso8601String(),
+          'templateId': 'template-123',
+          'isPreloaded': true,
+          'preloadExpiry': fixedDate
+              .add(const Duration(hours: 1))
+              .toIso8601String(),
+          'exercisesModified': true,
+          'sessionId': 'session-123',
         };
         final model = WorkoutModel.fromJson(json);
 
@@ -1115,22 +1107,21 @@ void main() {
         expect(model.notes, 'Great workout');
         expect(model.createdAt, fixedDate);
         expect(model.updatedAt, fixedDate);
+        expect(model.templateId, 'template-123');
+        expect(model.isPreloaded, true);
+        expect(model.preloadExpiry, fixedDate.add(const Duration(hours: 1)));
+        expect(model.exercisesModified, true);
+        expect(model.sessionId, 'session-123');
       });
 
       test('handles null status as completed', () {
-        final json = <String, dynamic>{
-          'id': 'w-1',
-          'status': null,
-        };
+        final json = <String, dynamic>{'id': 'w-1', 'status': null};
         final model = WorkoutModel.fromJson(json);
         expect(model.status, 'completed');
       });
 
       test('handles null exercises list', () {
-        final json = <String, dynamic>{
-          'id': 'w-1',
-          'exercises': null,
-        };
+        final json = <String, dynamic>{'id': 'w-1', 'exercises': null};
         final model = WorkoutModel.fromJson(json);
         expect(model.exercises, isEmpty);
       });
@@ -1149,10 +1140,7 @@ void main() {
       });
 
       test('handles Map<dynamic, dynamic> from Hive', () {
-        final json = <dynamic, dynamic>{
-          'id': 'w-hive',
-          'name': 'Hive Workout',
-        };
+        final json = <dynamic, dynamic>{'id': 'w-hive', 'name': 'Hive Workout'};
         final model = WorkoutModel.fromJson(json);
         expect(model.id, 'w-hive');
         expect(model.name, 'Hive Workout');
@@ -1188,12 +1176,48 @@ void main() {
       });
 
       test('handles invalid DateTime string gracefully', () {
-        final json = <String, dynamic>{
-          'startTime': 'not-a-date',
-        };
+        final json = <String, dynamic>{'startTime': 'not-a-date'};
         final model = WorkoutModel.fromJson(json);
         expect(model.startTime, isNull);
       });
+
+      test(
+        'normalizes duplicate legacy exercise ids into unique workout instances',
+        () {
+          final json = <String, dynamic>{
+            'id': 'w-1',
+            'name': 'Push Day',
+            'exercises': [
+              {
+                'id': 'bench_press',
+                'name': 'Bench Press',
+                'type': 'single',
+                'category': 'chest',
+                'sets': [],
+              },
+              {
+                'id': 'bench_press',
+                'name': 'Bench Press',
+                'type': 'single',
+                'category': 'chest',
+                'sets': [],
+              },
+            ],
+            'createdAt': fixedDate.toIso8601String(),
+            'updatedAt': fixedDate.toIso8601String(),
+          };
+
+          final domain = WorkoutModel.fromJson(json).toDomain();
+
+          expect(domain.exercises, hasLength(2));
+          expect(domain.exercises[0].stableExerciseId, 'bench_press');
+          expect(domain.exercises[1].stableExerciseId, 'bench_press');
+          expect(domain.exercises[0].databaseExerciseId, 'bench_press');
+          expect(domain.exercises[1].databaseExerciseId, 'bench_press');
+          expect(domain.exercises[0].id, 'bench_press');
+          expect(domain.exercises[1].id, isNot(domain.exercises[0].id));
+        },
+      );
     });
 
     group('toJson', () {
@@ -1208,6 +1232,11 @@ void main() {
           notes: 'Great workout',
           createdAt: fixedDate,
           updatedAt: fixedDate,
+          templateId: 'template-123',
+          isPreloaded: true,
+          preloadExpiry: fixedDate.add(const Duration(hours: 1)),
+          exercisesModified: true,
+          sessionId: 'session-123',
         );
         final json = model.toJson();
 
@@ -1220,6 +1249,11 @@ void main() {
         expect(json['notes'], 'Great workout');
         expect(json['createdAt'], fixedDate);
         expect(json['updatedAt'], fixedDate);
+        expect(json['templateId'], 'template-123');
+        expect(json['isPreloaded'], true);
+        expect(json['preloadExpiry'], fixedDate.add(const Duration(hours: 1)));
+        expect(json['exercisesModified'], true);
+        expect(json['sessionId'], 'session-123');
       });
     });
 
@@ -1244,6 +1278,11 @@ void main() {
           notes: 'Great workout',
           createdAt: fixedDate,
           updatedAt: fixedDate,
+          templateId: 'template-123',
+          isPreloaded: true,
+          preloadExpiry: fixedDate.add(const Duration(hours: 1)),
+          exercisesModified: true,
+          sessionId: 'session-123',
         );
         final domain = model.toDomain();
 
@@ -1254,6 +1293,11 @@ void main() {
         expect(domain.startTime, fixedDate);
         expect(domain.endTime, fixedDate);
         expect(domain.notes, 'Great workout');
+        expect(domain.templateId, 'template-123');
+        expect(domain.isPreloaded, true);
+        expect(domain.preloadExpiry, fixedDate.add(const Duration(hours: 1)));
+        expect(domain.exercisesModified, true);
+        expect(domain.sessionId, 'session-123');
       });
 
       test('maps unknown status to planned', () {
@@ -1307,6 +1351,11 @@ void main() {
           notes: 'Great workout',
           createdAt: fixedDate,
           updatedAt: fixedDate,
+          templateId: 'template-123',
+          isPreloaded: true,
+          preloadExpiry: fixedDate.add(const Duration(hours: 1)),
+          exercisesModified: true,
+          sessionId: 'session-123',
         );
         final model = WorkoutModel.fromDomain(workout);
 
@@ -1317,6 +1366,11 @@ void main() {
         expect(model.startTime, fixedDate);
         expect(model.endTime, fixedDate);
         expect(model.notes, 'Great workout');
+        expect(model.templateId, 'template-123');
+        expect(model.isPreloaded, true);
+        expect(model.preloadExpiry, fixedDate.add(const Duration(hours: 1)));
+        expect(model.exercisesModified, true);
+        expect(model.sessionId, 'session-123');
       });
     });
 
@@ -1369,6 +1423,13 @@ void main() {
           'notes': 'Strong session',
           'createdAt': fixedDate.toIso8601String(),
           'updatedAt': fixedDate.toIso8601String(),
+          'templateId': 'template-123',
+          'isPreloaded': true,
+          'preloadExpiry': fixedDate
+              .add(const Duration(hours: 1))
+              .toIso8601String(),
+          'exercisesModified': true,
+          'sessionId': 'session-123',
         };
 
         final model1 = WorkoutModel.fromJson(json);
@@ -1381,6 +1442,11 @@ void main() {
         expect(model2.exercises.length, model1.exercises.length);
         expect(model2.exercises[0].name, model1.exercises[0].name);
         expect(model2.notes, model1.notes);
+        expect(model2.templateId, model1.templateId);
+        expect(model2.isPreloaded, model1.isPreloaded);
+        expect(model2.preloadExpiry, model1.preloadExpiry);
+        expect(model2.exercisesModified, model1.exercisesModified);
+        expect(model2.sessionId, model1.sessionId);
       });
     });
   });

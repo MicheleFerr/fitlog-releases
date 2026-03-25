@@ -25,6 +25,7 @@ abstract class NotificationRepository {
     required DateTime scheduledTime,
     String? context,
     int? inactivityDay,
+    String? deepLinkPath,
   });
 
   /// Show a notification immediately
@@ -34,6 +35,7 @@ abstract class NotificationRepository {
     required NotificationType type,
     required NotificationMessage message,
     String? context,
+    String? deepLinkPath,
   });
 
   /// Cancel a scheduled notification by record ID

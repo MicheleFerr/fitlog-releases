@@ -35,6 +35,7 @@ class WorkoutTemplateListItem extends ConsumerStatefulWidget {
     required this.onShare,
     required this.onDelete,
     this.onMakePublic,
+    this.onShowShareCode,
     this.preloadedStats,
   });
 
@@ -45,6 +46,7 @@ class WorkoutTemplateListItem extends ConsumerStatefulWidget {
   final VoidCallback onShare;
   final VoidCallback onDelete;
   final VoidCallback? onMakePublic;
+  final VoidCallback? onShowShareCode;
 
   /// Pre-calculated stats from parent (optimization: avoids N provider calls)
   final TemplateStats? preloadedStats;
@@ -125,8 +127,9 @@ class _WorkoutTemplateListItemState
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: context.colors.surface,
-                  borderRadius:
-                      BorderRadius.circular(AppCardStyles.cornerRadius),
+                  borderRadius: BorderRadius.circular(
+                    AppCardStyles.cornerRadius,
+                  ),
                   boxShadow: AppCardStyles.compactCardShadows(context),
                 ),
                 child: Padding(
@@ -145,8 +148,7 @@ class _WorkoutTemplateListItemState
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors:
-                                category.gradientColors(context.isDarkMode),
+                            colors: category.gradientColors(context.isDarkMode),
                           ),
                           borderRadius: BorderRadius.circular(AppSpacing.sm),
                           boxShadow: [
@@ -179,10 +181,8 @@ class _WorkoutTemplateListItemState
                                 Expanded(
                                   child: Text(
                                     widget.template.name,
-                                    style:
-                                        context.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context.textTheme.titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -211,8 +211,7 @@ class _WorkoutTemplateListItemState
                                     : l10n.noDescription,
                                 style: context.textTheme.bodySmall?.copyWith(
                                   color: context.colors.onSurfaceVariant,
-                                  fontStyle: widget
-                                          .template.description.isEmpty
+                                  fontStyle: widget.template.description.isEmpty
                                       ? FontStyle.italic
                                       : null,
                                 ),
@@ -245,9 +244,9 @@ class _WorkoutTemplateListItemState
                                         ),
                                         style: context.textTheme.labelSmall
                                             ?.copyWith(
-                                          color: context.colors.tertiary,
-                                          fontStyle: FontStyle.italic,
-                                        ),
+                                              color: context.colors.tertiary,
+                                              fontStyle: FontStyle.italic,
+                                            ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -328,7 +327,63 @@ class _WorkoutTemplateListItemState
     AppLocalizations l10n,
     TemplateStats? stats,
   ) {
-    final hasRealDuration = stats != null &&
+    if (widget.template.isDistributedTemplate) {
+      return Row(
+        children: [
+          SemanticIcon(
+            icon: AppIcons.layers,
+            semanticLabel: 'Version ${widget.template.versionNumber}',
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            'V${widget.template.versionNumber}',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          SemanticIcon(
+            icon: AppIcons.download,
+            semanticLabel: '${widget.template.downloadCount}',
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            '${widget.template.downloadCount}',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          SemanticIcon(
+            icon: AppIcons.history,
+            semanticLabel: '${widget.template.usageCount}',
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            '${widget.template.usageCount}',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Icon(
+            widget.template.isPublic ? AppIcons.public : AppIcons.lock,
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant,
+          ),
+        ],
+      );
+    }
+
+    final hasRealDuration =
+        stats != null &&
         stats.totalCompletions > 0 &&
         stats.avgDuration != null;
 
@@ -395,7 +450,8 @@ class _WorkoutTemplateListItemState
             child: Text(
               stats.formattedLastPerformed(context),
               style: context.textTheme.labelSmall?.copyWith(
-                color: stats.statusColor(context) ??
+                color:
+                    stats.statusColor(context) ??
                     context.colors.onSurfaceVariant,
               ),
               maxLines: 1,
@@ -409,34 +465,63 @@ class _WorkoutTemplateListItemState
 
   /// Build popup menu for actions
   Widget _buildPopupMenu(BuildContext context, AppLocalizations l10n) {
+    final duplicateLabel = widget.template.isEditable
+        ? l10n.duplicate
+        : l10n.customizeYourCopy;
+    final duplicateIcon = widget.template.isEditable
+        ? const CNSymbol('doc.on.doc', size: 14)
+        : const CNSymbol('slider.horizontal.3', size: 14);
+    final items = <CNPopupMenuItem>[
+      CNPopupMenuItem(
+        label: l10n.startWorkout,
+        icon: const CNSymbol('play', size: 14),
+      ),
+      CNPopupMenuItem(label: duplicateLabel, icon: duplicateIcon),
+    ];
+
+    final actions = <VoidCallback>[widget.onStartWorkout, widget.onDuplicate];
+
+    if (widget.onMakePublic != null && !widget.template.isPublic) {
+      items.add(
+        CNPopupMenuItem(
+          label: l10n.shareTemplate,
+          icon: const CNSymbol('globe', size: 14),
+        ),
+      );
+      actions.add(widget.onMakePublic!);
+    }
+
+    if (widget.onShowShareCode != null) {
+      items.add(
+        CNPopupMenuItem(
+          label: l10n.showCode,
+          icon: const CNSymbol('number.square', size: 14),
+        ),
+      );
+      actions.add(widget.onShowShareCode!);
+    }
+
+    items.addAll([
+      CNPopupMenuItem(
+        label: l10n.share,
+        icon: const CNSymbol('square.and.arrow.up', size: 14),
+      ),
+      CNPopupMenuItem(
+        label: l10n.delete,
+        icon: const CNSymbol('trash', size: 14),
+      ),
+    ]);
+
+    actions.addAll([widget.onShare, widget.onDelete]);
+
     return CNPopupMenuButton.icon(
       buttonIcon: const CNSymbol('ellipsis', size: 16),
       buttonStyle: CNButtonStyle.plain,
       size: 32,
-      items: [
-        CNPopupMenuItem(
-          label: l10n.startWorkout,
-          icon: const CNSymbol('play', size: 14),
-        ),
-        CNPopupMenuItem(
-          label: l10n.duplicate,
-          icon: const CNSymbol('doc.on.doc', size: 14),
-        ),
-        CNPopupMenuItem(
-          label: l10n.share,
-          icon: const CNSymbol('square.and.arrow.up', size: 14),
-        ),
-        CNPopupMenuItem(
-          label: l10n.delete,
-          icon: const CNSymbol('trash', size: 14),
-        ),
-      ],
+      items: items,
       onSelected: (index) {
-        switch (index) {
-          case 0: widget.onStartWorkout();
-          case 1: widget.onDuplicate();
-          case 2: widget.onShare();
-          case 3: widget.onDelete();
+        if (index >= 0 && index < actions.length) {
+          actions[index]();
         }
       },
     );

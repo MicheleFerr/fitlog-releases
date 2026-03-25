@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
@@ -44,6 +45,7 @@ class _ExerciseHistoryBottomSheetState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final useRirMode = ref.watch(useRirModeProvider);
     final historyAsync = ref.watch(
       exerciseHistoryDataGroupedProvider(widget.exerciseName),
     );
@@ -87,6 +89,7 @@ class _ExerciseHistoryBottomSheetState
                 data: (groupedHistory) => _buildContent(
                   context,
                   l10n,
+                  useRirMode,
                   scrollController,
                   groupedHistory,
                   statsAsync,
@@ -172,6 +175,7 @@ class _ExerciseHistoryBottomSheetState
   Widget _buildContent(
     BuildContext context,
     AppLocalizations l10n,
+    bool useRirMode,
     ScrollController scrollController,
     Map<DateTime, List<ExerciseHistoryData>> groupedHistory,
     AsyncValue<
@@ -230,7 +234,13 @@ class _ExerciseHistoryBottomSheetState
             delegate: SliverChildBuilderDelegate((context, index) {
               final date = sortedDates[index];
               final dayHistory = groupedHistory[date]!;
-              return _buildDaySection(context, l10n, date, dayHistory);
+              return _buildDaySection(
+                context,
+                l10n,
+                useRirMode,
+                date,
+                dayHistory,
+              );
             }, childCount: sortedDates.length),
           ),
         ),
@@ -444,6 +454,7 @@ class _ExerciseHistoryBottomSheetState
   Widget _buildDaySection(
     BuildContext context,
     AppLocalizations l10n,
+    bool useRirMode,
     DateTime date,
     List<ExerciseHistoryData> dayHistory,
   ) {
@@ -539,7 +550,12 @@ class _ExerciseHistoryBottomSheetState
                           offset: Offset(0, 10 * (1 - value)),
                           child: Opacity(opacity: value, child: child),
                         ),
-                        child: _buildHistoryItem(context, l10n, entry.value),
+                        child: _buildHistoryItem(
+                          context,
+                          l10n,
+                          useRirMode,
+                          entry.value,
+                        ),
                       ),
                     )
                     .toList(),
@@ -561,8 +577,12 @@ class _ExerciseHistoryBottomSheetState
   Widget _buildHistoryItem(
     BuildContext context,
     AppLocalizations l10n,
+    bool useRirMode,
     ExerciseHistoryData data,
   ) {
+    final effortLabel = _formatEffortLabel(l10n, data.rpe, useRirMode);
+    final hasNotes = data.notes?.isNotEmpty == true;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -570,49 +590,107 @@ class _ExerciseHistoryBottomSheetState
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (data.weight != null) ...[
-            Icon(
-              AppIcons.fitnessCenterRounded,
-              size: 16,
-              color: context.colors.primary,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              '${data.weight!.toStringAsFixed(data.weight! % 1 == 0 ? 0 : 1)}kg',
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.colors.primary,
-              ),
-            ),
-            const SizedBox(width: 16),
-          ],
-          if (data.reps != null) ...[
-            Icon(
-              AppIcons.repeatRounded,
-              size: 16,
-              color: context.colors.secondary,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              '${data.reps}',
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.colors.secondary,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              l10n.reps.toLowerCase(),
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
+          Wrap(
+            spacing: 14,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              if (data.weight != null)
+                _buildMetricChip(
+                  context,
+                  icon: AppIcons.fitnessCenterRounded,
+                  iconColor: context.colors.primary,
+                  label:
+                      '${data.weight!.toStringAsFixed(data.weight! % 1 == 0 ? 0 : 1)}kg',
+                  textColor: context.colors.primary,
+                ),
+              if (data.reps != null)
+                _buildMetricChip(
+                  context,
+                  icon: AppIcons.repeatRounded,
+                  iconColor: context.colors.secondary,
+                  label: '${data.reps} ${l10n.reps.toLowerCase()}',
+                  textColor: context.colors.secondary,
+                ),
+              if (effortLabel != null)
+                _buildMetricChip(
+                  context,
+                  icon: AppIcons.localFireDepartment,
+                  iconColor: context.colors.tertiary,
+                  label: effortLabel,
+                  textColor: context.colors.tertiary,
+                ),
+            ],
+          ),
+          if (hasNotes) ...[
+            const SizedBox(height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  AppIcons.note,
+                  size: 15,
+                  color: context.colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    data.notes!,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ],
       ),
     );
+  }
+
+  Widget _buildMetricChip(
+    BuildContext context, {
+    required IconData icon,
+    required Color iconColor,
+    required String label,
+    required Color textColor,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: iconColor),
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: textColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  String? _formatEffortLabel(AppLocalizations l10n, int? rpe, bool useRirMode) {
+    if (rpe == null) return null;
+
+    final rir = _rpeToRir(rpe);
+    final primary = useRirMode ? '${l10n.rir} $rir' : '${l10n.rpe} $rpe';
+    final secondary = useRirMode ? '${l10n.rpe} $rpe' : '${l10n.rir} $rir';
+
+    return '$primary · $secondary';
+  }
+
+  int _rpeToRir(int rpe) {
+    final rir = 10 - rpe;
+    if (rir < 0) return 0;
+    if (rir > 5) return 5;
+    return rir;
   }
 
   Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {

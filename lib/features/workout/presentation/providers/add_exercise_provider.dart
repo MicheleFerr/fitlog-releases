@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/firestore_workout_history_reader.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
@@ -95,20 +96,20 @@ final supersetExercisesProvider =
 /// workout history when the tracker is empty (first launch or fresh install).
 final recentExercisesForModalProvider =
     FutureProvider.autoDispose<List<ExerciseUsageModel>>((ref) async {
-  final userId = FirebaseAuth.instance.currentUser?.uid;
-  if (userId == null) return [];
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) return [];
 
-  final tracker = ExerciseUsageTracker();
-  var recent = await tracker.getRecentlyUsedExercises(limit: 8);
+      final tracker = ExerciseUsageTracker();
+      var recent = await tracker.getRecentlyUsedExercises(limit: 8);
 
-  // Backfill from Firestore if tracker is empty (existing user, first use of feature)
-  if (recent.isEmpty) {
-    await _backfillUsageFromFirestore(tracker, userId);
-    recent = await tracker.getRecentlyUsedExercises(limit: 8);
-  }
+      // Backfill from Firestore if tracker is empty (existing user, first use of feature)
+      if (recent.isEmpty) {
+        await _backfillUsageFromFirestore(tracker, userId);
+        recent = await tracker.getRecentlyUsedExercises(limit: 8);
+      }
 
-  return recent;
-});
+      return recent;
+    });
 
 /// Backfill ExerciseUsageTracker from existing Firestore workout history.
 /// Reads the last 20 completed workouts and extracts all exercise names/IDs.
@@ -119,25 +120,28 @@ Future<void> _backfillUsageFromFirestore(
   String userId,
 ) async {
   try {
-    final workouts = await FirebaseFirestore.instance
-        .collection('workouts')
-        .where('userId', isEqualTo: userId)
-        .orderBy('completedAt', descending: true)
-        .limit(20)
-        .get();
+    final reader = FirestoreWorkoutHistoryReader(
+      firestore: FirebaseFirestore.instance,
+    );
+    final workouts = await reader.getRecentCompletedWorkouts(
+      userId: userId,
+      limit: 20,
+      scanLimit: 80,
+    );
 
-    if (workouts.docs.isEmpty) return;
+    if (workouts.isEmpty) return;
 
     // Track unique exercises to avoid duplicate incrementUsage calls
     final seen = <String>{};
 
-    for (final doc in workouts.docs) {
-      final exercises = doc.data()['exercises'] as List<dynamic>? ?? [];
+    for (final workout in workouts) {
+      final exercises = workout.exercises;
       for (final exercise in exercises) {
-        if (exercise is! Map<String, dynamic>) continue;
-        final id = exercise['id'] as String?;
-        final name = exercise['name'] as String?;
-        if (id != null && name != null && !seen.contains(id)) {
+        final id =
+            (exercise.exerciseData['databaseExerciseId'] as String?) ??
+            exercise.id;
+        final name = exercise.name;
+        if (!seen.contains(id)) {
           seen.add(id);
           await tracker.incrementUsage(
             exerciseId: id,

@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart'; /
 import 'package:gymbro_flutter_new/shared/data/hive_timestamp_adapter.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
+import 'package:gymbro_flutter_new/shared/data/services/tracking_authorization_service.dart';
 import 'package:gymbro_flutter_new/shared/data/models/weight_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/data/models/feedback_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/data/models/history_view_settings_model.dart';
@@ -116,9 +117,12 @@ void main() async {
   // Initialize Firebase only once (iOS AppDelegate/Android may already initialize)
   if (Firebase.apps.isEmpty) {
     try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      final firebaseOptions = DefaultFirebaseOptions.maybeCurrentPlatform;
+      if (firebaseOptions == null) {
+        await Firebase.initializeApp();
+      } else {
+        await Firebase.initializeApp(options: firebaseOptions);
+      }
     } catch (e) {
       // AppDelegate/SDK may have already configured [DEFAULT] before Dart boot.
       final isDuplicateApp = e is FirebaseException
@@ -388,6 +392,14 @@ void main() async {
   // ✅ NOW SAFE: Hive is initialized, can open consent box
   await PrivacyManager.initialize();
 
+  // App Store Guideline 5.1.2(i): request ATT before any tracking-capable
+  // analytics or ads flow runs on iOS.
+  final trackingStatus =
+      await TrackingAuthorizationService.requestAuthorizationIfNeeded();
+  if (kDebugMode && TrackingAuthorizationService.isSupported) {
+    debugPrint('📱 ATT status: $trackingStatus');
+  }
+
   // 🔐 PRIVACY: Initialize Privacy-Safe Analytics (EU-hosted, GDPR-compliant)
   // Only tracks if user has granted consent
   // ✅ NOW SAFE: Hive is initialized, can check consent
@@ -425,9 +437,15 @@ void main() async {
     debugPrint('   See: docs/FIREBASE_GRPC_MEMORY_LEAK_FIX.md');
   }
 
-  // Initialize GDPR Consent (PRIMA delle ads!)
+  // Initialize GDPR/UMP consent after ATT so the App Review flow sees the
+  // platform tracking permission before any ads consent or ad SDK startup.
+  //
+  // On iOS we do not auto-present a second ad privacy prompt after ATT.
+  // Users can revisit ad privacy choices manually from Settings.
   final consentService = ConsentService();
-  await consentService.initialize();
+  await consentService.initialize(
+    autoShowConsentForm: !TrackingAuthorizationService.isSupported,
+  );
 
   // Initialize Google Mobile Ads (DOPO il consent)
   if (kDebugMode) {

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Tab Cronologia: mostra lo storico delle esecuzioni dell'esercizio raggruppate per data
 class ExerciseHistoryTab extends ConsumerStatefulWidget {
@@ -31,6 +32,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
 
   @override
   Widget build(BuildContext context) {
+    final useRirMode = ref.watch(useRirModeProvider);
     final historyDataAsync = ref.watch(
       exerciseHistoryDataGroupedProvider(widget.exerciseName),
     );
@@ -42,12 +44,9 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
         }
 
         // Converti la mappa in lista ordinata per data
-        final historyList =
-            historyMap.entries.map((entry) {
-              return (date: entry.key, items: entry.value);
-            }).toList()..sort(
-              (a, b) => b.date.compareTo(a.date),
-            );
+        final historyList = historyMap.entries.map((entry) {
+          return (date: entry.key, items: entry.value);
+        }).toList()..sort((a, b) => b.date.compareTo(a.date));
 
         return RefreshIndicator(
           onRefresh: () async {
@@ -65,7 +64,13 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
               final dateKey = date.toIso8601String();
               final isExpanded = _expandedDates[dateKey] ?? false;
 
-              return _buildDateGroup(date, items, isExpanded, dateKey);
+              return _buildDateGroup(
+                date,
+                items,
+                isExpanded,
+                dateKey,
+                useRirMode,
+              );
             },
           ),
         );
@@ -130,6 +135,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
     List<ExerciseHistoryData> items,
     bool isExpanded,
     String dateKey,
+    bool useRirMode,
   ) {
     final formattedDate = _dateFormatter.format(date);
 
@@ -221,7 +227,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
               separatorBuilder: (context, index) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final item = items[index];
-                return _buildHistoryItem(item, index + 1);
+                return _buildHistoryItem(item, index + 1, useRirMode);
               },
             ),
           ],
@@ -230,10 +236,16 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
     );
   }
 
-  Widget _buildHistoryItem(ExerciseHistoryData item, int setNumber) {
+  Widget _buildHistoryItem(
+    ExerciseHistoryData item,
+    int setNumber,
+    bool useRirMode,
+  ) {
     final weight = item.weight ?? 0.0;
     final reps = item.reps ?? 0;
     final workoutName = item.workoutName;
+    final effortLabel = _formatEffortLabel(item.rpe, useRirMode);
+    final hasNotes = item.notes?.isNotEmpty == true;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -265,37 +277,33 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 6,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    SemanticIcon(
-                      icon: AppIcons.fitnessCenter,
-                      semanticLabel: 'Fitness center',
-                      size: AppIconSize.tiny,
-                      color: context.colors.primary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${weight.toStringAsFixed(1)} kg',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: context.colors.onSurface,
+                    if (item.weight != null)
+                      _buildMetric(
+                        icon: AppIcons.fitnessCenter,
+                        semanticLabel: 'Fitness center',
+                        color: context.colors.primary,
+                        text:
+                            '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} kg',
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    SemanticIcon(
-                      icon: AppIcons.repeat,
-                      semanticLabel: 'Repeat',
-                      size: AppIconSize.tiny,
-                      color: context.colors.secondary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$reps ${context.l10n.reps}',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: context.colors.onSurface,
+                    if (item.reps != null)
+                      _buildMetric(
+                        icon: AppIcons.repeat,
+                        semanticLabel: 'Repeat',
+                        color: context.colors.secondary,
+                        text: '$reps ${context.l10n.reps}',
                       ),
-                    ),
+                    if (effortLabel != null)
+                      _buildMetric(
+                        icon: AppIcons.localFireDepartment,
+                        semanticLabel: 'Effort',
+                        color: context.colors.tertiary,
+                        text: effortLabel,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -305,11 +313,82 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
+                if (hasNotes) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        AppIcons.note,
+                        size: 14,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          item.notes!,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                            height: 1.35,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildMetric({
+    required IconData icon,
+    required String semanticLabel,
+    required Color color,
+    required String text,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: semanticLabel,
+          size: AppIconSize.tiny,
+          color: color,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: context.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+
+  String? _formatEffortLabel(int? rpe, bool useRirMode) {
+    if (rpe == null) return null;
+
+    final rir = _rpeToRir(rpe);
+    final primary = useRirMode
+        ? '${context.l10n.rir} $rir'
+        : '${context.l10n.rpe} $rpe';
+    final secondary = useRirMode
+        ? '${context.l10n.rpe} $rpe'
+        : '${context.l10n.rir} $rir';
+
+    return '$primary · $secondary';
+  }
+
+  int _rpeToRir(int rpe) {
+    final rir = 10 - rpe;
+    if (rir < 0) return 0;
+    if (rir > 5) return 5;
+    return rir;
   }
 }

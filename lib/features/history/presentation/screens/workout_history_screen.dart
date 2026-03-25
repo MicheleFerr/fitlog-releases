@@ -33,7 +33,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_list.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -236,19 +236,34 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             buttonStyle: CNButtonStyle.plain,
             size: 32,
             items: [
-              CNPopupMenuItem(label: l10n.sortByDate, icon: const CNSymbol('calendar', size: 14)),
-              CNPopupMenuItem(label: l10n.sortByDuration, icon: const CNSymbol('clock', size: 14)),
-              CNPopupMenuItem(label: l10n.sortByVolume, icon: const CNSymbol('scalemass', size: 14)),
+              CNPopupMenuItem(
+                label: l10n.sortByDate,
+                icon: const CNSymbol('calendar', size: 14),
+              ),
+              CNPopupMenuItem(
+                label: l10n.sortByDuration,
+                icon: const CNSymbol('clock', size: 14),
+              ),
+              CNPopupMenuItem(
+                label: l10n.sortByVolume,
+                icon: const CNSymbol('scalemass', size: 14),
+              ),
             ],
             onSelected: (index) {
               final currentFilter = ref.read(workoutHistoryFilterProvider);
               switch (index) {
                 case 0:
-                  ref.read(workoutHistoryFilterProvider.notifier).state =
-                      currentFilter.copyWith(sortBy: WorkoutSortOption.dateDesc);
+                  ref
+                      .read(workoutHistoryFilterProvider.notifier)
+                      .state = currentFilter.copyWith(
+                    sortBy: WorkoutSortOption.dateDesc,
+                  );
                 case 1:
-                  ref.read(workoutHistoryFilterProvider.notifier).state =
-                      currentFilter.copyWith(sortBy: WorkoutSortOption.duration);
+                  ref
+                      .read(workoutHistoryFilterProvider.notifier)
+                      .state = currentFilter.copyWith(
+                    sortBy: WorkoutSortOption.duration,
+                  );
                 case 2:
                   ref.read(workoutHistoryFilterProvider.notifier).state =
                       currentFilter.copyWith(sortBy: WorkoutSortOption.volume);
@@ -1323,7 +1338,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   /// Show view settings bottom sheet
   void _showViewSettingsSheet(BuildContext context, AppLocalizations l10n) {
     HapticFeedback.lightImpact();
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (context) => _ViewSettingsSheet(l10n: l10n),
     );
@@ -1644,7 +1660,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                     ),
                     padding: EdgeInsets.zero,
                     onPressed: () => _showWorkoutActionsSheet(
-                      context, workout, canEdit, colorScheme, l10n,
+                      context,
+                      workout,
+                      canEdit,
+                      colorScheme,
+                      l10n,
                     ),
                   ),
                 ],
@@ -1817,7 +1837,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     WorkoutHistoryDetail workout,
     AppLocalizations l10n,
   ) {
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.8,
@@ -1838,7 +1859,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   /// Free users can only edit the most recent workout
   bool _canEditWorkout(WorkoutHistoryDetail workout) {
     // Check if user is premium
-    final isPremium = ref.read(isPremiumUserProvider);
+    final isPremium = ref.read(hasEffectivePremiumAccessProvider);
     if (isPremium) return true;
 
     // Free user: check if this is the latest workout
@@ -1943,7 +1964,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       return;
     }
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (context) =>
           WorkoutHistoryEditorEnhanced(historyWorkout: workout),
@@ -2033,11 +2055,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 ),
                 if (!canEdit) ...[
                   const SizedBox(width: 8),
-                  Icon(
-                    AppIcons.premium,
-                    size: 16,
-                    color: colorScheme.tertiary,
-                  ),
+                  Icon(AppIcons.premium, size: 16, color: colorScheme.tertiary),
                 ],
               ],
             ),

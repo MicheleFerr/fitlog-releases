@@ -452,11 +452,7 @@ void main() {
       });
 
       test('totalReps somma reps di tutti i set', () {
-        final sets = [
-          makeSet(reps: 10),
-          makeSet(reps: 8),
-          makeSet(reps: 6),
-        ];
+        final sets = [makeSet(reps: 10), makeSet(reps: 8), makeSet(reps: 6)];
         final exercise = makeExercise(sets: sets);
         expect(exercise.totalReps, equals(24));
       });
@@ -477,11 +473,7 @@ void main() {
       });
 
       test('averageRPE calcola media corretta', () {
-        final sets = [
-          makeSet(rpe: 6),
-          makeSet(rpe: 8),
-          makeSet(rpe: 7),
-        ];
+        final sets = [makeSet(rpe: 6), makeSet(rpe: 8), makeSet(rpe: 7)];
         final exercise = makeExercise(sets: sets);
         expect(exercise.averageRPE, closeTo(7.0, 0.01));
       });
@@ -606,14 +598,58 @@ void main() {
         expect(workout.exercises, isEmpty);
       });
 
-      test('durationMinutes viene serializzato/deserializzato correttamente', () {
-        final workout = makeWorkout(duration: const Duration(minutes: 75));
-        final map = workout.toMap();
+      test(
+        'durationMinutes viene serializzato/deserializzato correttamente',
+        () {
+          final workout = makeWorkout(duration: const Duration(minutes: 75));
+          final map = workout.toMap();
 
-        expect(map['durationMinutes'], equals(75));
+          expect(map['durationMinutes'], equals(75));
 
-        final restored = WorkoutHistoryDetail.fromMap(map);
+          final restored = WorkoutHistoryDetail.fromMap(map);
+          expect(restored.duration.inMinutes, equals(75));
+        },
+      );
+
+      test('fromMap supporta alias legacy startTime/endTime e _userId', () {
+        final restored = WorkoutHistoryDetail.fromMap({
+          'id': 'legacy_workout',
+          '_userId': 'legacy_user',
+          'name': 'Legacy Workout',
+          'createdAt': '2024-01-10T09:00:00.000',
+          'startTime': '2024-01-10T09:05:00.000',
+          'endTime': '2024-01-10T10:20:00.000',
+        });
+
+        expect(restored.userId, equals('legacy_user'));
+        expect(
+          restored.startedAt,
+          equals(DateTime.parse('2024-01-10T09:05:00.000')),
+        );
+        expect(
+          restored.completedAt,
+          equals(DateTime.parse('2024-01-10T10:20:00.000')),
+        );
         expect(restored.duration.inMinutes, equals(75));
+      });
+
+      test('SetHistoryDetail.fromMap supporta valori DateTime legacy', () {
+        final startedAt = DateTime(2024, 1, 10, 9, 0);
+        final completedAt = DateTime(2024, 1, 10, 9, 0, 30);
+
+        final restored = SetHistoryDetail.fromMap({
+          'setNumber': 1,
+          'weight': 50.0,
+          'reps': 8,
+          'rpe': 7,
+          'setStartedAt': startedAt,
+          'completedAt': completedAt,
+          'actualReps': 7.0,
+        });
+
+        expect(restored.setStartedAt, equals(startedAt));
+        expect(restored.completedAt, equals(completedAt));
+        expect(restored.actualReps, equals(7));
       });
     });
 
@@ -645,10 +681,7 @@ void main() {
             id: 'ex1',
             sets: [makeSet(), makeSet(setNumber: 2), makeSet(setNumber: 3)],
           ),
-          makeExercise(
-            id: 'ex2',
-            sets: [makeSet(), makeSet(setNumber: 2)],
-          ),
+          makeExercise(id: 'ex2', sets: [makeSet(), makeSet(setNumber: 2)]),
         ];
         final workout = makeWorkout(exercises: exercises);
         expect(workout.totalSets, equals(5));
@@ -656,14 +689,8 @@ void main() {
 
       test('totalReps somma le reps di tutti gli esercizi', () {
         final exercises = [
-          makeExercise(
-            id: 'ex1',
-            sets: [makeSet(reps: 10), makeSet(reps: 8)],
-          ),
-          makeExercise(
-            id: 'ex2',
-            sets: [makeSet(reps: 12)],
-          ),
+          makeExercise(id: 'ex1', sets: [makeSet(reps: 10), makeSet(reps: 8)]),
+          makeExercise(id: 'ex2', sets: [makeSet(reps: 12)]),
         ];
         final workout = makeWorkout(exercises: exercises);
         expect(workout.totalReps, equals(30));
@@ -671,10 +698,7 @@ void main() {
 
       test('averageRPE calcola media di tutti i set con RPE > 0', () {
         final exercises = [
-          makeExercise(
-            id: 'ex1',
-            sets: [makeSet(rpe: 7), makeSet(rpe: 8)],
-          ),
+          makeExercise(id: 'ex1', sets: [makeSet(rpe: 7), makeSet(rpe: 8)]),
           makeExercise(
             id: 'ex2',
             sets: [makeSet(rpe: 0), makeSet(rpe: 9)], // rpe 0 escluso

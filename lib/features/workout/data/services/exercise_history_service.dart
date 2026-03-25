@@ -22,6 +22,7 @@ class ExerciseHistoryData {
     this.weight,
     this.reps,
     this.rpe, // ✅ Include RPE from set
+    this.notes,
     this.tut, // ✅ Include TUT from exercise level
     this.setDurationMillis, // ✅ Include actual set duration
     required this.date,
@@ -30,6 +31,7 @@ class ExerciseHistoryData {
   final double? weight;
   final int? reps;
   final int? rpe; // Rate of Perceived Exertion (5-10)
+  final String? notes;
   final String? tut; // Time Under Tension from Exercise level
   final double? setDurationMillis; // Actual set duration in milliseconds
   final DateTime date;
@@ -236,14 +238,23 @@ class ExerciseHistoryService {
             // If no completed sets, look for non-warmup sets with weight > 0 and reps > 0
             if (setsToProcess.isEmpty) {
               setsToProcess = exercise.sets
-                  .where((set) => !set.isWarmup && (set.weight ?? 0) > 0 && (set.reps ?? 0) > 0)
+                  .where(
+                    (set) =>
+                        !set.isWarmup &&
+                        (set.weight ?? 0) > 0 &&
+                        (set.reps ?? 0) > 0,
+                  )
                   .toList();
             }
 
             // If still no sets, include any non-warmup sets with data
             if (setsToProcess.isEmpty) {
               setsToProcess = exercise.sets
-                  .where((set) => !set.isWarmup && ((set.weight ?? 0) > 0 || (set.reps ?? 0) > 0))
+                  .where(
+                    (set) =>
+                        !set.isWarmup &&
+                        ((set.weight ?? 0) > 0 || (set.reps ?? 0) > 0),
+                  )
                   .toList();
             }
 
@@ -252,6 +263,9 @@ class ExerciseHistoryService {
                 weight: (set.weight ?? 0) > 0 ? set.weight : null,
                 reps: (set.reps ?? 0) > 0 ? set.reps : null,
                 rpe: set.rpe, // ✅ Include RPE from set
+                notes: set.notes?.trim().isNotEmpty == true
+                    ? set.notes!.trim()
+                    : null,
                 tut: exercise.tut, // ✅ Include TUT from exercise level
                 setDurationMillis:
                     set.setDurationMillis, // ✅ Include actual set duration

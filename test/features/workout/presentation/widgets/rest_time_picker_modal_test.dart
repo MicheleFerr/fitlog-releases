@@ -7,7 +7,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Mock analytics service for testing
 class MockAnalyticsService implements IAnalyticsService {
@@ -18,7 +18,10 @@ class MockAnalyticsService implements IAnalyticsService {
   Future<void> logAppOpen() async {}
 
   @override
-  Future<void> logEvent({required String name, Map<String, dynamic>? parameters}) async {}
+  Future<void> logEvent({
+    required String name,
+    Map<String, dynamic>? parameters,
+  }) async {}
 
   @override
   Future<void> logNetworkRequest({
@@ -39,7 +42,10 @@ class MockAnalyticsService implements IAnalyticsService {
   }) async {}
 
   @override
-  Future<void> logScreenView({required String screenName, String? screenClass}) async {}
+  Future<void> logScreenView({
+    required String screenName,
+    String? screenClass,
+  }) async {}
 
   @override
   Future<void> resetAnalyticsData() async {}
@@ -54,7 +60,10 @@ class MockAnalyticsService implements IAnalyticsService {
   Future<void> setUserId(String? userId) async {}
 
   @override
-  Future<void> setUserProperty({required String name, required String? value}) async {}
+  Future<void> setUserProperty({
+    required String name,
+    required String? value,
+  }) async {}
 
   @override
   Future<String> startTrace(String name) async => 'mock-trace-id';
@@ -67,12 +76,11 @@ class MockAnalyticsService implements IAnalyticsService {
 }
 
 /// Helper to create MaterialApp with providers and localizations for tests
-Widget buildTestApp({
-  required Widget child,
-}) {
+Widget buildTestApp({required Widget child}) {
   return ProviderScope(
     overrides: [
       analyticsServiceProvider.overrideWithValue(MockAnalyticsService()),
+      defaultRestTimeProvider.overrideWithValue(90),
     ],
     child: MaterialApp(
       localizationsDelegates: const [
@@ -81,10 +89,7 @@ Widget buildTestApp({
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('it', 'IT'),
-      ],
+      supportedLocales: const [Locale('en', 'US'), Locale('it', 'IT')],
       home: Scaffold(body: child),
     ),
   );
@@ -92,7 +97,9 @@ Widget buildTestApp({
 
 void main() {
   group('RestTimePickerModal', () {
-    testWidgets('should update picker position when preset is selected', (tester) async {
+    testWidgets('should update picker position when preset is selected', (
+      tester,
+    ) async {
       int? selectedRestTime;
 
       await tester.pumpWidget(
@@ -105,16 +112,8 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-
-      // Enable custom timer toggle if not already enabled
-      final switchFinder = find.byType(CNSwitchListTile);
-      if (switchFinder.evaluate().isNotEmpty) {
-        final switchWidget = tester.widget<CNSwitchListTile>(switchFinder);
-        if (!switchWidget.value) {
-          await tester.tap(switchFinder);
-          await tester.pumpAndSettle();
-        }
-      }
+      expect(find.byType(Switch), findsNothing);
+      expect(find.byType(CupertinoSwitch), findsNothing);
 
       // Find the minutes picker - should be at position 1 (for 1 minute)
       final minutesPickers = find.byType(CupertinoPicker);
@@ -133,7 +132,9 @@ void main() {
         if (labelWidget is Row) {
           // The chip label is a Row with Icon + Text
           for (final child in (labelWidget).children) {
-            if (child is Text && child.data != null && child.data!.contains('2')) {
+            if (child is Text &&
+                child.data != null &&
+                child.data!.contains('2')) {
               await tester.tap(find.byWidget(chipWidget));
               await tester.pumpAndSettle();
               break;
@@ -153,7 +154,9 @@ void main() {
       expect(selectedRestTime, isNotNull);
     });
 
-    testWidgets('should initialize with correct picker positions', (tester) async {
+    testWidgets('should initialize with correct picker positions', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestApp(
           child: RestTimePickerModal(
@@ -164,26 +167,20 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-
-      // The modal should show with custom timer enabled
-      // since initialRestTime is provided
-      final switchFinder = find.byType(CNSwitchListTile);
-      if (switchFinder.evaluate().isNotEmpty) {
-        final switchWidget = tester.widget<CNSwitchListTile>(switchFinder);
-        expect(switchWidget.value, isTrue, reason: 'Switch should be ON when initialRestTime is provided');
-      }
+      expect(find.byType(Switch), findsNothing);
+      expect(find.byType(CupertinoSwitch), findsNothing);
 
       // Verify pickers are present
       expect(find.byType(CupertinoPicker), findsNWidgets(2));
     });
 
-    testWidgets('should return null when timer is disabled', (tester) async {
+    testWidgets('should return null when using default timer', (tester) async {
       int? selectedRestTime = 999; // Set to non-null to detect null assignment
 
       await tester.pumpWidget(
         buildTestApp(
           child: RestTimePickerModal(
-            initialRestTime: 90,
+            initialRestTime: null,
             onRestTimeSelected: (value) => selectedRestTime = value,
           ),
         ),
@@ -191,23 +188,31 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Disable the timer switch
-      final switchFinder = find.byType(CNSwitchListTile);
-      expect(switchFinder, findsOneWidget);
-
-      final switchWidget = tester.widget<CNSwitchListTile>(switchFinder);
-      if (switchWidget.value) {
-        await tester.tap(switchFinder);
-        await tester.pumpAndSettle();
-      }
-
       // Tap confirm
       final confirmButton = find.byType(FilledButton);
       await tester.tap(confirmButton);
       await tester.pumpAndSettle();
 
-      // Should return null when timer is disabled
+      // Should return null when default timer is selected
       expect(selectedRestTime, isNull);
+    });
+
+    testWidgets('should not render cupertino native toggle anymore', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          child: RestTimePickerModal(
+            initialRestTime: null,
+            onRestTimeSelected: (_) {},
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Switch), findsNothing);
+      expect(find.byType(CupertinoSwitch), findsNothing);
     });
 
     testWidgets('controllers should be properly disposed', (tester) async {

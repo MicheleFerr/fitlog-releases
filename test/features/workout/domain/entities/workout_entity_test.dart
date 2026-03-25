@@ -7,7 +7,7 @@ void main() {
   group('Workout Entity Tests', () {
     test('creates workout with required fields', () {
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Morning Workout',
@@ -23,9 +23,9 @@ void main() {
 
     test('creates in-progress workout', () {
       final startTime = DateTime(2024, 1, 1, 9, 0);
-      
+
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Active Workout',
@@ -42,9 +42,9 @@ void main() {
     test('creates completed workout', () {
       final startTime = DateTime(2024, 1, 1, 9, 0);
       final endTime = DateTime(2024, 1, 1, 10, 30);
-      
+
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Completed Workout',
@@ -62,9 +62,9 @@ void main() {
     test('calculates workout duration', () {
       final startTime = DateTime(2024, 1, 1, 9, 0);
       final endTime = DateTime(2024, 1, 1, 10, 30);
-      
+
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Test',
@@ -80,7 +80,7 @@ void main() {
 
     test('calculates total sets correctly', () {
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Set Count Test',
@@ -98,9 +98,7 @@ void main() {
             name: 'Squats',
             type: ExerciseType.single,
             category: ExerciseCategory.legs,
-            sets: [
-              ExerciseSet(setNumber: 1, weight: 80, reps: 10),
-            ],
+            sets: [ExerciseSet(setNumber: 1, weight: 80, reps: 10)],
           ),
         ],
       );
@@ -111,7 +109,7 @@ void main() {
 
     test('calculates completed sets correctly', () {
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Completed Sets Test',
@@ -121,8 +119,18 @@ void main() {
             type: ExerciseType.single,
             category: ExerciseCategory.chest,
             sets: [
-              ExerciseSet(setNumber: 1, weight: 60, reps: 10, isCompleted: true),
-              ExerciseSet(setNumber: 2, weight: 65, reps: 8, isCompleted: false),
+              ExerciseSet(
+                setNumber: 1,
+                weight: 60,
+                reps: 10,
+                isCompleted: true,
+              ),
+              ExerciseSet(
+                setNumber: 2,
+                weight: 65,
+                reps: 8,
+                isCompleted: false,
+              ),
             ],
           ),
           Exercise(
@@ -130,7 +138,12 @@ void main() {
             type: ExerciseType.single,
             category: ExerciseCategory.legs,
             sets: [
-              ExerciseSet(setNumber: 1, weight: 80, reps: 10, isCompleted: true),
+              ExerciseSet(
+                setNumber: 1,
+                weight: 80,
+                reps: 10,
+                isCompleted: true,
+              ),
             ],
           ),
         ],
@@ -143,7 +156,7 @@ void main() {
 
     test('calculates completed exercises correctly', () {
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Exercise Completion Test',
@@ -153,7 +166,12 @@ void main() {
             type: ExerciseType.single,
             category: ExerciseCategory.chest,
             sets: [
-              ExerciseSet(setNumber: 1, weight: 60, reps: 10, isCompleted: true),
+              ExerciseSet(
+                setNumber: 1,
+                weight: 60,
+                reps: 10,
+                isCompleted: true,
+              ),
               ExerciseSet(setNumber: 2, weight: 65, reps: 8, isCompleted: true),
             ],
           ),
@@ -162,7 +180,12 @@ void main() {
             type: ExerciseType.single,
             category: ExerciseCategory.legs,
             sets: [
-              ExerciseSet(setNumber: 1, weight: 80, reps: 10, isCompleted: false),
+              ExerciseSet(
+                setNumber: 1,
+                weight: 80,
+                reps: 10,
+                isCompleted: false,
+              ),
             ],
           ),
         ],
@@ -171,9 +194,156 @@ void main() {
       expect(workout.completedExercises, 1); // Only bench press fully completed
     });
 
+    test('counts compound exercise progress correctly', () {
+      final supersetExerciseA = Exercise(
+        id: 'sup-a',
+        name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
+      );
+      final supersetExerciseB = Exercise(
+        id: 'sup-b',
+        name: 'Row',
+        type: ExerciseType.single,
+        category: ExerciseCategory.back,
+      );
+      final superset = SupersetExercise(
+        id: 'superset-1',
+        name: 'Push Pull',
+        exercises: [supersetExerciseA, supersetExerciseB],
+        supersetSets: [
+          SupersetSet(
+            setNumber: 1,
+            isCompleted: true,
+            exerciseData: {
+              'sup-a': SupersetExerciseData(
+                exerciseId: 'sup-a',
+                exerciseName: 'Bench Press',
+                targetReps: 10,
+                targetWeight: 80,
+                actualReps: 10,
+                actualWeight: 80,
+                isCompleted: true,
+              ),
+              'sup-b': SupersetExerciseData(
+                exerciseId: 'sup-b',
+                exerciseName: 'Row',
+                targetReps: 12,
+                targetWeight: 60,
+                actualReps: 12,
+                actualWeight: 60,
+                isCompleted: true,
+              ),
+            },
+          ),
+          SupersetSet(
+            setNumber: 2,
+            exerciseData: {
+              'sup-a': SupersetExerciseData(
+                exerciseId: 'sup-a',
+                exerciseName: 'Bench Press',
+                targetReps: 8,
+                targetWeight: 85,
+              ),
+              'sup-b': SupersetExerciseData(
+                exerciseId: 'sup-b',
+                exerciseName: 'Row',
+                targetReps: 10,
+                targetWeight: 65,
+              ),
+            },
+          ),
+        ],
+      );
+      final dropset = DropSetExercise(
+        id: 'dropset-1',
+        name: 'Lateral Raise',
+        category: ExerciseCategory.shoulders,
+        stages: [
+          DropSetStage(weight: 12, reps: 12, isCompleted: true, actualReps: 12),
+          DropSetStage(weight: 10, reps: 10, isCompleted: true, actualReps: 10),
+          DropSetStage(weight: 8, reps: 10),
+        ],
+      );
+      final restPause = RestPauseExercise(
+        id: 'restpause-1',
+        name: 'Leg Extension',
+        category: ExerciseCategory.legs,
+        weight: 45,
+        targetReps: 12,
+        restPauseSets: [
+          RestPauseSet(
+            reps: 12,
+            restSeconds: 0,
+            isCompleted: true,
+            actualReps: 12,
+          ),
+          RestPauseSet(reps: 6, restSeconds: 20),
+        ],
+      );
+
+      final workout = Workout(
+        id: 'compound-workout',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+        name: 'Compound Workout',
+        exercises: [superset, dropset, restPause],
+      );
+
+      expect(workout.totalSets, 7);
+      expect(workout.completedSets, 4);
+      expect(workout.progressPercentage, closeTo(4 / 7, 0.0001));
+      expect(workout.completedVolume, closeTo(2304, 0.0001));
+      expect(workout.completedExercises, 0);
+    });
+
+    test('completeWorkout preserves a manually corrected endTime', () {
+      final startTime = DateTime(2024, 1, 1, 9, 0);
+      final correctedEndTime = DateTime(2024, 1, 1, 10, 15);
+
+      final workout = Workout(
+        id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+        name: 'Manual Duration Fix',
+        status: WorkoutStatus.inProgress,
+        startTime: startTime,
+        endTime: correctedEndTime,
+      );
+
+      final completedWorkout = workout.completeWorkout();
+
+      expect(completedWorkout.status, WorkoutStatus.completed);
+      expect(completedWorkout.endTime, correctedEndTime);
+      expect(completedWorkout.duration, const Duration(minutes: 75));
+    });
+
+    test('resumeWorkout excludes paused time from duration', () {
+      final startTime = DateTime.now().subtract(const Duration(minutes: 30));
+      final pausedAt = DateTime.now().subtract(const Duration(minutes: 10));
+      final pausedWorkout = Workout(
+        id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+        name: 'Paused Workout',
+        status: WorkoutStatus.paused,
+        startTime: startTime,
+        endTime: pausedAt,
+      );
+
+      final resumedWorkout = pausedWorkout.resumeWorkout();
+
+      expect(resumedWorkout.status, WorkoutStatus.inProgress);
+      expect(resumedWorkout.endTime, isNull);
+      expect(
+        resumedWorkout.startTime,
+        closeToDate(startTime.add(DateTime.now().difference(pausedAt))),
+      );
+    });
+
     test('copyWith creates new instance with updated values', () {
       final original = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Original',
@@ -196,7 +366,7 @@ void main() {
 
     test('addExercise updates exercises list', () {
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         name: 'Test',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
@@ -220,9 +390,9 @@ void main() {
         type: ExerciseType.single,
         category: ExerciseCategory.chest,
       );
-      
+
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Test',
@@ -238,9 +408,9 @@ void main() {
     test('toJson serialization', () {
       final startTime = DateTime(2024, 1, 1, 9, 0);
       final endTime = DateTime(2024, 1, 1, 10, 30);
-      
+
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'Serialization Test',
@@ -253,9 +423,7 @@ void main() {
             name: 'Bench Press',
             type: ExerciseType.single,
             category: ExerciseCategory.chest,
-            sets: [
-              ExerciseSet(setNumber: 1, weight: 60, reps: 10),
-            ],
+            sets: [ExerciseSet(setNumber: 1, weight: 60, reps: 10)],
           ),
         ],
       );
@@ -273,7 +441,7 @@ void main() {
     test('fromJson deserialization', () {
       final startTime = DateTime(2024, 1, 1, 9, 0);
       final endTime = DateTime(2024, 1, 1, 10, 30);
-      
+
       final json = {
         'id': 'workout-123',
         'name': 'Deserialization Test',
@@ -294,11 +462,11 @@ void main() {
                 'weight': 0.0,
                 'reps': 20,
                 'isCompleted': false,
-              }
+              },
             ],
             'createdAt': DateTime(2024, 1, 1).toIso8601String(),
             'updatedAt': DateTime(2024, 1, 2).toIso8601String(),
-          }
+          },
         ],
         'createdAt': DateTime(2024, 1, 1).toIso8601String(),
         'updatedAt': DateTime(2024, 1, 2).toIso8601String(),
@@ -318,13 +486,13 @@ void main() {
 
     test('workout identity and copyWith', () {
       final workout1 = Workout(
-      id: 'test-id-1',
+        id: 'test-id-1',
         name: 'Test',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
       );
       final workout2 = Workout(
-      id: 'test-id-2',
+        id: 'test-id-2',
         name: 'Test',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
@@ -332,7 +500,7 @@ void main() {
       final workout3 = workout1.copyWith();
 
       expect(workout1 == workout2, false); // Different objects
-      expect(workout1 == workout3, false); // copyWith creates new object
+      expect(workout1 == workout3, true); // Freezed uses value equality
       expect(workout1 == workout1, true); // Same object reference
       expect(workout3.name, workout1.name); // copyWith preserves values
       expect(workout3.id, workout1.id); // copyWith preserves ID
@@ -340,7 +508,7 @@ void main() {
 
     test('workout with RPE tracking', () {
       final workout = Workout(
-      id: 'test-id',
+        id: 'test-id',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
         name: 'RPE Test',
@@ -364,9 +532,63 @@ void main() {
 
       final exercise = workout.exercises.first;
       final set = exercise.sets.first;
-      
+
       expect(set.rpe, 7);
       expect(set.isCompleted, true);
     });
+
+    test('update and remove target only the matching workout instance id', () {
+      final firstBench = Exercise(
+        id: 'slot-1',
+        databaseExerciseId: 'bench_press',
+        name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
+        sets: [ExerciseSet(setNumber: 1, weight: 80, reps: 8)],
+      );
+      final secondBench = Exercise(
+        id: 'slot-2',
+        databaseExerciseId: 'bench_press',
+        name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
+        sets: [ExerciseSet(setNumber: 1, weight: 60, reps: 12)],
+      );
+
+      final workout = Workout(
+        id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+        name: 'Duplicate Exercise Test',
+        exercises: [firstBench, secondBench],
+      );
+
+      final updatedWorkout = workout.updateExercise(
+        firstBench.id,
+        firstBench.copyWith(name: 'Paused Bench Press'),
+      );
+
+      expect(updatedWorkout.exercises[0].name, 'Paused Bench Press');
+      expect(updatedWorkout.exercises[1].name, 'Bench Press');
+
+      final removedWorkout = updatedWorkout.removeExercise(secondBench.id);
+
+      expect(removedWorkout.exercises, hasLength(1));
+      expect(removedWorkout.exercises.single.id, firstBench.id);
+      expect(
+        removedWorkout.exercises.single.databaseExerciseId,
+        firstBench.databaseExerciseId,
+      );
+    });
   });
+}
+
+Matcher closeToDate(
+  DateTime expected, {
+  Duration tolerance = const Duration(seconds: 2),
+}) {
+  return predicate<DateTime?>((actual) {
+    if (actual == null) return false;
+    return actual.difference(expected).abs() <= tolerance;
+  }, 'a DateTime within ${tolerance.inSeconds}s of $expected');
 }

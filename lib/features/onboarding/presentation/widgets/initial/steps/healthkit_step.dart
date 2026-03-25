@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/utils/onboarding_health_permissions.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -44,40 +45,45 @@ class HealthKitStep extends ConsumerWidget {
             ),
           ),
 
+          const SizedBox(height: 8),
+
+          Text(
+            context.l10n.initialOnboardingHealthKitCorePermissions,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+
           const SizedBox(height: 32),
 
           // Health data options
           Expanded(
             child: ListView(
               children: [
-                // Workouts (default ON, free)
+                // Workouts are always included in the first permission prompt.
                 _HealthToggle(
                   type: HealthDataType.workout,
                   icon: AppIcons.workout,
                   title: context.l10n.initialOnboardingHealthKitWorkouts,
                   subtitle: context.l10n.initialOnboardingHealthKitWorkoutsDesc,
-                  isSelected: state.selectedHealthTypes.contains(
-                    HealthDataType.workout,
-                  ),
+                  isSelected: true,
                   isPro: false,
-                  onToggle: () =>
-                      notifier.toggleHealthType(HealthDataType.workout),
+                  isLocked: true,
+                  onToggle: () {},
                 ),
 
                 const SizedBox(height: 12),
 
-                // Body weight (default ON, free)
+                // Body weight is always included in the first permission prompt.
                 _HealthToggle(
                   type: HealthDataType.bodyWeight,
                   icon: AppIcons.weight,
                   title: context.l10n.initialOnboardingHealthKitWeight,
                   subtitle: context.l10n.initialOnboardingHealthKitWeightDesc,
-                  isSelected: state.selectedHealthTypes.contains(
-                    HealthDataType.bodyWeight,
-                  ),
+                  isSelected: true,
                   isPro: false,
-                  onToggle: () =>
-                      notifier.toggleHealthType(HealthDataType.bodyWeight),
+                  isLocked: true,
+                  onToggle: () {},
                 ),
 
                 const SizedBox(height: 12),
@@ -148,9 +154,7 @@ class HealthKitStep extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: state.selectedHealthTypes.isNotEmpty
-                  ? () => _connectHealthKit(context, ref)
-                  : null,
+              onPressed: () => _connectHealthKit(context, ref),
               icon: const Icon(AppIcons.healthAndSafety),
               label: Text(
                 context.l10n.initialOnboardingHealthKitConnect,
@@ -193,9 +197,9 @@ class HealthKitStep extends ConsumerWidget {
   Future<void> _connectHealthKit(BuildContext context, WidgetRef ref) async {
     final notifier = ref.read(initialOnboardingNotifierProvider.notifier);
     final state = ref.read(initialOnboardingNotifierProvider);
-    final selectedTypes = state.selectedHealthTypes.toList();
-
-    if (selectedTypes.isEmpty) return;
+    final requestedTypes = buildOnboardingHealthPermissionRequest(
+      state.selectedHealthTypes,
+    );
 
     // Show loading feedback
     SnackBarService.showInfo(
@@ -208,14 +212,15 @@ class HealthKitStep extends ConsumerWidget {
       final permissionController = ref.read(
         healthPermissionControllerProvider.notifier,
       );
-      await permissionController.requestPermissions(dataTypes: selectedTypes);
+      await permissionController.requestPermissions(dataTypes: requestedTypes);
 
       if (!context.mounted) return;
 
       // Check permission result
       final permissionState = ref.read(healthPermissionControllerProvider);
       final hasAnyPermission = permissionState.when(
-        data: (status) => selectedTypes.any((type) => status.canSync(type)),
+        data: (status) =>
+            requestedTypes.any((type) => status.canAttemptSync(type)),
         loading: () => false,
         error: (_, __) => false,
       );
@@ -254,6 +259,7 @@ class _HealthToggle extends StatelessWidget {
     required this.subtitle,
     required this.isSelected,
     required this.isPro,
+    this.isLocked = false,
     required this.onToggle,
   });
 
@@ -263,6 +269,7 @@ class _HealthToggle extends StatelessWidget {
   final String subtitle;
   final bool isSelected;
   final bool isPro;
+  final bool isLocked;
   final VoidCallback onToggle;
 
   @override
@@ -341,12 +348,14 @@ class _HealthToggle extends StatelessWidget {
             ),
           ),
 
-          // Toggle switch
-          CNSwitch(
-            value: isSelected,
-            onChanged: (_) => onToggle(),
-            color: context.colors.primary,
-          ),
+          if (isLocked)
+            Icon(AppIcons.complete, color: context.colors.primary, size: 24)
+          else
+            CNSwitch(
+              value: isSelected,
+              onChanged: (_) => onToggle(),
+              color: context.colors.primary,
+            ),
         ],
       ),
     );

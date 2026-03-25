@@ -68,6 +68,32 @@ class AnalyticsEvents {
   /// Workout deleted
   static const String workoutDeleted = 'workout_deleted';
 
+  // ===== GUIDED ONBOARDING EVENTS =====
+
+  /// Guided flow started in test mode
+  static const String guidedTestStarted = 'guided_test_started';
+
+  /// A guided test step was completed (add/edit/reorder/delete/close)
+  static const String guidedTestStepCompleted = 'guided_test_step_completed';
+
+  /// Guided test workout completed
+  static const String guidedTestCompleted = 'guided_test_completed';
+
+  /// Guided test workout discarded/cancelled
+  static const String guidedTestDiscarded = 'guided_test_discarded';
+
+  /// Guided real workout started
+  static const String guidedRealStarted = 'guided_real_started';
+
+  /// Guided real workout completed
+  static const String guidedRealCompleted = 'guided_real_completed';
+
+  /// Guided soft gate reminder shown
+  static const String guidedSoftGateSeen = 'guided_soft_gate_seen';
+
+  /// Guided soft gate CTA tapped
+  static const String guidedSoftGateCta = 'guided_soft_gate_cta';
+
   // ===== EXERCISE EVENTS =====
 
   /// Exercise added to workout
@@ -512,6 +538,9 @@ class AnalyticsParameters {
 
   /// Label (additional context)
   static const String label = 'label';
+
+  /// Guided step identifier
+  static const String stepId = 'step_id';
 
   /// Value (numeric value)
   static const String value = 'value';

@@ -26,6 +26,18 @@ class FirebaseWorkoutDataSource {
   const FirebaseWorkoutDataSource(this._firestore);
   final FirebaseFirestore _firestore;
 
+  Map<String, dynamic> _buildFirestorePayload(
+    WorkoutModel workout,
+    String userId,
+  ) {
+    return {
+      ...workout.toJson(),
+      'userId': userId,
+      if (workout.startTime != null) 'startedAt': workout.startTime,
+      if (workout.endTime != null) 'completedAt': workout.endTime,
+    };
+  }
+
   /// Save workout to Firestore
   /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<String> saveWorkout(WorkoutModel workout, String userId) async {
@@ -36,7 +48,7 @@ class FirebaseWorkoutDataSource {
         .doc(workout.id);
 
     await docRef
-        .set(workout.toJson())
+        .set(_buildFirestorePayload(workout, userId))
         .timeout(
           const Duration(seconds: 10),
           onTimeout: () =>
@@ -54,7 +66,7 @@ class FirebaseWorkoutDataSource {
         .doc(userId)
         .collection('workouts')
         .doc(workout.id)
-        .update(workout.toJson())
+        .update(_buildFirestorePayload(workout, userId))
         .timeout(
           const Duration(seconds: 10),
           onTimeout: () =>
@@ -89,7 +101,9 @@ class FirebaseWorkoutDataSource {
     int? limit,
     DateTime? startDate,
     DateTime? endDate,
+    bool useUpdatedAt = false,
   }) async {
+    final dateField = useUpdatedAt ? 'updatedAt' : 'createdAt';
     Query query = _firestore
         .collection('users')
         .doc(userId)
@@ -97,15 +111,15 @@ class FirebaseWorkoutDataSource {
 
     // Apply date filtering
     if (startDate != null) {
-      query = query.where('createdAt', isGreaterThanOrEqualTo: startDate);
+      query = query.where(dateField, isGreaterThanOrEqualTo: startDate);
     }
 
     if (endDate != null) {
-      query = query.where('createdAt', isLessThanOrEqualTo: endDate);
+      query = query.where(dateField, isLessThanOrEqualTo: endDate);
     }
 
     // Apply ordering and limit
-    query = query.orderBy('createdAt', descending: true);
+    query = query.orderBy(dateField, descending: true);
 
     if (limit != null) {
       query = query.limit(limit);
@@ -206,7 +220,8 @@ class FirebaseWorkoutDataSource {
           final completedSets = sets.where((set) => set['isCompleted'] == true);
           exercises[i]['totalVolume'] = completedSets.fold<double>(
             0.0,
-            (sum, set) => sum + (set['volume'] as num).toDouble(),
+            (totalVolume, set) =>
+                totalVolume + (set['volume'] as num).toDouble(),
           );
           break;
         }

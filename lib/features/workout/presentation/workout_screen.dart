@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
@@ -22,12 +23,15 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_bottom_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/schedule_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/utils/exercise_replacement_utils.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
@@ -49,6 +53,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/workout_view.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/controllers/workout_screen_controller.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 
 /// Orchestrator for WorkoutScreen that delegates to sub-components.
 ///
@@ -62,7 +67,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 /// - **WorkoutScreenController**: Business logic
 ///
 /// **Features**:
-/// - Conditional AppBar actions (reorder, complete, settings)
+/// - Conditional AppBar actions (complete, settings)
 /// - FAB behavior (ExpandableFAB vs done button)
 /// - Timer overlay (Tier1MinimalTimerOverlay)
 /// - Lifecycle management (auto-save on background)
@@ -73,6 +78,7 @@ class WorkoutScreen extends ConsumerStatefulWidget {
     this.initialTemplateId,
     this.sessionId,
     this.fromSmartCTA = false,
+    this.freeWorkoutTrigger,
   });
 
   /// Optional template ID to pre-load when opening the screen
@@ -84,26 +90,41 @@ class WorkoutScreen extends ConsumerStatefulWidget {
   /// Whether this screen was opened from the Smart CTA
   final bool fromSmartCTA;
 
+  /// One-shot trigger used to start a free workout when arriving from Home.
+  final String? freeWorkoutTrigger;
+
   @override
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     with WidgetsBindingObserver {
+  static const String _reorderHintShownPrefKey =
+      'workout_long_press_reorder_hint_shown_v1';
+  static const int _tutorialTargetMaxRetries = 6;
+
   // GlobalKeys for contextual overlays and tutorial targets
   final GlobalKey _addExerciseFABKey = GlobalKey();
   final GlobalKey _completeWorkoutButtonKey = GlobalKey();
-  final GlobalKey _reorderButtonKey = GlobalKey();
   final GlobalKey _firstSetRowKey = GlobalKey();
   final GlobalKey _exerciseMenuKey = GlobalKey();
+  final GlobalKey _workoutOptionsMenuKey = GlobalKey();
+  final GlobalKey _addExerciseModalBrowseKey = GlobalKey();
+  final GlobalKey _addExerciseModalFiltersCustomKey = GlobalKey();
+  String? _lastConsumedFreeWorkoutTrigger;
+  bool _startingFreeWorkout = false;
+  Future<void> Function()? _openDatabaseFromTutorialAction;
+  bool _reorderHintShownInSession = false;
+  bool _reorderHintCheckInProgress = false;
 
   /// Map of tutorial step keys for the WorkoutTutorialService
   Map<WorkoutTutorialStep, GlobalKey> get _tutorialTargetKeys => {
+    WorkoutTutorialStep.welcome: _addExerciseFABKey,
     WorkoutTutorialStep.addExercise: _addExerciseFABKey,
-    WorkoutTutorialStep.tapSet: _firstSetRowKey,
-    WorkoutTutorialStep.exerciseMenu: _exerciseMenuKey,
-    WorkoutTutorialStep.reorder: _reorderButtonKey,
-    WorkoutTutorialStep.finish: _completeWorkoutButtonKey,
+    WorkoutTutorialStep.browseDatabase: _addExerciseModalBrowseKey,
+    WorkoutTutorialStep.workoutSettings: _workoutOptionsMenuKey,
+    WorkoutTutorialStep.editSetGestures: _firstSetRowKey,
+    WorkoutTutorialStep.completeSetRpe: _firstSetRowKey,
   };
 
   @override
@@ -117,10 +138,21 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // NOTE: Other lifecycle handling (emergency save, draft recovery) is in AppLifecycleManager
     WidgetsBinding.instance.addObserver(this);
 
-    // Show onboarding overlay if needed
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _consumeFreeWorkoutTriggerIfNeeded();
       _showFirstWorkoutWelcomeIfNeeded();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant WorkoutScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.freeWorkoutTrigger != widget.freeWorkoutTrigger) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _consumeFreeWorkoutTriggerIfNeeded();
+      });
+    }
   }
 
   @override
@@ -135,27 +167,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // This handles the "distracted user" who gets interrupted by a phone call
     if (state == AppLifecycleState.resumed) {
       final tutorialState = ref.read(workoutTutorialProvider);
-      final currentWorkout = ref.read(currentWorkoutProvider);
-
-      // Check if workout has exercises
-      final hasExercises =
-          currentWorkout != null && currentWorkout.exercises.isNotEmpty;
 
       // BUG FIX: Don't re-show tutorial if:
       // - User has already completed it
-      // - Workout has exercises (tutorial should only show for empty workouts)
-      // This prevents tutorial from appearing during active workouts with content
       if (tutorialState.isActive &&
           !tutorialState.hasCompletedTutorial &&
-          !hasExercises &&
           mounted) {
         // Re-show the current tutorial step after UI settles
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) _showCurrentTutorialStep();
         });
-      } else if (tutorialState.isActive && hasExercises) {
-        // Stop tutorial if workout now has exercises
-        ref.read(workoutTutorialProvider.notifier).stopTutorial();
       }
     }
   }
@@ -177,6 +198,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   /// step by step, teaching users how to use the workout screen.
   Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
     if (!mounted) return;
+
+    if (_startingFreeWorkout || _lastConsumedFreeWorkoutTrigger != null) {
+      return;
+    }
 
     // ✅ FIX: Wait for tutorial state to be loaded from SharedPreferences
     // This prevents race condition where tutorial starts before prefs are loaded
@@ -209,8 +234,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       return;
     }
 
-    // Early exit if tutorial already started or completed
-    if (tutorialState.hasStartedTutorial || tutorialState.isActive) {
+    // If tutorial is already active, re-show the current step instead of bailing out.
+    if (tutorialState.isActive && !tutorialState.hasCompletedTutorial) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) _showCurrentTutorialStep();
+      });
+      return;
+    }
+
+    // Early exit only if already started in the past but not active now.
+    if (tutorialState.hasStartedTutorial) {
       return;
     }
 
@@ -329,10 +362,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: WelcomeView(
-        onQuickStart: () => _startQuickWorkout(context),
+        onStartFreeWorkout: () => _startFreeWorkout(context),
         onStartTemplate: (template) => _startTemplateWorkout(template),
         onShareTemplate: (template) => _shareTemplatePdf(context, template),
-        onDuplicateTemplate: (template) => _duplicateTemplate(context, template),
+        onDuplicateTemplate: (template) =>
+            _duplicateTemplate(context, template),
         onEditTemplate: (template) =>
             _editTemplateFromQuickStart(context, template),
         onDeleteTemplate: (template) =>
@@ -420,6 +454,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final hasValidHR =
         watchData.currentHeartRate > 0 && watchData.hasRecentHealthMetrics;
 
+    _maybeShowLongPressReorderHint(workout, state);
+
     return Scaffold(
       appBar: AppBar(
         // ✅ IMPROVED: Different title and styling in reorder mode
@@ -445,7 +481,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      color: colorScheme.primaryContainer.withValues(
+                        alpha: 0.3,
+                      ),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -560,23 +598,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
             ),
 
-          // Reorder mode toggle (only if exercises exist and not in reorder mode)
-          if (workout.exercises.isNotEmpty && !state.isReorderMode)
-            IconButton(
-              key: _reorderButtonKey,
-              icon: SemanticIcon(
-                icon: AppIcons.dragHandle,
-                size: AppIconSize.medium,
-                semanticLabel: l10n.reorderExercises,
-              ),
-              onPressed: () {
-                ref
-                    .read(workoutScreenControllerProvider.notifier)
-                    .toggleReorderMode();
-                HapticFeedback.lightImpact();
-              },
-            ),
-
           // ✅ IMPROVED: More prominent "Finish" button (best practice UX)
           if (!state.isReorderMode)
             Padding(
@@ -615,6 +636,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           // Overflow menu: CupertinoActionSheet (iOS native style)
           if (!state.isReorderMode)
             IconButton(
+              key: _workoutOptionsMenuKey,
               icon: SemanticIcon(
                 icon: AppIcons.moreVert,
                 size: AppIconSize.medium,
@@ -648,20 +670,57 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     );
   }
 
+  void _maybeShowLongPressReorderHint(
+    Workout workout,
+    WorkoutScreenState state,
+  ) {
+    if (!mounted || state.isReorderMode || workout.exercises.length < 2) return;
+    if (_reorderHintShownInSession || _reorderHintCheckInProgress) return;
+
+    _reorderHintCheckInProgress = true;
+    unawaited(() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final alreadyShown = prefs.getBool(_reorderHintShownPrefKey) ?? false;
+
+        if (alreadyShown) {
+          _reorderHintShownInSession = true;
+          return;
+        }
+
+        await prefs.setBool(_reorderHintShownPrefKey, true);
+        _reorderHintShownInSession = true;
+
+        if (!mounted) return;
+        final isItalian = Localizations.localeOf(context).languageCode == 'it';
+        final message = isItalian
+            ? 'Suggerimento: tieni premuta una card e trascina per riordinare gli esercizi.'
+            : 'Tip: long press a card and drag to reorder exercises.';
+
+        SnackBarService.showInfo(
+          context,
+          message,
+          duration: const Duration(seconds: 4),
+        );
+      } finally {
+        _reorderHintCheckInProgress = false;
+      }
+    }());
+  }
+
   /// Shows a CupertinoActionSheet with workout-level actions.
-  void _showWorkoutActionsSheet(BuildContext context, Workout workout) {
+  Future<void> _showWorkoutActionsSheet(BuildContext context, Workout workout) {
     final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
-
-    showCupertinoModalPopup<void>(
+    return showCupertinoModalPopup<_WorkoutActionsSheetSelection>(
       context: context,
       builder: (BuildContext sheetContext) => CupertinoActionSheet(
         actions: [
           CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(sheetContext);
-              _generateAllWarmups(workout);
-            },
+            onPressed: () => Navigator.pop(
+              sheetContext,
+              _WorkoutActionsSheetSelection.generateWarmups,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -682,18 +741,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
             ),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(sheetContext);
-              WorkoutCustomizationModalV3.show(context);
-            },
+            onPressed: () => Navigator.pop(
+              sheetContext,
+              _WorkoutActionsSheetSelection.openSettings,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.settings,
-                  color: colorScheme.secondary,
-                  size: 20,
-                ),
+                Icon(AppIcons.settings, color: colorScheme.secondary, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   l10n.workoutSettings,
@@ -707,12 +762,30 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
-          onPressed: () => Navigator.pop(sheetContext),
+          onPressed: () =>
+              Navigator.pop(sheetContext, _WorkoutActionsSheetSelection.cancel),
           isDefaultAction: true,
           child: Text(l10n.cancel),
         ),
       ),
-    );
+    ).then((selection) async {
+      if (!mounted) return;
+
+      switch (selection) {
+        case _WorkoutActionsSheetSelection.generateWarmups:
+          _generateAllWarmups(workout);
+          return;
+        case _WorkoutActionsSheetSelection.openSettings:
+          // Wait action sheet dismissal animation before opening next modal.
+          await Future<void>.delayed(const Duration(milliseconds: 120));
+          if (!mounted || !context.mounted) return;
+          await WorkoutCustomizationModalV3.show(context);
+          return;
+        case _WorkoutActionsSheetSelection.cancel:
+        case null:
+          return;
+      }
+    });
   }
 
   /// Build floating action button based on state
@@ -770,7 +843,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     // Get user name from Firebase
     final user = FirebaseAuth.instance.currentUser;
-    final userName = user?.displayName ?? user?.email?.split('@').first ?? 'Atleta';
+    final userName =
+        user?.displayName ?? user?.email?.split('@').first ?? 'Atleta';
 
     // Calculate elapsed duration
     final elapsedDuration = workout.startTime != null
@@ -878,12 +952,52 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   // WORKOUT ACTIONS
   // ========================================================================
 
-  /// Start quick workout (context gathering flow)
-  void _startQuickWorkout(BuildContext context) {
-    ModalService.showSheet(context,
-      isScrollControlled: true,
-      builder: (context) => const ContextGatheringBottomSheet(),
-    );
+  Future<void> _consumeFreeWorkoutTriggerIfNeeded() async {
+    final trigger = widget.freeWorkoutTrigger;
+
+    if (!mounted ||
+        trigger == null ||
+        trigger.isEmpty ||
+        trigger == _lastConsumedFreeWorkoutTrigger ||
+        _startingFreeWorkout) {
+      return;
+    }
+
+    _lastConsumedFreeWorkoutTrigger = trigger;
+    await _startFreeWorkout(context);
+  }
+
+  /// Start a free workout and open the exercise picker immediately.
+  Future<void> _startFreeWorkout(BuildContext context) async {
+    if (_startingFreeWorkout || !mounted) return;
+
+    _startingFreeWorkout = true;
+
+    try {
+      final currentWorkout = ref.read(currentWorkoutProvider);
+      final hasActiveWorkout =
+          currentWorkout != null &&
+          (currentWorkout.status == WorkoutStatus.inProgress ||
+              currentWorkout.status == WorkoutStatus.paused);
+
+      if (!hasActiveWorkout) {
+        if (currentWorkout != null) {
+          ref.read(currentWorkoutProvider.notifier).clearWorkout();
+        }
+
+        await ref
+            .read(workoutScreenControllerProvider.notifier)
+            .startWorkout(context: context, sessionId: widget.sessionId);
+      }
+
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+
+      if (!mounted || !context.mounted) return;
+
+      _showAddExercise(context);
+    } finally {
+      _startingFreeWorkout = false;
+    }
   }
 
   /// Start workout from template
@@ -919,28 +1033,67 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     BuildContext context, {
     int initialTab = 0,
     int initialAdvancedTab = 0,
+    bool fromTutorialStepAdvance = false,
   }) {
-    // EDGE CASE FIX: Auto-advance tutorial when FAB is tapped
-    // This handles the case where user taps FAB without clicking "Avanti" in tutorial
+    // If user taps FAB directly during step 2, move tutorial to the modal flow.
+    final tutorialNotifier = ref.read(workoutTutorialProvider.notifier);
     final tutorialState = ref.read(workoutTutorialProvider);
     if (tutorialState.isActive &&
+        !fromTutorialStepAdvance &&
         tutorialState.currentStep == WorkoutTutorialStep.addExercise) {
-      // Stop current tutorial overlay (user has figured out the FAB)
-      ref.read(workoutTutorialProvider.notifier).stopTutorial();
-      // Restart in tapSet-waiting state
-      ref.read(workoutTutorialProvider.notifier).startTutorial();
-      ref
-          .read(workoutTutorialProvider.notifier)
-          .advanceToStep(WorkoutTutorialStep.tapSet);
+      tutorialNotifier.advanceToStep(WorkoutTutorialStep.browseDatabase);
     }
 
     // Track if exercise was added during this modal session
     bool exerciseWasAdded = false;
+    final skipCustomizationOnContinue =
+        ref.read(currentWorkoutProvider)?.templateId == null;
 
-    AddExerciseModal.show(
+    Future<void> openBrowseDatabase() async {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (searchContext) => ExerciseSearchScreen(
+            onExerciseAdded: (exercise) async {
+              exerciseWasAdded = true;
+              final exerciseToAdd = await _applyWeightPrefill(exercise);
+              unawaited(
+                ref
+                    .read(workoutScreenControllerProvider.notifier)
+                    .addExercise(exerciseToAdd),
+              );
+              onExerciseAdded();
+            },
+            skipCustomizationOnContinue: skipCustomizationOnContinue,
+            showSupersetTemplates: false,
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+      final tutorialStateAfterSearch = ref.read(workoutTutorialProvider);
+      if (tutorialStateAfterSearch.isActive &&
+          tutorialStateAfterSearch.currentStep ==
+              WorkoutTutorialStep.filtersAndCustom) {
+        // Filters step is handled inside ExerciseSearchScreen.
+        // If user exits search before completing it, bring them back to browse step.
+        ref
+            .read(workoutTutorialProvider.notifier)
+            .advanceToStep(WorkoutTutorialStep.browseDatabase);
+        Future.delayed(const Duration(milliseconds: 260), () {
+          if (mounted) _showCurrentTutorialStep();
+        });
+      }
+    }
+
+    _openDatabaseFromTutorialAction = openBrowseDatabase;
+
+    final modalFuture = AddExerciseModal.show(
       context,
       initialTab: initialTab,
       initialAdvancedTab: initialAdvancedTab,
+      tutorialBrowseDatabaseKey: _addExerciseModalBrowseKey,
+      tutorialFiltersAndCustomKey: _addExerciseModalFiltersCustomKey,
+      onBrowseDatabaseRequested: openBrowseDatabase,
       onExerciseAdded: (exercise) async {
         debugPrint(
           '🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}',
@@ -961,20 +1114,46 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         // Trigger tutorial step if active
         onExerciseAdded();
       },
-    ).whenComplete(() {
+      skipCustomizationOnContinue: skipCustomizationOnContinue,
+    );
+
+    final modalTutorialState = ref.read(workoutTutorialProvider);
+    if (modalTutorialState.isActive &&
+        modalTutorialState.currentStep == WorkoutTutorialStep.browseDatabase) {
+      Future.delayed(const Duration(milliseconds: 450), () {
+        if (mounted) _showCurrentTutorialStep();
+      });
+    }
+
+    modalFuture.whenComplete(() {
+      _openDatabaseFromTutorialAction = null;
+
       // EDGE CASE FIX: Re-show tutorial if modal was dismissed without adding exercise
       // This handles the "distracted user" who opens modal but dismisses it without action
       if (!exerciseWasAdded && mounted) {
         final tutorialState = ref.read(workoutTutorialProvider);
         if (tutorialState.isActive) {
-          // Reset to addExercise step if we were waiting for exercise
-          if (tutorialState.currentStep == WorkoutTutorialStep.tapSet) {
+          // If modal tutorial was interrupted without selection, go back to step 2.
+          const modalOrWaitingSteps = <WorkoutTutorialStep>{
+            WorkoutTutorialStep.browseDatabase,
+            WorkoutTutorialStep.filtersAndCustom,
+            WorkoutTutorialStep.customizeExercise,
+          };
+          if (modalOrWaitingSteps.contains(tutorialState.currentStep)) {
             ref
                 .read(workoutTutorialProvider.notifier)
                 .advanceToStep(WorkoutTutorialStep.addExercise);
           }
           // Re-show the current tutorial step after a short delay
           Future.delayed(const Duration(milliseconds: 300), () {
+            if (mounted) _showCurrentTutorialStep();
+          });
+        }
+      } else if (mounted) {
+        final tutorialState = ref.read(workoutTutorialProvider);
+        if (tutorialState.isActive &&
+            tutorialState.currentStep == WorkoutTutorialStep.workoutSettings) {
+          Future.delayed(const Duration(milliseconds: 350), () {
             if (mounted) _showCurrentTutorialStep();
           });
         }
@@ -1074,27 +1253,30 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       // Convert WarmupSet → ExerciseSet
       final warmupExerciseSets = warmupSets
           .asMap()
-          .map((index, warmup) => MapEntry(
-                index,
-                ExerciseSet(
-                  setNumber: index + 1,
-                  weight: warmup.weight,
-                  reps: warmup.reps,
-                  isWarmup: true,
-                  isCompleted: false,
-                ),
-              ))
+          .map(
+            (index, warmup) => MapEntry(
+              index,
+              ExerciseSet(
+                setNumber: index + 1,
+                weight: warmup.weight,
+                reps: warmup.reps,
+                isWarmup: true,
+                isCompleted: false,
+              ),
+            ),
+          )
           .values
           .toList();
 
       // Renumber working sets after warmup
       final renumberedWorkingSets = workingSets
           .asMap()
-          .map((index, set) => MapEntry(
-                index,
-                set.copyWith(
-                    setNumber: warmupExerciseSets.length + index + 1),
-              ))
+          .map(
+            (index, set) => MapEntry(
+              index,
+              set.copyWith(setNumber: warmupExerciseSets.length + index + 1),
+            ),
+          )
           .values
           .toList();
 
@@ -1116,10 +1298,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         context.l10n.allWarmupsGenerated(generatedCount.toString()),
       );
     } else {
-      SnackBarService.showInfo(
-        context,
-        context.l10n.noExercisesNeedWarmup,
-      );
+      SnackBarService.showInfo(context, context.l10n.noExercisesNeedWarmup);
     }
 
     if (kDebugMode) {
@@ -1310,14 +1489,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Replace exercise - swap one exercise for another at the same position
   void _replaceExercise(BuildContext context, Exercise exercise) {
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (newExercise) {
+          final replacementExercise = buildReplacementExercise(
+            currentExercise: exercise,
+            replacementExercise: newExercise,
+          );
+
           // Update the exercise at the old exercise's ID position
           ref
               .read(currentWorkoutProvider.notifier)
-              .updateExercise(exercise.id, newExercise);
+              .updateExercise(exercise.id, replacementExercise);
           Navigator.of(context).pop();
         },
       ),
@@ -1338,11 +1523,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final setIndex = exercise.sets.indexWhere((s) => s.id == updatedSet.id);
     if (setIndex == -1) return;
 
-    final updatedSets = List<ExerciseSet>.from(exercise.sets);
-    updatedSets[setIndex] = updatedSet;
+    final previousSet = exercise.sets[setIndex];
+    final notifier = ref.read(currentWorkoutProvider.notifier);
+    final isNewCompletion = updatedSet.isCompleted && !previousSet.isCompleted;
 
-    final updatedExercise = exercise.copyWith(sets: updatedSets);
-    _updateExercise(updatedExercise);
+    ref.read(workoutScreenControllerProvider.notifier).trackGuidedSetEdited();
+
+    // Route fresh non-warmup completions through the workout provider so the
+    // timer policy stays consistent with Watch/Live Activity flows.
+    notifier.updateExerciseSet(exerciseId, updatedSet);
+
+    if (isNewCompletion && !updatedSet.isWarmup) {
+      notifier.completeSet(exerciseId, updatedSet.id);
+    }
   }
 
   /// Update exercise using notifier method
@@ -1364,15 +1557,38 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   // ========================================================================
 
   /// Edit template from quick start
-  void _editTemplateFromQuickStart(
+  Future<void> _editTemplateFromQuickStart(
     BuildContext context,
     wt.WorkoutTemplate template,
-  ) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => EditTemplateScreen(template: template),
-      ),
-    );
+  ) async {
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate = await repository.ensureEditableTemplate(
+        template,
+      );
+
+      if (!context.mounted) return;
+
+      if (editableTemplate.id != template.id) {
+        SnackBarService.showInfo(
+          context,
+          context.l10n.templatePrivateDraftCreated(template.name),
+        );
+      }
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => EditTemplateScreen(template: editableTemplate),
+        ),
+      );
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          localizeTemplateErrorMessage(context, e),
+        );
+      }
+    }
   }
 
   /// Share template as PDF
@@ -1560,28 +1776,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     BuildContext context,
     wt.WorkoutTemplate template,
   ) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
     final l10n = AppLocalizations.of(context);
 
-    if (userId == null) {
-      SnackBarService.showError(
-        context,
-        l10n.workoutTemplateDuplicationError('User not authenticated'),
-      );
-      return;
-    }
-
-    // Create duplicate with "(Copy)" suffix
-    final duplicatedTemplate = template.copyWith(
-      name: '${template.name} (${l10n.copy})',
-      isCustom: true,
-      updatedAt: DateTime.now(),
-    );
-
     try {
-      await ref
+      final duplicatedTemplate = await ref
           .read(workoutTemplateNotifierProvider.notifier)
-          .saveTemplate(duplicatedTemplate);
+          .duplicateTemplate(template);
 
       if (context.mounted) {
         SnackBarService.showSuccess(
@@ -1614,12 +1814,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   }
 
   /// Show the current tutorial step based on state
-  void _showCurrentTutorialStep() {
+  void _showCurrentTutorialStep({int attempt = 0}) {
     final tutorialState = ref.read(workoutTutorialProvider);
     if (!tutorialState.isActive) return;
 
     final targetKey = _tutorialTargetKeys[tutorialState.currentStep];
     if (targetKey == null) return;
+
+    // UI can still be laying out right after navigation/sheet transitions.
+    // Retry a few times before giving up to avoid a silent no-op tutorial start.
+    if (targetKey.currentContext == null) {
+      if (attempt >= _tutorialTargetMaxRetries) return;
+      Future.delayed(const Duration(milliseconds: 220), () {
+        if (mounted) _showCurrentTutorialStep(attempt: attempt + 1);
+      });
+      return;
+    }
 
     ref
         .read(workoutTutorialProvider.notifier)
@@ -1635,6 +1845,17 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   void _handleTutorialStepComplete(WorkoutTutorialStep completedStep) {
     if (!mounted) return;
 
+    // Last tutorial step still performs a guided action before closing.
+    if (completedStep == WorkoutTutorialStep.completeSetRpe) {
+      unawaited(_showTutorialRpeCompletionSheet());
+      unawaited(ref.read(workoutTutorialProvider.notifier).completeTutorial());
+      SnackBarService.showSuccess(
+        context,
+        AppLocalizations.of(context).tutorialCompletedMessage,
+      );
+      return;
+    }
+
     final nextStep = _getNextTutorialStep(completedStep);
     if (nextStep == null) {
       // Tutorial completed
@@ -1646,12 +1867,71 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       return;
     }
 
-    // For addExercise step, we wait for user to actually add an exercise
-    // For other steps, show immediately
+    // Step 2 must continue inside the Add Exercise modal.
     if (completedStep == WorkoutTutorialStep.addExercise) {
-      // User needs to add exercise first, advance state but don't show overlay yet
       ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
-      // The next step will be triggered when exercise is added (via onExerciseAdded)
+      _showAddExerciseInternal(
+        context,
+        initialTab: 0,
+        fromTutorialStepAdvance: true,
+      );
+      return;
+    }
+
+    // Step 3 should execute guided action: open database search.
+    if (completedStep == WorkoutTutorialStep.browseDatabase) {
+      ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
+      final openAction = _openDatabaseFromTutorialAction;
+      if (openAction != null) {
+        unawaited(openAction());
+      } else {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (mounted) _showCurrentTutorialStep();
+        });
+      }
+      return;
+    }
+
+    // Step 6 should execute guided action: open workout settings sheet.
+    if (completedStep == WorkoutTutorialStep.workoutSettings) {
+      ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
+      final workout = ref.read(currentWorkoutProvider);
+      if (workout != null) {
+        unawaited(
+          _showWorkoutActionsSheet(context, workout).whenComplete(() {
+            Future.delayed(const Duration(milliseconds: 320), () {
+              if (mounted) _showCurrentTutorialStep();
+            });
+          }),
+        );
+      } else {
+        Future.delayed(const Duration(milliseconds: 320), () {
+          if (mounted) _showCurrentTutorialStep();
+        });
+      }
+      return;
+    }
+
+    // Step 7 should execute guided action: open first set editor.
+    if (completedStep == WorkoutTutorialStep.editSetGestures) {
+      ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
+      unawaited(
+        _showTutorialSetEditor().whenComplete(() {
+          Future.delayed(const Duration(milliseconds: 320), () {
+            if (mounted) _showCurrentTutorialStep();
+          });
+        }),
+      );
+      return;
+    }
+
+    // For filtersAndCustom step, we wait for user to actually add an exercise.
+    // For other steps, show immediately
+    if (completedStep == WorkoutTutorialStep.filtersAndCustom) {
+      // Continue in ExerciseCustomizationScreen for counting/rest guidance.
+      // Workout screen should not show this step.
+      ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
+      // Next overlay is shown by ExerciseCustomizationScreen.
     } else {
       // Advance and show next step
       ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
@@ -1661,18 +1941,199 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     }
   }
 
+  ({Exercise exercise, ExerciseSet set, int setIndex})? _findTutorialSetTarget({
+    String? exerciseId,
+    int? preferredSetIndex,
+    bool preferIncomplete = false,
+  }) {
+    final workout = ref.read(currentWorkoutProvider);
+    if (workout == null || workout.exercises.isEmpty) return null;
+
+    final candidates = <Exercise>[];
+    if (exerciseId != null) {
+      for (final exercise in workout.exercises) {
+        if (exercise.id == exerciseId && exercise is! SupersetExercise) {
+          candidates.add(exercise);
+          break;
+        }
+      }
+    } else {
+      for (final exercise in workout.exercises) {
+        if (exercise is! SupersetExercise && exercise.sets.isNotEmpty) {
+          candidates.add(exercise);
+        }
+      }
+    }
+
+    for (final exercise in candidates) {
+      if (exercise.sets.isEmpty) continue;
+
+      var setIndex = -1;
+
+      if (preferIncomplete) {
+        setIndex = exercise.sets.indexWhere(
+          (s) => !s.isWarmup && !s.isCompleted,
+        );
+        if (setIndex == -1) {
+          setIndex = exercise.sets.indexWhere((s) => !s.isCompleted);
+        }
+      }
+
+      if (setIndex == -1 && preferredSetIndex != null) {
+        if (preferredSetIndex >= 0 &&
+            preferredSetIndex < exercise.sets.length) {
+          setIndex = preferredSetIndex;
+        }
+      }
+
+      if (setIndex == -1) {
+        setIndex = exercise.sets.indexWhere((s) => !s.isWarmup);
+      }
+
+      if (setIndex == -1) {
+        setIndex = 0;
+      }
+
+      if (setIndex >= 0 && setIndex < exercise.sets.length) {
+        return (
+          exercise: exercise,
+          set: exercise.sets[setIndex],
+          setIndex: setIndex,
+        );
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> _showTutorialSetEditor({
+    String? exerciseId,
+    int? preferredSetIndex,
+  }) async {
+    final target = _findTutorialSetTarget(
+      exerciseId: exerciseId,
+      preferredSetIndex: preferredSetIndex,
+    );
+    if (target == null || !mounted) return;
+
+    final appConfig = ref.read(appConfigProvider);
+
+    double? suggestedWeight;
+    try {
+      final prefill = await ref
+          .read(exerciseWeightPrefillProvider(target.exercise.name).future)
+          .timeout(const Duration(seconds: 2), onTimeout: () => null);
+      suggestedWeight = prefill?.weight;
+    } catch (_) {
+      suggestedWeight = null;
+    }
+
+    if (!mounted) return;
+
+    await context.showMinimalSetEditSheet(
+      exerciseSet: target.set,
+      countingMode: target.exercise.countingMode,
+      measurementUnit: appConfig.measurementUnit,
+      suggestedWeight: suggestedWeight,
+      currentSetIndex: target.setIndex,
+      totalSets: target.exercise.sets.length,
+      allSets: target.exercise.sets,
+      previousSet: target.setIndex > 0
+          ? target.exercise.sets[target.setIndex - 1]
+          : null,
+      onSave: (updatedSet) {
+        _updateExerciseSet(target.exercise.id, updatedSet);
+      },
+      onApplyToAll: (updatedSet) {
+        final latestTarget = _findTutorialSetTarget(
+          exerciseId: target.exercise.id,
+        );
+        if (latestTarget == null) return;
+        final updatedSets = latestTarget.exercise.sets.map((set) {
+          if (set.isWarmup) return set;
+          return set.copyWith(
+            weight: updatedSet.weight,
+            reps: updatedSet.reps,
+            minReps: updatedSet.minReps,
+            maxReps: updatedSet.maxReps,
+            seconds: updatedSet.seconds,
+          );
+        }).toList();
+        _updateExercise(latestTarget.exercise.copyWith(sets: updatedSets));
+        ref
+            .read(workoutScreenControllerProvider.notifier)
+            .trackGuidedSetEdited();
+      },
+      onSaveAndNext: (updatedSet) {
+        _updateExerciseSet(target.exercise.id, updatedSet);
+        final nextIndex = target.setIndex + 1;
+        if (nextIndex < target.exercise.sets.length) {
+          unawaited(
+            _showTutorialSetEditor(
+              exerciseId: target.exercise.id,
+              preferredSetIndex: nextIndex,
+            ),
+          );
+        }
+      },
+      onSaveAndPrevious: (updatedSet) {
+        _updateExerciseSet(target.exercise.id, updatedSet);
+        final previousIndex = target.setIndex - 1;
+        if (previousIndex >= 0) {
+          unawaited(
+            _showTutorialSetEditor(
+              exerciseId: target.exercise.id,
+              preferredSetIndex: previousIndex,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> _showTutorialRpeCompletionSheet() async {
+    final target = _findTutorialSetTarget(preferIncomplete: true);
+    if (target == null || !mounted) return;
+
+    final targetReps =
+        target.set.reps ?? target.set.minReps ?? target.set.maxReps ?? 10;
+
+    await RpeSelectorBottomSheet.show(
+      context: context,
+      set: target.set,
+      targetReps: targetReps,
+      exercise: target.exercise,
+      onConfirm: (actualReps, actualWeight, rpe) {
+        final updatedSet = target.set.copyWith(
+          isCompleted: true,
+          completedAt: DateTime.now(),
+          actualReps: actualReps,
+          weight: actualWeight,
+          rpe: rpe,
+        );
+        _updateExerciseSet(target.exercise.id, updatedSet);
+      },
+    );
+  }
+
   /// Get the next tutorial step
   WorkoutTutorialStep? _getNextTutorialStep(WorkoutTutorialStep current) {
     switch (current) {
+      case WorkoutTutorialStep.welcome:
+        return WorkoutTutorialStep.addExercise;
       case WorkoutTutorialStep.addExercise:
-        return WorkoutTutorialStep.tapSet;
-      case WorkoutTutorialStep.tapSet:
-        return WorkoutTutorialStep.exerciseMenu;
-      case WorkoutTutorialStep.exerciseMenu:
-        return WorkoutTutorialStep.reorder;
-      case WorkoutTutorialStep.reorder:
-        return WorkoutTutorialStep.finish;
-      case WorkoutTutorialStep.finish:
+        return WorkoutTutorialStep.browseDatabase;
+      case WorkoutTutorialStep.browseDatabase:
+        return WorkoutTutorialStep.filtersAndCustom;
+      case WorkoutTutorialStep.filtersAndCustom:
+        return WorkoutTutorialStep.customizeExercise;
+      case WorkoutTutorialStep.customizeExercise:
+        return WorkoutTutorialStep.workoutSettings;
+      case WorkoutTutorialStep.workoutSettings:
+        return WorkoutTutorialStep.editSetGestures;
+      case WorkoutTutorialStep.editSetGestures:
+        return WorkoutTutorialStep.completeSetRpe;
+      case WorkoutTutorialStep.completeSetRpe:
         return null; // Tutorial complete
       case WorkoutTutorialStep.completed:
         return null;
@@ -1685,11 +2146,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final tutorialState = ref.read(workoutTutorialProvider);
     if (!tutorialState.isActive) return;
 
-    // If we're waiting for exercise to be added, show the next step
-    if (tutorialState.currentStep == WorkoutTutorialStep.tapSet) {
-      Future.delayed(const Duration(milliseconds: 800), () {
-        if (mounted) _showCurrentTutorialStep();
-      });
+    // Counting/rest guidance is now shown in ExerciseCustomizationScreen.
+    // If user adds directly without passing through that screen, advance anyway.
+    if (tutorialState.currentStep == WorkoutTutorialStep.customizeExercise) {
+      ref
+          .read(workoutTutorialProvider.notifier)
+          .advanceToStep(WorkoutTutorialStep.workoutSettings);
     }
   }
 }
@@ -1704,3 +2166,5 @@ class _DeleteConfirmationResult {
   final bool confirmed;
   final bool dontAskAgain;
 }
+
+enum _WorkoutActionsSheetSelection { generateWarmups, openSettings, cancel }

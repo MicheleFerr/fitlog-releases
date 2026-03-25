@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_candidate.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 
 /// Risultato dell'upgrade
 class UpgradeResult {
@@ -203,7 +205,9 @@ class _QuickUpgradeModalState extends ConsumerState<QuickUpgradeModal> {
                     _ExerciseRow(
                       exerciseName: _selectedMatch.exercise.nome,
                       isSource: false,
-                      muscleGroups: _selectedMatch.exercise.focus,
+                      primaryMuscles: _selectedMatch.exercise.focus,
+                      secondaryMuscles:
+                          _selectedMatch.exercise.muscoliSecondari,
                     ),
                   ],
                 ),
@@ -219,25 +223,17 @@ class _QuickUpgradeModalState extends ConsumerState<QuickUpgradeModal> {
                 ),
                 child: Column(
                   children: [
-                    _MetadataRow(
-                      icon: AppIcons.fitnessCenter,
-                      label: l10n.muscles,
-                      value: _selectedMatch.exercise.focus.join(', '),
-                    ),
-                    if (_selectedMatch
-                        .exercise
-                        .muscoliSecondari
-                        .isNotEmpty) ...[
-                      const Divider(height: 16),
-                      _MetadataRow(
-                        icon: AppIcons.accessibility,
-                        label: l10n.secondaryMuscles,
-                        value: _selectedMatch.exercise.muscoliSecondari.join(
-                          ', ',
-                        ),
+                    if (_selectedMatch.exercise.focus.isNotEmpty ||
+                        _selectedMatch.exercise.muscoliSecondari.isNotEmpty)
+                      _MuscleMapMetadata(
+                        label: l10n.muscles,
+                        primaryMuscles: _selectedMatch.exercise.focus,
+                        secondaryMuscles:
+                            _selectedMatch.exercise.muscoliSecondari,
                       ),
-                    ],
-                    const Divider(height: 16),
+                    if (_selectedMatch.exercise.focus.isNotEmpty ||
+                        _selectedMatch.exercise.muscoliSecondari.isNotEmpty)
+                      const Divider(height: 16),
                     _MetadataRow(
                       icon: AppIcons.category,
                       label: l10n.movementPattern,
@@ -247,7 +243,9 @@ class _QuickUpgradeModalState extends ConsumerState<QuickUpgradeModal> {
                     _MetadataRow(
                       icon: AppIcons.build,
                       label: l10n.equipment,
-                      value: _selectedMatch.exercise.attrezzatura,
+                      valueWidget: _EquipmentMetadataValue(
+                        equipment: _selectedMatch.exercise.attrezzatura,
+                      ),
                     ),
                   ],
                 ),
@@ -367,17 +365,22 @@ class _ExerciseRow extends StatelessWidget {
   const _ExerciseRow({
     required this.exerciseName,
     required this.isSource,
-    this.muscleGroups,
+    this.primaryMuscles,
+    this.secondaryMuscles = const [],
   });
 
   final String exerciseName;
   final bool isSource;
-  final List<String>? muscleGroups;
+  final List<String>? primaryMuscles;
+  final List<String> secondaryMuscles;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     final textTheme = context.textTheme;
+    final hasMuscleData =
+        primaryMuscles != null &&
+        (primaryMuscles!.isNotEmpty || secondaryMuscles.isNotEmpty);
 
     return Row(
       children: [
@@ -406,13 +409,66 @@ class _ExerciseRow extends StatelessWidget {
                       : colorScheme.onSurface,
                 ),
               ),
-              if (muscleGroups != null && muscleGroups!.isNotEmpty)
-                Text(
-                  muscleGroups!.join(', '),
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.primary,
-                  ),
+              if (hasMuscleData) ...[
+                const SizedBox(height: AppSpacing.xs),
+                ExerciseTargetMuscleMap(
+                  primaryMuscles: primaryMuscles!,
+                  secondaryMuscles: secondaryMuscles,
+                  previewWidth: 84,
+                  previewHeight: 60,
+                  enableFullscreen: false,
                 ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MuscleMapMetadata extends StatelessWidget {
+  const _MuscleMapMetadata({
+    required this.label,
+    required this.primaryMuscles,
+    this.secondaryMuscles = const [],
+  });
+
+  final String label;
+  final List<String> primaryMuscles;
+  final List<String> secondaryMuscles;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+    final textTheme = context.textTheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          AppIcons.fitnessCenter,
+          size: AppIconSize.small,
+          color: colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              ExerciseTargetMuscleMap(
+                primaryMuscles: primaryMuscles,
+                secondaryMuscles: secondaryMuscles,
+                previewWidth: 104,
+                previewHeight: 76,
+              ),
             ],
           ),
         ),
@@ -425,12 +481,14 @@ class _MetadataRow extends StatelessWidget {
   const _MetadataRow({
     required this.icon,
     required this.label,
-    required this.value,
+    this.value,
+    this.valueWidget,
   });
 
   final IconData icon;
   final String label;
-  final String value;
+  final String? value;
+  final Widget? valueWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -453,9 +511,36 @@ class _MetadataRow extends StatelessWidget {
             ),
           ),
         ),
+        if (valueWidget != null)
+          Flexible(child: valueWidget!)
+        else
+          Text(
+            value ?? '',
+            style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+          ),
+      ],
+    );
+  }
+}
+
+class _EquipmentMetadataValue extends StatelessWidget {
+  const _EquipmentMetadataValue({required this.equipment});
+
+  final String equipment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        EquipmentIconBadge(equipment: equipment, size: 18),
+        const SizedBox(width: AppSpacing.xs),
         Text(
-          value,
-          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+          equipment,
+          textAlign: TextAlign.end,
+          style: context.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );
@@ -506,15 +591,21 @@ class _AlternativeMatchTile extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
-                      match.exercise.focus.join(', '),
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    if (match.exercise.focus.isNotEmpty ||
+                        match.exercise.muscoliSecondari.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.xs),
+                      ExerciseTargetMuscleMap(
+                        primaryMuscles: match.exercise.focus,
+                        secondaryMuscles: match.exercise.muscoliSecondari,
+                        previewWidth: 72,
+                        previewHeight: 52,
+                        enableFullscreen: false,
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
+              const SizedBox(width: AppSpacing.sm),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(

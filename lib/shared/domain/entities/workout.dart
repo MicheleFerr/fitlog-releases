@@ -34,6 +34,69 @@ abstract class Workout with _$Workout {
   factory Workout.fromJson(Map<String, dynamic> json) =>
       _$WorkoutFromJson(json);
 
+  static int _totalSetsForExercise(Exercise exercise) {
+    if (exercise is SupersetExercise) {
+      return exercise.supersetSets.length;
+    }
+    if (exercise is DropSetExercise) {
+      return exercise.stages.length;
+    }
+    if (exercise is RestPauseExercise) {
+      return exercise.restPauseSets.length;
+    }
+    return exercise.sets.length;
+  }
+
+  static int _completedSetsForExercise(Exercise exercise) {
+    if (exercise is SupersetExercise) {
+      return exercise.supersetSets.where((set) => set.isCompleted).length;
+    }
+    if (exercise is DropSetExercise) {
+      return exercise.stages.where((stage) => stage.isCompleted).length;
+    }
+    if (exercise is RestPauseExercise) {
+      return exercise.restPauseSets.where((set) => set.isCompleted).length;
+    }
+    return exercise.sets.where((set) => set.isCompleted).length;
+  }
+
+  static double _completedVolumeForExercise(Exercise exercise) {
+    if (exercise is SupersetExercise) {
+      return exercise.supersetSets
+          .where((set) => set.isCompleted)
+          .fold<double>(0.0, (total, set) {
+            final roundVolume = set.exerciseData.values.fold<double>(
+              0.0,
+              (roundTotal, data) {
+                final weight = data.actualWeight ?? data.targetWeight ?? 0.0;
+                final reps = data.actualReps ?? data.targetReps ?? 0;
+                return roundTotal + (weight * reps);
+              },
+            );
+            return total + roundVolume;
+          });
+    }
+    if (exercise is DropSetExercise) {
+      return exercise.stages
+          .where((stage) => stage.isCompleted)
+          .fold<double>(
+            0.0,
+            (total, stage) => total + (stage.weight * stage.effectiveReps),
+          );
+    }
+    if (exercise is RestPauseExercise) {
+      return exercise.restPauseSets
+          .where((set) => set.isCompleted)
+          .fold<double>(
+            0.0,
+            (total, set) => total + (exercise.weight * set.effectiveReps),
+          );
+    }
+    return exercise.sets
+        .where((set) => set.isCompleted)
+        .fold<double>(0.0, (total, set) => total + set.volume);
+  }
+
   // Computed properties
   Duration? get duration {
     if (startTime == null) return null;
@@ -42,24 +105,27 @@ abstract class Workout with _$Workout {
   }
 
   int get completedExercises {
-    return exercises
-        .where(
-          (exercise) =>
-              exercise.sets.isNotEmpty &&
-              exercise.sets.every((set) => set.isCompleted),
-        )
-        .length;
+    return exercises.where((exercise) => exercise.isCompleted).length;
   }
 
   int get totalSets {
-    return exercises.fold(0, (total, exercise) => total + exercise.sets.length);
+    return exercises.fold(
+      0,
+      (total, exercise) => total + _totalSetsForExercise(exercise),
+    );
   }
 
   int get completedSets {
     return exercises.fold(
       0,
-      (total, exercise) =>
-          total + exercise.sets.where((set) => set.isCompleted).length,
+      (total, exercise) => total + _completedSetsForExercise(exercise),
+    );
+  }
+
+  double get completedVolume {
+    return exercises.fold(
+      0.0,
+      (total, exercise) => total + _completedVolumeForExercise(exercise),
     );
   }
 
@@ -111,6 +177,7 @@ abstract class Workout with _$Workout {
     return copyWith(
       status: WorkoutStatus.inProgress,
       startTime: DateTime.now(),
+      endTime: null,
       updatedAt: DateTime.now(),
       // 🐛 BUG FIX: Clear preload flags when starting workout
       // Without this, cleanup timer kills active workouts after preloadExpiry
@@ -120,21 +187,34 @@ abstract class Workout with _$Workout {
   }
 
   Workout completeWorkout() {
+    final completedAt = status == WorkoutStatus.paused
+        ? DateTime.now()
+        : (endTime ?? DateTime.now());
     return copyWith(
       status: WorkoutStatus.completed,
-      endTime: DateTime.now(),
+      endTime: completedAt,
       updatedAt: DateTime.now(),
     );
   }
 
   Workout pauseWorkout() {
-    return copyWith(status: WorkoutStatus.paused, updatedAt: DateTime.now());
+    final pausedAt = DateTime.now();
+    return copyWith(
+      status: WorkoutStatus.paused,
+      endTime: pausedAt,
+      updatedAt: pausedAt,
+    );
   }
 
   Workout resumeWorkout() {
+    final resumedAt = DateTime.now();
+    final adjustedStartTime =
+        startTime != null && endTime != null ? startTime!.add(resumedAt.difference(endTime!)) : startTime;
     return copyWith(
       status: WorkoutStatus.inProgress,
-      updatedAt: DateTime.now(),
+      startTime: adjustedStartTime,
+      endTime: null,
+      updatedAt: resumedAt,
       // 🐛 BUG FIX: Clear preload flags when resuming workout (safety measure)
       isPreloaded: false,
       preloadExpiry: null,

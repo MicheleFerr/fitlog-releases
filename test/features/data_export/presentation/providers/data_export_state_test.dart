@@ -61,16 +61,12 @@ void main() {
     });
 
     test('isExporting defaults to false', () {
-      final state = DataExportState(
-        progress: ExportProgress.initial(),
-      );
+      final state = DataExportState(progress: ExportProgress.initial());
       expect(state.isExporting, isFalse);
     });
 
     test('request defaults to null', () {
-      final state = DataExportState(
-        progress: ExportProgress.initial(),
-      );
+      final state = DataExportState(progress: ExportProgress.initial());
       expect(state.request, isNull);
     });
   });
@@ -143,7 +139,9 @@ void main() {
     });
 
     test('multiple copyWith calls chain correctly', () {
-      final request = ExportRequest(categories: {ExportCategory.workoutHistory});
+      final request = ExportRequest(
+        categories: {ExportCategory.workoutHistory},
+      );
       final newProgress = ExportProgress(
         status: ExportStatus.completed,
         progress: 1.0,
@@ -363,17 +361,21 @@ void main() {
 
     test('export button should be disabled when canExport is false', () {
       final categories = ExportCategory.values.toSet();
-      final canExport = false;
-      final isEnabled = canExport && categories.isNotEmpty;
+      bool computeEnabled(bool canExport) => canExport && categories.isNotEmpty;
+
+      final isEnabled = computeEnabled(false);
       expect(isEnabled, isFalse);
     });
 
-    test('export button enabled when categories selected and canExport true', () {
-      final categories = {ExportCategory.workoutHistory};
-      final canExport = true;
-      final isEnabled = canExport && categories.isNotEmpty;
-      expect(isEnabled, isTrue);
-    });
+    test(
+      'export button enabled when categories selected and canExport true',
+      () {
+        final categories = {ExportCategory.workoutHistory};
+        final canExport = true;
+        final isEnabled = canExport && categories.isNotEmpty;
+        expect(isEnabled, isTrue);
+      },
+    );
 
     test('select-all then deselect-all toggles correctly', () {
       var selected = ExportCategory.values.toSet();
@@ -399,7 +401,10 @@ void main() {
     });
 
     test('single category toggle removes from set', () {
-      final selected = {ExportCategory.workoutHistory, ExportCategory.templates};
+      final selected = {
+        ExportCategory.workoutHistory,
+        ExportCategory.templates,
+      };
       selected.remove(ExportCategory.workoutHistory);
       expect(selected.contains(ExportCategory.workoutHistory), isFalse);
       expect(selected.length, 1);
@@ -435,17 +440,16 @@ void main() {
         data.bodyMeasurements.isNotEmpty;
     bool shouldIncludePhotos(ExportedData data) =>
         data.progressPhotoUrls.isNotEmpty;
-    bool shouldIncludePRs(ExportedData data) =>
-        data.personalRecords.isNotEmpty;
+    bool shouldIncludePRs(ExportedData data) => data.personalRecords.isNotEmpty;
     bool shouldIncludeAchievements(ExportedData data) =>
         data.achievements.isNotEmpty;
 
     ExportedData baseData() => ExportedData(
-          exportId: 'zip-test-001',
-          exportedAt: DateTime(2024, 6, 1),
-          appVersion: '1.0.0',
-          userId: 'user-001',
-        );
+      exportId: 'zip-test-001',
+      exportedAt: DateTime(2024, 6, 1),
+      appVersion: '1.0.0',
+      userId: 'user-001',
+    );
 
     test('empty data: no category files included', () {
       final data = baseData();
@@ -697,27 +701,17 @@ void main() {
   group('ExportRequest equality edge cases', () {
     test('same categories in different order are equal (Set semantics)', () {
       final a = ExportRequest(
-        categories: {
-          ExportCategory.workoutHistory,
-          ExportCategory.templates,
-        },
+        categories: {ExportCategory.workoutHistory, ExportCategory.templates},
       );
       final b = ExportRequest(
-        categories: {
-          ExportCategory.templates,
-          ExportCategory.workoutHistory,
-        },
+        categories: {ExportCategory.templates, ExportCategory.workoutHistory},
       );
       expect(a, equals(b));
     });
 
     test('different category sets are not equal', () {
-      final a = ExportRequest(
-        categories: {ExportCategory.workoutHistory},
-      );
-      final b = ExportRequest(
-        categories: {ExportCategory.templates},
-      );
+      final a = ExportRequest(categories: {ExportCategory.workoutHistory});
+      final b = ExportRequest(categories: {ExportCategory.templates});
       expect(a, isNot(equals(b)));
     });
 

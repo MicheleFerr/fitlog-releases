@@ -7,11 +7,11 @@ abstract final class PlatformChannels {
   static const liveActivity = 'com.gymbro.timer/live_activity';
   static const workoutSession = 'com.gymbro.timer/workout_session';
   static const notifications = 'com.gymbro/notifications';
+  static const trackingAuthorization = 'com.gymbro/tracking_authorization';
   static const featureFlags = 'com.gymbro.feature_flags';
   static const audioDebug = 'com.gymbro.fitlog/audio_debug';
   static const timerSoundFix = 'com.gymbro.timer_sound_fix';
-  static const soundTest = 'com.gymbro.sound_test';
-  static const backgroundAudio = 'com.gymbro.background_audio';
   static const healthkitActivity = 'com.gymbro/healthkit_activity';
   static const watchConnectivity = 'com.gymbro/watch_connectivity';
+  static const appIcon = 'com.gymbro/app_icon';
 }

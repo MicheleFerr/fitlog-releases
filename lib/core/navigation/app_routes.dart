@@ -66,6 +66,9 @@ abstract final class AppRoutes {
   static const String workoutPath = '/workout';
   static const String workoutName = 'workout';
 
+  static const String workoutStartPath = '/workout/start/:templateId';
+  static const String workoutStartName = 'workout-start';
+
   /// Stats - analytics and statistics (sub-route of Home, no tab)
   static const String statsPath = '/stats';
   static const String statsName = 'stats';
@@ -110,10 +113,12 @@ abstract final class AppRoutes {
       '/stats/analytics/exercise/:exerciseName';
   static const String analyticsExerciseDetailName = 'analytics-exercise-detail';
 
-  static const String exerciseProgressPath = '/stats/analytics/exercise-progress';
+  static const String exerciseProgressPath =
+      '/stats/analytics/exercise-progress';
   static const String exerciseProgressName = 'exercise-progress';
 
-  static const String exerciseProgressDetailPath = '/stats/analytics/exercise-progress/detail';
+  static const String exerciseProgressDetailPath =
+      '/stats/analytics/exercise-progress/detail';
   static const String exerciseProgressDetailName = 'exercise-progress-detail';
 
   static const String proAnalyticsPath = '/stats/analytics/pro';
@@ -139,8 +144,10 @@ abstract final class AppRoutes {
   static const String aiCoachPath = '/ai-coach';
   static const String aiCoachName = 'ai-coach';
 
-  static const String aiCoachDocumentsAttributionPath = '/ai-coach/documents/attribution';
-  static const String aiCoachDocumentsAttributionName = 'ai-coach-documents-attribution';
+  static const String aiCoachDocumentsAttributionPath =
+      '/ai-coach/documents/attribution';
+  static const String aiCoachDocumentsAttributionName =
+      'ai-coach-documents-attribution';
 
   static const String routinePath = '/routine';
   static const String routineName = 'routine';
@@ -225,7 +232,8 @@ abstract final class AppRoutes {
   static const String coachTemplatesName = 'coach-templates';
 
   /// Coach template editor - create or edit a coach template
-  static const String coachTemplateEditorPath = '/profile/coach/templates/editor';
+  static const String coachTemplateEditorPath =
+      '/profile/coach/templates/editor';
   static const String coachTemplateEditorName = 'coach-template-editor';
 
   /// Coach settings - branding and folder configuration

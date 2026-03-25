@@ -22,6 +22,7 @@ class CustomExercise extends Equatable {
     required this.id,
     required this.nome,
     this.baseExerciseId,
+    this.inclinazioneGradi,
     required this.focus,
     required this.muscoliSecondari,
     required this.tipoEsercizio,
@@ -50,6 +51,7 @@ class CustomExercise extends Equatable {
       id: const Uuid().v4(),
       nome: nome,
       baseExerciseId: null,
+      inclinazioneGradi: null,
       focus: focus,
       muscoliSecondari: muscoliSecondari,
       tipoEsercizio: tipoEsercizio,
@@ -72,6 +74,7 @@ class CustomExercise extends Equatable {
     required String patternMovimento,
     required String attrezzatura,
     required bool isModifiedFromBase,
+    int? inclinazioneGradi,
     DateTime? unlockedUntil,
     String? userId,
   }) {
@@ -79,6 +82,7 @@ class CustomExercise extends Equatable {
       id: const Uuid().v4(),
       nome: nome,
       baseExerciseId: baseExerciseId,
+      inclinazioneGradi: inclinazioneGradi,
       focus: focus,
       muscoliSecondari: muscoliSecondari,
       tipoEsercizio: tipoEsercizio,
@@ -96,6 +100,7 @@ class CustomExercise extends Equatable {
       id: json['id'] as String,
       nome: json['nome'] as String,
       baseExerciseId: json['baseExerciseId'] as String?,
+      inclinazioneGradi: (json['inclinazioneGradi'] as num?)?.toInt(),
       focus: (json['focus'] as List<dynamic>).cast<String>(),
       muscoliSecondari: (json['muscoliSecondari'] as List<dynamic>)
           .cast<String>(),
@@ -122,6 +127,10 @@ class CustomExercise extends Equatable {
   /// Reference to base exercise if this is a variant (null if pure custom)
   @HiveField(2)
   final String? baseExerciseId;
+
+  /// Optional angle for incline/decline variants in degrees.
+  @HiveField(12)
+  final int? inclinazioneGradi;
 
   /// Primary muscles targeted (e.g., ["PETT", "DELT ANT"])
   @HiveField(3)
@@ -168,6 +177,7 @@ class CustomExercise extends Equatable {
       'id': id,
       'nome': nome,
       'baseExerciseId': baseExerciseId,
+      'inclinazioneGradi': inclinazioneGradi,
       'focus': focus,
       'muscoliSecondari': muscoliSecondari,
       'tipoEsercizio': tipoEsercizio,
@@ -215,6 +225,12 @@ class CustomExercise extends Equatable {
   /// Display string for secondary muscles
   String get muscoliSecondariDisplayName => muscoliSecondari.join(', ');
 
+  /// Name shown in UI; for variants includes inclination degrees when available.
+  String get displayName {
+    if (!isVariant || inclinazioneGradi == null) return nome;
+    return '$nome ($inclinazioneGradi°)';
+  }
+
   /// Icon for equipment type
   String get attrezzaturaIcon {
     switch (attrezzatura.toLowerCase()) {
@@ -239,6 +255,7 @@ class CustomExercise extends Equatable {
     String? id,
     String? nome,
     String? baseExerciseId,
+    int? inclinazioneGradi,
     List<String>? focus,
     List<String>? muscoliSecondari,
     String? tipoEsercizio,
@@ -253,6 +270,7 @@ class CustomExercise extends Equatable {
       id: id ?? this.id,
       nome: nome ?? this.nome,
       baseExerciseId: baseExerciseId ?? this.baseExerciseId,
+      inclinazioneGradi: inclinazioneGradi ?? this.inclinazioneGradi,
       focus: focus ?? this.focus,
       muscoliSecondari: muscoliSecondari ?? this.muscoliSecondari,
       tipoEsercizio: tipoEsercizio ?? this.tipoEsercizio,
@@ -272,6 +290,7 @@ class CustomExercise extends Equatable {
     id,
     nome,
     baseExerciseId,
+    inclinazioneGradi,
     focus,
     muscoliSecondari,
     tipoEsercizio,

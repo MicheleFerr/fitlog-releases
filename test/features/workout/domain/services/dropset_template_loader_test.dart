@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
@@ -190,18 +188,21 @@ void main() {
     group('error handling', () {
       test('throws on invalid asset path', () async {
         // Mock rootBundle to return invalid JSON
-        final originalBundle = rootBundle;
-        ServicesBinding.instance.defaultBinaryMessenger
-            .setMockMessageHandler('flutter/assets', (message) async {
-          return null;
-        });
+        ServicesBinding.instance.defaultBinaryMessenger.setMockMessageHandler(
+          'flutter/assets',
+          (message) async {
+            return null;
+          },
+        );
 
         DropsetTemplateLoader.clearCache();
 
         // Restore after test - the loader reads from the real assets in test
         // so we just verify the error wrapping behavior via the static path
-        ServicesBinding.instance.defaultBinaryMessenger
-            .setMockMessageHandler('flutter/assets', null);
+        ServicesBinding.instance.defaultBinaryMessenger.setMockMessageHandler(
+          'flutter/assets',
+          null,
+        );
       });
     });
 

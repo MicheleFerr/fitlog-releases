@@ -120,6 +120,13 @@ class WorkoutTemplateRepository {
     }
   }
 
+  /// Local repository templates are always editable.
+  Future<WorkoutTemplate> ensureEditableTemplate(
+    WorkoutTemplate template,
+  ) async {
+    return template;
+  }
+
   /// Elimina un template personalizzato
   Future<void> deleteTemplate(String templateId) async {
     try {

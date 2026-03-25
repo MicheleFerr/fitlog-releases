@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
@@ -36,7 +37,6 @@ final workoutSessionLAProvider =
 
 /// State class for the Live Activity
 class WorkoutSessionLAState {
-
   const WorkoutSessionLAState({
     this.isActive = false,
     this.activityId,
@@ -86,6 +86,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
   /// ✅ FIX: Debounce timer to prevent race condition with REST→EXERCISE transition
   /// Gives iOS native side time to complete the transitionToRest before we call transitionToExercise
   Timer? _transitionDebounceTimer;
+  bool _isReconcilingWithSystem = false;
 
   @override
   WorkoutSessionLAState build() {
@@ -279,11 +280,11 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       );
     }
 
-    final firstExercise = workout.exercises.isNotEmpty
-        ? workout.exercises.first
-        : null;
+    final sessionTarget = _findFirstIncompleteTarget(workout);
+    final currentExercise = sessionTarget?.exercise;
+    final currentSetIndex = sessionTarget?.setIndex;
 
-    if (firstExercise == null) {
+    if (currentExercise == null || currentSetIndex == null) {
       if (kDebugMode) {
         debugPrint('[WorkoutSessionLA] ❌ No exercises in workout');
       }
@@ -294,19 +295,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     final appConfig = ref.read(appConfigProvider);
     final rpeEnabled = appConfig.rpeTracking ?? false;
 
-    // Find first incomplete set
-    final firstIncompleteSetIndex = firstExercise.sets.indexWhere(
-      (set) => !set.isCompleted,
-    );
-    final currentSetIndex = firstIncompleteSetIndex == -1
-        ? firstExercise.sets.length
-        : firstIncompleteSetIndex + 1;
-
-    final firstSet = firstExercise.sets.isNotEmpty
-        ? firstExercise.sets[firstIncompleteSetIndex == -1
-              ? 0
-              : firstIncompleteSetIndex]
-        : null;
+    final currentSet = _resolveDisplayedSet(currentExercise, currentSetIndex);
 
     // Count completed exercises
     final completedExercises = workout.exercises
@@ -316,11 +305,11 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     final activityId = await _service.startSession(
       workoutId: workout.id,
       workoutName: workout.name,
-      exerciseName: firstExercise.name,
+      exerciseName: currentExercise.name,
       currentSet: currentSetIndex,
-      totalSets: firstExercise.sets.length,
-      weight: firstSet?.weight ?? 0,
-      targetReps: firstSet?.reps ?? 0,
+      totalSets: currentExercise.sets.length,
+      weight: currentSet?.weight ?? 0,
+      targetReps: currentSet?.reps ?? 0,
       completedExercises: completedExercises,
       totalExercises: workout.exercises.length,
       rpeEnabled: rpeEnabled,
@@ -336,21 +325,21 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         isActive: true,
         activityId: activityId,
         mode: WorkoutSessionMode.exercise,
-        currentExerciseName: firstExercise.name,
-        currentExerciseId: firstExercise.id,
+        currentExerciseName: currentExercise.name,
+        currentExerciseId: currentExercise.id,
         currentSetIndex: currentSetIndex,
-        totalSets: firstExercise.sets.length,
+        totalSets: currentExercise.sets.length,
       );
 
       // Store the current exercise's rest time in UserDefaults for AppIntent access
-      final restDuration = firstExercise.restTime ?? 90;
+      final restDuration = currentExercise.restTime ?? 90;
       await _service.setCurrentRestDuration(restDuration);
 
       // Store RPE tracking setting so AppIntent knows whether to show RPE mode
       await _service.setRpeTrackingEnabled(rpeEnabled);
 
       // Precompute next exercise info for AppIntent
-      await _computeAndStoreNextInfo(firstExercise, currentSetIndex, workout);
+      await _computeAndStoreNextInfo(currentExercise, currentSetIndex, workout);
     } else {
       if (kDebugMode) {
         debugPrint(
@@ -380,7 +369,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         ? exercise.sets[firstIncompleteSetIndex]
         : (exercise.sets.isNotEmpty ? exercise.sets.last : null);
 
-    await _service.transitionToExercise(
+    final didSync = await _service.transitionToExercise(
       exerciseName: exercise.name,
       currentSet: currentSetIndex,
       totalSets: exercise.sets.length,
@@ -388,6 +377,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       targetReps: currentSet?.reps ?? 0,
       completedExercises: completedExercises,
     );
+    if (!_handleNativeSyncResult(didSync)) {
+      return;
+    }
 
     state = state.copyWith(
       mode: WorkoutSessionMode.exercise,
@@ -442,7 +434,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         ? nextExercise.sets[nextSetIndex - 1]
         : (nextExercise.sets.isNotEmpty ? nextExercise.sets.first : null);
 
-    await _service.transitionToRest(
+    final didSync = await _service.transitionToRest(
       restDuration: restDurationSeconds,
       nextExerciseName: nextExercise.name,
       nextSet: nextSetIndex,
@@ -450,6 +442,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       weight: nextSet?.weight ?? 0,
       targetReps: nextSet?.reps ?? 0,
     );
+    if (!_handleNativeSyncResult(didSync)) {
+      return;
+    }
 
     state = state.copyWith(
       mode: WorkoutSessionMode.rest,
@@ -464,7 +459,10 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
   Future<void> transitionToRPE() async {
     if (!state.isActive) return;
 
-    await _service.transitionToRPE();
+    final didSync = await _service.transitionToRPE();
+    if (!_handleNativeSyncResult(didSync)) {
+      return;
+    }
 
     state = state.copyWith(mode: WorkoutSessionMode.rpe);
   }
@@ -495,7 +493,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
           '[WorkoutSessionLA] 📤 Calling iOS transitionToExercise: ${exercise.name} set $setIndex',
         );
       }
-      await _service.transitionToExercise(
+      final didSync = await _service.transitionToExercise(
         exerciseName: exercise.name,
         currentSet: setIndex,
         totalSets: exercise.sets.length,
@@ -503,6 +501,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         targetReps: set?.reps ?? 0,
         completedExercises: completedExercises,
       );
+      if (!_handleNativeSyncResult(didSync)) {
+        return;
+      }
       if (kDebugMode) {
         debugPrint('[WorkoutSessionLA] ✅ iOS transitionToExercise completed');
       }
@@ -590,7 +591,8 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
             : null;
 
         // Use the inter-exercise rest (restAfterExercise) if available
-        final interExerciseRest = exercise.restAfterExercise ?? exercise.restTime ?? 90;
+        final interExerciseRest =
+            exercise.restAfterExercise ?? exercise.restTime ?? 90;
 
         await _service.setNextExerciseInfo(
           exerciseName: nextExercise.name,
@@ -623,6 +625,63 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     await _service.endSession(dismissPolicy: dismissPolicy);
 
     state = const WorkoutSessionLAState();
+  }
+
+  Future<void> reconcileWithCurrentWorkout({
+    bool recreateIfMissing = true,
+  }) async {
+    if (!Platform.isIOS || _isReconcilingWithSystem) return;
+
+    _isReconcilingWithSystem = true;
+    try {
+      final workout = ref.read(currentWorkoutProvider);
+      final hasNativeSession = await _service.isSessionActive();
+
+      if (hasNativeSession) {
+        if (workout != null) {
+          final nativeState = await _service.getSessionState();
+          if (nativeState != null) {
+            final resolvedExercise = _findExerciseForSync(
+              workout,
+              exerciseId: state.currentExerciseId,
+              exerciseName: nativeState.exerciseName,
+            );
+
+            state = WorkoutSessionLAState(
+              isActive: true,
+              activityId: _service.currentActivityId ?? state.activityId,
+              mode: nativeState.mode,
+              currentExerciseName:
+                  resolvedExercise?.name ?? nativeState.exerciseName,
+              currentExerciseId: resolvedExercise?.id,
+              currentSetIndex: nativeState.currentSet,
+              totalSets: nativeState.totalSets,
+            );
+          }
+        }
+        return;
+      }
+
+      final previousState = state;
+      final hadStaleSession = previousState.isActive || _service.isActive;
+      if (hadStaleSession) {
+        _service.markSessionInactive();
+      }
+
+      if (workout == null || !workout.isActive || !recreateIfMissing) {
+        if (hadStaleSession) {
+          state = const WorkoutSessionLAState();
+        }
+        return;
+      }
+
+      await _restoreLiveActivityFromCurrentContext(
+        workout,
+        previousState: previousState,
+      );
+    } finally {
+      _isReconcilingWithSystem = false;
+    }
   }
 
   /// Check for pending Live Activity events on app resume
@@ -691,11 +750,13 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       // Stream.listen callbacks can't await, so use unawaited + catchError
       // to prevent silently swallowed errors.
       unawaited(
-        workoutNotifier.extendRestTimerFromLiveActivity(addedSeconds).catchError((Object e) {
-          if (kDebugMode) {
-            debugPrint('[WorkoutSessionLA] Error extending rest timer: $e');
-          }
-        }),
+        workoutNotifier
+            .extendRestTimerFromLiveActivity(addedSeconds)
+            .catchError((Object e) {
+              if (kDebugMode) {
+                debugPrint('[WorkoutSessionLA] Error extending rest timer: $e');
+              }
+            }),
       );
     } else if (event.isSelectRPE) {
       // User selected an RPE value - update Live Activity UI to show selection
@@ -730,6 +791,313 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         }
       }
     }
+  }
+
+  Future<void> _restoreLiveActivityFromCurrentContext(
+    Workout workout, {
+    required WorkoutSessionLAState previousState,
+  }) async {
+    final target = _resolveSessionTarget(
+      workout,
+      referenceState: previousState,
+    );
+    if (target == null) {
+      if (kDebugMode) {
+        debugPrint(
+          '[WorkoutSessionLA] ⚠️ No session target found while restoring Live Activity',
+        );
+      }
+      state = const WorkoutSessionLAState();
+      return;
+    }
+
+    final timerState = ref.read(unifiedTimerProvider);
+    final desiredMode = _resolveRestoreMode(previousState, timerState);
+    final exercise = target.exercise;
+    final setIndex = target.setIndex;
+    final displayedSet = _resolveDisplayedSet(exercise, setIndex);
+    final appConfig = ref.read(appConfigProvider);
+    final rpeEnabled = appConfig.rpeTracking ?? false;
+    final completedExercises = workout.exercises
+        .where((e) => e.sets.every((s) => s.isCompleted))
+        .length;
+
+    if (kDebugMode) {
+      debugPrint(
+        '[WorkoutSessionLA] ♻️ Restoring Live Activity in ${desiredMode.name} mode for ${exercise.name} set $setIndex',
+      );
+    }
+
+    final activityId = await _service.startSession(
+      workoutId: workout.id,
+      workoutName: workout.name,
+      exerciseName: exercise.name,
+      currentSet: setIndex,
+      totalSets: exercise.sets.length,
+      weight: displayedSet?.weight ?? 0,
+      targetReps: displayedSet?.reps ?? 0,
+      completedExercises: completedExercises,
+      totalExercises: workout.exercises.length,
+      rpeEnabled: rpeEnabled,
+    );
+
+    if (activityId == null) {
+      state = const WorkoutSessionLAState();
+      return;
+    }
+
+    state = WorkoutSessionLAState(
+      isActive: true,
+      activityId: activityId,
+      mode: WorkoutSessionMode.exercise,
+      currentExerciseName: exercise.name,
+      currentExerciseId: exercise.id,
+      currentSetIndex: setIndex,
+      totalSets: exercise.sets.length,
+    );
+
+    await _service.setCurrentRestDuration(exercise.restTime ?? 90);
+    await _service.setRpeTrackingEnabled(rpeEnabled);
+    await _computeAndStoreNextInfo(exercise, setIndex, workout);
+
+    if (desiredMode == WorkoutSessionMode.rest) {
+      await _restoreRestMode(
+        exercise: exercise,
+        setIndex: setIndex,
+        timerState: timerState,
+      );
+      state = WorkoutSessionLAState(
+        isActive: true,
+        activityId: activityId,
+        mode: WorkoutSessionMode.rest,
+        currentExerciseName: exercise.name,
+        currentExerciseId: exercise.id,
+        currentSetIndex: setIndex,
+        totalSets: exercise.sets.length,
+      );
+      return;
+    }
+
+    if (desiredMode == WorkoutSessionMode.rpe) {
+      await _service.transitionToRPE();
+      state = WorkoutSessionLAState(
+        isActive: true,
+        activityId: activityId,
+        mode: WorkoutSessionMode.rpe,
+        currentExerciseName: exercise.name,
+        currentExerciseId: exercise.id,
+        currentSetIndex: setIndex,
+        totalSets: exercise.sets.length,
+      );
+      return;
+    }
+
+    state = WorkoutSessionLAState(
+      isActive: true,
+      activityId: activityId,
+      mode: WorkoutSessionMode.exercise,
+      currentExerciseName: exercise.name,
+      currentExerciseId: exercise.id,
+      currentSetIndex: setIndex,
+      totalSets: exercise.sets.length,
+    );
+  }
+
+  Future<void> _restoreRestMode({
+    required Exercise exercise,
+    required int setIndex,
+    UnifiedTimerState? timerState,
+  }) async {
+    final displayedSet = _resolveDisplayedSet(exercise, setIndex);
+    final totalRestSeconds =
+        timerState?.totalDurationSeconds ?? exercise.restTime ?? 90;
+
+    await _service.transitionToRest(
+      restDuration: totalRestSeconds,
+      nextExerciseName: exercise.name,
+      nextSet: setIndex,
+      totalSets: exercise.sets.length,
+      weight: displayedSet?.weight ?? 0,
+      targetReps: displayedSet?.reps ?? 0,
+    );
+
+    if (timerState == null) {
+      return;
+    }
+
+    if (timerState.isPaused) {
+      await _service.pauseRestTimer(timerState.remainingSeconds);
+      return;
+    }
+
+    if (timerState.endTime != null) {
+      await _service.syncRestEndTime(timerState.endTime!);
+      return;
+    }
+
+    if (timerState.remainingSeconds > 0) {
+      await _service.syncRestEndTime(
+        DateTime.now().add(Duration(seconds: timerState.remainingSeconds)),
+      );
+    }
+  }
+
+  WorkoutSessionMode _resolveRestoreMode(
+    WorkoutSessionLAState referenceState,
+    UnifiedTimerState? timerState,
+  ) {
+    if (timerState != null &&
+        (timerState.isActive || timerState.isPaused) &&
+        timerState.remainingSeconds > 0) {
+      return WorkoutSessionMode.rest;
+    }
+
+    if (referenceState.mode == WorkoutSessionMode.rpe) {
+      return WorkoutSessionMode.rpe;
+    }
+
+    return WorkoutSessionMode.exercise;
+  }
+
+  bool _handleNativeSyncResult(bool didSync) {
+    if (didSync) {
+      return true;
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '[WorkoutSessionLA] ⚠️ Native Live Activity missing during sync - clearing local state',
+      );
+    }
+    _service.markSessionInactive();
+    state = const WorkoutSessionLAState();
+    return false;
+  }
+
+  ({Exercise exercise, int setIndex})? _findFirstIncompleteTarget(
+    Workout workout,
+  ) {
+    for (final exercise in workout.exercises) {
+      final incompleteIndex = exercise.sets.indexWhere(
+        (set) => !set.isCompleted,
+      );
+      if (incompleteIndex != -1) {
+        return (exercise: exercise, setIndex: incompleteIndex + 1);
+      }
+    }
+
+    if (workout.exercises.isEmpty) {
+      return null;
+    }
+
+    final fallbackExercise = workout.exercises.first;
+    return (
+      exercise: fallbackExercise,
+      setIndex: fallbackExercise.sets.isEmpty
+          ? 1
+          : fallbackExercise.sets.length,
+    );
+  }
+
+  ({Exercise exercise, int setIndex})? _resolveSessionTarget(
+    Workout workout, {
+    required WorkoutSessionLAState referenceState,
+  }) {
+    final timerState = ref.read(unifiedTimerProvider);
+    final preferredSetIndex =
+        referenceState.currentExerciseId != null ||
+            (referenceState.currentExerciseName?.isNotEmpty ?? false)
+        ? (referenceState.currentSetIndex > 0
+              ? referenceState.currentSetIndex
+              : timerState?.currentSet)
+        : timerState?.currentSet;
+    final exercise = _findExerciseForSync(
+      workout,
+      exerciseId: referenceState.currentExerciseId,
+      exerciseName:
+          timerState?.exerciseName ?? referenceState.currentExerciseName,
+    );
+
+    if (exercise != null) {
+      return (
+        exercise: exercise,
+        setIndex: _resolveSetIndex(
+          exercise,
+          preferredSetIndex: preferredSetIndex,
+        ),
+      );
+    }
+
+    for (final candidate in workout.exercises) {
+      final incompleteIndex = candidate.sets.indexWhere(
+        (set) => !set.isCompleted,
+      );
+      if (incompleteIndex != -1) {
+        return (exercise: candidate, setIndex: incompleteIndex + 1);
+      }
+    }
+
+    if (workout.exercises.isEmpty) {
+      return null;
+    }
+
+    final fallbackExercise = workout.exercises.last;
+    return (
+      exercise: fallbackExercise,
+      setIndex: _resolveSetIndex(fallbackExercise),
+    );
+  }
+
+  Exercise? _findExerciseForSync(
+    Workout workout, {
+    String? exerciseId,
+    String? exerciseName,
+  }) {
+    if (exerciseId != null) {
+      for (final exercise in workout.exercises) {
+        if (exercise.id == exerciseId) {
+          return exercise;
+        }
+      }
+    }
+
+    if (exerciseName != null && exerciseName.isNotEmpty) {
+      for (final exercise in workout.exercises) {
+        if (exercise.name == exerciseName) {
+          return exercise;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  int _resolveSetIndex(Exercise exercise, {int? preferredSetIndex}) {
+    if (exercise.sets.isEmpty) {
+      return 1;
+    }
+
+    if (preferredSetIndex != null &&
+        preferredSetIndex >= 1 &&
+        preferredSetIndex <= exercise.sets.length) {
+      return preferredSetIndex;
+    }
+
+    final incompleteIndex = exercise.sets.indexWhere((set) => !set.isCompleted);
+    if (incompleteIndex != -1) {
+      return incompleteIndex + 1;
+    }
+
+    return exercise.sets.length;
+  }
+
+  ExerciseSet? _resolveDisplayedSet(Exercise exercise, int setIndex) {
+    if (exercise.sets.isEmpty) {
+      return null;
+    }
+
+    final safeIndex = setIndex.clamp(1, exercise.sets.length);
+    return exercise.sets[safeIndex - 1];
   }
 }
 
@@ -778,7 +1146,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
         final currentExercise = workout.exercises.firstWhere(
           (e) => e.id == currentExerciseId,
         );
-        final incompleteSets = currentExercise.sets.where((set) => !set.isCompleted);
+        final incompleteSets = currentExercise.sets.where(
+          (set) => !set.isCompleted,
+        );
         if (incompleteSets.isNotEmpty) {
           targetExercise = currentExercise;
           targetSet = incompleteSets.first;
@@ -963,7 +1333,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
         final currentExercise = workout.exercises.firstWhere(
           (e) => e.id == currentExerciseId,
         );
-        final incompleteSets = currentExercise.sets.where((set) => !set.isCompleted);
+        final incompleteSets = currentExercise.sets.where(
+          (set) => !set.isCompleted,
+        );
         if (incompleteSets.isNotEmpty) {
           targetExercise = currentExercise;
           targetSet = incompleteSets.first;

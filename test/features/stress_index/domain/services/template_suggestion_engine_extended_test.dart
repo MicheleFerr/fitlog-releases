@@ -31,7 +31,10 @@ void main() {
     test('defaultVolumeLandmarks is accessible', () {
       expect(defaultVolumeLandmarks, isNotNull);
       expect(defaultVolumeLandmarks.mev, greaterThan(0));
-      expect(defaultVolumeLandmarks.mrv, greaterThan(defaultVolumeLandmarks.mev));
+      expect(
+        defaultVolumeLandmarks.mrv,
+        greaterThan(defaultVolumeLandmarks.mev),
+      );
     });
 
     test('all muscles have mev < mavHigh < mrv ordering', () {
@@ -79,7 +82,7 @@ void main() {
 
     test('totalVolumeRatio is finite and non-negative', () {
       final tracker = WeeklyVolumeTracker.fromHistory([], {});
-      expect(tracker.totalVolumeRatio, isFinite);
+      expect(tracker.totalVolumeRatio.isFinite, isTrue);
       expect(tracker.totalVolumeRatio, greaterThanOrEqualTo(0.0));
     });
 
@@ -139,13 +142,13 @@ void main() {
     test('constructs with muscle recovery data', () {
       final tracker = WeeklyVolumeTracker.fromHistory([], {});
       final recovery = {
-        'PETT': MuscleReadinessData(
+        'PETT': const MuscleReadinessData(
           muscleId: 'PETT',
           displayName: 'Chest',
           recoveryPercent: 85.0,
           hoursSinceWorkout: 48,
         ),
-        'LAT': MuscleReadinessData(
+        'LAT': const MuscleReadinessData(
           muscleId: 'LAT',
           displayName: 'Lats',
           recoveryPercent: 70.0,
@@ -205,7 +208,7 @@ void main() {
     });
 
     test('MuscleReadinessData.state at boundary 90% returns ready', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'TEST',
         displayName: 'Test',
         recoveryPercent: 90.0,
@@ -215,7 +218,7 @@ void main() {
     });
 
     test('MuscleReadinessData.state at boundary 70% returns acceptable', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'TEST',
         displayName: 'Test',
         recoveryPercent: 70.0,
@@ -224,15 +227,18 @@ void main() {
       expect(data.state, equals(MuscleReadinessState.acceptable));
     });
 
-    test('MuscleReadinessData.state at boundary 50% returns underRecovered', () {
-      final data = MuscleReadinessData(
-        muscleId: 'TEST',
-        displayName: 'Test',
-        recoveryPercent: 50.0,
-        hoursSinceWorkout: 24,
-      );
-      expect(data.state, equals(MuscleReadinessState.underRecovered));
-    });
+    test(
+      'MuscleReadinessData.state at boundary 50% returns underRecovered',
+      () {
+        const data = MuscleReadinessData(
+          muscleId: 'TEST',
+          displayName: 'Test',
+          recoveryPercent: 50.0,
+          hoursSinceWorkout: 24,
+        );
+        expect(data.state, equals(MuscleReadinessState.underRecovered));
+      },
+    );
   });
 
   // ---------------------------------------------------------------------------
@@ -241,7 +247,7 @@ void main() {
 
   group('MuscleReadinessData - modifiers', () {
     test('totalModifier is 0 when all modifiers are 0', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'PETT',
         displayName: 'Chest',
         recoveryPercent: 80.0,
@@ -251,7 +257,7 @@ void main() {
     });
 
     test('hasSignificantModifiers is false when total < 10', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'PETT',
         displayName: 'Chest',
         recoveryPercent: 80.0,
@@ -263,7 +269,7 @@ void main() {
     });
 
     test('hasSignificantModifiers is true when total == -10', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'PETT',
         displayName: 'Chest',
         recoveryPercent: 80.0,
@@ -276,7 +282,7 @@ void main() {
     });
 
     test('hasSignificantModifiers is true when abs > 10', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'PETT',
         displayName: 'Chest',
         recoveryPercent: 80.0,
@@ -287,7 +293,7 @@ void main() {
     });
 
     test('positive totalModifier also checked', () {
-      final data = MuscleReadinessData(
+      const data = MuscleReadinessData(
         muscleId: 'PETT',
         displayName: 'Chest',
         recoveryPercent: 80.0,

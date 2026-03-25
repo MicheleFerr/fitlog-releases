@@ -721,13 +721,14 @@ class WorkoutStatsCalculator {
 
       _CacheLogger.firebase('Building Firestore query...');
       final query = _firestore
+          .collection('users')
+          .doc(userId)
           .collection('workouts')
-          .where('userId', isEqualTo: userId)
           .where(
-            'completedAt',
+            'endTime',
             isGreaterThan: Timestamp.fromDate(ninetyDaysAgo),
           )
-          .orderBy('completedAt', descending: true)
+          .orderBy('endTime', descending: true)
           .limit(500); // Max 500 workouts
 
       _CacheLogger.firebase('Executing Firebase query...');
@@ -770,7 +771,7 @@ class WorkoutStatsCalculator {
 
       for (final doc in docs) {
         final data = doc.data();
-        final timestamp = data['completedAt'] as Timestamp?;
+        final timestamp = data['endTime'] as Timestamp?;
 
         if (timestamp != null) {
           validDocs++;
@@ -818,9 +819,7 @@ class WorkoutStatsCalculator {
           }
         } else {
           invalidDocs++;
-          _CacheLogger.firebase(
-            'Invalid document found (no completedAt): ${doc.id}',
-          );
+          _CacheLogger.firebase('Invalid document found (no endTime): ${doc.id}');
         }
       }
 

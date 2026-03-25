@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/template_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -64,7 +65,9 @@ class TemplateSuggestionCard extends ConsumerWidget {
           return _TemplateSuggestionContent(
             analysis: alternative,
             alternatives: acceptable.skip(1).take(2).toList(),
-            onTap: () => _handleTemplateTap(context, alternative),
+            onPreview: () => _handleTemplateTap(context, alternative),
+            onStart: () =>
+                _startTemplateWorkout(context, alternative.templateId),
           );
         }
 
@@ -78,7 +81,8 @@ class TemplateSuggestionCard extends ConsumerWidget {
         return _TemplateSuggestionContent(
           analysis: best,
           alternatives: filteredAlternatives,
-          onTap: () => _handleTemplateTap(context, best),
+          onPreview: () => _handleTemplateTap(context, best),
+          onStart: () => _startTemplateWorkout(context, best.templateId),
         );
       },
       loading: () => _buildLoadingState(context),
@@ -108,7 +112,13 @@ class TemplateSuggestionCard extends ConsumerWidget {
   ) {
     HapticFeedback.mediumImpact();
     // Navigate to template detail
-    context.push('/templates/detail', extra: analysis.templateId);
+    context.push(AppRoutes.templateDetailPath, extra: analysis.templateId);
+  }
+
+  void _startTemplateWorkout(BuildContext context, String templateId) {
+    HapticFeedback.mediumImpact();
+    final encodedTemplateId = Uri.encodeComponent(templateId);
+    context.go('${AppRoutes.workoutPath}/start/$encodedTemplateId');
   }
 }
 
@@ -117,12 +127,14 @@ class _TemplateSuggestionContent extends StatelessWidget {
   const _TemplateSuggestionContent({
     required this.analysis,
     required this.alternatives,
-    required this.onTap,
+    required this.onPreview,
+    required this.onStart,
   });
 
   final TemplateStressAnalysis analysis;
   final List<TemplateStressAnalysis> alternatives;
-  final VoidCallback onTap;
+  final VoidCallback onPreview;
+  final VoidCallback onStart;
 
   Color _getRecommendationColor(
     TemplateRecommendation recommendation,
@@ -185,7 +197,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
         child: Material(
           color: context.colors.surface.withValues(alpha: 0),
           child: InkWell(
-            onTap: onTap,
+            onTap: onPreview,
             borderRadius: BorderRadius.circular(24),
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -380,7 +392,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
                       const Spacer(),
                       // Start workout button
                       FilledButton.icon(
-                        onPressed: onTap,
+                        onPressed: onStart,
                         icon: const SemanticIcon(
                           icon: AppIcons.play,
                           semanticLabel: 'Start',
@@ -490,7 +502,8 @@ class _TemplateSuggestionContent extends StatelessWidget {
     BuildContext context,
     List<TemplateStressAnalysis> alternatives,
   ) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
@@ -545,7 +558,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
                           Navigator.of(sheetContext).pop();
                           HapticFeedback.mediumImpact();
                           context.push(
-                            '/templates/detail',
+                            AppRoutes.templateDetailPath,
                             extra: alt.templateId,
                           );
                         },
@@ -987,7 +1000,7 @@ class _RestDaySuggestionCard extends StatelessWidget {
                   onPressed: () {
                     HapticFeedback.mediumImpact();
                     context.push(
-                      '/templates/detail',
+                      AppRoutes.templateDetailPath,
                       extra: bestAnalysis.templateId,
                     );
                   },

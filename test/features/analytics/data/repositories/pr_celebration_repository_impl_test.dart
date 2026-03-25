@@ -1,3 +1,5 @@
+// ignore_for_file: subtype_of_sealed_class
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,45 +83,57 @@ void main() {
         final pr = createTestPR();
 
         final mockPreviousPRQuery = MockQuery<Map<String, dynamic>>();
-        final mockPreviousPRSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
+        final mockPreviousPRSnapshot =
+            MockQuerySnapshot<Map<String, dynamic>>();
         final mockPreviousPRDoc =
             MockQueryDocumentSnapshot<Map<String, dynamic>>();
 
-        when(() => mockFirestore.collection('users'))
-            .thenReturn(mockUserCollection);
+        when(
+          () => mockFirestore.collection('users'),
+        ).thenReturn(mockUserCollection);
         when(() => mockUserCollection.doc(userId)).thenReturn(mockUserDoc);
-        when(() => mockUserDoc.collection('pr_celebrations'))
-            .thenReturn(mockCelebrationCollection);
-        when(() => mockCelebrationCollection.where(
-              'exerciseName',
-              isEqualTo: pr.exerciseName,
-            )).thenReturn(mockPreviousPRQuery);
-        when(() => mockPreviousPRQuery.where(
-              'prType',
-              isEqualTo: any(named: 'isEqualTo'),
-            )).thenReturn(mockPreviousPRQuery);
-        when(() => mockPreviousPRQuery.orderBy(
-              'celebratedAt',
-              descending: true,
-            )).thenReturn(mockPreviousPRQuery);
-        when(() => mockPreviousPRQuery.limit(1))
-            .thenReturn(mockPreviousPRQuery);
-        when(() => mockPreviousPRQuery.get())
-            .thenAnswer((_) async => mockPreviousPRSnapshot);
-        when(() => mockPreviousPRSnapshot.docs)
-            .thenReturn([mockPreviousPRDoc]);
+        when(
+          () => mockUserDoc.collection('pr_celebrations'),
+        ).thenReturn(mockCelebrationCollection);
+        when(
+          () => mockCelebrationCollection.where(
+            'exerciseName',
+            isEqualTo: pr.exerciseName,
+          ),
+        ).thenReturn(mockPreviousPRQuery);
+        when(
+          () => mockPreviousPRQuery.where(
+            'prType',
+            isEqualTo: any(named: 'isEqualTo'),
+          ),
+        ).thenReturn(mockPreviousPRQuery);
+        when(
+          () => mockPreviousPRQuery.orderBy('celebratedAt', descending: true),
+        ).thenReturn(mockPreviousPRQuery);
+        when(
+          () => mockPreviousPRQuery.limit(1),
+        ).thenReturn(mockPreviousPRQuery);
+        when(
+          () => mockPreviousPRQuery.get(),
+        ).thenAnswer((_) async => mockPreviousPRSnapshot);
+        when(() => mockPreviousPRSnapshot.docs).thenReturn([mockPreviousPRDoc]);
         when(() => mockPreviousPRDoc.data()).thenReturn({
           'newValue': 90.0, // Previous PR was 90kg
         });
 
-        when(() => mockCelebrationCollection.doc(any())).thenReturn(mockCelebrationDoc);
-        when(() => mockCelebrationDoc.set(any()))
-            .thenAnswer((_) async => Future.value());
+        when(
+          () => mockCelebrationCollection.doc(any()),
+        ).thenReturn(mockCelebrationDoc);
+        when(
+          () => mockCelebrationDoc.set(any()),
+        ).thenAnswer((_) async => Future.value());
 
-        when(() => mockAnalyticsService.logEvent(
-              name: any(named: 'name'),
-              parameters: any(named: 'parameters'),
-            )).thenAnswer((_) async => Future.value());
+        when(
+          () => mockAnalyticsService.logEvent(
+            name: any(named: 'name'),
+            parameters: any(named: 'parameters'),
+          ),
+        ).thenAnswer((_) async => Future.value());
 
         // Act
         final result = await repository.recordCelebration(userId, pr);
@@ -127,10 +141,12 @@ void main() {
         // Assert
         expect(result.isRight(), true);
         verify(() => mockCelebrationDoc.set(any())).called(1);
-        verify(() => mockAnalyticsService.logEvent(
-              name: 'pr_celebration_recorded',
-              parameters: any(named: 'parameters'),
-            )).called(1);
+        verify(
+          () => mockAnalyticsService.logEvent(
+            name: 'pr_celebration_recorded',
+            parameters: any(named: 'parameters'),
+          ),
+        ).called(1);
       });
 
       test('should handle error when Firestore fails', () async {
@@ -138,8 +154,9 @@ void main() {
         const userId = 'user-123';
         final pr = createTestPR();
 
-        when(() => mockFirestore.collection('users'))
-            .thenThrow(FirebaseException(plugin: 'firestore', message: 'Network error'));
+        when(() => mockFirestore.collection('users')).thenThrow(
+          FirebaseException(plugin: 'firestore', message: 'Network error'),
+        );
 
         // Act
         final result = await repository.recordCelebration(userId, pr);
@@ -153,10 +170,15 @@ void main() {
       test('should return true when within 5-minute window', () async {
         // Arrange
         const userId = 'user-123';
-        final workoutEndTime = DateTime.now().subtract(const Duration(minutes: 3));
+        final workoutEndTime = DateTime.now().subtract(
+          const Duration(minutes: 3),
+        );
 
         // Act
-        final result = await repository.shouldNotifyUser(userId, workoutEndTime);
+        final result = await repository.shouldNotifyUser(
+          userId,
+          workoutEndTime,
+        );
 
         // Assert
         result.fold(
@@ -168,10 +190,15 @@ void main() {
       test('should return false when outside 5-minute window', () async {
         // Arrange
         const userId = 'user-123';
-        final workoutEndTime = DateTime.now().subtract(const Duration(minutes: 10));
+        final workoutEndTime = DateTime.now().subtract(
+          const Duration(minutes: 10),
+        );
 
         // Act
-        final result = await repository.shouldNotifyUser(userId, workoutEndTime);
+        final result = await repository.shouldNotifyUser(
+          userId,
+          workoutEndTime,
+        );
 
         // Assert
         result.fold(
@@ -189,43 +216,59 @@ void main() {
         const engagement = CelebrationEngagement.shared;
 
         final mockEngagementQuery = MockQuery<Map<String, dynamic>>();
-        final mockEngagementSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
+        final mockEngagementSnapshot =
+            MockQuerySnapshot<Map<String, dynamic>>();
         final mockEngagementDoc =
             MockQueryDocumentSnapshot<Map<String, dynamic>>();
 
-        when(() => mockFirestore.collection('users'))
-            .thenReturn(mockUserCollection);
+        when(
+          () => mockFirestore.collection('users'),
+        ).thenReturn(mockUserCollection);
         when(() => mockUserCollection.doc(userId)).thenReturn(mockUserDoc);
-        when(() => mockUserDoc.collection('pr_celebrations'))
-            .thenReturn(mockCelebrationCollection);
-        when(() => mockCelebrationCollection.where('prId', isEqualTo: prId))
-            .thenReturn(mockEngagementQuery);
-        when(() => mockEngagementQuery.orderBy('celebratedAt', descending: true))
-            .thenReturn(mockEngagementQuery);
-        when(() => mockEngagementQuery.limit(1))
-            .thenReturn(mockEngagementQuery);
-        when(() => mockEngagementQuery.get())
-            .thenAnswer((_) async => mockEngagementSnapshot);
+        when(
+          () => mockUserDoc.collection('pr_celebrations'),
+        ).thenReturn(mockCelebrationCollection);
+        when(
+          () => mockCelebrationCollection.where('prId', isEqualTo: prId),
+        ).thenReturn(mockEngagementQuery);
+        when(
+          () => mockEngagementQuery.orderBy('celebratedAt', descending: true),
+        ).thenReturn(mockEngagementQuery);
+        when(
+          () => mockEngagementQuery.limit(1),
+        ).thenReturn(mockEngagementQuery);
+        when(
+          () => mockEngagementQuery.get(),
+        ).thenAnswer((_) async => mockEngagementSnapshot);
         when(() => mockEngagementSnapshot.docs).thenReturn([mockEngagementDoc]);
         when(() => mockEngagementDoc.reference).thenReturn(mockCelebrationDoc);
-        when(() => mockCelebrationDoc.update(any()))
-            .thenAnswer((_) async => Future.value());
+        when(
+          () => mockCelebrationDoc.update(any()),
+        ).thenAnswer((_) async => Future.value());
 
-        when(() => mockAnalyticsService.logEvent(
-              name: any(named: 'name'),
-              parameters: any(named: 'parameters'),
-            )).thenAnswer((_) async => Future.value());
+        when(
+          () => mockAnalyticsService.logEvent(
+            name: any(named: 'name'),
+            parameters: any(named: 'parameters'),
+          ),
+        ).thenAnswer((_) async => Future.value());
 
         // Act
-        final result = await repository.trackEngagement(userId, prId, engagement);
+        final result = await repository.trackEngagement(
+          userId,
+          prId,
+          engagement,
+        );
 
         // Assert
         expect(result.isRight(), true);
         verify(() => mockCelebrationDoc.update(any())).called(1);
-        verify(() => mockAnalyticsService.logEvent(
-              name: 'pr_celebration_engagement',
-              parameters: any(named: 'parameters'),
-            )).called(1);
+        verify(
+          () => mockAnalyticsService.logEvent(
+            name: 'pr_celebration_engagement',
+            parameters: any(named: 'parameters'),
+          ),
+        ).called(1);
       });
     });
 
@@ -237,18 +280,23 @@ void main() {
         final mockRecentSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
         final mockRecentDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
 
-        when(() => mockFirestore.collection('users'))
-            .thenReturn(mockUserCollection);
+        when(
+          () => mockFirestore.collection('users'),
+        ).thenReturn(mockUserCollection);
         when(() => mockUserCollection.doc(userId)).thenReturn(mockUserDoc);
-        when(() => mockUserDoc.collection('pr_celebrations'))
-            .thenReturn(mockCelebrationCollection);
-        when(() => mockCelebrationCollection.orderBy(
-              'celebratedAt',
-              descending: true,
-            )).thenReturn(mockRecentQuery);
+        when(
+          () => mockUserDoc.collection('pr_celebrations'),
+        ).thenReturn(mockCelebrationCollection);
+        when(
+          () => mockCelebrationCollection.orderBy(
+            'celebratedAt',
+            descending: true,
+          ),
+        ).thenReturn(mockRecentQuery);
         when(() => mockRecentQuery.limit(10)).thenReturn(mockRecentQuery);
-        when(() => mockRecentQuery.get())
-            .thenAnswer((_) async => mockRecentSnapshot);
+        when(
+          () => mockRecentQuery.get(),
+        ).thenAnswer((_) async => mockRecentSnapshot);
         when(() => mockRecentSnapshot.docs).thenReturn([mockRecentDoc]);
         when(() => mockRecentDoc.data()).thenReturn({
           'id': 'celebration-1',
@@ -266,13 +314,12 @@ void main() {
         final result = await repository.getRecentCelebrations(userId);
 
         // Assert
-        result.fold(
-          (failure) => fail('Expected Right, got Left: $failure'),
-          (celebrations) {
-            expect(celebrations, isNotEmpty);
-            expect(celebrations.length, 1);
-          },
-        );
+        result.fold((failure) => fail('Expected Right, got Left: $failure'), (
+          celebrations,
+        ) {
+          expect(celebrations, isNotEmpty);
+          expect(celebrations.length, 1);
+        });
       });
     });
   });

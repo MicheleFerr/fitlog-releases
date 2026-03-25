@@ -300,9 +300,13 @@ class CustomExerciseLocalDatasource {
         return;
       }
 
-      final userPrefix = 'custom_exercise_$currentUserId';
+      const userPrefix = 'custom_exercise_';
+      final userSuffix = '_$currentUserId';
       final keysToDelete = _box!.keys
-          .where((key) => key.toString().startsWith(userPrefix))
+          .where((key) {
+            final keyStr = key.toString();
+            return keyStr.startsWith(userPrefix) && keyStr.endsWith(userSuffix);
+          })
           .toList();
 
       for (final key in keysToDelete) {
@@ -420,12 +424,14 @@ class CustomExerciseLocalDatasource {
       final currentUserId = userCacheKeys.currentUserId;
       if (currentUserId == null) return 0;
 
-      final userPrefix = 'custom_exercise_$currentUserId';
+      const userPrefix = 'custom_exercise_';
+      final userSuffix = '_$currentUserId';
       int count = 0;
 
       // Count active exercises
       for (final key in _box!.keys) {
-        if (key.toString().startsWith(userPrefix)) {
+        final keyStr = key.toString();
+        if (keyStr.startsWith(userPrefix) && keyStr.endsWith(userSuffix)) {
           final exercise = await _box?.get(key);
           if (exercise != null && exercise.isActive) {
             count++;

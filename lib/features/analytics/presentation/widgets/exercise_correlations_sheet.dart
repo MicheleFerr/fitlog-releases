@@ -16,7 +16,7 @@
 /// ```dart
 /// ExerciseCorrelationsSheet.show(
 ///   context,
-///   exerciseId: exerciseId,
+///   exerciseId: exerciseId, // optional
 ///   exerciseName: exerciseName,
 /// );
 /// ```
@@ -41,17 +41,17 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 class ExerciseCorrelationsSheet extends ConsumerStatefulWidget {
   const ExerciseCorrelationsSheet({
     super.key,
-    required this.exerciseId,
+    this.exerciseId,
     required this.exerciseName,
   });
 
-  final String exerciseId;
+  final String? exerciseId;
   final String exerciseName;
 
   /// Show the correlations bottom sheet
   static Future<void> show(
     BuildContext context, {
-    required String exerciseId,
+    String? exerciseId,
     required String exerciseName,
   }) {
     return ModalService.showSheet<void>(
@@ -79,7 +79,10 @@ class _ExerciseCorrelationsSheetState
   @override
   Widget build(BuildContext context) {
     final analyticsAsync = ref.watch(
-      exerciseAnalyticsProvider(widget.exerciseId),
+      exerciseAnalyticsProvider((
+        exerciseName: widget.exerciseName,
+        exerciseId: widget.exerciseId,
+      )),
     );
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
@@ -115,7 +118,9 @@ class _ExerciseCorrelationsSheetState
                             width: 40,
                             height: 4,
                             decoration: BoxDecoration(
-                              color: context.colors.outline.withValues(alpha: 0.3),
+                              color: context.colors.outline.withValues(
+                                alpha: 0.3,
+                              ),
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
@@ -139,15 +144,18 @@ class _ExerciseCorrelationsSheetState
                                   children: [
                                     Text(
                                       context.l10n.analyticsCorrelationsTitle,
-                                      style: context.textTheme.titleLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: context.textTheme.titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                     Text(
                                       widget.exerciseName,
-                                      style: context.textTheme.bodyMedium?.copyWith(
-                                        color: context.colors.onSurfaceVariant,
-                                      ),
+                                      style: context.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color:
+                                                context.colors.onSurfaceVariant,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -170,23 +178,17 @@ class _ExerciseCorrelationsSheetState
                   )
                 : CustomScrollView(
                     controller: scrollController,
-                    slivers: [
-                      SliverToBoxAdapter(child: _buildNoData()),
-                    ],
+                    slivers: [SliverToBoxAdapter(child: _buildNoData())],
                   ),
             loading: () => CustomScrollView(
               controller: scrollController,
               slivers: const [
-                SliverFillRemaining(
-                  child: Center(child: LoadingIndicator()),
-                ),
+                SliverFillRemaining(child: Center(child: LoadingIndicator())),
               ],
             ),
             error: (e, _) => CustomScrollView(
               controller: scrollController,
-              slivers: [
-                SliverToBoxAdapter(child: _buildError(e)),
-              ],
+              slivers: [SliverToBoxAdapter(child: _buildError(e))],
             ),
           ),
         );
@@ -227,7 +229,8 @@ class _ExerciseCorrelationsSheetState
               title: context.l10n.analyticsTrendSummary,
               icon: AppIcons.trendUp,
               isExpanded: _trendsExpanded,
-              onToggle: () => setState(() => _trendsExpanded = !_trendsExpanded),
+              onToggle: () =>
+                  setState(() => _trendsExpanded = !_trendsExpanded),
               child: _buildTrendContent(analytics),
             ),
             const SizedBox(height: 24),
@@ -240,7 +243,6 @@ class _ExerciseCorrelationsSheetState
       ),
     ];
   }
-
 
   /// Quick at-a-glance summary showing key metrics
   Widget _buildQuickSummary(ExerciseAnalyticsData analytics) {
@@ -602,8 +604,9 @@ class _ExerciseCorrelationsSheetState
                 child: LinearProgressIndicator(
                   value: progress,
                   minHeight: 8,
-                  backgroundColor:
-                      context.colors.primaryContainer.withValues(alpha: 0.3),
+                  backgroundColor: context.colors.primaryContainer.withValues(
+                    alpha: 0.3,
+                  ),
                   valueColor: AlwaysStoppedAnimation(context.colors.primary),
                 ),
               ),
@@ -751,12 +754,7 @@ class _ExerciseCorrelationsSheetState
       children: [
         Icon(icon, color: color, size: AppIconSize.medium),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            message,
-            style: context.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(message, style: context.textTheme.bodyMedium)),
       ],
     );
   }
@@ -941,7 +939,6 @@ class _ExerciseCorrelationsSheetState
     }
     return content;
   }
-
 
   Widget _buildTrendItem({
     required IconData icon,

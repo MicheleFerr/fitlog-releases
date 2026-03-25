@@ -1,3 +1,5 @@
+// ignore_for_file: subtype_of_sealed_class, must_be_immutable
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -249,8 +251,7 @@ class FakeDocumentReference implements DocumentReference<Map<String, dynamic>> {
   }
 }
 
-class FakeDocumentSnapshot
-    implements DocumentSnapshot<Map<String, dynamic>> {
+class FakeDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
   FakeDocumentSnapshot(this._id, this._data);
 
   final String _id;
@@ -317,9 +318,7 @@ class FakeReference implements Reference {
       return FakeReference('$_path/$childPath');
     }
     if (inv.memberName == #listAll) {
-      return Future<ListResult>.value(
-        FakeListResult(items: [], prefixes: []),
-      );
+      return Future<ListResult>.value(FakeListResult(items: [], prefixes: []));
     }
     if (inv.memberName == #delete) return Future<void>.value();
     if (inv.memberName == #fullPath) return _path;
@@ -433,7 +432,9 @@ void main() {
         displayName: 'New',
       );
 
-      final docRef = fakeFirestore.getOrCreateCollection('users').getOrCreateDoc('new-uid');
+      final docRef = fakeFirestore
+          .getOrCreateCollection('users')
+          .getOrCreateDoc('new-uid');
       expect(docRef.setCount, greaterThan(0));
     });
 
@@ -448,11 +449,13 @@ void main() {
           password: 'Pass123!',
           displayName: 'User',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('An account already exists for that email'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('An account already exists for that email'),
+          ),
+        ),
       );
     });
 
@@ -465,11 +468,13 @@ void main() {
           password: 'Pass123!',
           displayName: 'User',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Registration failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Registration failed'),
+          ),
+        ),
       );
     });
 
@@ -488,11 +493,13 @@ void main() {
           password: 'Pass123!',
           displayName: 'User',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Too many registration attempts'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Too many registration attempts'),
+          ),
+        ),
       );
     });
   });
@@ -515,11 +522,13 @@ void main() {
           email: 'user@test.com',
           password: 'wrong',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Wrong password provided'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Wrong password provided'),
+          ),
+        ),
       );
     });
 
@@ -531,11 +540,13 @@ void main() {
           email: 'user@test.com',
           password: 'x',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Sign in failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Sign in failed'),
+          ),
+        ),
       );
     });
 
@@ -550,11 +561,13 @@ void main() {
           email: 'rl@test.com',
           password: 'Pass123!',
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Too many login attempts'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Too many login attempts'),
+          ),
+        ),
       );
     });
   });
@@ -572,11 +585,13 @@ void main() {
 
       expect(
         () => authService.signOut(),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Sign out failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Sign out failed'),
+          ),
+        ),
       );
     });
   });
@@ -585,11 +600,13 @@ void main() {
     test('throws when no user signed in', () {
       expect(
         () => authService.deleteAccount(),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('No user currently signed in'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('No user currently signed in'),
+          ),
+        ),
       );
     });
 
@@ -617,11 +634,13 @@ void main() {
 
       expect(
         () => authService.deleteAccount(),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('requires-recent-login'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('requires-recent-login'),
+          ),
+        ),
       );
     });
 
@@ -632,11 +651,13 @@ void main() {
 
       expect(
         () => authService.deleteAccount(),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('This user account has been disabled'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('This user account has been disabled'),
+          ),
+        ),
       );
     });
   });
@@ -655,11 +676,13 @@ void main() {
 
       expect(
         () => authService.sendPasswordResetEmail('x@test.com'),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('No user found for that email'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('No user found for that email'),
+          ),
+        ),
       );
     });
 
@@ -669,11 +692,13 @@ void main() {
       // password_reset cooldown is 60 seconds
       expect(
         () => authService.sendPasswordResetEmail('rl@test.com'),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Too many password reset attempts'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Too many password reset attempts'),
+          ),
+        ),
       );
     });
   });
@@ -689,15 +714,19 @@ void main() {
       fakeFirestore
           .getOrCreateCollection('users')
           .getOrCreateDoc('err-uid')
-          .getError = Exception('network');
+          .getError = Exception(
+        'network',
+      );
 
       expect(
         () => authService.getUserDocument('err-uid'),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Failed to get user document'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Failed to get user document'),
+          ),
+        ),
       );
     });
   });
@@ -743,8 +772,7 @@ void main() {
       'invalid-credential': 'The provided credentials are invalid',
       'account-exists-with-different-credential':
           'An account already exists with a different sign-in method',
-      'requires-recent-login':
-          'This operation requires recent authentication',
+      'requires-recent-login': 'This operation requires recent authentication',
     };
 
     for (final entry in errorCases.entries) {

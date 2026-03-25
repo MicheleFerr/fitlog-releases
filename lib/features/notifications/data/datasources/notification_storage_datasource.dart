@@ -69,9 +69,17 @@ class NotificationStorageDatasource {
     final record = NotificationRecord.fromJson(
       Map<String, dynamic>.from(recordJson),
     );
+    if (record.wasCanceled) return;
+
     final updatedRecord = record.copyWith(wasCanceled: true);
 
     await box.put(recordId, updatedRecord.toJson());
+
+    // A canceled notification never reached the user, so it must not count
+    // towards sent totals or ignore-based throttling.
+    if (!record.wasOpened) {
+      await _revertPendingStats(record.type);
+    }
   }
 
   /// Get all records for a notification type
@@ -95,13 +103,19 @@ class NotificationStorageDatasource {
   Future<List<NotificationRecord>> getRecordsSince(DateTime since) async {
     final box = _recordsBox;
     if (box == null) return [];
+    final now = DateTime.now();
 
     return box.values
         .map(
           (json) =>
               NotificationRecord.fromJson(Map<String, dynamic>.from(json)),
         )
-        .where((record) => record.sentAt.isAfter(since) && !record.wasCanceled)
+        .where(
+          (record) =>
+              record.sentAt.isAfter(since) &&
+              !record.sentAt.isAfter(now) &&
+              !record.wasCanceled,
+        )
         .toList()
       ..sort((a, b) => b.sentAt.compareTo(a.sentAt));
   }
@@ -244,6 +258,24 @@ class NotificationStorageDatasource {
           : currentStats.totalOpened,
       consecutiveIgnores: wasOpened ? 0 : currentStats.consecutiveIgnores + 1,
       lastSentAt: wasOpened ? currentStats.lastSentAt : DateTime.now(),
+      lastMessageKey: currentStats.lastMessageKey,
+    );
+
+    await box.put(type.name, updatedStats.toJson());
+  }
+
+  Future<void> _revertPendingStats(NotificationType type) async {
+    final box = _statsBox;
+    if (box == null) return;
+
+    final currentStats = await getStats(type);
+    final updatedStats = NotificationStats(
+      totalSent: currentStats.totalSent > 0 ? currentStats.totalSent - 1 : 0,
+      totalOpened: currentStats.totalOpened,
+      consecutiveIgnores: currentStats.consecutiveIgnores > 0
+          ? currentStats.consecutiveIgnores - 1
+          : 0,
+      lastSentAt: currentStats.lastSentAt,
       lastMessageKey: currentStats.lastMessageKey,
     );
 

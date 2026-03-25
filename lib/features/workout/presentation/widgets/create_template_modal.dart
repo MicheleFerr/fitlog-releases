@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/template_name_generator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
@@ -218,7 +219,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                       autofocus: true,
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
-                        labelText: l10n.templateNameLabel,
+                        labelText: l10n.templateName,
                         hintText: 'es. Push Day, Leg Day...',
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(
@@ -226,8 +227,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                           size: AppIconSize.small,
                         ),
                       ),
-                      validator: (value) =>
-                          TemplateValidator.validateTemplateName(value),
+                      validator: _validateOptionalTemplateName,
                     ),
                     const SizedBox(height: 20),
 
@@ -295,7 +295,11 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
           setState(() {
             _createFromCurrentWorkout = !_createFromCurrentWorkout;
             if (_createFromCurrentWorkout && _nameController.text.isEmpty) {
-              _nameController.text = '${currentWorkout.name}';
+              _nameController.text =
+                  TemplateNameGenerator.generateFromExercises(
+                    currentWorkout.exercises,
+                    fallbackName: context.l10n.customTemplate,
+                  );
             }
           });
           HapticFeedback.selectionClick();
@@ -337,7 +341,11 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                 setState(() {
                   _createFromCurrentWorkout = value;
                   if (value && _nameController.text.isEmpty) {
-                    _nameController.text = '${currentWorkout.name}';
+                    _nameController.text =
+                        TemplateNameGenerator.generateFromExercises(
+                          currentWorkout.exercises,
+                          fallbackName: context.l10n.customTemplate,
+                        );
                   }
                 });
               },
@@ -519,18 +527,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
     try {
       final templateId = const Uuid().v4();
       List<ExerciseTemplate> exerciseTemplates = [];
-      // Sanitize name on submission (not during typing)
-      String templateName = TemplateValidator.sanitizeTemplateName(
-        _nameController.text,
-      );
 
       if (_createFromCurrentWorkout) {
         final currentWorkout = ref.read(currentWorkoutProvider)!;
-        // Sanitize the template name if using workout name
-        templateName = _nameController.text.trim().isNotEmpty
-            ? templateName
-            : TemplateValidator.sanitizeTemplateName(currentWorkout.name);
-
         exerciseTemplates = currentWorkout.exercises.map((exercise) {
           // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT
           return ExerciseTemplate.fromExercise(
@@ -538,6 +537,16 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
           ).copyWith(restTime: _defaultRestTime);
         }).toList();
       }
+
+      final enteredName = TemplateValidator.sanitizeTemplateName(
+        _nameController.text,
+      );
+      final templateName = enteredName.isNotEmpty
+          ? enteredName
+          : TemplateNameGenerator.generateFromTemplateExercises(
+              exerciseTemplates,
+              fallbackName: context.l10n.customTemplate,
+            );
 
       // Convert selected type to tag for backward compatibility
       final tags = _selectedType != null ? [_selectedType!.tag] : <String>[];
@@ -596,7 +605,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
   }
 
   void _showDefaultRestTimePicker() {
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
+      useRootNavigator: true,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -625,5 +636,11 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
     } else {
       return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
     }
+  }
+
+  String? _validateOptionalTemplateName(String? value) {
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return null;
+    return TemplateValidator.validateTemplateName(trimmed);
   }
 }

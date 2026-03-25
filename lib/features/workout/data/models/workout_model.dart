@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 /// Helper function to parse DateTime from various formats
 DateTime? _parseDateTime(dynamic value) {
@@ -46,6 +47,92 @@ DateTime? _parseDateTime(dynamic value) {
   }
 }
 
+List<Exercise> _normalizeExerciseInstanceIds(List<Exercise> exercises) {
+  final seenTopLevelIds = <String>{};
+  return exercises
+      .map(
+        (exercise) => _normalizeExerciseInstanceId(exercise, seenTopLevelIds),
+      )
+      .toList();
+}
+
+Exercise _normalizeExerciseInstanceId(Exercise exercise, Set<String> seenIds) {
+  final stableId = exercise.databaseExerciseId ?? exercise.id;
+  final normalizedId = seenIds.add(exercise.id)
+      ? exercise.id
+      : const Uuid().v4();
+
+  if (exercise is SupersetExercise) {
+    final childSeenIds = <String>{};
+    final normalizedChildren = <Exercise>[];
+    final originalIdByNormalizedId = <String, String>{};
+
+    for (final child in exercise.exercises) {
+      final normalizedChild = _normalizeExerciseInstanceId(child, childSeenIds);
+      normalizedChildren.add(normalizedChild);
+      originalIdByNormalizedId[normalizedChild.id] = child.id;
+    }
+
+    final normalizedSupersetSets = exercise.supersetSets.map((set) {
+      final normalizedExerciseData = <String, SupersetExerciseData>{};
+
+      for (final child in normalizedChildren) {
+        final originalId = originalIdByNormalizedId[child.id] ?? child.id;
+        final existingData =
+            set.exerciseData[originalId] ?? set.exerciseData[child.id];
+
+        normalizedExerciseData[child.id] =
+            existingData?.copyWith(
+              exerciseId: child.id,
+              exerciseName: child.name,
+            ) ??
+            SupersetExerciseData(
+              exerciseId: child.id,
+              exerciseName: child.name,
+              targetWeight: 0.0,
+              targetReps: 10,
+              isCompleted: false,
+            );
+      }
+
+      return set.copyWith(exerciseData: normalizedExerciseData);
+    }).toList();
+
+    return exercise.copyWith(
+      id: normalizedId,
+      databaseExerciseId: stableId,
+      exercises: normalizedChildren,
+      supersetSets: normalizedSupersetSets,
+      createdAt: exercise.createdAt,
+      updatedAt: exercise.updatedAt,
+    );
+  }
+
+  if (exercise is DropSetExercise) {
+    return exercise.copyWith(
+      id: normalizedId,
+      databaseExerciseId: stableId,
+      createdAt: exercise.createdAt,
+      updatedAt: exercise.updatedAt,
+    );
+  }
+
+  if (exercise is RestPauseExercise) {
+    return exercise.copyWith(
+      id: normalizedId,
+      databaseExerciseId: stableId,
+      createdAt: exercise.createdAt,
+      updatedAt: exercise.updatedAt,
+    );
+  }
+
+  return exercise.copyWith(
+    id: normalizedId,
+    databaseExerciseId: stableId,
+    updatedAt: exercise.updatedAt,
+  );
+}
+
 /// Data model for Workout with JSON serialization
 class WorkoutModel {
   const WorkoutModel({
@@ -58,6 +145,11 @@ class WorkoutModel {
     this.notes,
     required this.createdAt,
     required this.updatedAt,
+    this.templateId,
+    this.isPreloaded = false,
+    this.preloadExpiry,
+    this.exercisesModified,
+    this.sessionId,
   });
 
   /// Convert from domain entity
@@ -74,11 +166,16 @@ class WorkoutModel {
       notes: workout.notes,
       createdAt: workout.createdAt,
       updatedAt: workout.updatedAt,
+      templateId: workout.templateId,
+      isPreloaded: workout.isPreloaded,
+      preloadExpiry: workout.preloadExpiry,
+      exercisesModified: workout.exercisesModified,
+      sessionId: workout.sessionId,
     );
   }
 
   /// Convert from JSON (Firestore/Hive)
-  /// Handles both Map<String, dynamic> and Map<dynamic, dynamic> from Hive
+  /// Handles both `Map<String, dynamic>` and `Map<dynamic, dynamic>` from Hive.
   factory WorkoutModel.fromJson(Map<dynamic, dynamic> json) {
     // Cast to Map<String, dynamic> for type safety
     final Map<String, dynamic> data = Map<String, dynamic>.from(json);
@@ -125,6 +222,11 @@ class WorkoutModel {
       notes: data['notes'] as String?,
       createdAt: _parseDateTime(data['createdAt']) ?? DateTime.now(),
       updatedAt: _parseDateTime(data['updatedAt']) ?? DateTime.now(),
+      templateId: data['templateId'] as String?,
+      isPreloaded: data['isPreloaded'] as bool? ?? false,
+      preloadExpiry: _parseDateTime(data['preloadExpiry']),
+      exercisesModified: data['exercisesModified'] as bool?,
+      sessionId: data['sessionId'] as String?,
     );
   }
   final String id;
@@ -136,15 +238,20 @@ class WorkoutModel {
   final String? notes;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? templateId;
+  final bool isPreloaded;
+  final DateTime? preloadExpiry;
+  final bool? exercisesModified;
+  final String? sessionId;
 
   /// Convert to domain entity
   Workout toDomain() {
     return Workout(
       id: id,
       name: name,
-      exercises: exercises
-          .map((exerciseModel) => exerciseModel.toDomain())
-          .toList(),
+      exercises: _normalizeExerciseInstanceIds(
+        exercises.map((exerciseModel) => exerciseModel.toDomain()).toList(),
+      ),
       status: WorkoutStatus.values.firstWhere(
         (e) => e.name == status,
         orElse: () => WorkoutStatus.planned,
@@ -154,6 +261,11 @@ class WorkoutModel {
       notes: notes,
       createdAt: createdAt,
       updatedAt: updatedAt,
+      templateId: templateId,
+      isPreloaded: isPreloaded,
+      preloadExpiry: preloadExpiry,
+      exercisesModified: exercisesModified,
+      sessionId: sessionId,
     );
   }
 
@@ -169,6 +281,11 @@ class WorkoutModel {
       'notes': notes,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'templateId': templateId,
+      'isPreloaded': isPreloaded,
+      'preloadExpiry': preloadExpiry,
+      'exercisesModified': exercisesModified,
+      'sessionId': sessionId,
     };
   }
 
@@ -183,6 +300,11 @@ class WorkoutModel {
     String? notes,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? templateId,
+    bool? isPreloaded,
+    DateTime? preloadExpiry,
+    bool? exercisesModified,
+    String? sessionId,
   }) {
     return WorkoutModel(
       id: id ?? this.id,
@@ -194,6 +316,11 @@ class WorkoutModel {
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      templateId: templateId ?? this.templateId,
+      isPreloaded: isPreloaded ?? this.isPreloaded,
+      preloadExpiry: preloadExpiry ?? this.preloadExpiry,
+      exercisesModified: exercisesModified ?? this.exercisesModified,
+      sessionId: sessionId ?? this.sessionId,
     );
   }
 }
@@ -202,6 +329,7 @@ class WorkoutModel {
 class ExerciseModel {
   const ExerciseModel({
     required this.id,
+    this.databaseExerciseId,
     required this.name,
     required this.type,
     required this.category,
@@ -269,6 +397,7 @@ class ExerciseModel {
 
     return ExerciseModel(
       id: exercise.id,
+      databaseExerciseId: exercise.databaseExerciseId,
       name: exercise.name,
       type: exercise.type.name,
       category: exercise.category.name,
@@ -313,6 +442,7 @@ class ExerciseModel {
     final String id;
     final String name;
     final String? notes;
+    final String? databaseExerciseId;
 
     if (exerciseData != null) {
       // Use null-aware operators and provide fallbacks for required fields
@@ -325,12 +455,22 @@ class ExerciseModel {
           (data['name'] as String?) ??
           'Unknown Exercise';
       notes = exerciseData['notes'] as String?;
+      databaseExerciseId =
+          (exerciseData['databaseExerciseId'] as String?) ??
+          (data['databaseExerciseId'] as String?) ??
+          (data['exerciseId'] as String?) ??
+          (exerciseData['id'] as String?) ??
+          (data['id'] as String?);
     } else {
       id =
           (data['id'] as String?) ??
           'unknown-${DateTime.now().millisecondsSinceEpoch}';
       name = (data['name'] as String?) ?? 'Unknown Exercise';
       notes = data['notes'] as String?;
+      databaseExerciseId =
+          (data['databaseExerciseId'] as String?) ??
+          (data['exerciseId'] as String?) ??
+          (data['id'] as String?);
     }
 
     // Type field might not exist in Firebase, default to 'single'
@@ -407,6 +547,7 @@ class ExerciseModel {
 
     return ExerciseModel(
       id: id,
+      databaseExerciseId: databaseExerciseId,
       name: name,
       type: type,
       category: category,
@@ -443,6 +584,7 @@ class ExerciseModel {
     );
   }
   final String id;
+  final String? databaseExerciseId;
   final String name;
   final String type;
   final String category;
@@ -486,8 +628,9 @@ class ExerciseModel {
   bool get isCompleted => sets.isNotEmpty && sets.every((s) => s.isCompleted);
 
   /// Total volume across all completed sets
-  double get totalVolume =>
-      sets.where((s) => s.isCompleted).fold(0.0, (sum, s) => sum + s.volume);
+  double get totalVolume => sets
+      .where((s) => s.isCompleted)
+      .fold(0.0, (total, s) => total + s.volume);
 
   Exercise toDomain() {
     // Parse enums
@@ -549,6 +692,7 @@ class ExerciseModel {
 
       return SupersetExercise(
         id: id,
+        databaseExerciseId: databaseExerciseId,
         name: name,
         exercises: supersetExercises!.map((e) => e.toDomain()).toList(),
         supersetSets: supersetSetsList,
@@ -556,6 +700,8 @@ class ExerciseModel {
         restTime: restTime,
         restAfterExercise: restAfterExercise,
         tut: tut,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
         // Advanced fields
         autoAdjustmentType: autoAdjType,
         calculated1RM: calculated1RM,
@@ -573,6 +719,7 @@ class ExerciseModel {
     } else if (type == 'dropset' && dropSetStages != null) {
       return DropSetExercise(
         id: id,
+        databaseExerciseId: databaseExerciseId,
         name: name,
         category: exerciseCategory,
         stages: dropSetStages!.map((s) => DropSetStage.fromJson(s)).toList(),
@@ -580,6 +727,8 @@ class ExerciseModel {
         restTime: restTime,
         restAfterExercise: restAfterExercise,
         tut: tut,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
         // Advanced fields
         autoAdjustmentType: autoAdjType,
         calculated1RM: calculated1RM,
@@ -597,6 +746,7 @@ class ExerciseModel {
     } else if (type == 'restPause' && restPauseSetsData != null) {
       return RestPauseExercise(
         id: id,
+        databaseExerciseId: databaseExerciseId,
         name: name,
         category: exerciseCategory,
         weight: restPauseWeight ?? 0.0,
@@ -608,6 +758,8 @@ class ExerciseModel {
         restTime: restTime,
         restAfterExercise: restAfterExercise,
         tut: tut,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
         // Advanced fields
         autoAdjustmentType: autoAdjType,
         calculated1RM: calculated1RM,
@@ -627,6 +779,7 @@ class ExerciseModel {
     // Default: base Exercise
     return Exercise(
       id: id,
+      databaseExerciseId: databaseExerciseId,
       name: name,
       type: exerciseType,
       category: exerciseCategory,
@@ -655,6 +808,7 @@ class ExerciseModel {
   Map<String, dynamic> toJson() {
     final json = {
       'id': id,
+      'databaseExerciseId': databaseExerciseId,
       'name': name,
       'type': type,
       'category': category,
@@ -700,6 +854,7 @@ class ExerciseModel {
   /// Create a copy with modified fields
   ExerciseModel copyWith({
     String? id,
+    String? databaseExerciseId,
     String? name,
     String? type,
     String? category,
@@ -731,6 +886,7 @@ class ExerciseModel {
   }) {
     return ExerciseModel(
       id: id ?? this.id,
+      databaseExerciseId: databaseExerciseId ?? this.databaseExerciseId,
       name: name ?? this.name,
       type: type ?? this.type,
       category: category ?? this.category,
@@ -804,7 +960,8 @@ class ExerciseSetModel {
       notes: exerciseSet.notes,
       completedAt: exerciseSet.completedAt,
       // Preserve isCompleted when completedAt is null (legacy/edge case)
-      isCompletedLegacy: exerciseSet.completedAt == null && exerciseSet.isCompleted,
+      isCompletedLegacy:
+          exerciseSet.completedAt == null && exerciseSet.isCompleted,
       setDurationMillis: exerciseSet.setDurationMillis,
       setStartedAt: exerciseSet.setStartedAt,
       actualReps: exerciseSet.actualReps,
@@ -885,6 +1042,7 @@ class ExerciseSetModel {
   final int? rpe;
   final String? notes;
   final DateTime? completedAt;
+
   /// True when legacy data had isCompleted=true but no completedAt timestamp
   final bool isCompletedLegacy;
   // ✅ TUT & Advanced Tracking Fields
@@ -955,8 +1113,10 @@ class ExerciseSetModel {
       'distance': distance, // ✅ Added
       // ✅ Rest Timer Tracking
       'restTimerSkipped': restTimerSkipped,
-      if (restTimerSecondsRemaining != null) 'restTimerSecondsRemaining': restTimerSecondsRemaining,
-      if (restTimerSecondsAdded != null) 'restTimerSecondsAdded': restTimerSecondsAdded,
+      if (restTimerSecondsRemaining != null)
+        'restTimerSecondsRemaining': restTimerSecondsRemaining,
+      if (restTimerSecondsAdded != null)
+        'restTimerSecondsAdded': restTimerSecondsAdded,
       if (actualRestSeconds != null) 'actualRestSeconds': actualRestSeconds,
     };
   }
@@ -998,7 +1158,9 @@ class ExerciseSetModel {
       notes: notes ?? this.notes,
       completedAt: completedAt ?? this.completedAt,
       // If a real completedAt is set, clear legacy flag
-      isCompletedLegacy: completedAt != null ? false : (isCompletedLegacy ?? this.isCompletedLegacy),
+      isCompletedLegacy: completedAt != null
+          ? false
+          : (isCompletedLegacy ?? this.isCompletedLegacy),
       setDurationMillis: setDurationMillis ?? this.setDurationMillis,
       setStartedAt: setStartedAt ?? this.setStartedAt,
       actualReps: actualReps ?? this.actualReps,
@@ -1007,8 +1169,10 @@ class ExerciseSetModel {
       distance: distance ?? this.distance,
       // ✅ Rest Timer Tracking
       restTimerSkipped: restTimerSkipped ?? this.restTimerSkipped,
-      restTimerSecondsRemaining: restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,
-      restTimerSecondsAdded: restTimerSecondsAdded ?? this.restTimerSecondsAdded,
+      restTimerSecondsRemaining:
+          restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,
+      restTimerSecondsAdded:
+          restTimerSecondsAdded ?? this.restTimerSecondsAdded,
       actualRestSeconds: actualRestSeconds ?? this.actualRestSeconds,
     );
   }

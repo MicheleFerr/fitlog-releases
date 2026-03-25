@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_sync_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
+import 'package:gymbro_flutter_new/features/health_sync/data/services/health_background_service.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 
@@ -128,7 +129,10 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
       // Cleanup when provider is disposed
     });
 
-    Future.microtask(() => _syncOnAppLaunchIfEnabled());
+    Future.microtask(() async {
+      await _restoreSchedulerState();
+      await _syncOnAppLaunchIfEnabled();
+    });
 
     return const BackgroundSyncState();
   }
@@ -149,21 +153,23 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
       healthPermissionStatusProvider.future,
     );
 
-    if (permissionStatus.hasNoPermissions) {
+    if (!permissionStatus.hasAnySyncAccess) {
       throw Exception(
         'Cannot enable background sync: No health permissions granted',
       );
     }
 
-    // Schedule platform-specific background task
+    final config = ref.read(backgroundSyncConfigProvider);
+    await HealthBackgroundService.instance.enable(
+      syncInterval: config.syncInterval,
+    );
+
     if (Platform.isIOS) {
       await _scheduleIOSBackgroundTask();
     } else if (Platform.isAndroid) {
       await _scheduleAndroidWorkManager();
     }
 
-    // Update state
-    final config = ref.read(backgroundSyncConfigProvider);
     state = state.copyWith(
       isScheduled: true,
       nextScheduledSync: DateTime.now().add(config.syncInterval),
@@ -183,7 +189,8 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
       await _cancelAndroidWorkManager();
     }
 
-    // Update state
+    await HealthBackgroundService.instance.disable();
+
     state = state.copyWith(isScheduled: false, nextScheduledSync: null);
   }
 
@@ -211,13 +218,19 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
 
       // Trigger sync for all authorized data types
       await syncController.syncAll();
+      final now = DateTime.now();
+      await HealthBackgroundService.instance.recordSuccessfulSync(now);
 
       // Update state
       state = state.copyWith(
         isSyncing: false,
-        lastBackgroundSync: DateTime.now(),
+        lastBackgroundSync: now,
+        nextScheduledSync: now.add(
+          ref.read(backgroundSyncConfigProvider).syncInterval,
+        ),
       );
     } catch (e) {
+      await HealthBackgroundService.instance.recordFailedSync(e);
       state = state.copyWith(isSyncing: false);
       rethrow;
     }
@@ -266,23 +279,67 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
       return; // App launch sync disabled
     }
 
-    // Throttle: Only sync if last sync was > 12 hours ago
-    if (state.lastBackgroundSync != null) {
-      final timeSinceLastSync = DateTime.now().difference(
-        state.lastBackgroundSync!,
+    try {
+      final permissionStatus = await ref.read(
+        healthPermissionStatusProvider.future,
       );
-      if (timeSinceLastSync < const Duration(hours: 12)) {
-        return; // Too soon, skip
-      }
-    }
+      final syncableTypes = [
+        if (permissionStatus.canAttemptSync(HealthDataType.workout))
+          HealthDataType.workout,
+        if (permissionStatus.canAttemptSync(HealthDataType.bodyWeight))
+          HealthDataType.bodyWeight,
+      ];
 
-    // Trigger background sync
-    await triggerBackgroundSync();
+      if (syncableTypes.isEmpty) {
+        return;
+      }
+
+      final backgroundSnapshot = await HealthBackgroundService.instance
+          .getSnapshot();
+      if (!backgroundSnapshot.enabled) {
+        return;
+      }
+
+      var shouldSync = false;
+      for (final dataType in syncableTypes) {
+        final status = await ref.read(
+          healthSyncStatusProvider(dataType).future,
+        );
+        if (status.shouldAutoSync()) {
+          shouldSync = true;
+          break;
+        }
+      }
+
+      if (!shouldSync) {
+        return;
+      }
+
+      await triggerBackgroundSync();
+    } catch (_) {
+      // Startup sync is best-effort and should not surface as an uncaught error.
+    }
   }
 
   // ============================================================
   // PLATFORM-SPECIFIC TASK SCHEDULING
   // ============================================================
+
+  Future<void> _restoreSchedulerState() async {
+    final config = ref.read(backgroundSyncConfigProvider);
+    await HealthBackgroundService.instance.configure(
+      syncInterval: config.syncInterval,
+    );
+
+    final snapshot = await HealthBackgroundService.instance.getSnapshot();
+    state = state.copyWith(
+      isScheduled: snapshot.enabled,
+      lastBackgroundSync: snapshot.lastBackgroundSync,
+      nextScheduledSync: snapshot.enabled && snapshot.lastBackgroundSync != null
+          ? snapshot.lastBackgroundSync!.add(config.syncInterval)
+          : null,
+    );
+  }
 
   /// iOS: Schedules BackgroundTask using BackgroundTasks API.
   ///
@@ -293,29 +350,14 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
   ///
   /// **Implementation**: Calls platform channel to native iOS code.
   Future<void> _scheduleIOSBackgroundTask() async {
-    // TODO: Implement platform channel call to iOS BackgroundTasks API
-    // final config = ref.read(backgroundSyncConfigProvider);
-    //
-    // await methodChannel.invokeMethod('scheduleBackgroundTask', {
-    //   'identifier': 'com.fitlog.healthSync',
-    //   'interval': config.syncInterval.inSeconds,
-    // });
-
-    throw UnimplementedError(
-      'iOS BackgroundTask scheduling not implemented yet',
+    await HealthBackgroundService.instance.enable(
+      syncInterval: ref.read(backgroundSyncConfigProvider).syncInterval,
     );
   }
 
   /// iOS: Cancels all pending BackgroundTasks.
   Future<void> _cancelIOSBackgroundTask() async {
-    // TODO: Implement platform channel call to iOS
-    // await methodChannel.invokeMethod('cancelBackgroundTask', {
-    //   'identifier': 'com.fitlog.healthSync',
-    // });
-
-    throw UnimplementedError(
-      'iOS BackgroundTask cancellation not implemented yet',
-    );
+    await HealthBackgroundService.instance.disable();
   }
 
   /// Android: Schedules PeriodicWorkRequest using WorkManager.
@@ -327,29 +369,13 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
   ///
   /// **Implementation**: Calls platform channel to native Android code.
   Future<void> _scheduleAndroidWorkManager() async {
-    // TODO: Implement platform channel call to Android WorkManager
-    // final config = ref.read(backgroundSyncConfigProvider);
-    //
-    // await methodChannel.invokeMethod('schedulePeriodicWork', {
-    //   'tag': 'health_sync',
-    //   'interval': config.syncInterval.inSeconds,
-    //   'requiresWifi': config.syncOnWifiOnly,
-    // });
-
-    throw UnimplementedError(
-      'Android WorkManager scheduling not implemented yet',
+    await HealthBackgroundService.instance.handleAppBackgrounded(
+      syncInterval: ref.read(backgroundSyncConfigProvider).syncInterval,
     );
   }
 
   /// Android: Cancels all workers with "health_sync" tag.
   Future<void> _cancelAndroidWorkManager() async {
-    // TODO: Implement platform channel call to Android
-    // await methodChannel.invokeMethod('cancelWorkByTag', {
-    //   'tag': 'health_sync',
-    // });
-
-    throw UnimplementedError(
-      'Android WorkManager cancellation not implemented yet',
-    );
+    await HealthBackgroundService.instance.handleAppForegrounded();
   }
 }

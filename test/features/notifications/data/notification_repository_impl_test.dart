@@ -31,6 +31,7 @@ class FakeLocalNotificationDatasource extends LocalNotificationDatasource {
   final List<Map<String, dynamic>> shownNotifications = [];
   final List<int> canceledIds = [];
   final List<NotificationType> canceledByType = [];
+  List<PendingLocalNotification> pendingNotifications = const [];
 
   // Configurable behaviour
   int nextGeneratedId = 1042; // default non-zero value
@@ -38,9 +39,7 @@ class FakeLocalNotificationDatasource extends LocalNotificationDatasource {
   bool shouldFailShow = false;
 
   @override
-  Future<void> initialize({
-    void Function(String?)? onNotificationTap,
-  }) async {
+  Future<void> initialize({void Function(String?)? onNotificationTap}) async {
     wasInitialized = true;
     capturedTapCallback = onNotificationTap;
   }
@@ -94,6 +93,11 @@ class FakeLocalNotificationDatasource extends LocalNotificationDatasource {
   @override
   Future<void> cancelNotificationsByType(NotificationType type) async {
     canceledByType.add(type);
+  }
+
+  @override
+  Future<List<PendingLocalNotification>> getPendingNotifications() async {
+    return pendingNotifications;
   }
 }
 
@@ -261,6 +265,21 @@ void main() {
 
       expect(local.capturedTapCallback, isNotNull);
     });
+
+    test('rehydrates pending notification mappings from payloads', () async {
+      final local = FakeLocalNotificationDatasource()
+        ..pendingNotifications = const [
+          PendingLocalNotification(id: 2007, payload: 'inactivity:rec-123:/'),
+        ];
+      final storage = FakeNotificationStorageDatasource();
+      final repo = _makeRepo(local: local, storage: storage);
+
+      await repo.initialize();
+      await repo.cancelNotification('rec-123');
+
+      expect(local.canceledIds, contains(2007));
+      expect(storage.canceledRecordIds, contains('rec-123'));
+    });
   });
 
   // =========================================================================
@@ -378,7 +397,10 @@ void main() {
       );
 
       expect(storage.updatedMessageKeys, hasLength(1));
-      expect(storage.updatedMessageKeys.first.key, NotificationType.insightVolume);
+      expect(
+        storage.updatedMessageKeys.first.key,
+        NotificationType.insightVolume,
+      );
       expect(storage.updatedMessageKeys.first.value, equals('vol_msg_2'));
     });
 
@@ -398,8 +420,7 @@ void main() {
     });
 
     test('tracks notification ID to record ID mapping', () async {
-      final local = FakeLocalNotificationDatasource()
-        ..nextGeneratedId = 3042;
+      final local = FakeLocalNotificationDatasource()..nextGeneratedId = 3042;
       final storage = FakeNotificationStorageDatasource()
         ..canSendResponse = true;
       final repo = _makeRepo(local: local, storage: storage);
@@ -413,6 +434,26 @@ void main() {
       // Cancel by record ID — should find mapping and cancel via local datasource
       await repo.cancelNotification(recordId!);
       expect(local.canceledIds, contains(3042));
+    });
+
+    test('does not save record when local scheduling fails', () async {
+      final local = FakeLocalNotificationDatasource()
+        ..shouldFailSchedule = true;
+      final storage = FakeNotificationStorageDatasource()
+        ..canSendResponse = true;
+      final repo = _makeRepo(local: local, storage: storage);
+
+      await expectLater(
+        repo.scheduleNotification(
+          type: NotificationType.insightPr,
+          message: _makeMessage(),
+          scheduledTime: DateTime.now().add(const Duration(hours: 1)),
+        ),
+        throwsException,
+      );
+
+      expect(storage._records, isEmpty);
+      expect(storage.updatedMessageKeys, isEmpty);
     });
   });
 
@@ -506,6 +547,24 @@ void main() {
       );
 
       expect(local.shownNotifications, isEmpty);
+    });
+
+    test('does not save record when local show fails', () async {
+      final local = FakeLocalNotificationDatasource()..shouldFailShow = true;
+      final storage = FakeNotificationStorageDatasource()
+        ..canSendResponse = true;
+      final repo = _makeRepo(local: local, storage: storage);
+
+      await expectLater(
+        repo.showNotificationNow(
+          type: NotificationType.insightPr,
+          message: _makeMessage(),
+        ),
+        throwsException,
+      );
+
+      expect(storage._records, isEmpty);
+      expect(storage.updatedMessageKeys, isEmpty);
     });
   });
 
@@ -605,6 +664,23 @@ void main() {
       expect(local.canceledByType, contains(NotificationType.inactivity));
     });
 
+    test('marks tracked records as canceled in storage', () async {
+      final local = FakeLocalNotificationDatasource()..nextGeneratedId = 2010;
+      final storage = FakeNotificationStorageDatasource()
+        ..canSendResponse = true;
+      final repo = _makeRepo(local: local, storage: storage);
+
+      final recordId = await repo.scheduleNotification(
+        type: NotificationType.inactivity,
+        message: _makeMessage(),
+        scheduledTime: DateTime.now().add(const Duration(days: 1)),
+      );
+
+      await repo.cancelNotificationsByType(NotificationType.inactivity);
+
+      expect(storage.canceledRecordIds, contains(recordId));
+    });
+
     test('removes in-memory mappings in the correct ID range', () async {
       final local = FakeLocalNotificationDatasource()
         ..nextGeneratedId = 2010; // inactivity range 2000-2099
@@ -687,8 +763,7 @@ void main() {
         ..canSendResponse = true;
       final repo = _makeRepo(storage: storage);
 
-      final result =
-          await repo.canSendNotification(NotificationType.insightPr);
+      final result = await repo.canSendNotification(NotificationType.insightPr);
 
       expect(result, isTrue);
     });
@@ -698,8 +773,9 @@ void main() {
         ..canSendResponse = false;
       final repo = _makeRepo(storage: storage);
 
-      final result =
-          await repo.canSendNotification(NotificationType.inactivity);
+      final result = await repo.canSendNotification(
+        NotificationType.inactivity,
+      );
 
       expect(result, isFalse);
     });
@@ -720,8 +796,7 @@ void main() {
       storage.seedStats(NotificationType.insightPr, expectedStats);
       final repo = _makeRepo(storage: storage);
 
-      final stats =
-          await repo.getNotificationStats(NotificationType.insightPr);
+      final stats = await repo.getNotificationStats(NotificationType.insightPr);
 
       expect(stats.totalSent, equals(5));
       expect(stats.totalOpened, equals(3));
@@ -824,10 +899,7 @@ void main() {
         await repo.resetIgnoreCount(type);
       }
 
-      expect(
-        storage.resetIgnoreTypes,
-        containsAll(NotificationType.values),
-      );
+      expect(storage.resetIgnoreTypes, containsAll(NotificationType.values));
     });
   });
 
@@ -913,8 +985,11 @@ void main() {
       final allIds = <int>{};
       for (final range in ranges.values) {
         for (var id = range.$1; id <= range.$2; id++) {
-          expect(allIds.contains(id), isFalse,
-              reason: 'ID $id is in multiple ranges');
+          expect(
+            allIds.contains(id),
+            isFalse,
+            reason: 'ID $id is in multiple ranges',
+          );
           allIds.add(id);
         }
       }
@@ -951,6 +1026,28 @@ void main() {
       expect(deepLink, equals('/stats'));
     });
 
+    test('custom deepLinkPath overrides the type default', () async {
+      final local = FakeLocalNotificationDatasource();
+      final storage = FakeNotificationStorageDatasource()
+        ..canSendResponse = true;
+      final repo = _makeRepo(local: local, storage: storage);
+
+      await repo.scheduleNotification(
+        type: NotificationType.insightPr,
+        message: _makeMessage(),
+        scheduledTime: DateTime.now().add(const Duration(minutes: 15)),
+        deepLinkPath:
+            '/stats/analytics/exercise/Bench%20Press?source=notification',
+      );
+
+      final payload = local.scheduledNotifications.first['payload'] as String;
+      final deepLink = payload.split(':').sublist(2).join(':');
+      expect(
+        deepLink,
+        equals('/stats/analytics/exercise/Bench%20Press?source=notification'),
+      );
+    });
+
     test('workoutForgotten payload carries /workout deep link', () async {
       final local = FakeLocalNotificationDatasource();
       final storage = FakeNotificationStorageDatasource()
@@ -979,8 +1076,7 @@ void main() {
         scheduledTime: DateTime.now().add(const Duration(days: 3)),
       );
 
-      final payload =
-          local.scheduledNotifications.first['payload'] as String;
+      final payload = local.scheduledNotifications.first['payload'] as String;
       final deepLink = payload.split(':').sublist(2).join(':');
       expect(deepLink, equals('/'));
     });
@@ -1005,8 +1101,7 @@ void main() {
           message: _makeMessage(),
         );
 
-        final payload =
-            local.shownNotifications.first['payload'] as String;
+        final payload = local.shownNotifications.first['payload'] as String;
 
         // Simulate tap by invoking the captured callback
         local.capturedTapCallback!(payload);
@@ -1027,8 +1122,7 @@ void main() {
         message: _makeMessage(),
       );
 
-      final payload =
-          local.shownNotifications.first['payload'] as String;
+      final payload = local.shownNotifications.first['payload'] as String;
       local.capturedTapCallback!(payload);
 
       // Allow markNotificationOpened (async) to complete

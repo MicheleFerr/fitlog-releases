@@ -584,6 +584,7 @@ struct GymBroScheduleLiveActivity: Widget {
         ActivityConfiguration(for: GymBroScheduleAttributes.self) { context in
             // Lock Screen / Banner UI
             LockScreenScheduleView(context: context)
+                .widgetURL(URL(string: "gymbro://schedule/\(context.attributes.workoutId)"))
         } dynamicIsland: { context in
             // Dynamic Island UI
             DynamicIsland {

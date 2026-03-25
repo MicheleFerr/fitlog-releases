@@ -9,11 +9,11 @@ enum ChannelNames {
     static let liveActivity       = "com.gymbro.timer/live_activity"
     static let workoutSession     = "com.gymbro.timer/workout_session"
     static let notifications      = "com.gymbro/notifications"
+    static let trackingAuthorization = "com.gymbro/tracking_authorization"
     static let featureFlags       = "com.gymbro.feature_flags"
     static let audioDebug         = "com.gymbro.fitlog/audio_debug"
     static let timerSoundFix      = "com.gymbro.timer_sound_fix"
-    static let soundTest          = "com.gymbro.sound_test"
-    static let backgroundAudio    = "com.gymbro.background_audio"
     static let healthkitActivity  = "com.gymbro/healthkit_activity"
     static let watchConnectivity  = "com.gymbro/watch_connectivity"
+    static let appIcon            = "com.gymbro/app_icon"
 }

@@ -64,6 +64,7 @@ class _HintMicroTipState extends ConsumerState<HintMicroTip>
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _slideAnimation;
   Timer? _autoTimer;
+  bool _isDismissing = false;
 
   @override
   void initState() {
@@ -73,8 +74,9 @@ class _HintMicroTipState extends ConsumerState<HintMicroTip>
 
     _controller = AnimationController(
       vsync: this,
-      duration:
-          reduceMotion ? Duration.zero : const Duration(milliseconds: 500),
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 500),
     );
 
     _fadeAnimation = CurvedAnimation(
@@ -85,9 +87,7 @@ class _HintMicroTipState extends ConsumerState<HintMicroTip>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     // Notify service that hint is shown
     ref.read(hintActionsProvider.notifier).showHint(widget.hint);
@@ -104,12 +104,16 @@ class _HintMicroTipState extends ConsumerState<HintMicroTip>
   @override
   void dispose() {
     _autoTimer?.cancel();
+    if (!_isDismissing) {
+      ref.read(discoverabilityHintServiceProvider).markHintDismissed();
+    }
     _controller.dispose();
     super.dispose();
   }
 
   void _dismiss() {
     if (!mounted) return;
+    _isDismissing = true;
     _autoTimer?.cancel();
     _controller.reverse().then((_) {
       if (!mounted) return;
@@ -132,8 +136,7 @@ class _HintMicroTipState extends ConsumerState<HintMicroTip>
         child: SlideTransition(
           position: _slideAnimation,
           child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: context.colors.primary.withValues(alpha: 0.05),
               borderRadius: AppBorderRadius.smRadius,
@@ -165,8 +168,9 @@ class _HintMicroTipState extends ConsumerState<HintMicroTip>
                     child: Icon(
                       AppIcons.close,
                       size: AppIconSize.tiny,
-                      color:
-                          context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                      color: context.colors.onSurfaceVariant.withValues(
+                        alpha: 0.5,
+                      ),
                     ),
                   ),
                 ),

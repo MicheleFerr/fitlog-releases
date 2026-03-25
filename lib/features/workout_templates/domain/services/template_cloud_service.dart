@@ -5,9 +5,8 @@
 /// creation MUST go through this service.
 ///
 /// **Quota Tiers**:
-/// - Free: 4 private templates, 2 public templates
-/// - Premium: 20 private templates, 10 public templates
-/// - Pro: 999 private templates (effectively unlimited)
+/// - Free: 4 editable templates in Library
+/// - Premium: 999 editable templates in Library (effectively unlimited)
 ///
 /// **Why Cloud Functions?**
 /// - Atomic quota check + creation (no race conditions)
@@ -81,76 +80,153 @@ class CreateTemplateResult {
   final String? error;
 }
 
+class TemplateMutationResult {
+  const TemplateMutationResult({required this.templateId, required this.quota});
+
+  factory TemplateMutationResult.fromResponse(Map<String, dynamic> data) {
+    final quotaData = data['quota'] != null
+        ? Map<String, dynamic>.from(data['quota'] as Map)
+        : <String, dynamic>{};
+
+    return TemplateMutationResult(
+      templateId: data['templateId'] as String? ?? '',
+      quota: TemplateQuotaInfo.fromResponse(quotaData),
+    );
+  }
+
+  final String templateId;
+  final TemplateQuotaInfo quota;
+}
+
 /// Template quota information
 class TemplateQuotaInfo {
   const TemplateQuotaInfo({
     required this.accountTier,
-    required this.privateUsed,
-    required this.privateMax,
-    required this.privateRemaining,
-    required this.publicUsed,
-    required this.publicMax,
-    required this.publicRemaining,
+    required this.libraryUsed,
+    required this.libraryMax,
+    required this.libraryRemaining,
+    required this.distributionUsed,
+    required this.distributionMax,
+    required this.distributionRemaining,
+    this.distributionMetered = false,
   });
 
   factory TemplateQuotaInfo.fromResponse(Map<String, dynamic> data) {
     // Firebase Cloud Functions return _Map<Object?, Object?>, need to convert
-    final privateData = data['private'] != null
+    final libraryData = data['library'] != null
+        ? Map<String, dynamic>.from(data['library'] as Map)
+        : data['private'] != null
         ? Map<String, dynamic>.from(data['private'] as Map)
         : <String, dynamic>{};
-    final publicData = data['public'] != null
+    final distributionData = data['distribution'] != null
+        ? Map<String, dynamic>.from(data['distribution'] as Map)
+        : data['shared'] != null
+        ? Map<String, dynamic>.from(data['shared'] as Map)
+        : data['public'] != null
         ? Map<String, dynamic>.from(data['public'] as Map)
         : <String, dynamic>{};
 
     return TemplateQuotaInfo(
       accountTier: data['accountTier'] as String? ?? 'free',
-      privateUsed:
-          privateData['used'] as int? ?? data['privateUsed'] as int? ?? 0,
-      privateMax: privateData['max'] as int? ?? data['privateMax'] as int? ?? 4,
-      privateRemaining:
-          privateData['remaining'] as int? ??
-          ((data['privateMax'] as int? ?? 4) -
-              (data['privateUsed'] as int? ?? 0)),
-      publicUsed: publicData['used'] as int? ?? data['publicUsed'] as int? ?? 0,
-      publicMax: publicData['max'] as int? ?? data['publicMax'] as int? ?? 2,
-      publicRemaining:
-          publicData['remaining'] as int? ??
-          ((data['publicMax'] as int? ?? 2) -
-              (data['publicUsed'] as int? ?? 0)),
+      libraryUsed:
+          libraryData['used'] as int? ??
+          data['libraryUsed'] as int? ??
+          data['privateUsed'] as int? ??
+          0,
+      libraryMax:
+          libraryData['max'] as int? ??
+          data['libraryMax'] as int? ??
+          data['privateMax'] as int? ??
+          4,
+      libraryRemaining:
+          libraryData['remaining'] as int? ??
+          data['libraryRemaining'] as int? ??
+          ((data['libraryMax'] as int? ?? data['privateMax'] as int? ?? 4) -
+              (data['libraryUsed'] as int? ??
+                  data['privateUsed'] as int? ??
+                  0)),
+      distributionUsed:
+          distributionData['used'] as int? ??
+          data['distributionUsed'] as int? ??
+          data['sharedUsed'] as int? ??
+          data['publicUsed'] as int? ??
+          0,
+      distributionMax:
+          distributionData['max'] as int? ??
+          data['distributionMax'] as int? ??
+          data['sharedMax'] as int? ??
+          data['publicMax'] as int? ??
+          999,
+      distributionRemaining:
+          distributionData['remaining'] as int? ??
+          data['distributionRemaining'] as int? ??
+          ((data['distributionMax'] as int? ??
+                  data['sharedMax'] as int? ??
+                  data['publicMax'] as int? ??
+                  999) -
+              (data['distributionUsed'] as int? ??
+                  data['sharedUsed'] as int? ??
+                  data['publicUsed'] as int? ??
+                  0)),
+      distributionMetered:
+          distributionData['metered'] as bool? ??
+          data['distributionMetered'] as bool? ??
+          false,
     );
   }
 
   factory TemplateQuotaInfo.empty() {
     return const TemplateQuotaInfo(
       accountTier: 'free',
-      privateUsed: 0,
-      privateMax: 4,
-      privateRemaining: 4,
-      publicUsed: 0,
-      publicMax: 2,
-      publicRemaining: 2,
+      libraryUsed: 0,
+      libraryMax: 4,
+      libraryRemaining: 4,
+      distributionUsed: 0,
+      distributionMax: 999,
+      distributionRemaining: 999,
     );
   }
 
   final String accountTier;
-  final int privateUsed;
-  final int privateMax;
-  final int privateRemaining;
-  final int publicUsed;
-  final int publicMax;
-  final int publicRemaining;
+  final int libraryUsed;
+  final int libraryMax;
+  final int libraryRemaining;
+  final int distributionUsed;
+  final int distributionMax;
+  final int distributionRemaining;
+  final bool distributionMetered;
 
-  /// Check if user can create more private templates
-  bool get canCreatePrivate => privateRemaining > 0;
+  int get privateUsed => libraryUsed;
 
-  /// Check if user can create more public templates
-  bool get canCreatePublic => publicRemaining > 0;
+  int get privateMax => libraryMax;
+
+  int get privateRemaining => libraryRemaining;
+
+  int get sharedUsed => distributionUsed;
+
+  int get sharedMax => distributionMax;
+
+  int get sharedRemaining => distributionRemaining;
+
+  int get publicUsed => distributionUsed;
+
+  int get publicMax => distributionMax;
+
+  int get publicRemaining => distributionRemaining;
+
+  bool get canSaveToLibrary => libraryRemaining > 0;
+
+  /// Check if user can save another editable template to Library.
+  bool get canCreatePrivate => canSaveToLibrary;
+
+  /// Distribution is free in the store-first model.
+  bool get canCreatePublic => true;
 
   /// Check if user is at quota limit
-  bool get isAtLimit => !canCreatePrivate && !canCreatePublic;
+  bool get isAtLimit => !canSaveToLibrary;
 
-  /// Check if user is close to private template limit (<=2 remaining)
-  bool get isNearPrivateLimit => privateRemaining <= 2 && privateRemaining > 0;
+  /// Check if user is close to the Library limit (<=2 remaining)
+  bool get isNearPrivateLimit => libraryRemaining <= 2 && libraryRemaining > 0;
 }
 
 /// Template quota exception for quota-related errors
@@ -383,6 +459,252 @@ class TemplateCloudService {
     }
   }
 
+  /// Share an existing template privately via unlisted visibility.
+  static Future<TemplateMutationResult> shareTemplateUnlisted({
+    required String templateId,
+    bool isAnonymous = false,
+  }) async {
+    try {
+      AppLogger.info(
+        'Sharing template unlisted via Cloud Function: $templateId',
+        tag: 'TemplateCloudService',
+      );
+
+      final result = await _rateLimitHandler
+          .executeWithRetry<HttpsCallableResult<Map<String, dynamic>>>(
+            () => FirebaseFunctions.instance
+                .httpsCallable(
+                  'shareTemplateUnlisted',
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 30),
+                  ),
+                )
+                .call<Map<String, dynamic>>({
+                  'templateId': templateId,
+                  'isAnonymous': isAnonymous,
+                }),
+            onRateLimited: (retryAfter) {
+              AppLogger.warning(
+                'Rate limited. Retrying shareTemplateUnlisted in $retryAfter seconds...',
+                tag: 'TemplateCloudService',
+              );
+            },
+            maxDelay: const Duration(minutes: 2),
+          );
+
+      return TemplateMutationResult.fromResponse(result.data);
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error(
+        'Cloud Function error: ${e.code} - ${e.message}',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+
+      if (e.code == 'resource-exhausted') {
+        throw TemplateQuotaExceededException(
+          message: e.message ?? 'Template quota exceeded',
+          quota: TemplateQuotaInfo.empty(),
+        );
+      }
+
+      rethrow;
+    }
+  }
+
+  /// Publish an existing template via Cloud Function.
+  ///
+  /// Publishing turns a private Library template into a Store template.
+  /// Distribution is free, so this does not consume monetized quota.
+  static Future<TemplateQuotaInfo> publishTemplate({
+    required String templateId,
+    bool isAnonymous = false,
+  }) async {
+    try {
+      AppLogger.info(
+        'Publishing template via Cloud Function: $templateId',
+        tag: 'TemplateCloudService',
+      );
+
+      final result = await _rateLimitHandler
+          .executeWithRetry<HttpsCallableResult<Map<String, dynamic>>>(
+            () => FirebaseFunctions.instance
+                .httpsCallable(
+                  'publishTemplate',
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 30),
+                  ),
+                )
+                .call<Map<String, dynamic>>({
+                  'templateId': templateId,
+                  'isAnonymous': isAnonymous,
+                }),
+            onRateLimited: (retryAfter) {
+              AppLogger.warning(
+                'Rate limited. Retrying publishTemplate in $retryAfter seconds...',
+                tag: 'TemplateCloudService',
+              );
+            },
+            maxDelay: const Duration(minutes: 2),
+          );
+
+      final quotaData = result.data['quota'] != null
+          ? Map<String, dynamic>.from(result.data['quota'] as Map)
+          : <String, dynamic>{};
+
+      return TemplateQuotaInfo.fromResponse(quotaData);
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error(
+        'Cloud Function error: ${e.code} - ${e.message}',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+
+      if (e.code == 'resource-exhausted') {
+        throw TemplateQuotaExceededException(
+          message: e.message ?? 'Template quota exceeded',
+          quota: TemplateQuotaInfo.empty(),
+        );
+      }
+
+      rethrow;
+    } catch (e) {
+      AppLogger.error(
+        'Unexpected error publishing template: $e',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+      rethrow;
+    }
+  }
+
+  /// Save a shared Store template into the current user's Library.
+  static Future<TemplateMutationResult> forkTemplate({
+    required String templateId,
+  }) async {
+    try {
+      AppLogger.info(
+        'Saving Store template to Library via Cloud Function: $templateId',
+        tag: 'TemplateCloudService',
+      );
+
+      final result = await _rateLimitHandler
+          .executeWithRetry<HttpsCallableResult<Map<String, dynamic>>>(
+            () => FirebaseFunctions.instance
+                .httpsCallable(
+                  'forkTemplate',
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 30),
+                  ),
+                )
+                .call<Map<String, dynamic>>({'templateId': templateId}),
+            onRateLimited: (retryAfter) {
+              AppLogger.warning(
+                'Rate limited. Retrying forkTemplate in $retryAfter seconds...',
+                tag: 'TemplateCloudService',
+              );
+            },
+            maxDelay: const Duration(minutes: 2),
+          );
+
+      return TemplateMutationResult.fromResponse(result.data);
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error(
+        'Cloud Function error: ${e.code} - ${e.message}',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+
+      if (e.code == 'resource-exhausted') {
+        throw TemplateQuotaExceededException(
+          message: e.message ?? 'Template quota exceeded',
+          quota: TemplateQuotaInfo.empty(),
+        );
+      }
+
+      rethrow;
+    }
+  }
+
+  /// Create a new private editable copy from a shared template owned by the user.
+  static Future<TemplateMutationResult> createTemplateDraftFromShared({
+    required String templateId,
+  }) async {
+    try {
+      AppLogger.info(
+        'Creating editable Library copy from distributed template: $templateId',
+        tag: 'TemplateCloudService',
+      );
+
+      final result = await _rateLimitHandler
+          .executeWithRetry<HttpsCallableResult<Map<String, dynamic>>>(
+            () => FirebaseFunctions.instance
+                .httpsCallable(
+                  'createTemplateDraftFromShared',
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 30),
+                  ),
+                )
+                .call<Map<String, dynamic>>({'templateId': templateId}),
+            onRateLimited: (retryAfter) {
+              AppLogger.warning(
+                'Rate limited. Retrying createTemplateDraftFromShared in $retryAfter seconds...',
+                tag: 'TemplateCloudService',
+              );
+            },
+            maxDelay: const Duration(minutes: 2),
+          );
+
+      return TemplateMutationResult.fromResponse(result.data);
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error(
+        'Cloud Function error: ${e.code} - ${e.message}',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+
+      if (e.code == 'resource-exhausted') {
+        throw TemplateQuotaExceededException(
+          message: e.message ?? 'Template quota exceeded',
+          quota: TemplateQuotaInfo.empty(),
+        );
+      }
+
+      rethrow;
+    }
+  }
+
+  /// Report a shared template for moderation.
+  static Future<void> reportTemplate({
+    required String templateId,
+    required String reason,
+    String? details,
+  }) async {
+    try {
+      AppLogger.info(
+        'Reporting template via Cloud Function: $templateId',
+        tag: 'TemplateCloudService',
+      );
+
+      await FirebaseFunctions.instance
+          .httpsCallable(
+            'reportTemplate',
+            options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
+          )
+          .call<Map<String, dynamic>>({
+            'templateId': templateId,
+            'reason': reason,
+            'details': details ?? '',
+          });
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error(
+        'Cloud Function error: ${e.code} - ${e.message}',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+      rethrow;
+    }
+  }
+
   /// Get current template quota status
   ///
   /// **Returns**: `TemplateQuotaInfo` with current quota status
@@ -416,8 +738,8 @@ class TemplateCloudService {
 
       AppLogger.info(
         'Quota fetched: ${quota.accountTier} tier, '
-        '${quota.privateUsed}/${quota.privateMax} private, '
-        '${quota.publicUsed}/${quota.publicMax} public',
+        '${quota.libraryUsed}/${quota.libraryMax} in Library, '
+        '${quota.distributionUsed} distributed',
         tag: 'TemplateCloudService',
       );
 
@@ -497,8 +819,10 @@ class TemplateCloudService {
           'setNumber': index + 1,
           'targetWeight': firstExerciseData?.targetWeight,
           'targetReps': firstExerciseData?.targetReps,
-          if (firstExerciseData?.targetMinReps != null) 'targetMinReps': firstExerciseData?.targetMinReps,
-          if (firstExerciseData?.targetMaxReps != null) 'targetMaxReps': firstExerciseData?.targetMaxReps,
+          if (firstExerciseData?.targetMinReps != null)
+            'targetMinReps': firstExerciseData?.targetMinReps,
+          if (firstExerciseData?.targetMaxReps != null)
+            'targetMaxReps': firstExerciseData?.targetMaxReps,
         };
       }).toList();
 
@@ -534,8 +858,10 @@ class TemplateCloudService {
       return {
         ...baseJson,
         'targetReps': exercise.targetReps,
-        if (exercise.targetMinReps != null) 'targetMinReps': exercise.targetMinReps,
-        if (exercise.targetMaxReps != null) 'targetMaxReps': exercise.targetMaxReps,
+        if (exercise.targetMinReps != null)
+          'targetMinReps': exercise.targetMinReps,
+        if (exercise.targetMaxReps != null)
+          'targetMaxReps': exercise.targetMaxReps,
         'restPauseSets': restPauseSets,
       };
     } else {

@@ -7,6 +7,7 @@ class SubscriptionPlan {
     required this.id,
     required this.priceString,
     required this.period,
+    this.displayTitle,
     this.currencyCode,
     this.rcPackageIdentifier,
   });
@@ -14,6 +15,7 @@ class SubscriptionPlan {
   final String id;
   final String priceString;
   final SubscriptionPeriod period;
+  final String? displayTitle;
   final String? currencyCode;
 
   /// RevenueCat package identifier used for the actual purchase call

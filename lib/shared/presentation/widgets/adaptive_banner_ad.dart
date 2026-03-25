@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Adaptive Banner Ad Widget
@@ -23,13 +22,10 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 ///   adUnitId: AdMobConfig.bannerAnalytics,
 /// )
 /// ```
-class AdaptiveBannerAd extends ConsumerStatefulWidget { // Altezza custom (opzionale)
+class AdaptiveBannerAd extends ConsumerStatefulWidget {
+  // Altezza custom (opzionale)
 
-  const AdaptiveBannerAd({
-    super.key,
-    required this.adUnitId,
-    this.height,
-  });
+  const AdaptiveBannerAd({super.key, required this.adUnitId, this.height});
   final String adUnitId;
   final double? height;
 
@@ -138,13 +134,6 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
 
   @override
   Widget build(BuildContext context) {
-    // Hide ads for premium users (paid subscription)
-    final isPremium = ref.watch(isPremiumUserProvider);
-    if (isPremium) {
-      return const SizedBox.shrink();
-    }
-
-    // Hide ads for Platinum tier users (earned through XP)
     final shouldShowAds = ref.watch(shouldShowAdsProvider);
     if (!shouldShowAds) {
       return const SizedBox.shrink();
@@ -160,9 +149,7 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
       return Container(
         height: widget.height ?? 50,
         color: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-        child: const Center(
-          child: LoadingIndicator(size: 20),
-        ),
+        child: const Center(child: LoadingIndicator(size: 20)),
       );
     }
 

@@ -4,8 +4,6 @@
 	<dict>
 		<key>BGTaskSchedulerPermittedIdentifiers</key>
 		<array>
-			<string>com.gymbro.timer.refresh</string>
-			<string>com.gymbro.timer.processing</string>
 			<string>dev.flutter.background.refresh</string>
 		</array>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
@@ -18,6 +16,46 @@
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleIcons</key>
+		<dict>
+			<key>CFBundleAlternateIcons</key>
+			<dict>
+				<key>AppIconPink</key>
+				<dict>
+					<key>CFBundleIconFiles</key>
+					<array>
+						<string>AppIconPink</string>
+					</array>
+					<key>UIPrerenderedIcon</key>
+					<false/>
+				</dict>
+			</dict>
+			<key>CFBundlePrimaryIcon</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>AppIcon</string>
+			</dict>
+		</dict>
+		<key>CFBundleIcons~ipad</key>
+		<dict>
+			<key>CFBundleAlternateIcons</key>
+			<dict>
+				<key>AppIconPink</key>
+				<dict>
+					<key>CFBundleIconFiles</key>
+					<array>
+						<string>AppIconPink</string>
+					</array>
+					<key>UIPrerenderedIcon</key>
+					<false/>
+				</dict>
+			</dict>
+			<key>CFBundlePrimaryIcon</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>AppIcon</string>
+			</dict>
+		</dict>
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
@@ -36,6 +74,15 @@
 				<key>CFBundleURLSchemes</key>
 				<array>
 					<string>com.googleusercontent.apps.206648824958-91h4cm9fjmivavikmcvup5atg0sp6v5t</string>
+				</array>
+			</dict>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>FitLogDeepLink</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>fitlog</string>
+					<string>gymbro</string>
 				</array>
 			</dict>
 		</array>
@@ -339,15 +386,35 @@
 				<string>wg4vff78zm.skadnetwork</string>
 			</dict>
 		</array>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>audio</string>
-			<string>fetch</string>
-			<string>processing</string>
-			<string>remote-notification</string>
-		</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>

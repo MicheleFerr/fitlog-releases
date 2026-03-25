@@ -1,4 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.micheleferrero93.GymProgressAppNew">
     
     <!-- Notification Permissions -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -54,10 +56,9 @@
               android:resource="@style/NormalTheme"
               />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <!-- Health Connect permissions intent filter (Android 14+) -->
             <!-- Required for app to show in Health Connect's permissions UI -->
             <intent-filter>
@@ -69,6 +70,32 @@
                 <action android:name="android.health.connect.action.MANAGE_HEALTH_PERMISSIONS" />
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".DefaultLauncherAlias"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="FitLog Pro"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".PinkLauncherAlias"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="FitLog Pro"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <!-- Health Connect Privacy Policy Activity Alias -->
         <!-- Required: Links Health Connect to app's privacy policy -->
@@ -99,6 +126,11 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="health" />
+
+        <service
+            android:name="id.flutter.flutter_background_service.BackgroundService"
+            android:foregroundServiceType="health|dataSync"
+            tools:node="merge" />
 
         
         <!-- Notification channels will be created by flutter_local_notifications plugin -->

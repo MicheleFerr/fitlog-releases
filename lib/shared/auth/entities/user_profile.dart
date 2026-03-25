@@ -22,23 +22,22 @@ enum AccountTier { free, premium }
 /// Template quota information
 class TemplateQuota {
   const TemplateQuota({
-    required this.maxPrivateTemplates,
-    required this.maxPublicTemplates,
-    this.usedPrivateTemplates = 0,
-    this.usedPublicTemplates = 0,
+    required this.maxLibraryTemplates,
+    this.usedLibraryTemplates = 0,
+    this.distributedTemplateCount = 0,
+    this.maxDistributionTemplates = 999,
   });
 
   /// Get quota based on XP tier (primary source of truth)
   factory TemplateQuota.forUserTier(
     UserTier tier, {
-    int usedPrivate = 0,
-    int usedPublic = 0,
+    int usedLibrary = 0,
+    int distributedCount = 0,
   }) {
     return TemplateQuota(
-      maxPrivateTemplates: tier.maxTemplates,
-      maxPublicTemplates: tier.maxPublicTemplates,
-      usedPrivateTemplates: usedPrivate,
-      usedPublicTemplates: usedPublic,
+      maxLibraryTemplates: tier.maxTemplates,
+      usedLibraryTemplates: usedLibrary,
+      distributedTemplateCount: distributedCount,
     );
   }
 
@@ -46,23 +45,21 @@ class TemplateQuota {
   /// Premium/Pro subscribers get bonus slots on top of their XP tier
   factory TemplateQuota.forTier(
     AccountTier tier, {
-    int usedPrivate = 0,
-    int usedPublic = 0,
+    int usedLibrary = 0,
+    int distributedCount = 0,
   }) {
     switch (tier) {
       case AccountTier.free:
         return TemplateQuota(
-          maxPrivateTemplates: 4,
-          maxPublicTemplates: 2,
-          usedPrivateTemplates: usedPrivate,
-          usedPublicTemplates: usedPublic,
+          maxLibraryTemplates: 4,
+          usedLibraryTemplates: usedLibrary,
+          distributedTemplateCount: distributedCount,
         );
       case AccountTier.premium:
         return TemplateQuota(
-          maxPrivateTemplates: 999, // Unlimited for premium
-          maxPublicTemplates: 999, // Unlimited for premium
-          usedPrivateTemplates: usedPrivate,
-          usedPublicTemplates: usedPublic,
+          maxLibraryTemplates: 999, // Unlimited for premium
+          usedLibraryTemplates: usedLibrary,
+          distributedTemplateCount: distributedCount,
         );
     }
   }
@@ -73,56 +70,86 @@ class TemplateQuota {
   factory TemplateQuota.consolidated({
     required UserTier userTier,
     required AccountTier accountTier,
-    int usedPrivate = 0,
-    int usedPublic = 0,
+    int usedLibrary = 0,
+    int distributedCount = 0,
   }) {
     final xpQuota = TemplateQuota.forUserTier(userTier);
     final accountQuota = TemplateQuota.forTier(accountTier);
 
     return TemplateQuota(
-      maxPrivateTemplates:
-          xpQuota.maxPrivateTemplates > accountQuota.maxPrivateTemplates
-          ? xpQuota.maxPrivateTemplates
-          : accountQuota.maxPrivateTemplates,
-      maxPublicTemplates:
-          xpQuota.maxPublicTemplates > accountQuota.maxPublicTemplates
-          ? xpQuota.maxPublicTemplates
-          : accountQuota.maxPublicTemplates,
-      usedPrivateTemplates: usedPrivate,
-      usedPublicTemplates: usedPublic,
+      maxLibraryTemplates:
+          xpQuota.maxLibraryTemplates > accountQuota.maxLibraryTemplates
+          ? xpQuota.maxLibraryTemplates
+          : accountQuota.maxLibraryTemplates,
+      usedLibraryTemplates: usedLibrary,
+      distributedTemplateCount: distributedCount,
     );
   }
 
   factory TemplateQuota.fromJson(Map<String, dynamic> json) {
+    final usedLibrary =
+        json['usedLibraryTemplates'] ??
+        json['libraryEditableCount'] ??
+        json['usedPrivateTemplates'] ??
+        0;
+    final distributedCount =
+        json['distributedTemplateCount'] ??
+        json['usedPublicTemplates'] ??
+        json['usedSharedTemplates'] ??
+        0;
+
     return TemplateQuota(
-      maxPrivateTemplates: json['maxPrivateTemplates'] ?? 4,
-      maxPublicTemplates: json['maxPublicTemplates'] ?? 2,
-      usedPrivateTemplates: json['usedPrivateTemplates'] ?? 0,
-      usedPublicTemplates: json['usedPublicTemplates'] ?? 0,
+      maxLibraryTemplates:
+          json['maxLibraryTemplates'] ?? json['maxPrivateTemplates'] ?? 4,
+      usedLibraryTemplates: usedLibrary,
+      distributedTemplateCount: distributedCount,
+      maxDistributionTemplates:
+          json['maxPublicTemplates'] ?? json['maxSharedTemplates'] ?? 999,
     );
   }
-  final int maxPrivateTemplates;
-  final int maxPublicTemplates;
-  final int usedPrivateTemplates;
-  final int usedPublicTemplates;
+  final int maxLibraryTemplates;
+  final int usedLibraryTemplates;
+  final int distributedTemplateCount;
+  final int maxDistributionTemplates;
 
-  /// Check if user can save a new private template
-  bool get canSavePrivate => usedPrivateTemplates < maxPrivateTemplates;
+  /// Primary store-first API.
+  bool get canSaveToLibrary => usedLibraryTemplates < maxLibraryTemplates;
 
-  /// Check if user can save a new public template
-  bool get canSavePublic => usedPublicTemplates < maxPublicTemplates;
+  int get remainingLibrary => maxLibraryTemplates - usedLibraryTemplates;
 
-  /// Get remaining private templates
-  int get remainingPrivate => maxPrivateTemplates - usedPrivateTemplates;
+  /// Legacy aliases kept for compatibility in older parts of the app.
+  int get maxPrivateTemplates => maxLibraryTemplates;
 
-  /// Get remaining public templates
-  int get remainingPublic => maxPublicTemplates - usedPublicTemplates;
+  int get maxPublicTemplates => maxDistributionTemplates;
+
+  int get usedPrivateTemplates => usedLibraryTemplates;
+
+  int get usedPublicTemplates => distributedTemplateCount;
+
+  bool get canSavePrivate => canSaveToLibrary;
+
+  bool get canSavePublic => true;
+
+  int get remainingPrivate => remainingLibrary;
+
+  int get remainingPublic =>
+      (maxDistributionTemplates - distributedTemplateCount).clamp(
+        0,
+        maxDistributionTemplates,
+      );
 
   Map<String, dynamic> toJson() => {
+    'maxLibraryTemplates': maxLibraryTemplates,
+    'usedLibraryTemplates': usedLibraryTemplates,
+    'libraryEditableCount': usedLibraryTemplates,
     'maxPrivateTemplates': maxPrivateTemplates,
     'maxPublicTemplates': maxPublicTemplates,
     'usedPrivateTemplates': usedPrivateTemplates,
     'usedPublicTemplates': usedPublicTemplates,
+    'maxSharedTemplates': maxDistributionTemplates,
+    'usedSharedTemplates': distributedTemplateCount,
+    'distributedTemplateCount': distributedTemplateCount,
+    'distributionMetered': false,
   };
 }
 
@@ -165,8 +192,8 @@ class UserProfile {
       final usedPublic = json['stats']?['publicTemplateCount'] ?? 0;
       quota = TemplateQuota.forTier(
         tier,
-        usedPrivate: usedPrivate,
-        usedPublic: usedPublic,
+        usedLibrary: usedPrivate,
+        distributedCount: usedPublic,
       );
     }
 
@@ -233,8 +260,8 @@ class UserProfile {
       final usedPublic = data['stats']?['publicTemplateCount'] ?? 0;
       quota = TemplateQuota.forTier(
         tier,
-        usedPrivate: usedPrivate,
-        usedPublic: usedPublic,
+        usedLibrary: usedPrivate,
+        distributedCount: usedPublic,
       );
     }
 
@@ -396,14 +423,14 @@ class UserProfile {
   /// Increment template usage
   UserProfile incrementTemplateUsage({required bool isPublic}) {
     final updatedQuota = TemplateQuota(
-      maxPrivateTemplates: templateQuota.maxPrivateTemplates,
-      maxPublicTemplates: templateQuota.maxPublicTemplates,
-      usedPrivateTemplates: isPublic
-          ? templateQuota.usedPrivateTemplates
-          : templateQuota.usedPrivateTemplates + 1,
-      usedPublicTemplates: isPublic
-          ? templateQuota.usedPublicTemplates + 1
-          : templateQuota.usedPublicTemplates,
+      maxLibraryTemplates: templateQuota.maxLibraryTemplates,
+      usedLibraryTemplates: isPublic
+          ? templateQuota.usedLibraryTemplates
+          : templateQuota.usedLibraryTemplates + 1,
+      distributedTemplateCount: isPublic
+          ? templateQuota.distributedTemplateCount + 1
+          : templateQuota.distributedTemplateCount,
+      maxDistributionTemplates: templateQuota.maxDistributionTemplates,
     );
 
     return copyWith(templateQuota: updatedQuota);
@@ -412,14 +439,14 @@ class UserProfile {
   /// Decrement template usage
   UserProfile decrementTemplateUsage({required bool isPublic}) {
     final updatedQuota = TemplateQuota(
-      maxPrivateTemplates: templateQuota.maxPrivateTemplates,
-      maxPublicTemplates: templateQuota.maxPublicTemplates,
-      usedPrivateTemplates: isPublic
-          ? templateQuota.usedPrivateTemplates
-          : (templateQuota.usedPrivateTemplates - 1).clamp(0, 999),
-      usedPublicTemplates: isPublic
-          ? (templateQuota.usedPublicTemplates - 1).clamp(0, 999)
-          : templateQuota.usedPublicTemplates,
+      maxLibraryTemplates: templateQuota.maxLibraryTemplates,
+      usedLibraryTemplates: isPublic
+          ? templateQuota.usedLibraryTemplates
+          : (templateQuota.usedLibraryTemplates - 1).clamp(0, 999),
+      distributedTemplateCount: isPublic
+          ? (templateQuota.distributedTemplateCount - 1).clamp(0, 999)
+          : templateQuota.distributedTemplateCount,
+      maxDistributionTemplates: templateQuota.maxDistributionTemplates,
     );
 
     return copyWith(templateQuota: updatedQuota);

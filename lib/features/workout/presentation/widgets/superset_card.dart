@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
@@ -7,12 +11,16 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_extensions.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
 import 'package:cupertino_native/cupertino_native.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -65,35 +73,172 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   bool get _allSetsCompleted =>
       widget.superset.supersetSets.every((s) => s.isFullyCompleted);
 
+  Exercise? _findNextIncompleteExercise() {
+    final workout = ref.read(currentWorkoutProvider);
+    if (workout == null) return null;
+
+    final currentIndex = workout.exercises.indexWhere(
+      (exercise) => exercise.id == widget.superset.id,
+    );
+    if (currentIndex == -1) return null;
+
+    for (var i = currentIndex + 1; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (!exercise.isCompleted) {
+        return exercise;
+      }
+    }
+
+    return null;
+  }
+
+  int _resolveInterExerciseRest() {
+    final appConfig = ref.read(appConfigProvider);
+    return widget.superset.restAfterExercise ??
+        appConfig.defaultRestBetweenExercises;
+  }
+
+  int _getExerciseTotalSets(Exercise exercise) {
+    if (exercise is SupersetExercise) {
+      return exercise.supersetSets.length;
+    }
+    if (exercise is DropSetExercise) {
+      return exercise.stages.length;
+    }
+    if (exercise is RestPauseExercise) {
+      return exercise.restPauseSets.length;
+    }
+    return exercise.sets.length;
+  }
+
+  Future<void> _startInterExerciseTimerIfNeeded() async {
+    if (!ref.read(appConfigProvider).isAutoRestTimerEnabled) {
+      return;
+    }
+
+    final nextExercise = _findNextIncompleteExercise();
+    if (nextExercise == null) {
+      return;
+    }
+
+    final interExerciseRest = _resolveInterExerciseRest();
+    final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+    await ref
+        .read(unifiedTimerProvider.notifier)
+        .startTimer(
+          durationSeconds: interExerciseRest,
+          type: TimerType.interExercise,
+          exerciseName: nextExercise.name,
+          currentSet: 1,
+          totalSets: nextExerciseTotalSets,
+          exerciseId: nextExercise.id,
+        );
+
+    if (Platform.isIOS) {
+      unawaited(
+        ref
+            .read(workoutSessionLAProvider.notifier)
+            .transitionToRest(
+              restDurationSeconds: interExerciseRest,
+              nextExercise: nextExercise,
+              nextSetIndex: 1,
+            ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     // 🔧 PERF FIX: Removed unused config watch - was causing unnecessary rebuilds
     // Config fields are watched with .select() only where needed
 
-    return Dismissible(
-      key: Key('superset_${widget.superset.name}'),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (direction) async {
-        // Don't actually dismiss - just handle the gesture
-        return false;
-      },
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 16),
-        // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.transparent
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              context.colors.surface.withValues(alpha: 0),
-              context.colors.error.withValues(alpha: 0.3),
+    if (widget.isReorderMode) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainer,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: context.colors.outlineVariant.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(AppIcons.repeat, color: context.colors.secondary),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.superset.name,
+                    style: context.textTheme.bodyLarge,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    final cardContent = Semantics(
+      label: 'Superset',
+      hint: widget.isReorderMode ? null : 'Tap to expand',
+      button: true,
+      child: GestureDetector(
+        onTap: widget.isReorderMode ? null : widget.onTap,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainer,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: context.colors.outlineVariant.withValues(alpha: 0.3),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: context.colors.shadow.withValues(alpha: 0.03),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header del superset (compact)
+              _buildSupersetHeader(context, l10n),
+
+              // Sets section (collapsible)
+              if (_isExpanded) ...[
+                const Divider(height: 1),
+                _buildSupersetSets(context, l10n),
+              ],
+
+              // Note del superset (se presenti)
+              if (widget.superset.notes?.isNotEmpty == true && _isExpanded) ...[
+                const Divider(height: 1),
+                _buildNotesSection(context, l10n),
+              ],
+            ],
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+      ),
+    );
+
+    return Slidable(
+      key: ValueKey('superset_${widget.superset.id}_${widget.index}'),
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        extentRatio: widget.onReplace != null ? 0.48 : 0.24,
+        openThreshold: 0.2,
+        children: [
+          if (widget.onReplace != null)
             _buildSwipeAction(
               context,
               icon: AppIcons.swapHoriz,
@@ -101,78 +246,22 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               color: context.colors.success,
               onTap: () {
                 HapticFeedback.mediumImpact();
-                if (widget.onReplace != null) widget.onReplace!();
+                widget.onReplace?.call();
               },
             ),
-            const SizedBox(width: 8),
-            _buildSwipeAction(
-              context,
-              icon: AppIcons.edit,
-              label: l10n.edit,
-              color: context.colors.primary,
-              onTap: () {
-                HapticFeedback.mediumImpact();
-                if (widget.onEdit != null) widget.onEdit!();
-              },
-            ),
-            const SizedBox(width: 8),
-            _buildSwipeAction(
-              context,
-              icon: AppIcons.delete,
-              label: l10n.delete,
-              color: context.colors.error,
-              onTap: () {
-                HapticFeedback.mediumImpact();
-                _showDeleteConfirmation(context);
-              },
-            ),
-          ],
-        ),
-      ),
-      child: Semantics(
-        label: 'Superset',
-        hint: widget.isReorderMode ? null : 'Tap to expand',
-        button: true,
-        child: GestureDetector(
-          onTap: widget.isReorderMode ? null : widget.onTap,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainer,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: context.colors.outlineVariant.withValues(alpha: 0.3),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: context.colors.shadow.withValues(alpha: 0.03),
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header del superset (compact)
-                _buildSupersetHeader(context, l10n),
-
-                // Sets section (collapsible)
-                if (_isExpanded) ...[
-                  const Divider(height: 1),
-                  _buildSupersetSets(context, l10n),
-                ],
-
-                // Note del superset (se presenti)
-                if (widget.superset.notes?.isNotEmpty == true && _isExpanded) ...[
-                  const Divider(height: 1),
-                  _buildNotesSection(context, l10n),
-                ],
-              ],
-            ),
+          _buildSwipeAction(
+            context,
+            icon: AppIcons.delete,
+            label: l10n.delete,
+            color: context.colors.error,
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              _showDeleteConfirmation(context);
+            },
           ),
-        ),
+        ],
       ),
+      child: cardContent,
     );
   }
 
@@ -183,33 +272,31 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return Semantics(
-      label: label,
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: context.colors.surface, size: 20),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: context.colors.surface,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
+    return CustomSlidableAction(
+      onPressed: (slideContext) {
+        Slidable.of(slideContext)?.close();
+        onTap();
+      },
+      backgroundColor: color,
+      foregroundColor: context.colors.surface,
+      padding: EdgeInsets.zero,
+      child: Semantics(
+        label: label,
+        button: true,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: context.colors.surface, size: 20),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.surface,
+                fontWeight: FontWeight.w500,
               ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
@@ -248,7 +335,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
 
     return Semantics(
       label: 'Superset header',
-      hint: _allSetsCompleted ? (_manualExpandOverride ? 'Tap to collapse' : 'Tap to expand') : null,
+      hint: _allSetsCompleted
+          ? (_manualExpandOverride ? 'Tap to collapse' : 'Tap to expand')
+          : null,
       button: _allSetsCompleted,
       child: GestureDetector(
         // ✅ FIX Issue 1: Only allow toggle when ALL sets are completed
@@ -262,122 +351,122 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             : null,
         behavior: HitTestBehavior.opaque,
         child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Row(
-          children: [
-            // Compact superset icon
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: allCompleted
-                    ? context.colors.tertiary.withValues(alpha: 0.15)
-                    : context.colors.secondary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                AppIcons.link,
-                color: allCompleted
-                    ? context.colors.tertiary
-                    : context.colors.secondary,
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 10),
-
-            // Nome del superset + info compatta
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.superset.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      decoration: allCompleted
-                          ? TextDecoration.lineThrough
-                          : null,
-                      color: allCompleted
-                          ? context.colors.onSurfaceVariant
-                          : null,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  // Compact exercise names preview
-                  Text(
-                    widget.superset.exercises.map((e) => e.name).join(' + '),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Progress indicator (compact)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: allCompleted
-                    ? context.colors.tertiary.withValues(alpha: 0.1)
-                    : context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '$completedSets/$totalSets',
-                style: context.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              // Compact superset icon
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: allCompleted
+                      ? context.colors.tertiary.withValues(alpha: 0.15)
+                      : context.colors.secondary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  AppIcons.link,
                   color: allCompleted
                       ? context.colors.tertiary
-                      : context.colors.onSurfaceVariant,
+                      : context.colors.secondary,
+                  size: 18,
                 ),
               ),
-            ),
-            // Menu button - wrappato per evitare conflitto con GestureDetector parent
-            if (!widget.isReorderMode)
-              GestureDetector(
-                onTap: () {}, // Blocca propagation al parent
-                child: CNPopupMenuButton.icon(
-                  buttonIcon: const CNSymbol('ellipsis', size: 16),
-                  buttonStyle: CNButtonStyle.plain,
-                  size: 32,
-                  items: [
-                    CNPopupMenuItem(
-                      label: l10n.editSuperset,
-                      icon: const CNSymbol('pencil', size: 14),
+              const SizedBox(width: 10),
+
+              // Nome del superset + info compatta
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.superset.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        decoration: allCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                        color: allCompleted
+                            ? context.colors.onSurfaceVariant
+                            : null,
+                      ),
                     ),
-                    CNPopupMenuItem(
-                      label: l10n.duplicate,
-                      icon: const CNSymbol('doc.on.doc', size: 14),
-                    ),
-                    CNPopupMenuItem(
-                      label: l10n.deleteSuperset,
-                      icon: const CNSymbol('trash', size: 14),
+                    const SizedBox(height: 2),
+                    // Compact exercise names preview
+                    Text(
+                      widget.superset.exercises.map((e) => e.name).join(' + '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
-                  onSelected: _handleMenuAction,
                 ),
               ),
-            // ✅ FIX Issue 1: Only show chevron when completed (can re-expand)
-            if (_allSetsCompleted) ...[
-              const SizedBox(width: 4),
-              Icon(
-                _isExpanded
-                    ? AppIcons.keyboardArrowUp
-                    : AppIcons.keyboardArrowDown,
-                size: 20,
-                color: context.colors.onSurfaceVariant,
+
+              // Progress indicator (compact)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: allCompleted
+                      ? context.colors.tertiary.withValues(alpha: 0.1)
+                      : context.colors.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '$completedSets/$totalSets',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: allCompleted
+                        ? context.colors.tertiary
+                        : context.colors.onSurfaceVariant,
+                  ),
+                ),
               ),
+              // Menu button - wrappato per evitare conflitto con GestureDetector parent
+              if (!widget.isReorderMode)
+                GestureDetector(
+                  onTap: () {}, // Blocca propagation al parent
+                  child: CNPopupMenuButton.icon(
+                    buttonIcon: const CNSymbol('ellipsis', size: 16),
+                    buttonStyle: CNButtonStyle.plain,
+                    size: 32,
+                    items: [
+                      CNPopupMenuItem(
+                        label: l10n.editSuperset,
+                        icon: const CNSymbol('pencil', size: 14),
+                      ),
+                      CNPopupMenuItem(
+                        label: l10n.duplicate,
+                        icon: const CNSymbol('doc.on.doc', size: 14),
+                      ),
+                      CNPopupMenuItem(
+                        label: l10n.deleteSuperset,
+                        icon: const CNSymbol('trash', size: 14),
+                      ),
+                    ],
+                    onSelected: _handleMenuAction,
+                  ),
+                ),
+              // ✅ FIX Issue 1: Only show chevron when completed (can re-expand)
+              if (_allSetsCompleted) ...[
+                const SizedBox(width: 4),
+                Icon(
+                  _isExpanded
+                      ? AppIcons.keyboardArrowUp
+                      : AppIcons.keyboardArrowDown,
+                  size: 20,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -468,7 +557,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       case 0: // Edit
         if (widget.onEdit != null) widget.onEdit!();
       case 1: // Duplicate
-        // TODO: Implement duplicate functionality
+      // TODO: Implement duplicate functionality
       case 2: // Delete
         _showDeleteConfirmation(context);
     }
@@ -512,113 +601,113 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         behavior: HitTestBehavior.deferToChild,
         child: Container(
           margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
-        padding: EdgeInsets.symmetric(
-          horizontal: displayMode.horizontalPadding,
-          vertical: displayMode.verticalPadding,
-        ),
-        decoration: BoxDecoration(
-          color: isFullyCompleted
-              ? context.colors.tertiary.withValues(alpha: 0.1)
-              : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(displayMode.borderRadius),
-          border: isFullyCompleted
-              ? Border.all(
-                  color: context.colors.tertiary.withValues(alpha: 0.3),
-                )
-              : null,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Round number in circle
-            Container(
-              width: displayMode.circleSize,
-              height: displayMode.circleSize,
-              margin: const EdgeInsets.only(top: 2),
-              decoration: BoxDecoration(
-                color: isFullyCompleted
-                    ? context.colors.tertiary
-                    : context.colors.outline.withValues(alpha: 0.3),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  '$setNumber',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: isFullyCompleted
-                        ? context.colors.onTertiary
-                        : context.colors.onSurfaceVariant,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+          padding: EdgeInsets.symmetric(
+            horizontal: displayMode.horizontalPadding,
+            vertical: displayMode.verticalPadding,
+          ),
+          decoration: BoxDecoration(
+            color: isFullyCompleted
+                ? context.colors.tertiary.withValues(alpha: 0.1)
+                : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(displayMode.borderRadius),
+            border: isFullyCompleted
+                ? Border.all(
+                    color: context.colors.tertiary.withValues(alpha: 0.3),
+                  )
+                : null,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Round number in circle
+              Container(
+                width: displayMode.circleSize,
+                height: displayMode.circleSize,
+                margin: const EdgeInsets.only(top: 2),
+                decoration: BoxDecoration(
+                  color: isFullyCompleted
+                      ? context.colors.tertiary
+                      : context.colors.outline.withValues(alpha: 0.3),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '$setNumber',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: isFullyCompleted
+                          ? context.colors.onTertiary
+                          : context.colors.onSurfaceVariant,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
+              const SizedBox(width: 12),
 
-            // ✅ NEW: Show ALL exercises in this round
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i < exercises.length; i++) ...[
-                    _buildExerciseRow(
-                      context,
-                      exercises[i],
-                      supersetSet.exerciseData[exercises[i].id],
-                      i,
-                      exercises.length,
-                      displayMode,
-                    ),
-                    if (i < exercises.length - 1)
-                      SizedBox(
-                        height: displayMode == SetDisplayMode.compact ? 2 : 4,
+              // ✅ NEW: Show ALL exercises in this round
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < exercises.length; i++) ...[
+                      _buildExerciseRow(
+                        context,
+                        exercises[i],
+                        supersetSet.exerciseData[exercises[i].id],
+                        i,
+                        exercises.length,
+                        displayMode,
                       ),
+                      if (i < exercises.length - 1)
+                        SizedBox(
+                          height: displayMode == SetDisplayMode.compact ? 2 : 4,
+                        ),
+                    ],
                   ],
+                ),
+              ),
+
+              // Action icons
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Completion checkmark
+                  if (isFullyCompleted)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: SemanticIcon(
+                        icon: AppIcons.checkCircle,
+                        semanticLabel: 'Completed',
+                        size: AppIconSize.small,
+                        color: context.colors.tertiary,
+                      ),
+                    ),
+                  // Edit button
+                  Semantics(
+                    label: l10n.edit,
+                    button: true,
+                    child: InkWell(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        _startSupersetRound(context, supersetSet);
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: SemanticIcon(
+                          icon: AppIcons.edit,
+                          semanticLabel: l10n.edit,
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-
-            // Action icons
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Completion checkmark
-                if (isFullyCompleted)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: SemanticIcon(
-                      icon: AppIcons.checkCircle,
-                      semanticLabel: 'Completed',
-                      size: AppIconSize.small,
-                      color: context.colors.tertiary,
-                    ),
-                  ),
-                // Edit button
-                Semantics(
-                  label: l10n.edit,
-                  button: true,
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      _startSupersetRound(context, supersetSet);
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SemanticIcon(
-                        icon: AppIcons.edit,
-                        semanticLabel: l10n.edit,
-                        size: AppIconSize.small,
-                        color: context.colors.primary,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );
@@ -636,8 +725,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final isCompleted = exerciseData?.isCompleted ?? false;
     final weight =
         exerciseData?.actualWeight ?? exerciseData?.targetWeight ?? 0.0;
-    final repsStr = exerciseData?.actualReps?.toString()
-        ?? (exerciseData?.hasRepRange == true
+    final repsStr =
+        exerciseData?.actualReps?.toString() ??
+        (exerciseData?.hasRepRange == true
             ? exerciseData!.repsDisplay
             : '${exerciseData?.targetReps ?? 0}');
 
@@ -800,7 +890,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final timerActions = ref.read(tier1TimerActionsProvider);
     final restDuration = widget.superset.restTime ?? 90;
     final supersetName = widget.superset.name;
-    final isLastRound = supersetSet.setNumber >= widget.superset.supersetSets.length;
+    final isLastRound =
+        supersetSet.setNumber >= widget.superset.supersetSets.length;
     final nextRound = supersetSet.setNumber + 1;
     final totalRounds = widget.superset.supersetSets.length;
 
@@ -822,13 +913,16 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       onSupersetCompleteAll: (completeDataMap) {
         _handleRoundCompletion(supersetSet, completeDataMap);
         // ✅ FIX Bug 1: Avvia timer riposo dopo completamento round (se non ultimo)
-        if (!isLastRound) {
+        if (!isLastRound &&
+            ref.read(appConfigProvider).isAutoRestTimerEnabled) {
           timerActions.startExerciseRest(
             seconds: restDuration,
             exerciseName: '$supersetName - Round $nextRound',
             currentSet: nextRound,
             totalSets: totalRounds,
           );
+        } else {
+          unawaited(_startInterExerciseTimerIfNeeded());
         }
       },
 

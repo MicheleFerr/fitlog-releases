@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/firestore_workout_history_reader.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:flutter/foundation.dart';
 
@@ -17,21 +18,19 @@ final previousWorkoutFromTemplateProvider = FutureProvider.autoDispose
       if (userId == null) return null;
 
       try {
-        // Query per trovare ultimo workout completato con questo templateId
-        final querySnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .collection('workouts')
-            .where('templateId', isEqualTo: templateId)
-            .where('status', isEqualTo: 'completed')
-            .orderBy('endTime', descending: true)
-            .limit(1)
-            .get();
+        final reader = FirestoreWorkoutHistoryReader(
+          firestore: FirebaseFirestore.instance,
+        );
+        final workouts = await reader.getRecentCompletedWorkouts(
+          userId: userId,
+          templateId: templateId,
+          limit: 1,
+          scanLimit: 150,
+        );
 
-        if (querySnapshot.docs.isEmpty) return null;
+        if (workouts.isEmpty) return null;
 
-        final data = querySnapshot.docs.first.data();
-        return Workout.fromJson(data);
+        return workouts.first.toWorkout();
       } catch (e) {
         if (kDebugMode) {
           debugPrint('❌ Error fetching previous workout: $e');

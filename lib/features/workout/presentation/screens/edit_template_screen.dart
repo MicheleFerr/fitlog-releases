@@ -63,7 +63,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       text: widget.template.description,
     );
     _exercises = List.from(widget.template.exercises);
-    _exerciseKeyIds = List.generate(_exercises.length, (_) => _nextExerciseKeyId++);
+    _exerciseKeyIds = List.generate(
+      _exercises.length,
+      (_) => _nextExerciseKeyId++,
+    );
 
     // Start first exercise expanded for immediate feedback
     if (_exercises.isNotEmpty) {
@@ -122,7 +125,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                   ),
                 ),
                 const SizedBox(width: 4),
-                Icon(AppIcons.edit, size: 14, color: context.colors.onSurface.withValues(alpha: 0.5)),
+                Icon(
+                  AppIcons.edit,
+                  size: 14,
+                  color: context.colors.onSurface.withValues(alpha: 0.5),
+                ),
               ],
             ),
           ),
@@ -167,7 +174,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                     decoration: InputDecoration(
                       hintText: context.l10n.description,
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 8,
+                      ),
                     ),
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.7),
@@ -289,7 +299,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: TabBarInset.of(context)),
           child: CNButton.icon(
-            icon: const CNSymbol('plus', size: 20, weight: CNSymbolWeight.medium),
+            icon: const CNSymbol(
+              'plus',
+              size: 20,
+              weight: CNSymbolWeight.medium,
+            ),
             onPressed: _showAddExercise,
             style: CNButtonStyle.glass,
             size: 56,
@@ -395,7 +409,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                         index: index,
                         child: Icon(
                           AppIcons.dragHandle,
-                          color: context.colors.onSurface.withValues(alpha: 0.5),
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -415,28 +431,40 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                               children: [
                                 // Muscle group chip
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 1,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: context.colors.surfaceContainerHighest,
+                                    color:
+                                        context.colors.surfaceContainerHighest,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
                                     exerciseTemplate.category.name,
-                                    style: context.textTheme.labelSmall?.copyWith(
-                                      fontSize: 9,
-                                      color: context.colors.onSurface.withValues(alpha: 0.6),
-                                    ),
+                                    style: context.textTheme.labelSmall
+                                        ?.copyWith(
+                                          fontSize: 9,
+                                          color: context.colors.onSurface
+                                              .withValues(alpha: 0.6),
+                                        ),
                                   ),
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  exerciseTemplate.type == ExerciseType.superset &&
-                                          exerciseTemplate.subExercises != null &&
-                                          exerciseTemplate.subExercises!.isNotEmpty
+                                  exerciseTemplate.type ==
+                                              ExerciseType.superset &&
+                                          exerciseTemplate.subExercises !=
+                                              null &&
+                                          exerciseTemplate
+                                              .subExercises!
+                                              .isNotEmpty
                                       ? '${exerciseTemplate.sets.length} round × ${exerciseTemplate.subExercises!.length}'
                                       : '${exerciseTemplate.sets.length} set',
                                   style: context.textTheme.bodySmall?.copyWith(
-                                    color: context.colors.onSurface.withValues(alpha: 0.7),
+                                    color: context.colors.onSurface.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                                 ),
                                 // Rest time chip - tappable
@@ -447,27 +475,41 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                                     _showRestTimePicker(index);
                                   },
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: context.colors.primary.withValues(alpha: 0.1),
+                                      color: context.colors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: context.colors.primary.withValues(alpha: 0.3),
+                                        color: context.colors.primary
+                                            .withValues(alpha: 0.3),
                                       ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(AppIcons.timer, size: 12, color: context.colors.primary),
-                                        if (exerciseTemplate.restTime != null) ...[
+                                        Icon(
+                                          AppIcons.timer,
+                                          size: 12,
+                                          color: context.colors.primary,
+                                        ),
+                                        if (exerciseTemplate.restTime !=
+                                            null) ...[
                                           const SizedBox(width: 2),
                                           Text(
-                                            _formatRestTime(exerciseTemplate.restTime!),
-                                            style: context.textTheme.labelSmall?.copyWith(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w600,
-                                              color: context.colors.primary,
+                                            _formatRestTime(
+                                              exerciseTemplate.restTime!,
                                             ),
+                                            style: context.textTheme.labelSmall
+                                                ?.copyWith(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: context.colors.primary,
+                                                ),
                                           ),
                                         ],
                                       ],
@@ -666,9 +708,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
               }
 
               // Compact inline set row (~38px)
-              final mode = exerciseTemplate.countingMode ?? ExerciseCountingMode.weighted;
+              final mode =
+                  exerciseTemplate.countingMode ??
+                  ExerciseCountingMode.weighted;
               final isWeightEmpty = (set.targetWeight ?? 0) == 0;
-              final isRepsEmpty = (set.targetReps ?? 0) == 0 && !set.hasRepRange;
+              final isRepsEmpty =
+                  (set.targetReps ?? 0) == 0 && !set.hasRepRange;
               final isSecondsEmpty = (set.targetSeconds ?? 0) == 0;
 
               return GestureDetector(
@@ -688,7 +733,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                           width: 28,
                           height: 28,
                           decoration: BoxDecoration(
-                            color: context.colors.primary.withValues(alpha: 0.1),
+                            color: context.colors.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -710,29 +757,43 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                               builder: (context, child) {
                                 return Container(
                                   height: 30,
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: context.colors.surfaceContainerHighest.withValues(
-                                      alpha: isWeightEmpty ? _pulseAnimation.value * 0.3 : 0.5,
-                                    ),
+                                    color: context
+                                        .colors
+                                        .surfaceContainerHighest
+                                        .withValues(
+                                          alpha: isWeightEmpty
+                                              ? _pulseAnimation.value * 0.3
+                                              : 0.5,
+                                        ),
                                     borderRadius: BorderRadius.circular(8),
                                     border: isWeightEmpty
                                         ? Border.all(
-                                            color: context.colors.primary.withValues(
-                                              alpha: _pulseAnimation.value * 0.5,
-                                            ),
+                                            color: context.colors.primary
+                                                .withValues(
+                                                  alpha:
+                                                      _pulseAnimation.value *
+                                                      0.5,
+                                                ),
                                           )
                                         : null,
                                   ),
                                   child: Center(
                                     child: Text(
-                                      isWeightEmpty ? '-' : '${set.targetWeight?.toStringAsFixed(1)} kg',
-                                      style: context.textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: isWeightEmpty
-                                            ? context.colors.onSurface.withValues(alpha: 0.3)
-                                            : context.colors.onSurface,
-                                      ),
+                                      isWeightEmpty
+                                          ? '-'
+                                          : '${set.targetWeight?.toStringAsFixed(1)} kg',
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: isWeightEmpty
+                                                ? context.colors.onSurface
+                                                      .withValues(alpha: 0.3)
+                                                : context.colors.onSurface,
+                                          ),
                                     ),
                                   ),
                                 );
@@ -745,7 +806,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                               '×',
                               style: context.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: context.colors.onSurface.withValues(alpha: 0.5),
+                                color: context.colors.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
                               ),
                             ),
                           ),
@@ -758,29 +821,43 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                               builder: (context, child) {
                                 return Container(
                                   height: 30,
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: context.colors.surfaceContainerHighest.withValues(
-                                      alpha: isRepsEmpty ? _pulseAnimation.value * 0.3 : 0.5,
-                                    ),
+                                    color: context
+                                        .colors
+                                        .surfaceContainerHighest
+                                        .withValues(
+                                          alpha: isRepsEmpty
+                                              ? _pulseAnimation.value * 0.3
+                                              : 0.5,
+                                        ),
                                     borderRadius: BorderRadius.circular(8),
                                     border: isRepsEmpty
                                         ? Border.all(
-                                            color: context.colors.secondary.withValues(
-                                              alpha: _pulseAnimation.value * 0.5,
-                                            ),
+                                            color: context.colors.secondary
+                                                .withValues(
+                                                  alpha:
+                                                      _pulseAnimation.value *
+                                                      0.5,
+                                                ),
                                           )
                                         : null,
                                   ),
                                   child: Center(
                                     child: Text(
-                                      isRepsEmpty ? '-' : '${set.repsDisplay} rep',
-                                      style: context.textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: isRepsEmpty
-                                            ? context.colors.onSurface.withValues(alpha: 0.3)
-                                            : context.colors.onSurface,
-                                      ),
+                                      isRepsEmpty
+                                          ? '-'
+                                          : '${set.repsDisplay} rep',
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: isRepsEmpty
+                                                ? context.colors.onSurface
+                                                      .withValues(alpha: 0.3)
+                                                : context.colors.onSurface,
+                                          ),
                                     ),
                                   ),
                                 );
@@ -795,33 +872,46 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                               builder: (context, child) {
                                 final secs = set.targetSeconds ?? 0;
                                 final display = secs >= 60
-                                    ? '${secs ~/ 60}m ${secs % 60 > 0 ? '${secs % 60}s' : ''}'.trim()
+                                    ? '${secs ~/ 60}m ${secs % 60 > 0 ? '${secs % 60}s' : ''}'
+                                          .trim()
                                     : '${secs}s';
                                 return Container(
                                   height: 30,
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: context.colors.surfaceContainerHighest.withValues(
-                                      alpha: isSecondsEmpty ? _pulseAnimation.value * 0.3 : 0.5,
-                                    ),
+                                    color: context
+                                        .colors
+                                        .surfaceContainerHighest
+                                        .withValues(
+                                          alpha: isSecondsEmpty
+                                              ? _pulseAnimation.value * 0.3
+                                              : 0.5,
+                                        ),
                                     borderRadius: BorderRadius.circular(8),
                                     border: isSecondsEmpty
                                         ? Border.all(
-                                            color: context.colors.secondary.withValues(
-                                              alpha: _pulseAnimation.value * 0.5,
-                                            ),
+                                            color: context.colors.secondary
+                                                .withValues(
+                                                  alpha:
+                                                      _pulseAnimation.value *
+                                                      0.5,
+                                                ),
                                           )
                                         : null,
                                   ),
                                   child: Center(
                                     child: Text(
                                       isSecondsEmpty ? '-' : display,
-                                      style: context.textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: isSecondsEmpty
-                                            ? context.colors.onSurface.withValues(alpha: 0.3)
-                                            : context.colors.onSurface,
-                                      ),
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: isSecondsEmpty
+                                                ? context.colors.onSurface
+                                                      .withValues(alpha: 0.3)
+                                                : context.colors.onSurface,
+                                          ),
                                     ),
                                   ),
                                 );
@@ -833,10 +923,20 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                           SizedBox(
                             width: 32,
                             child: IconButton(
-                              onPressed: () => _removeSet(exerciseIndex, setIndex),
-                              icon: Icon(AppIcons.close, size: 14, color: context.colors.error.withValues(alpha: 0.6)),
+                              onPressed: () =>
+                                  _removeSet(exerciseIndex, setIndex),
+                              icon: Icon(
+                                AppIcons.close,
+                                size: 14,
+                                color: context.colors.error.withValues(
+                                  alpha: 0.6,
+                                ),
+                              ),
                               padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(maxWidth: 32, maxHeight: 32),
+                              constraints: const BoxConstraints(
+                                maxWidth: 32,
+                                maxHeight: 32,
+                              ),
                             ),
                           ),
                       ],
@@ -899,26 +999,28 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         final lastWorkout = history.first;
         final sets = (lastWorkout['sets'] as List<dynamic>?) ?? [];
         // Filter out warmup sets
-        final workingSets = sets
-            .where((s) => s['isWarmup'] != true)
-            .toList();
+        final workingSets = sets.where((s) => s['isWarmup'] != true).toList();
         if (workingSets.isEmpty) continue;
 
         final updatedSets = <SetTemplate>[];
         for (int j = 0; j < exercise.sets.length; j++) {
-          final historySet = j < workingSets.length ? workingSets[j] : workingSets.last;
+          final historySet = j < workingSets.length
+              ? workingSets[j]
+              : workingSets.last;
           final weight = (historySet['weight'] as num?)?.toDouble() ?? 0;
           final reps = (historySet['reps'] as num?)?.toInt() ?? 0;
-          updatedSets.add(SetTemplate(
-            setNumber: exercise.sets[j].setNumber,
-            targetWeight: weight > 0 ? weight : exercise.sets[j].targetWeight,
-            targetReps: reps > 0 ? reps : exercise.sets[j].targetReps,
-            targetMinReps: exercise.sets[j].targetMinReps,
-            targetMaxReps: exercise.sets[j].targetMaxReps,
-            targetRpe: exercise.sets[j].targetRpe,
-            targetSeconds: exercise.sets[j].targetSeconds,
-            notes: exercise.sets[j].notes,
-          ));
+          updatedSets.add(
+            SetTemplate(
+              setNumber: exercise.sets[j].setNumber,
+              targetWeight: weight > 0 ? weight : exercise.sets[j].targetWeight,
+              targetReps: reps > 0 ? reps : exercise.sets[j].targetReps,
+              targetMinReps: exercise.sets[j].targetMinReps,
+              targetMaxReps: exercise.sets[j].targetMaxReps,
+              targetRpe: exercise.sets[j].targetRpe,
+              targetSeconds: exercise.sets[j].targetSeconds,
+              notes: exercise.sets[j].notes,
+            ),
+          );
         }
 
         if (mounted) {
@@ -973,7 +1075,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
               decoration: InputDecoration(
                 hintText: context.l10n.templateName,
                 border: const OutlineInputBorder(),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
               ),
               style: context.textTheme.titleSmall,
               onSubmitted: (_) {
@@ -1144,7 +1249,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     final round = exerciseTemplate.sets[roundIndex];
 
     // Show modal with weight/reps pickers for this round
-    await ModalService.showSheet(context,
+    await ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (context) => Container(
         decoration: BoxDecoration(
@@ -1440,22 +1546,29 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   /// Apply weight to all sets of an exercise (long-press action)
   void _applyWeightToAllSets(int exerciseIndex, double weight) {
     final exercise = _exercises[exerciseIndex];
-    final updatedSets = exercise.sets.map((s) => SetTemplate(
-      setNumber: s.setNumber,
-      targetWeight: weight,
-      targetReps: s.targetReps,
-      targetMinReps: s.targetMinReps,
-      targetMaxReps: s.targetMaxReps,
-      targetRpe: s.targetRpe,
-      targetSeconds: s.targetSeconds,
-      notes: s.notes,
-    )).toList();
+    final updatedSets = exercise.sets
+        .map(
+          (s) => SetTemplate(
+            setNumber: s.setNumber,
+            targetWeight: weight,
+            targetReps: s.targetReps,
+            targetMinReps: s.targetMinReps,
+            targetMaxReps: s.targetMaxReps,
+            targetRpe: s.targetRpe,
+            targetSeconds: s.targetSeconds,
+            notes: s.notes,
+          ),
+        )
+        .toList();
     setState(() {
       _exercises[exerciseIndex] = exercise.copyWith(sets: updatedSets);
     });
     _markAsChanged();
     if (mounted) {
-      SnackBarService.showSuccess(context, '${weight.toStringAsFixed(1)} kg → ${context.l10n.appliedToAllSets}');
+      SnackBarService.showSuccess(
+        context,
+        '${weight.toStringAsFixed(1)} kg → ${context.l10n.appliedToAllSets}',
+      );
     }
   }
 
@@ -1475,14 +1588,18 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       seconds: set.targetSeconds,
     );
 
-    final allSets = exercise.sets.map((s) => ExerciseSet(
-      setNumber: s.setNumber,
-      weight: s.targetWeight,
-      reps: s.targetReps,
-      minReps: s.targetMinReps,
-      maxReps: s.targetMaxReps,
-      seconds: s.targetSeconds,
-    )).toList();
+    final allSets = exercise.sets
+        .map(
+          (s) => ExerciseSet(
+            setNumber: s.setNumber,
+            weight: s.targetWeight,
+            reps: s.targetReps,
+            minReps: s.targetMinReps,
+            maxReps: s.targetMaxReps,
+            seconds: s.targetSeconds,
+          ),
+        )
+        .toList();
 
     final previousSet = setIndex > 0
         ? ExerciseSet(
@@ -1500,8 +1617,13 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         _updateSetWeight(exIdx, sIdx, updatedSet.weight ?? 0);
       }
       if (mode.requiresReps) {
-        _updateSetReps(exIdx, sIdx, updatedSet.reps,
-            minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
+        _updateSetReps(
+          exIdx,
+          sIdx,
+          updatedSet.reps,
+          minReps: updatedSet.minReps,
+          maxReps: updatedSet.maxReps,
+        );
       }
       if (mode.requiresTime) {
         _updateSetSeconds(exIdx, sIdx, updatedSet.seconds);
@@ -1519,13 +1641,17 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       onSaveAndNext: setIndex < exercise.sets.length - 1
           ? (updatedSet) {
               saveSet(exerciseIndex, setIndex, updatedSet);
-              Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex + 1));
+              Future.microtask(
+                () => _showEditTemplateSetModal(exerciseIndex, setIndex + 1),
+              );
             }
           : null,
       onSaveAndPrevious: setIndex > 0
           ? (updatedSet) {
               saveSet(exerciseIndex, setIndex, updatedSet);
-              Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex - 1));
+              Future.microtask(
+                () => _showEditTemplateSetModal(exerciseIndex, setIndex - 1),
+              );
             }
           : null,
       onApplyToAll: (updatedSet) {
@@ -1539,7 +1665,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   /// Warmup toggle button widget
   Widget _buildWarmupToggle(int index) {
     final exercise = _exercises[index];
-    final isSupersetWithSubExercises = exercise.type == ExerciseType.superset &&
+    final isSupersetWithSubExercises =
+        exercise.type == ExerciseType.superset &&
         exercise.subExercises != null &&
         exercise.subExercises!.isNotEmpty;
 
@@ -1571,14 +1698,18 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             Icon(
               AppIcons.localFireDepartment,
               size: 14,
-              color: isEnabled ? context.colors.warning : context.colors.onSurface.withValues(alpha: 0.4),
+              color: isEnabled
+                  ? context.colors.warning
+                  : context.colors.onSurface.withValues(alpha: 0.4),
             ),
             const SizedBox(width: 2),
             Text(
               'W',
               style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isEnabled ? context.colors.warning : context.colors.onSurface.withValues(alpha: 0.4),
+                color: isEnabled
+                    ? context.colors.warning
+                    : context.colors.onSurface.withValues(alpha: 0.4),
               ),
             ),
           ],
@@ -1610,7 +1741,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   }
 
   /// Generate warmup sets from percentages
-  List<_WarmupSet> _generateWarmupSets(int exerciseIndex, ExerciseTemplate exercise) {
+  List<_WarmupSet> _generateWarmupSets(
+    int exerciseIndex,
+    ExerciseTemplate exercise,
+  ) {
     final firstSet = exercise.sets.firstOrNull;
     final baseWeight = firstSet?.targetWeight ?? 0;
     if (baseWeight <= 0) return [];
@@ -1623,12 +1757,18 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
 
       final override = overrides[i];
       if (override != null) {
-        return _WarmupSet(weight: override.weight, reps: override.reps, percent: percent);
+        return _WarmupSet(
+          weight: override.weight,
+          reps: override.reps,
+          percent: percent,
+        );
       }
 
       final weight = _smartRound(baseWeight * percent / 100);
       final baseReps = firstSet?.targetReps ?? 10;
-      final reps = percent <= 50 ? (baseReps * 0.5).round().clamp(3, 8) : (baseReps * 0.6).round().clamp(3, 8);
+      final reps = percent <= 50
+          ? (baseReps * 0.5).round().clamp(3, 8)
+          : (baseReps * 0.6).round().clamp(3, 8);
       return _WarmupSet(weight: weight, reps: reps, percent: percent);
     }).toList();
   }
@@ -1674,17 +1814,26 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                 children: [
                   Row(
                     children: [
-                      Icon(AppIcons.localFireDepartment, color: context.colors.warning, size: 22),
+                      Icon(
+                        AppIcons.localFireDepartment,
+                        color: context.colors.warning,
+                        size: 22,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         context.l10n.warmupConfig,
-                        style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(ctx),
-                    icon: const SemanticIcon(icon: AppIcons.close, semanticLabel: 'Close'),
+                    icon: const SemanticIcon(
+                      icon: AppIcons.close,
+                      semanticLabel: 'Close',
+                    ),
                   ),
                 ],
               ),
@@ -1703,7 +1852,21 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                 children: List.generate(tempPercentages.length, (i) {
                   return GestureDetector(
                     onTap: () {
-                      final options = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+                      final options = [
+                        30,
+                        35,
+                        40,
+                        45,
+                        50,
+                        55,
+                        60,
+                        65,
+                        70,
+                        75,
+                        80,
+                        85,
+                        90,
+                      ];
                       final currentIdx = options.indexOf(tempPercentages[i]);
                       final nextIdx = (currentIdx + 1) % options.length;
                       setSheetState(() {
@@ -1711,7 +1874,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         color: context.colors.warning.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(12),
@@ -1751,10 +1917,16 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                       onPressed: () {
                         setSheetState(() => tempPercentages.removeLast());
                       },
-                      icon: Icon(AppIcons.removeCircleOutline, size: 16, color: context.colors.error),
+                      icon: Icon(
+                        AppIcons.removeCircleOutline,
+                        size: 16,
+                        color: context.colors.error,
+                      ),
                       label: Text(
                         context.l10n.removeSet,
-                        style: context.textTheme.labelSmall?.copyWith(color: context.colors.error),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.error,
+                        ),
                       ),
                     ),
                   const Spacer(),
@@ -1764,12 +1936,20 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                         final lastPercent = tempPercentages.last;
                         final newPercent = ((lastPercent + 100) / 2).round();
                         final snapped = (newPercent / 5).round() * 5;
-                        setSheetState(() => tempPercentages.add(snapped.clamp(30, 95)));
+                        setSheetState(
+                          () => tempPercentages.add(snapped.clamp(30, 95)),
+                        );
                       },
-                      icon: Icon(AppIcons.add, size: 16, color: context.colors.warning),
+                      icon: Icon(
+                        AppIcons.add,
+                        size: 16,
+                        color: context.colors.warning,
+                      ),
                       label: Text(
                         context.l10n.addSet,
-                        style: context.textTheme.labelSmall?.copyWith(color: context.colors.warning),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.warning,
+                        ),
                       ),
                     ),
                 ],
@@ -1804,13 +1984,18 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
 
   /// Recalculate warmup percent based on actual weight vs base weight
   int _recalcPercent(int exerciseIndex, double weight, int originalPercent) {
-    final baseWeight = _exercises[exerciseIndex].sets.firstOrNull?.targetWeight ?? 0;
+    final baseWeight =
+        _exercises[exerciseIndex].sets.firstOrNull?.targetWeight ?? 0;
     if (baseWeight <= 0) return originalPercent;
     return ((weight / baseWeight) * 100).round().clamp(1, 100);
   }
 
   /// Create a _WarmupSet override with recalculated percent
-  _WarmupSet _makeOverride(int exerciseIndex, ExerciseSet updatedSet, _WarmupSet original) {
+  _WarmupSet _makeOverride(
+    int exerciseIndex,
+    ExerciseSet updatedSet,
+    _WarmupSet original,
+  ) {
     final w = updatedSet.weight ?? original.weight;
     final r = updatedSet.reps ?? original.reps;
     return _WarmupSet(
@@ -1832,14 +2017,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       reps: warmup.reps,
     );
 
-    final allSets = allWarmups.asMap().entries.map((e) => ExerciseSet(
-      setNumber: e.key + 1,
-      weight: e.value.weight,
-      reps: e.value.reps,
-    )).toList();
+    final allSets = allWarmups
+        .asMap()
+        .entries
+        .map(
+          (e) => ExerciseSet(
+            setNumber: e.key + 1,
+            weight: e.value.weight,
+            reps: e.value.reps,
+          ),
+        )
+        .toList();
 
     // Calculate suggested weight/reps from the percentage
-    final suggestedWeight = baseWeight > 0 ? _smartRound(baseWeight * warmup.percent / 100) : null;
+    final suggestedWeight = baseWeight > 0
+        ? _smartRound(baseWeight * warmup.percent / 100)
+        : null;
     final baseReps = exercise.sets.firstOrNull?.targetReps ?? 10;
     final suggestedReps = warmup.percent <= 50
         ? (baseReps * 0.5).round().clamp(3, 8)
@@ -1856,7 +2049,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       onSave: (updatedSet) {
         setState(() {
           _warmupOverrides[exerciseIndex] ??= {};
-          _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(exerciseIndex, updatedSet, warmup);
+          _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(
+            exerciseIndex,
+            updatedSet,
+            warmup,
+          );
         });
         _markAsChanged();
       },
@@ -1864,13 +2061,24 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
           ? (updatedSet) {
               setState(() {
                 _warmupOverrides[exerciseIndex] ??= {};
-                _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(exerciseIndex, updatedSet, warmup);
+                _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(
+                  exerciseIndex,
+                  updatedSet,
+                  warmup,
+                );
               });
               _markAsChanged();
               Future.microtask(() {
-                final nextWarmups = _generateWarmupSets(exerciseIndex, _exercises[exerciseIndex]);
+                final nextWarmups = _generateWarmupSets(
+                  exerciseIndex,
+                  _exercises[exerciseIndex],
+                );
                 if (warmupIndex + 1 < nextWarmups.length) {
-                  _editWarmupSet(exerciseIndex, warmupIndex + 1, nextWarmups[warmupIndex + 1]);
+                  _editWarmupSet(
+                    exerciseIndex,
+                    warmupIndex + 1,
+                    nextWarmups[warmupIndex + 1],
+                  );
                 }
               });
             }
@@ -1879,13 +2087,24 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
           ? (updatedSet) {
               setState(() {
                 _warmupOverrides[exerciseIndex] ??= {};
-                _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(exerciseIndex, updatedSet, warmup);
+                _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(
+                  exerciseIndex,
+                  updatedSet,
+                  warmup,
+                );
               });
               _markAsChanged();
               Future.microtask(() {
-                final prevWarmups = _generateWarmupSets(exerciseIndex, _exercises[exerciseIndex]);
+                final prevWarmups = _generateWarmupSets(
+                  exerciseIndex,
+                  _exercises[exerciseIndex],
+                );
                 if (warmupIndex - 1 >= 0) {
-                  _editWarmupSet(exerciseIndex, warmupIndex - 1, prevWarmups[warmupIndex - 1]);
+                  _editWarmupSet(
+                    exerciseIndex,
+                    warmupIndex - 1,
+                    prevWarmups[warmupIndex - 1],
+                  );
                 }
               });
             }
@@ -1910,7 +2129,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
 
   /// Build warmup sets display (2-per-row, amber colored)
   Widget _buildWarmupSets(int exerciseIndex, ExerciseTemplate exercise) {
-    final isSupersetWithSubExercises = exercise.type == ExerciseType.superset &&
+    final isSupersetWithSubExercises =
+        exercise.type == ExerciseType.superset &&
         exercise.subExercises != null &&
         exercise.subExercises!.isNotEmpty;
     if (isSupersetWithSubExercises) return const SizedBox.shrink();
@@ -1930,7 +2150,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
           ),
           child: Row(
             children: [
-              Icon(AppIcons.infoOutline, size: 16, color: context.colors.warning),
+              Icon(
+                AppIcons.infoOutline,
+                size: 16,
+                color: context.colors.warning,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -1965,7 +2189,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
               if (i + 1 < warmupSets.length)
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => _editWarmupSet(exerciseIndex, i + 1, warmupSets[i + 1]),
+                    onTap: () =>
+                        _editWarmupSet(exerciseIndex, i + 1, warmupSets[i + 1]),
                     child: _buildWarmupChip(warmupSets[i + 1]),
                   ),
                 )
@@ -1987,7 +2212,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             onTap: () => _showWarmupPercentageConfig(),
             child: Row(
               children: [
-                Icon(AppIcons.localFireDepartment, size: 12, color: context.colors.warning),
+                Icon(
+                  AppIcons.localFireDepartment,
+                  size: 12,
+                  color: context.colors.warning,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   context.l10n.warmupSets,
@@ -1998,13 +2227,20 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                   ),
                 ),
                 const Spacer(),
-                Icon(AppIcons.edit, size: 12, color: context.colors.warning.withValues(alpha: 0.5)),
+                Icon(
+                  AppIcons.edit,
+                  size: 12,
+                  color: context.colors.warning.withValues(alpha: 0.5),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 4),
           ...rows,
-          Divider(color: context.colors.warning.withValues(alpha: 0.2), height: 12),
+          Divider(
+            color: context.colors.warning.withValues(alpha: 0.2),
+            height: 12,
+          ),
         ],
       ),
     );
@@ -2017,7 +2253,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       decoration: BoxDecoration(
         color: context.colors.warning.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: context.colors.warning.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: context.colors.warning.withValues(alpha: 0.2),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -2057,6 +2295,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
 
     ModalService.showBottomSheet(
       context,
+      useRootNavigator: true,
       child: RestTimePickerModal(
         initialRestTime: exerciseTemplate.restTime,
         onRestTimeSelected: (restTime) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
@@ -9,7 +10,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_dashboard_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -35,27 +35,28 @@ class AnalyticsOverviewTab extends ConsumerStatefulWidget {
 class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   TimePeriod _selectedPeriod = TimePeriod.week;
 
+  DateTime _dateOnly(DateTime dateTime) {
+    return DateTime(dateTime.year, dateTime.month, dateTime.day);
+  }
+
   List<Workout> get filteredWorkouts {
-    final now = DateTime.now();
-    switch (_selectedPeriod) {
-      case TimePeriod.week:
-        final weekAgo = now.subtract(const Duration(days: 7));
-        return widget.workouts
-            .where((w) => (w.endTime ?? w.createdAt).isAfter(weekAgo))
-            .toList();
-      case TimePeriod.month:
-        final monthAgo = now.subtract(const Duration(days: 30));
-        return widget.workouts
-            .where((w) => (w.endTime ?? w.createdAt).isAfter(monthAgo))
-            .toList();
-      case TimePeriod.year:
-        final yearAgo = now.subtract(const Duration(days: 365));
-        return widget.workouts
-            .where((w) => (w.endTime ?? w.createdAt).isAfter(yearAgo))
-            .toList();
-      case TimePeriod.all:
-        return widget.workouts;
+    final today = _dateOnly(DateTime.now());
+    final daysBack = switch (_selectedPeriod) {
+      TimePeriod.week => 6,
+      TimePeriod.month => 29,
+      TimePeriod.year => 364,
+      TimePeriod.all => null,
+    };
+
+    if (daysBack == null) {
+      return widget.workouts;
     }
+
+    final startDate = today.subtract(Duration(days: daysBack));
+    return widget.workouts.where((workout) {
+      final workoutDate = _dateOnly(workout.endTime ?? workout.createdAt);
+      return !workoutDate.isBefore(startDate) && !workoutDate.isAfter(today);
+    }).toList();
   }
 
   /// Compute period statistics from workouts
@@ -165,7 +166,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     // Compute stats locally from filtered workouts
     final stats = _computePeriodStats(filteredWorkouts);
     final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
-    final isPremium = ref.watch(isPremiumUserProvider);
+    final hasProAnalytics = ref.watch(hasProAnalyticsProvider);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -226,9 +227,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                           const SizedBox(height: 16),
                           WeeklyDashboardWidget(
                             activities: _convertWorkoutsToActivities(
-                              widget.workouts,
+                              filteredWorkouts,
                             ),
-                            isPremium: isPremium, // Dynamic from user profile
+                            isPremium: hasProAnalytics,
                             onDataSync: (data) {
                               HapticFeedback.mediumImpact();
                             },
@@ -266,7 +267,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 const SizedBox(height: 20),
 
                 // Pro Insights Section - Premium Analytics with blur/lock
-                _buildProInsightsSection(context, isPremium, l10n, theme),
+                _buildProInsightsSection(context, hasProAnalytics, l10n, theme),
                 const SizedBox(height: 20),
 
                 // Recent Workouts Section
@@ -769,7 +770,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final l10n = AppLocalizations.of(context);
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
@@ -1379,7 +1381,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       return;
     }
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => _AllActivitiesModal(

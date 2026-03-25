@@ -41,24 +41,19 @@ class TemplateRepository {
   /// 🔐 SECURITY FIX 2025-02-09: Uses Cloud Function to enforce server-side quota.
   /// Direct Firestore writes are BLOCKED by security rules (allow create: if false).
   ///
-  /// [maxPrivateTemplates] - Max private templates (from tierEntitlementsProvider)
-  /// [maxPublicTemplates] - Max public templates (from tierEntitlementsProvider)
+  /// [maxLibraryTemplates] - Max editable templates allowed in Library
   Future<String> createTemplate(
     WorkoutTemplate template, {
-    required int maxPrivateTemplates,
-    required int maxPublicTemplates,
+    required int maxLibraryTemplates,
   }) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
 
-    // Note: Quota is now enforced server-side by the Cloud Function.
-    // We still do a client-side check for better UX (faster feedback).
-    await _checkUserQuota(
-      userId,
-      template.visibility,
-      maxPrivate: maxPrivateTemplates,
-      maxPublic: maxPublicTemplates,
-    );
+    if (template.visibility == TemplateVisibility.private) {
+      // Note: Quota is enforced server-side by the Cloud Function.
+      // We keep a lightweight client-side Library check for faster UX feedback.
+      await _checkUserQuota(userId, maxLibrary: maxLibraryTemplates);
+    }
 
     // GDPR: Anonymize author info if isAnonymous is true
     final authorName = template.isAnonymous
@@ -92,7 +87,7 @@ class TemplateRepository {
     if (kDebugMode) {
       debugPrint(
         '✅ [TemplateRepository] Template created: ${result.templateId} '
-        '(quota: ${result.quota.privateUsed}/${result.quota.privateMax})',
+        '(library: ${result.quota.libraryUsed}/${result.quota.libraryMax})',
       );
     }
 
@@ -156,31 +151,19 @@ class TemplateRepository {
 
   /// Check user template quota
   ///
-  /// Uses consolidated limits from tierEntitlementsProvider (passed by caller)
-  /// Pattern: Takes MAX of UserTier (XP) + AccountTier (Premium)
-  Future<void> _checkUserQuota(
-    String userId,
-    TemplateVisibility visibility, {
-    required int maxPrivate,
-    required int maxPublic,
-  }) async {
+  /// Uses consolidated Library limits from tierEntitlementsProvider.
+  Future<void> _checkUserQuota(String userId, {required int maxLibrary}) async {
     final userTemplates = await _templatesCollection
         .where('userId', isEqualTo: userId)
-        .where('visibility', isEqualTo: visibility.name)
+        .where('visibility', isEqualTo: TemplateVisibility.private.name)
         .get();
 
     final count = userTemplates.docs.length;
 
-    // ✅ FIXED: Use consolidated limits (UserTier + AccountTier)
-    // Limits passed from caller with tierEntitlementsProvider access
-    final limit = visibility == TemplateVisibility.private
-        ? maxPrivate
-        : maxPublic;
-
-    if (count >= limit) {
+    if (count >= maxLibrary) {
       throw Exception(
-        'Template limit reached: $count/$limit ${visibility.name} templates. '
-        'Delete existing templates or upgrade tier for more slots.',
+        'Library limit reached: $count/$maxLibrary editable templates. '
+        'Delete existing Library templates or upgrade tier for more slots.',
       );
     }
   }

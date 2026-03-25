@@ -15,7 +15,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/workout_import/data/datasources/workout_import_ai_client.dart';
 import 'package:gymbro_flutter_new/features/workout_import/domain/entities/parsed_workout.dart';
 import 'package:gymbro_flutter_new/features/workout_import/domain/services/workout_import_service.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 // ---------------------------------------------------------------------------
 // Fake WorkoutImportAiClient
@@ -60,10 +59,7 @@ class FakeWorkoutImportAiClient extends WorkoutImportAiClient {
 
   static Map<String, dynamic> _emptyDaysJson() => {
     'days': [
-      {
-        'name': 'Workout',
-        'exercises': <dynamic>[],
-      },
+      {'name': 'Workout', 'exercises': <dynamic>[]},
     ],
   };
 }
@@ -328,20 +324,23 @@ void main() {
       expect(result.rawText, contains('Original workout text'));
     });
 
-    test('uses default day name "Workout" when JSON day name is null', () async {
-      fakeClient.textResult = {
-        'days': [
-          {'name': null, 'exercises': <dynamic>[]},
-        ],
-      };
+    test(
+      'uses default day name "Workout" when JSON day name is null',
+      () async {
+        fakeClient.textResult = {
+          'days': [
+            {'name': null, 'exercises': <dynamic>[]},
+          ],
+        };
 
-      final result = await service.parseFromText(
-        text: 'workout',
-        exerciseDb: emptyDb,
-      );
+        final result = await service.parseFromText(
+          text: 'workout',
+          exerciseDb: emptyDb,
+        );
 
-      expect(result.days.first.name, 'Workout');
-    });
+        expect(result.days.first.name, 'Workout');
+      },
+    );
 
     test('uses default rawName "Unknown" when JSON rawName is null', () async {
       fakeClient.textResult = singleDayJson(
@@ -378,31 +377,34 @@ void main() {
       expect(result.days.first.exercises[2].rawName, 'Deadlift');
     });
 
-    test('maps optional exercise fields (restSeconds, muscleGroup, notes, supersetGroup)', () async {
-      fakeClient.textResult = singleDayJson(
-        exercises: [
-          exerciseJson(
-            rawName: 'Bench Press',
-            sets: [],
-            restSeconds: 90,
-            muscleGroup: 'chest',
-            notes: 'Touch and go',
-            supersetGroup: 'A',
-          ),
-        ],
-      );
+    test(
+      'maps optional exercise fields (restSeconds, muscleGroup, notes, supersetGroup)',
+      () async {
+        fakeClient.textResult = singleDayJson(
+          exercises: [
+            exerciseJson(
+              rawName: 'Bench Press',
+              sets: [],
+              restSeconds: 90,
+              muscleGroup: 'chest',
+              notes: 'Touch and go',
+              supersetGroup: 'A',
+            ),
+          ],
+        );
 
-      final result = await service.parseFromText(
-        text: 'workout',
-        exerciseDb: emptyDb,
-      );
+        final result = await service.parseFromText(
+          text: 'workout',
+          exerciseDb: emptyDb,
+        );
 
-      final ex = result.days.first.exercises.first;
-      expect(ex.restSeconds, 90);
-      expect(ex.muscleGroup, 'chest');
-      expect(ex.notes, 'Touch and go');
-      expect(ex.supersetGroup, 'A');
-    });
+        final ex = result.days.first.exercises.first;
+        expect(ex.restSeconds, 90);
+        expect(ex.muscleGroup, 'chest');
+        expect(ex.notes, 'Touch and go');
+        expect(ex.supersetGroup, 'A');
+      },
+    );
 
     test('maps null optional exercise fields gracefully', () async {
       fakeClient.textResult = singleDayJson(
@@ -450,10 +452,7 @@ void main() {
     test('maps AMRAP (isMaxReps: true) set', () async {
       fakeClient.textResult = singleDayJson(
         exercises: [
-          exerciseJson(
-            rawName: 'Pull-up',
-            sets: [setJson(isMaxReps: true)],
-          ),
+          exerciseJson(rawName: 'Pull-up', sets: [setJson(isMaxReps: true)]),
         ],
       );
 
@@ -470,10 +469,7 @@ void main() {
     test('maps timed set (durationSeconds)', () async {
       fakeClient.textResult = singleDayJson(
         exercises: [
-          exerciseJson(
-            rawName: 'Plank',
-            sets: [setJson(durationSeconds: 60)],
-          ),
+          exerciseJson(rawName: 'Plank', sets: [setJson(durationSeconds: 60)]),
         ],
       );
 
@@ -734,10 +730,8 @@ void main() {
       fakeClient.throwOnImage = const FormatException('Vision API error');
 
       expect(
-        () => service.parseFromImage(
-          base64Image: 'image==',
-          exerciseDb: emptyDb,
-        ),
+        () =>
+            service.parseFromImage(base64Image: 'image==', exerciseDb: emptyDb),
         throwsA(isA<FormatException>()),
       );
     });
@@ -762,14 +756,17 @@ void main() {
   // Error handling and edge cases
   // ---------------------------------------------------------------------------
   group('error handling', () {
-    test('propagates FormatException from AI client during text parsing', () async {
-      fakeClient.throwOnText = const FormatException('AI unavailable');
+    test(
+      'propagates FormatException from AI client during text parsing',
+      () async {
+        fakeClient.throwOnText = const FormatException('AI unavailable');
 
-      expect(
-        () => service.parseFromText(text: 'workout', exerciseDb: emptyDb),
-        throwsA(isA<FormatException>()),
-      );
-    });
+        expect(
+          () => service.parseFromText(text: 'workout', exerciseDb: emptyDb),
+          throwsA(isA<FormatException>()),
+        );
+      },
+    );
 
     test('propagates general exception from AI client', () async {
       fakeClient.throwOnText = Exception('Network error');
@@ -857,18 +854,21 @@ void main() {
       expect(captured, contains('3x10'));
     });
 
-    test('result preserves rawText from original input (not preprocessed)', () async {
-      // The service passes the original text as rawText, before preprocessing
-      fakeClient.textResult = singleDayJson();
+    test(
+      'result preserves rawText from original input (not preprocessed)',
+      () async {
+        // The service passes the original text as rawText, before preprocessing
+        fakeClient.textResult = singleDayJson();
 
-      final result = await service.parseFromText(
-        text: 'Bench Press 3×8',
-        exerciseDb: emptyDb,
-      );
+        final result = await service.parseFromText(
+          text: 'Bench Press 3×8',
+          exerciseDb: emptyDb,
+        );
 
-      // rawText is the original input text passed by the caller
-      expect(result.rawText, 'Bench Press 3×8');
-    });
+        // rawText is the original input text passed by the caller
+        expect(result.rawText, 'Bench Press 3×8');
+      },
+    );
   });
 
   // ---------------------------------------------------------------------------
@@ -928,7 +928,7 @@ void main() {
 
 class _CapturingFakeClient extends WorkoutImportAiClient {
   _CapturingFakeClient({required this.onParseText})
-      : super(httpClient: OpenRouterHttpClient(apiKey: 'test-key-not-used'));
+    : super(httpClient: OpenRouterHttpClient(apiKey: 'test-key-not-used'));
 
   final Map<String, dynamic> Function(String text) onParseText;
 

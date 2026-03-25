@@ -16,6 +16,13 @@ import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
+DateTime? _parseFirestoreDate(dynamic value) {
+  if (value is Timestamp) return value.toDate();
+  if (value is DateTime) return value;
+  if (value is String) return DateTime.tryParse(value);
+  return null;
+}
+
 /// Complete workout history with all exercise details
 class WorkoutHistoryDetail {
   // ID of the workout template used
@@ -55,18 +62,29 @@ class WorkoutHistoryDetail {
   /// Create from Firestore document
   factory WorkoutHistoryDetail.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+    final createdAt = _parseFirestoreDate(data['createdAt']) ?? DateTime.now();
+    final startedAt =
+        _parseFirestoreDate(data['startedAt']) ??
+        _parseFirestoreDate(data['startTime']) ??
+        createdAt;
+    final completedAt =
+        _parseFirestoreDate(data['completedAt']) ??
+        _parseFirestoreDate(data['endTime']) ??
+        DateTime.now();
+    final durationMinutes =
+        (data['durationMinutes'] as num?)?.toInt() ??
+        completedAt.difference(startedAt).inMinutes;
 
     return WorkoutHistoryDetail(
       id: doc.id,
-      userId: data['userId'] ?? '',
+      userId: data['userId'] ?? doc.reference.parent.parent?.id ?? '',
       name: data['name'] ?? 'Unknown Workout',
       description: data['description'] ?? '',
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      startedAt: (data['startedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      completedAt:
-          (data['completedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      duration: Duration(minutes: data['durationMinutes'] ?? 0),
+      createdAt: createdAt,
+      startedAt: startedAt,
+      completedAt: completedAt,
+      updatedAt: _parseFirestoreDate(data['updatedAt']) ?? DateTime.now(),
+      duration: Duration(minutes: durationMinutes),
       exercises:
           (data['exercises'] as List<dynamic>?)
               ?.map(
@@ -81,24 +99,37 @@ class WorkoutHistoryDetail {
 
   /// Create from local Map
   factory WorkoutHistoryDetail.fromMap(Map<dynamic, dynamic> map) {
+    final createdAt =
+        _parseFirestoreDate(map['createdAt']) ??
+        _parseFirestoreDate(map['startTime']) ??
+        DateTime.now();
+    final startedAt =
+        _parseFirestoreDate(map['startedAt']) ??
+        _parseFirestoreDate(map['startTime']) ??
+        createdAt;
+    final completedAt =
+        _parseFirestoreDate(map['completedAt']) ??
+        _parseFirestoreDate(map['endTime']) ??
+        createdAt;
+    final updatedAt = _parseFirestoreDate(map['updatedAt']) ?? completedAt;
+    final rawDurationMinutes = (map['durationMinutes'] as num?)?.toInt();
+
     return WorkoutHistoryDetail(
       id: map['id'] ?? '',
-      userId: map['userId'] ?? '',
+      userId: map['userId'] ?? map['_userId'] ?? '',
       name: map['name'] ?? 'Unknown Workout',
       description: map['description'] ?? '',
-      createdAt: DateTime.parse(
-        map['createdAt'] ?? DateTime.now().toIso8601String(),
+      createdAt: createdAt,
+      startedAt: startedAt,
+      completedAt: completedAt,
+      updatedAt: updatedAt,
+      duration: Duration(
+        minutes:
+            rawDurationMinutes ??
+            (completedAt.isAfter(startedAt)
+                ? completedAt.difference(startedAt).inMinutes
+                : 0),
       ),
-      startedAt: DateTime.parse(
-        map['startedAt'] ?? DateTime.now().toIso8601String(),
-      ),
-      completedAt: DateTime.parse(
-        map['completedAt'] ?? DateTime.now().toIso8601String(),
-      ),
-      updatedAt: DateTime.parse(
-        map['updatedAt'] ?? DateTime.now().toIso8601String(),
-      ),
-      duration: Duration(minutes: map['durationMinutes'] ?? 0),
       exercises:
           (map['exercises'] as List<dynamic>?)
               ?.map(
@@ -149,11 +180,14 @@ class WorkoutHistoryDetail {
       'name': name,
       'description': description,
       'createdAt': Timestamp.fromDate(createdAt),
+      'startTime': Timestamp.fromDate(startedAt),
       'startedAt': Timestamp.fromDate(startedAt),
+      'endTime': Timestamp.fromDate(completedAt),
       'completedAt': Timestamp.fromDate(completedAt),
       'updatedAt': Timestamp.fromDate(
         DateTime.now(),
       ), // Always update timestamp
+      'status': 'completed',
       'durationMinutes': duration.inMinutes,
       'exercises': exercises.map((e) => e.toMap()).toList(),
       'metadata': metadata,
@@ -178,6 +212,19 @@ class WorkoutHistoryDetail {
     final allSets = exercises.expand((e) => e.sets).where((s) => s.rpe > 0);
     if (allSets.isEmpty) return 0.0;
     return allSets.map((s) => s.rpe).reduce((a, b) => a + b) / allSets.length;
+  }
+
+  /// Health imports are not considered first-party app workouts and must stay
+  /// out of the workout history shown by the app.
+  bool get isHealthImportedWorkout {
+    final source = metadata['source']?.toString().toLowerCase();
+    final healthSource = metadata['healthSource']?.toString().toLowerCase();
+
+    return source == 'apple_health_import' ||
+        source == 'healthkit_import' ||
+        source == 'health_connect_import' ||
+        healthSource == 'healthkit' ||
+        healthSource == 'health connect';
   }
 
   /// Create copy with modifications
@@ -421,6 +468,8 @@ class ExerciseHistoryDetail {
 
     return Exercise(
       id: id,
+      databaseExerciseId:
+          exerciseData['databaseExerciseId'] as String? ?? id,
       name: name,
       type: ExerciseType.single,
       category: _parseCategory(category),
@@ -473,13 +522,9 @@ class SetHistoryDetail {
       isFailure: map['isFailure'] ?? false,
       // ✅ TUT & Advanced Tracking Fields
       setDurationMillis: (map['setDurationMillis'] as num?)?.toDouble(),
-      setStartedAt: map['setStartedAt'] != null
-          ? DateTime.parse(map['setStartedAt'] as String)
-          : null,
-      completedAt: map['completedAt'] != null
-          ? DateTime.parse(map['completedAt'] as String)
-          : null,
-      actualReps: map['actualReps'] as int?,
+      setStartedAt: _parseFirestoreDate(map['setStartedAt']),
+      completedAt: _parseFirestoreDate(map['completedAt']),
+      actualReps: (map['actualReps'] as num?)?.toInt(),
     );
   }
   final int setNumber;

@@ -101,8 +101,18 @@ void main() {
       final sets = [
         buildSet(date: DateTime(2025, 1, 1), weight: 40, reps: 10, volume: 400),
         buildSet(date: DateTime(2025, 1, 8), weight: 40, reps: 10, volume: 400),
-        buildSet(date: DateTime(2025, 1, 15), weight: 80, reps: 10, volume: 800),
-        buildSet(date: DateTime(2025, 1, 22), weight: 80, reps: 10, volume: 800),
+        buildSet(
+          date: DateTime(2025, 1, 15),
+          weight: 80,
+          reps: 10,
+          volume: 800,
+        ),
+        buildSet(
+          date: DateTime(2025, 1, 22),
+          weight: 80,
+          reps: 10,
+          volume: 800,
+        ),
       ];
 
       expect(sets.calculateVolumeTrend(), equals(TrendDirection.improving));
@@ -113,8 +123,18 @@ void main() {
       final sets = [
         buildSet(date: DateTime(2025, 1, 1), weight: 80, reps: 10, volume: 800),
         buildSet(date: DateTime(2025, 1, 8), weight: 80, reps: 10, volume: 800),
-        buildSet(date: DateTime(2025, 1, 15), weight: 40, reps: 10, volume: 400),
-        buildSet(date: DateTime(2025, 1, 22), weight: 40, reps: 10, volume: 400),
+        buildSet(
+          date: DateTime(2025, 1, 15),
+          weight: 40,
+          reps: 10,
+          volume: 400,
+        ),
+        buildSet(
+          date: DateTime(2025, 1, 22),
+          weight: 40,
+          reps: 10,
+          volume: 400,
+        ),
       ];
 
       expect(sets.calculateVolumeTrend(), equals(TrendDirection.declining));
@@ -199,6 +219,31 @@ void main() {
       );
 
       expect(m.getSetsInPeriod(TimePeriod.week), isEmpty);
+    });
+
+    test('TimePeriod.week includes a set exactly 6 days ago', () {
+      final now = DateTime.now();
+      final boundaryDate = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(const Duration(days: 6));
+
+      final m = ExerciseProgressMetrics(
+        exerciseName: 'Pull Up',
+        totalSessions: 1,
+        maxWeight: 0.0,
+        averageWeight: 0.0,
+        averageReps: 10.0,
+        averageRPE: 6.0,
+        totalVolume: 0.0,
+        lastWorkoutDate: boundaryDate,
+        weightTrend: TrendDirection.stable,
+        volumeTrend: TrendDirection.stable,
+        allSets: [buildSet(date: boundaryDate)],
+      );
+
+      expect(m.getSetsInPeriod(TimePeriod.week), hasLength(1));
     });
   });
 }

@@ -16,17 +16,29 @@ BOLD='\033[1m'
 
 echo -e "${BLUE}${BOLD}🚀 GymBro Quick Bug Check${NC}\n"
 
+FLUTTER_AVAILABLE=1
+if ! command -v flutter >/dev/null 2>&1; then
+    FLUTTER_AVAILABLE=0
+fi
+
 # 1. Flutter Analyze (solo conteggio)
 echo -e "${BOLD}1. Flutter Analyze:${NC}"
-ANALYZE_OUTPUT=$(flutter analyze 2>&1 || true)
-ERRORS=$(echo "$ANALYZE_OUTPUT" | grep -c "error •" || echo "0")
-WARNINGS=$(echo "$ANALYZE_OUTPUT" | grep -c "warning •" || echo "0")
-INFO=$(echo "$ANALYZE_OUTPUT" | grep -c "info •" || echo "0")
-
-if [ "$ERRORS" -gt 0 ]; then
-    echo -e "  ${RED}❌ $ERRORS errori${NC}"
+if [ "$FLUTTER_AVAILABLE" -eq 0 ]; then
+    ERRORS=1
+    WARNINGS=0
+    INFO=0
+    echo -e "  ${RED}❌ flutter non trovato nel PATH${NC}"
 else
-    echo -e "  ${GREEN}✅ 0 errori${NC}"
+    ANALYZE_OUTPUT=$(flutter analyze 2>&1 || true)
+    ERRORS=$(echo "$ANALYZE_OUTPUT" | grep -c "error •" || echo "0")
+    WARNINGS=$(echo "$ANALYZE_OUTPUT" | grep -c "warning •" || echo "0")
+    INFO=$(echo "$ANALYZE_OUTPUT" | grep -c "info •" || echo "0")
+
+    if [ "$ERRORS" -gt 0 ]; then
+        echo -e "  ${RED}❌ $ERRORS errori${NC}"
+    else
+        echo -e "  ${GREEN}✅ 0 errori${NC}"
+    fi
 fi
 echo -e "  ${YELLOW}⚠️  $WARNINGS warnings${NC}"
 echo -e "  ${GREEN}ℹ️  $INFO info${NC}"

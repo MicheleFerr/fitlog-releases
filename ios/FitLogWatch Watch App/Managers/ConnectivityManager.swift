@@ -12,6 +12,17 @@ import WatchKit
 import HealthKit
 import Combine
 
+typealias WatchSetTarget = (
+    weight: Double,
+    reps: Int,
+    seconds: Int,
+    actualReps: Int?,
+    isCompleted: Bool,
+    isWarmup: Bool,
+    minReps: Int?,
+    maxReps: Int?
+)
+
 /// Manages bidirectional communication between Watch and iPhone
 @MainActor
 class ConnectivityManager: NSObject, ObservableObject {
@@ -23,15 +34,27 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var isActivated = false
 
     // MARK: - Workout State (synced from iPhone)
-    @Published var isWorkoutActive = false
+    @Published var isWorkoutActive = false {
+        didSet {
+            guard oldValue != isWorkoutActive else { return }
+            if isWorkoutActive {
+                startPeriodicWorkoutSyncIfNeeded()
+            } else {
+                stopPeriodicWorkoutSync()
+                currentWorkoutId = nil
+            }
+        }
+    }
     /// ✅ FIX: When workout ends, indicates if HKWorkoutSession should be saved to HealthKit
     /// Set by iPhone when sending "workoutEnded" message (default true for backwards compatibility)
     @Published var shouldSaveWorkoutToHealthKit = true
     @Published var currentExerciseName = "No Exercise"
     @Published var currentSetNumber = 0
     @Published var totalSets = 0
+    @Published var countingMode: String = "weighted"
     @Published var targetWeight: Double = 0
     @Published var targetReps = 0
+    @Published var targetSeconds = 0
     // ⌚ Rep range support (e.g., 8-12 reps)
     @Published var minReps: Int? = nil
     @Published var maxReps: Int? = nil
@@ -43,6 +66,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var formCues: String? = nil  // Persistent technique reminders
     @Published var tut: String? = nil  // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
     @Published var workoutType: String = "strength"  // ✅ FIX: Workout type for HKWorkoutSession
+    private(set) var currentWorkoutId: String? = nil
 
     // MARK: - Exercise Navigation (for jumping between exercises)
     @Published var exerciseNames: [String] = []  // All exercises in the workout
@@ -50,9 +74,9 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var totalExercises: Int = 0
 
     // ✅ FIX: All sets' targets for current exercise (for navigation between sets)
-    // Each element: (weight, reps, actualReps?, isCompleted, isWarmup, minReps?, maxReps?) indexed by setNumber - 1
+    // Each element: (weight, reps, seconds, actualReps?, isCompleted, isWarmup, minReps?, maxReps?) indexed by setNumber - 1
     // actualReps is nil if set not completed, or the actual reps performed
-    @Published var allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool, minReps: Int?, maxReps: Int?)] = []
+    @Published var allSetsTargets: [WatchSetTarget] = []
 
     // MARK: - 🔥 SUPERSET State (synced from iPhone)
     @Published var isSuperset = false
@@ -86,6 +110,19 @@ class ConnectivityManager: NSObject, ObservableObject {
             return "\(min)-\(max)"
         }
         return "\(targetReps)"
+    }
+    var isWeightedMode: Bool { countingMode == "weighted" }
+    var isRepsMode: Bool { countingMode == "reps" }
+    var isTimeMode: Bool { countingMode == "time" }
+    var hasDisplayTarget: Bool {
+        switch countingMode {
+        case "reps":
+            return hasRepRange || targetReps > 0
+        case "time":
+            return targetSeconds > 0
+        default:
+            return targetWeight > 0 || hasRepRange || targetReps > 0
+        }
     }
 
     // MARK: - Workout Summary (shown after workout ends)
@@ -153,6 +190,10 @@ class ConnectivityManager: NSObject, ObservableObject {
     private var lastReachabilityChange: Date = .distantPast
     private var reconnectionAttempts = 0
     private let maxReconnectionAttempts = 5
+    private var periodicWorkoutSyncTask: Task<Void, Never>?
+    private let periodicWorkoutSyncInterval: Duration = .seconds(25)
+    private var lastRecoveryAttempt: Date = .distantPast
+    private let minimumRecoveryInterval: TimeInterval = 5.0
 
     // MARK: - Haptic Feedback Debounce (prevents multiple sounds on workout start)
     private var lastWorkoutStartHaptic: Date = .distantPast
@@ -170,6 +211,57 @@ class ConnectivityManager: NSObject, ObservableObject {
         lastWorkoutStartHaptic = now
         WKInterfaceDevice.current().play(.start)
         print("🔔 [HAPTIC] Playing workout start haptic")
+    }
+
+    /// Periodically refreshes workout state while a workout is active.
+    /// This recovers sessions that still report reachable but silently stop syncing.
+    private func startPeriodicWorkoutSyncIfNeeded() {
+        guard periodicWorkoutSyncTask == nil else { return }
+
+        periodicWorkoutSyncTask = Task { @MainActor [weak self] in
+            while let self = self, !Task.isCancelled {
+                try? await Task.sleep(for: self.periodicWorkoutSyncInterval)
+                guard !Task.isCancelled else { break }
+
+                guard self.isWorkoutActive else {
+                    self.stopPeriodicWorkoutSync()
+                    break
+                }
+
+                guard self.session?.isReachable == true else { continue }
+
+                print("⌚ [RECOVERY] Periodic workout state refresh")
+                self.syncWorkoutStateFromiPhone(skipCache: true)
+            }
+        }
+    }
+
+    private func stopPeriodicWorkoutSync() {
+        periodicWorkoutSyncTask?.cancel()
+        periodicWorkoutSyncTask = nil
+    }
+
+    /// Marks the current transport as unhealthy and schedules a fresh state request.
+    private func scheduleConnectionRecovery(reason: String) {
+        let now = Date()
+        guard now.timeIntervalSince(lastRecoveryAttempt) >= minimumRecoveryInterval else {
+            return
+        }
+
+        lastRecoveryAttempt = now
+        isReachable = false
+        print("⌚ [RECOVERY] Scheduling connection recovery: \(reason)")
+
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(1))
+            guard let self = self else { return }
+
+            if self.session?.activationState != .activated {
+                self.attemptReconnection()
+            }
+
+            self.syncWorkoutStateFromiPhone(skipCache: true)
+        }
     }
 
     // P2-7 FIX: Private init enforces singleton pattern
@@ -307,6 +399,7 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         // If not reachable, we already showed cached data, just reset flag
         guard session.isReachable else {
+            isReachable = false
             print("⚠️ iPhone not reachable, relying on cached data")
             isSyncingWorkoutState = false
             return
@@ -319,6 +412,7 @@ class ConnectivityManager: NSObject, ObservableObject {
                     guard let self = self else { return }
                     defer { self.isSyncingWorkoutState = false }
 
+                    self.isReachable = true
                     print("📱 [WATCH] Received workout state response: \(response)")
 
                     if let isActive = response.boolValue(for: "isActive") {
@@ -344,9 +438,23 @@ class ConnectivityManager: NSObject, ObservableObject {
                 Task { @MainActor in
                     self?.isSyncingWorkoutState = false
                     print("❌ Failed to get workout state: \(error.localizedDescription)")
+                    self?.scheduleConnectionRecovery(reason: "workout state request failed")
                 }
             }
         )
+    }
+
+    func sendWatchWaitingForWorkoutBootstrap() {
+        var message: [String: Any] = [
+            "type": WatchMessageType.watchWaitingForWorkoutBootstrap,
+            "timestamp": Date().timeIntervalSince1970,
+        ]
+
+        if let currentWorkoutId {
+            message["workoutId"] = currentWorkoutId
+        }
+
+        sendToiPhone(message, critical: true, forceImmediate: true)
     }
 
     // MARK: - Rate-Limited Message Sending
@@ -513,6 +621,10 @@ class ConnectivityManager: NSObject, ObservableObject {
             print("⚠️ WCError code: \(nsError.code)")
         }
 
+        if nsError.code == 7003 || nsError.code == 7005 {
+            scheduleConnectionRecovery(reason: "\(messageType) transport failure")
+        }
+
         // Fallback to guaranteed delivery for critical messages
         if critical, let session = session {
             do {
@@ -620,9 +732,11 @@ class ConnectivityManager: NSObject, ObservableObject {
                 }
             }
         }) { [weak self] error in
-            print("⌚ [SYNC] ⚠️ sendMessage failed: \(error.localizedDescription)")
-            // Fallback: queue via transferUserInfo for guaranteed delivery
-            self?.session?.transferUserInfo(data)
+            Task { @MainActor in
+                guard let self = self else { return }
+                print("⌚ [SYNC] ⚠️ sendMessage failed: \(error.localizedDescription)")
+                self.handleSendFailure(data, error: error, critical: true)
+            }
         }
 
         // Immediate feedback
@@ -829,6 +943,8 @@ class ConnectivityManager: NSObject, ObservableObject {
         // ✅ Optimistic UI update - update local display immediately
         targetWeight = weight
         targetReps = reps
+        minReps = nil
+        maxReps = nil
 
         // ✅ FIX: Also update allSetsTargets for views that use it (e.g., ExerciseControlView)
         // This ensures all screens show the updated values immediately, not just screens
@@ -839,11 +955,12 @@ class ConnectivityManager: NSObject, ObservableObject {
             allSetsTargets[setIndex] = (
                 weight: weight,
                 reps: reps,
+                seconds: currentTarget.seconds,
                 actualReps: currentTarget.actualReps,
                 isCompleted: currentTarget.isCompleted,
                 isWarmup: currentTarget.isWarmup,
-                minReps: currentTarget.minReps,
-                maxReps: currentTarget.maxReps
+                minReps: nil,
+                maxReps: nil
             )
             print("⌚ [WATCH] Updated allSetsTargets[\(setIndex)]: \(weight) kg × \(reps) reps")
         }
@@ -1087,6 +1204,7 @@ class ConnectivityManager: NSObject, ObservableObject {
             let setData = allSetsTargets[setIndex]
             targetWeight = setData.weight
             targetReps = setData.reps
+            targetSeconds = setData.seconds
             minReps = setData.minReps
             maxReps = setData.maxReps
             print("⌚ [SET] Jumped to set \(setNumber): \(setData.weight)kg × \(setData.reps) reps")
@@ -1111,6 +1229,8 @@ class ConnectivityManager: NSObject, ObservableObject {
         // Update local target for responsive UI
         targetWeight = weight
         targetReps = reps
+        minReps = nil
+        maxReps = nil
 
         // ✅ FIX: Update ALL sets in allSetsTargets for immediate sync across screens
         for i in 0..<allSetsTargets.count {
@@ -1118,11 +1238,12 @@ class ConnectivityManager: NSObject, ObservableObject {
             allSetsTargets[i] = (
                 weight: weight,
                 reps: reps,
+                seconds: currentTarget.seconds,
                 actualReps: currentTarget.actualReps,
                 isCompleted: currentTarget.isCompleted,
                 isWarmup: currentTarget.isWarmup,
-                minReps: currentTarget.minReps,
-                maxReps: currentTarget.maxReps
+                minReps: nil,
+                maxReps: nil
             )
         }
 
@@ -1148,6 +1269,9 @@ class ConnectivityManager: NSObject, ObservableObject {
             let previousSet = allSetsTargets[previousSetIndex]
             targetWeight = previousSet.weight
             targetReps = previousSet.reps
+            targetSeconds = previousSet.seconds
+            minReps = previousSet.minReps
+            maxReps = previousSet.maxReps
 
             // Also update current set in allSetsTargets
             if currentSetIndex >= 0 && currentSetIndex < allSetsTargets.count {
@@ -1155,11 +1279,12 @@ class ConnectivityManager: NSObject, ObservableObject {
                 allSetsTargets[currentSetIndex] = (
                     weight: previousSet.weight,
                     reps: previousSet.reps,
+                    seconds: previousSet.seconds,
                     actualReps: currentTarget.actualReps,
                     isCompleted: currentTarget.isCompleted,
                     isWarmup: currentTarget.isWarmup,
-                    minReps: currentTarget.minReps,
-                    maxReps: currentTarget.maxReps
+                    minReps: previousSet.minReps,
+                    maxReps: previousSet.maxReps
                 )
             }
             print("⌚ [SET] Copied from previous set: \(previousSet.weight)kg × \(previousSet.reps) reps")
@@ -1370,6 +1495,9 @@ class ConnectivityManager: NSObject, ObservableObject {
     // Centralizes NSNumber coercion (Flutter sends numbers via WCSession as NSNumber)
     private func handleWorkoutUpdate(_ data: [String: Any]) {
         // Note: DO NOT update isWorkoutActive here — managed by message handlers only
+        if let workoutId = data.stringValue(for: "workoutId") {
+            currentWorkoutId = workoutId
+        }
 
         // Track if exercise changed to reset stale set targets
         let previousExercise = currentExerciseName
@@ -1384,8 +1512,10 @@ class ConnectivityManager: NSObject, ObservableObject {
         // Core exercise state
         if let v = data.intValue(for: "currentSet") { currentSetNumber = v }
         if let v = data.intValue(for: "totalSets") { totalSets = v }
+        countingMode = data.stringValue(for: "countingMode") ?? "weighted"
         if let v = data.doubleValue(for: "targetWeight") { targetWeight = v }
         if let v = data.intValue(for: "targetReps") { targetReps = v }
+        targetSeconds = data.intValue(for: "targetSeconds") ?? 0
         // ⌚ Rep range support
         minReps = data.intValue(for: "minReps")
         maxReps = data.intValue(for: "maxReps")
@@ -1414,19 +1544,27 @@ class ConnectivityManager: NSObject, ObservableObject {
         // All sets' targets (for set navigation)
         if let setsArray = data.dictArray(for: "allSets") {
             allSetsTargets = setsArray.compactMap { s in
-                guard let weight = s.doubleValue(for: "weight"),
-                      let reps = s.intValue(for: "reps") else {
+                let weight = s.doubleValue(for: "weight") ?? 0
+                let reps = s.intValue(for: "reps") ?? 0
+                let seconds = s.intValue(for: "seconds") ?? 0
+                let minReps = s.intValue(for: "minReps")
+                let maxReps = s.intValue(for: "maxReps")
+                let isWarmup = s.boolValue(for: "isWarmup") ?? false
+                let isCompleted = s.boolValue(for: "isCompleted") ?? false
+                let hasDisplayData = weight > 0 || reps > 0 || seconds > 0 || minReps != nil || maxReps != nil || isWarmup || isCompleted
+                guard hasDisplayData else {
                     print("⌚ [WATCH] ⚠️ Failed to parse set: \(s)")
                     return nil
                 }
                 return (
                     weight: weight,
                     reps: reps,
+                    seconds: seconds,
                     actualReps: s.intValue(for: "actualReps"),
-                    isCompleted: s.boolValue(for: "isCompleted") ?? false,
-                    isWarmup: s.boolValue(for: "isWarmup") ?? false,
-                    minReps: s.intValue(for: "minReps"),
-                    maxReps: s.intValue(for: "maxReps")
+                    isCompleted: isCompleted,
+                    isWarmup: isWarmup,
+                    minReps: minReps,
+                    maxReps: maxReps
                 )
             }
             let completed = allSetsTargets.filter { $0.isCompleted }.count
@@ -1730,13 +1868,16 @@ extension ConnectivityManager: WCSessionDelegate {
 
         guard isWorkoutActive else { return snapshot }
 
+        snapshot["workoutId"] = currentWorkoutId
         snapshot["currentExerciseName"] = currentExerciseName
         snapshot["currentExerciseIndex"] = currentExerciseIndex
         snapshot["exerciseNames"] = exerciseNames
         snapshot["currentSetNumber"] = currentSetNumber
         snapshot["totalSets"] = totalSets
+        snapshot["countingMode"] = countingMode
         snapshot["targetWeight"] = targetWeight
         snapshot["targetReps"] = targetReps
+        snapshot["targetSeconds"] = targetSeconds
         snapshot["setsCompleted"] = setsCompleted
         snapshot["setsCompletedInExercise"] = setsCompletedInExercise
 
@@ -1749,6 +1890,7 @@ extension ConnectivityManager: WCSessionDelegate {
             var d: [String: Any] = [
                 "weight": set.weight,
                 "reps": set.reps,
+                "seconds": set.seconds,
                 "isCompleted": set.isCompleted,
                 "isWarmup": set.isWarmup,
             ]

@@ -306,7 +306,8 @@ abstract class OptimizedBaseHybridRepository<T> with FirestoreCacheFirstMixin {
   /// Check if user is premium (uses cached data)
   bool get isPremiumUser {
     // Use cached profile, no Firebase query!
-    return _cachedUserProfile?.accountTier != AccountTier.free;
+    final accountTier = _cachedUserProfile?.accountTier;
+    return accountTier != null && accountTier != AccountTier.free;
   }
 
   /// Check if user can sync to cloud

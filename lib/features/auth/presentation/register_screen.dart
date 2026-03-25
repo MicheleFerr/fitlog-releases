@@ -20,6 +20,13 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   bool _tosAccepted = false;
+  late final String _selectedHeroImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedHeroImage = AuthHeroAssets.randomRegisterVariant();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +35,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
       next.when(
         data: (_) {
-          if (mounted) {
+          if (mounted && ref.read(authServiceProvider).currentUser != null) {
             context.goNamed('home');
           }
         },
         loading: () {},
         error: (error, _) {
           if (mounted) {
-            SnackBarService.showError(context, context.l10n.error);
+            SnackBarService.showError(context, error.toString());
           }
         },
       );
@@ -46,7 +53,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              AuthHeroAssets.register,
+              _selectedHeroImage,
               fit: BoxFit.cover,
               errorBuilder: (_, _, _) =>
                   Image.asset(AuthHeroAssets.fallback, fit: BoxFit.cover),
@@ -296,7 +303,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   void _handleGoogleSignUp() async {
-    await ref.read(authControllerProvider.notifier).signInWithGoogle();
+    await ref
+        .read(authControllerProvider.notifier)
+        .signInWithGoogle(forceAccountSelection: true);
   }
 
   void _handleAppleSignUp() async {

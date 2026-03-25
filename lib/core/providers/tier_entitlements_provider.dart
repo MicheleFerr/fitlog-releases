@@ -13,8 +13,8 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
+import 'package:gymbro_flutter_new/core/providers/effective_premium_access_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 
 /// Centralized entitlement provider (Policy Decision Point)
@@ -27,11 +27,7 @@ import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 /// while XP progression can grant additional slots.
 final tierEntitlementsProvider = Provider<TierEntitlements>((ref) {
   final userTier = ref.watch(userTierProvider);
-  final accountTier = ref.watch(
-    userProfileProvider.select((profile) =>
-      profile.value?.accountTier ?? AccountTier.free
-    ),
-  );
+  final accountTier = ref.watch(effectiveAccountTierProvider);
   return TierEntitlements.consolidated(
     userTier: userTier,
     accountTier: accountTier,
@@ -77,8 +73,7 @@ class TierEntitlements {
   // ============================================================
 
   /// Days of history available (null = unlimited for premium)
-  int? get historyDaysLimit =>
-      _accountTier != AccountTier.free ? null : 90;
+  int? get historyDaysLimit => _accountTier != AccountTier.free ? null : 90;
 
   /// Cutoff date for history access (null = no cutoff for premium)
   DateTime? get historyCutoffDate {
@@ -91,13 +86,17 @@ class TierEntitlements {
   bool get hasUnlimitedHistory => historyDaysLimit == null;
 
   // ============================================================
-  // TEMPLATE LIMITS (XP tier gated)
+  // TEMPLATE LIMITS (Library slots, XP/account consolidated)
   // ============================================================
 
-  /// Maximum private templates (XP tier + account tier consolidated)
+  /// Maximum editable templates the user can keep in Library.
+  int get maxLibraryTemplates => _quota.maxLibraryTemplates;
+
+  /// Maximum private templates (legacy alias)
   int get maxTemplates => _quota.maxPrivateTemplates;
 
-  /// Maximum public templates (XP tier + account tier consolidated)
+  /// Distribution is free in the store-first model.
+  /// Kept as legacy alias for older debug/compat callers.
   int get maxPublicTemplates => _quota.maxPublicTemplates;
 
   /// Maximum custom single exercises (tier-gated)
@@ -119,35 +118,39 @@ class TierEntitlements {
   /// Whether to show banner ads (Premium/Pro users have no ads)
   bool get shouldShowAds => _accountTier == AccountTier.free && _tier.showAds;
 
-  /// Pro Analytics access (Platinum+ XP tier or Premium account)
-  bool get hasProAnalytics =>
-      _accountTier != AccountTier.free || _tier.hasProAnalytics;
+  /// Pro Analytics access is available to all users.
+  /// Free users are still limited to the recent history window.
+  bool get hasProAnalytics => true;
 
   /// Cloud Sync access (Platinum+ XP tier or Premium account)
   bool get hasCloudSync =>
       _accountTier != AccountTier.free || _tier.hasCloudSync;
 
   /// Check if user can save another private template
-  bool canSaveTemplate(int currentCount) => currentCount < maxTemplates;
+  bool canSaveTemplate(int currentCount) => currentCount < maxLibraryTemplates;
 
-  /// Check if user can save another public template
-  bool canSavePublicTemplate(int currentCount) => currentCount < maxPublicTemplates;
+  /// Distribution is free in the store-first model.
+  bool canSavePublicTemplate(int currentCount) => true;
 
   /// Check if user can create another custom single exercise
-  bool canCreateCustomSingleExercise(int currentCount) => currentCount < maxCustomSingleExercises;
+  bool canCreateCustomSingleExercise(int currentCount) =>
+      currentCount < maxCustomSingleExercises;
 
   /// Check if user can create another custom superset
-  bool canCreateCustomSuperset(int currentCount) => currentCount < maxCustomSupersets;
+  bool canCreateCustomSuperset(int currentCount) =>
+      currentCount < maxCustomSupersets;
 
   /// Check if user can create another custom dropset
-  bool canCreateCustomDropset(int currentCount) => currentCount < maxCustomDropsets;
+  bool canCreateCustomDropset(int currentCount) =>
+      currentCount < maxCustomDropsets;
 
   /// Check if user can create another custom rest-pause
-  bool canCreateCustomRestPause(int currentCount) => currentCount < maxCustomRestPause;
+  bool canCreateCustomRestPause(int currentCount) =>
+      currentCount < maxCustomRestPause;
 
   /// Get remaining private template slots
   int remainingTemplates(int currentCount) =>
-      (maxTemplates - currentCount).clamp(0, maxTemplates);
+      (maxLibraryTemplates - currentCount).clamp(0, maxLibraryTemplates);
 
   /// Get remaining public template slots
   int remainingPublicTemplates(int currentCount) =>
@@ -155,7 +158,10 @@ class TierEntitlements {
 
   /// Get remaining custom single exercise slots
   int remainingCustomSingleExercises(int currentCount) =>
-      (maxCustomSingleExercises - currentCount).clamp(0, maxCustomSingleExercises);
+      (maxCustomSingleExercises - currentCount).clamp(
+        0,
+        maxCustomSingleExercises,
+      );
 
   /// Get remaining custom superset slots
   int remainingCustomSupersets(int currentCount) =>
@@ -187,6 +193,7 @@ class TierEntitlements {
   UserTier? tierRequiredFor(TierFeature feature) {
     switch (feature) {
       case TierFeature.proAnalytics:
+        return null;
       case TierFeature.cloudSync:
       case TierFeature.noAds:
         return UserTier.platinum;
@@ -201,12 +208,7 @@ class TierEntitlements {
 }
 
 /// Enumeration of tier-gated features
-enum TierFeature {
-  proAnalytics,
-  cloudSync,
-  noAds,
-  extraTemplates,
-}
+enum TierFeature { proAnalytics, cloudSync, noAds, extraTemplates }
 
 // ============================================================
 // SELECTIVE PROVIDERS (Performance optimization)
@@ -219,28 +221,22 @@ enum TierFeature {
 /// Use this at ad display points to gate banner ads.
 /// Platinum users have ads disabled.
 final shouldShowAdsProvider = Provider<bool>((ref) {
-  return ref.watch(
-    tierEntitlementsProvider.select((e) => e.shouldShowAds),
-  );
+  return ref.watch(tierEntitlementsProvider.select((e) => e.shouldShowAds));
 });
 
 /// Maximum templates user can save
 ///
 /// Use this when checking template creation limits.
 final maxTemplatesProvider = Provider<int>((ref) {
-  return ref.watch(
-    tierEntitlementsProvider.select((e) => e.maxTemplates),
-  );
+  return ref.watch(tierEntitlementsProvider.select((e) => e.maxTemplates));
 });
 
 /// Whether user has Pro Analytics access
 ///
 /// Use this to gate Pro Analytics features.
-/// Only Platinum users have access.
+/// Access is available to all users; free users still have a history cutoff.
 final hasProAnalyticsProvider = Provider<bool>((ref) {
-  return ref.watch(
-    tierEntitlementsProvider.select((e) => e.hasProAnalytics),
-  );
+  return ref.watch(tierEntitlementsProvider.select((e) => e.hasProAnalytics));
 });
 
 /// Whether user has Cloud Sync access
@@ -248,9 +244,7 @@ final hasProAnalyticsProvider = Provider<bool>((ref) {
 /// Use this to gate Cloud Sync features.
 /// Only Platinum users have access.
 final hasCloudSyncProvider = Provider<bool>((ref) {
-  return ref.watch(
-    tierEntitlementsProvider.select((e) => e.hasCloudSync),
-  );
+  return ref.watch(tierEntitlementsProvider.select((e) => e.hasCloudSync));
 });
 
 /// Maximum public templates user can save
@@ -284,9 +278,7 @@ final maxCustomSupersetsProvider = Provider<int>((ref) {
 ///
 /// Use this when checking custom dropset template creation limits.
 final maxCustomDropsetsProvider = Provider<int>((ref) {
-  return ref.watch(
-    tierEntitlementsProvider.select((e) => e.maxCustomDropsets),
-  );
+  return ref.watch(tierEntitlementsProvider.select((e) => e.maxCustomDropsets));
 });
 
 /// Maximum custom rest-pause templates user can create
@@ -302,9 +294,7 @@ final maxCustomRestPauseProvider = Provider<int>((ref) {
 ///
 /// Use this to filter history, analytics, and AI coach data.
 final historyCutoffDateProvider = Provider<DateTime?>((ref) {
-  return ref.watch(
-    tierEntitlementsProvider.select((e) => e.historyCutoffDate),
-  );
+  return ref.watch(tierEntitlementsProvider.select((e) => e.historyCutoffDate));
 });
 
 /// Whether user has unlimited history access

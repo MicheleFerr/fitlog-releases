@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
@@ -23,14 +24,16 @@ import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.
 class HealthRepositoryImpl
     with FirebaseErrorMapperMixin
     implements IHealthRepository {
-
   HealthRepositoryImpl({
     required IHealthLocalDatasource localDatasource,
     required IHealthRemoteDatasource remoteDatasource,
+    FirebaseAuth? auth,
   }) : _localDatasource = localDatasource,
-       _remoteDatasource = remoteDatasource;
+       _remoteDatasource = remoteDatasource,
+       _auth = auth ?? FirebaseAuth.instance;
   final IHealthLocalDatasource _localDatasource;
   final IHealthRemoteDatasource _remoteDatasource;
+  final FirebaseAuth _auth;
 
   // ============================================================
   // PERMISSION MANAGEMENT
@@ -73,7 +76,7 @@ class HealthRepositoryImpl
         (failure) => throw Exception('Permission check failed'),
       );
 
-      if (!permissionStatus.canSync(HealthDataType.workout)) {
+      if (!permissionStatus.canAttemptSync(HealthDataType.workout)) {
         throw Exception('Workout sync permission not granted');
       }
 
@@ -87,15 +90,16 @@ class HealthRepositoryImpl
       );
 
       try {
-        // 3. Fetch workouts from remote datasource
-        // ignore: unused_local_variable
-        final workouts = await _remoteDatasource.fetchWorkouts(
+        // Do not import health-platform workouts into the app workout
+        // database/history. The app must only show workouts logged inside GymBro.
+        if (_auth.currentUser == null) {
+          throw Exception('User not authenticated');
+        }
+
+        await _remoteDatasource.fetchWorkouts(
           startDate: startDate,
           endDate: endDate,
         );
-
-        // TODO: Map workouts to FitLog domain entities and save to workout repository
-        // This will be implemented when integrating with existing workout system
 
         // 4. Update sync status to "success"
         await _localDatasource.saveSyncStatus(
@@ -138,7 +142,7 @@ class HealthRepositoryImpl
         (failure) => throw Exception('Permission check failed'),
       );
 
-      if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
+      if (!permissionStatus.canAttemptSync(HealthDataType.bodyWeight)) {
         throw Exception('Body weight sync permission not granted');
       }
 
@@ -202,7 +206,7 @@ class HealthRepositoryImpl
         (failure) => throw Exception('Permission check failed'),
       );
 
-      if (!permissionStatus.canSync(HealthDataType.height)) {
+      if (!permissionStatus.canAttemptSync(HealthDataType.height)) {
         throw Exception('Height sync permission not granted');
       }
 
@@ -283,7 +287,7 @@ class HealthRepositoryImpl
         (failure) => throw Exception('Permission check failed'),
       );
 
-      if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
+      if (!permissionStatus.canAttemptSync(HealthDataType.bodyWeight)) {
         throw Exception('Body weight write permission not granted');
       }
 
@@ -388,10 +392,7 @@ class HealthRepositoryImpl
       };
 
       // Propagate sync errors
-      syncResult.fold(
-        (failure) => throw failure,
-        (_) => null,
-      );
+      syncResult.fold((failure) => throw failure, (_) => null);
     }, operationName: 'retryFailedSync');
   }
 

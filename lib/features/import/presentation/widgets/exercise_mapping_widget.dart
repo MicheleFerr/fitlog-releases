@@ -8,9 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/import/domain/entities/import_result.dart';
 import 'package:gymbro_flutter_new/features/import/presentation/providers/import_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 
 /// Widget for mapping imported exercises to database
 class ExerciseMappingWidget extends ConsumerStatefulWidget {
@@ -216,7 +218,8 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
   ) async {
     final exercises = ref.read(allExercisesProvider).value ?? [];
 
-    final selectedId = await ModalService.showSheet<String>(context,
+    final selectedId = await ModalService.showSheet<String>(
+      context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
@@ -326,15 +329,64 @@ class _ExerciseSearchSheetState extends State<_ExerciseSearchSheet> {
               final exercise = _filteredExercises[index];
               return ListTile(
                 title: Text(exercise.nome),
-                subtitle: exercise.focus.isNotEmpty
-                    ? Text(exercise.focus.join(', '))
-                    : null,
+                subtitle: _buildExercisePreview(exercise),
                 onTap: () => Navigator.of(context).pop(exercise.id),
               );
             },
           ),
         ),
       ],
+    );
+  }
+
+  Widget? _buildExercisePreview(dynamic exercise) {
+    final hasMuscleData =
+        exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+    final hasEquipment = exercise.attrezzatura.isNotEmpty;
+
+    if (!hasMuscleData && !hasEquipment) return null;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasMuscleData)
+            ExerciseTargetMuscleMap(
+              primaryMuscles: exercise.focus,
+              secondaryMuscles: exercise.muscoliSecondari,
+              previewWidth: 78,
+              previewHeight: 58,
+              enableFullscreen: false,
+            ),
+          if (hasMuscleData && hasEquipment) const SizedBox(height: 6),
+          if (hasEquipment)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest.withValues(
+                  alpha: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  EquipmentIconBadge(
+                    equipment: exercise.attrezzatura,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    exercise.attrezzatura,
+                    style: context.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

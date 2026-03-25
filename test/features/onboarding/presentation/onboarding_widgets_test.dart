@@ -62,10 +62,7 @@ Widget buildTestAppWithFrame({
       supportedLocales: const [Locale('en'), Locale('it')],
       locale: const Locale('en'),
       home: Scaffold(
-        body: SizedBox(
-          height: height,
-          child: child,
-        ),
+        body: SizedBox(height: height, child: child),
       ),
     ),
   );
@@ -90,8 +87,8 @@ class _StubOnboardingNotifier extends InitialOnboardingNotifier {
 /// A stub health permission status that reports no Health Connect and all
 /// permissions denied – safe for tests that do not care about health data.
 // ignore: unused_element
-final _stubHealthPermissionOverride =
-    healthPermissionStatusProvider.overrideWith(
+final _stubHealthPermissionOverride = healthPermissionStatusProvider
+    .overrideWith(
       (ref) async => const HealthPermissionStatus(
         permissions: <HealthDataType, PermissionState>{},
         healthConnectAvailable: false,
@@ -106,12 +103,7 @@ void main() {
   group('WelcomeStep', () {
     testWidgets('renders welcome title', (tester) async {
       await tester.pumpWidget(
-        buildTestApp(
-          child: const SizedBox(
-            height: 900,
-            child: WelcomeStep(),
-          ),
-        ),
+        buildTestApp(child: const SizedBox(height: 900, child: WelcomeStep())),
       );
       await tester.pumpAndSettle();
 
@@ -120,31 +112,19 @@ void main() {
 
     testWidgets('renders welcome subtitle', (tester) async {
       await tester.pumpWidget(
-        buildTestApp(
-          child: const SizedBox(
-            height: 900,
-            child: WelcomeStep(),
-          ),
-        ),
+        buildTestApp(child: const SizedBox(height: 900, child: WelcomeStep())),
       );
       await tester.pumpAndSettle();
 
       expect(
-        find.text(
-          'Your smart workout journal that helps you reach your goals',
-        ),
+        find.text('Your smart workout journal that helps you reach your goals'),
         findsOneWidget,
       );
     });
 
     testWidgets('renders "Let\'s go!" CTA button', (tester) async {
       await tester.pumpWidget(
-        buildTestApp(
-          child: const SizedBox(
-            height: 900,
-            child: WelcomeStep(),
-          ),
-        ),
+        buildTestApp(child: const SizedBox(height: 900, child: WelcomeStep())),
       );
       await tester.pumpAndSettle();
 
@@ -153,12 +133,7 @@ void main() {
 
     testWidgets('renders feature items', (tester) async {
       await tester.pumpWidget(
-        buildTestApp(
-          child: const SizedBox(
-            height: 900,
-            child: WelcomeStep(),
-          ),
-        ),
+        buildTestApp(child: const SizedBox(height: 900, child: WelcomeStep())),
       );
       await tester.pumpAndSettle();
 
@@ -210,12 +185,7 @@ void main() {
 
     testWidgets('fade-in animation triggers after first frame', (tester) async {
       await tester.pumpWidget(
-        buildTestApp(
-          child: const SizedBox(
-            height: 900,
-            child: WelcomeStep(),
-          ),
-        ),
+        buildTestApp(child: const SizedBox(height: 900, child: WelcomeStep())),
       );
 
       // Before post-frame callback fires, opacity should be 0
@@ -283,7 +253,9 @@ void main() {
       expect(find.text('General fitness'), findsOneWidget);
     });
 
-    testWidgets('tapping a goal card calls setGoal on notifier', (tester) async {
+    testWidgets('tapping a goal card calls setGoal on notifier', (
+      tester,
+    ) async {
       TrainingGoalUI? selectedGoal;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
@@ -307,8 +279,9 @@ void main() {
       expect(selectedGoal, TrainingGoalUI.buildMuscle);
     });
 
-    testWidgets('tapping "Get stronger" calls setGoal with correct value',
-        (tester) async {
+    testWidgets('tapping "Get stronger" calls setGoal with correct value', (
+      tester,
+    ) async {
       TrainingGoalUI? selectedGoal;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
@@ -332,9 +305,12 @@ void main() {
       expect(selectedGoal, TrainingGoalUI.getStronger);
     });
 
-    testWidgets('selected goal card shows checkmark (AnimatedScale = 1)',
-        (tester) async {
-      final stateWithGoal = baseState.copyWith(goal: TrainingGoalUI.buildMuscle);
+    testWidgets('selected goal card shows checkmark (AnimatedScale = 1)', (
+      tester,
+    ) async {
+      final stateWithGoal = baseState.copyWith(
+        goal: TrainingGoalUI.buildMuscle,
+      );
 
       await tester.pumpWidget(
         buildTestAppWithFrame(
@@ -348,16 +324,14 @@ void main() {
       final animatedScales = tester.widgetList<AnimatedScale>(
         find.byType(AnimatedScale),
       );
-      expect(
-        animatedScales.any((w) => w.scale == 1.0),
-        isTrue,
-      );
+      expect(animatedScales.any((w) => w.scale == 1.0), isTrue);
     });
 
-    testWidgets('unselected goal cards have AnimatedScale = 0',
-        (tester) async {
+    testWidgets('unselected goal cards have AnimatedScale = 0', (tester) async {
       // Only buildMuscle is selected
-      final stateWithGoal = baseState.copyWith(goal: TrainingGoalUI.buildMuscle);
+      final stateWithGoal = baseState.copyWith(
+        goal: TrainingGoalUI.buildMuscle,
+      );
 
       await tester.pumpWidget(
         buildTestAppWithFrame(
@@ -367,9 +341,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final animatedScales = tester.widgetList<AnimatedScale>(
-        find.byType(AnimatedScale),
-      ).toList();
+      final animatedScales = tester
+          .widgetList<AnimatedScale>(find.byType(AnimatedScale))
+          .toList();
 
       // 4 goal cards → 4 AnimatedScale widgets; 3 should have scale 0
       expect(animatedScales.where((w) => w.scale == 0.0).length, 3);
@@ -429,8 +403,9 @@ void main() {
       expect(find.text('5+ years, I know my PRs'), findsOneWidget);
     });
 
-    testWidgets('tapping "Beginner" calls setExperience on notifier',
-        (tester) async {
+    testWidgets('tapping "Beginner" calls setExperience on notifier', (
+      tester,
+    ) async {
       ExperienceLevelUI? capturedLevel;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
@@ -454,8 +429,9 @@ void main() {
       expect(capturedLevel, ExperienceLevelUI.beginner);
     });
 
-    testWidgets('tapping "Advanced athlete" calls setExperience with athlete',
-        (tester) async {
+    testWidgets('tapping "Advanced athlete" calls setExperience with athlete', (
+      tester,
+    ) async {
       ExperienceLevelUI? capturedLevel;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
@@ -499,21 +475,22 @@ void main() {
     });
 
     testWidgets(
-        'uses gender-specific asset path when sex is female (no crash)',
-        (tester) async {
-      final stateWithFemale = baseState.copyWith(sex: BiologicalSex.female);
+      'uses gender-specific asset path when sex is female (no crash)',
+      (tester) async {
+        final stateWithFemale = baseState.copyWith(sex: BiologicalSex.female);
 
-      await tester.pumpWidget(
-        buildTestAppWithFrame(
-          child: const ExperienceStep(),
-          overrides: [buildOnboardingOverride(stateWithFemale)],
-        ),
-      );
+        await tester.pumpWidget(
+          buildTestAppWithFrame(
+            child: const ExperienceStep(),
+            overrides: [buildOnboardingOverride(stateWithFemale)],
+          ),
+        );
 
-      // Should not throw; images fall back to emoji on error
-      await tester.pumpAndSettle();
-      expect(find.text('Beginner'), findsOneWidget);
-    });
+        // Should not throw; images fall back to emoji on error
+        await tester.pumpAndSettle();
+        expect(find.text('Beginner'), findsOneWidget);
+      },
+    );
   });
 
   // ---------------------------------------------------------------------------
@@ -543,9 +520,7 @@ void main() {
           ],
           supportedLocales: const [Locale('en'), Locale('it')],
           locale: const Locale('en'),
-          home: const Scaffold(
-            body: PersonalInfoStep(),
-          ),
+          home: const Scaffold(body: PersonalInfoStep()),
         ),
       );
     }
@@ -607,8 +582,9 @@ void main() {
       expect(find.text('Continue'), findsOneWidget);
     });
 
-    testWidgets('Continue button is disabled when sex or age not set',
-        (tester) async {
+    testWidgets('Continue button is disabled when sex or age not set', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1080, 1920);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -624,8 +600,9 @@ void main() {
       expect(button.onPressed, isNull);
     });
 
-    testWidgets('Continue button is enabled when sex and age are set',
-        (tester) async {
+    testWidgets('Continue button is enabled when sex and age are set', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1080, 1920);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -652,10 +629,8 @@ void main() {
       BiologicalSex? capturedSex;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
-        () => _SexCapturingNotifier(
-          baseState,
-          onSexSet: (s) => capturedSex = s,
-        ),
+        () =>
+            _SexCapturingNotifier(baseState, onSexSet: (s) => capturedSex = s),
       );
 
       await tester.pumpWidget(
@@ -690,10 +665,8 @@ void main() {
       BiologicalSex? capturedSex;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
-        () => _SexCapturingNotifier(
-          baseState,
-          onSexSet: (s) => capturedSex = s,
-        ),
+        () =>
+            _SexCapturingNotifier(baseState, onSexSet: (s) => capturedSex = s),
       );
 
       await tester.pumpWidget(
@@ -720,8 +693,9 @@ void main() {
       expect(capturedSex, BiologicalSex.female);
     });
 
-    testWidgets('selected Male card has distinct border (visual check)',
-        (tester) async {
+    testWidgets('selected Male card has distinct border (visual check)', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1080, 1920);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -792,8 +766,9 @@ void main() {
       expect(find.text('Summary'), findsOneWidget);
     });
 
-    testWidgets('summary cards display goal, sex, age, height, weight',
-        (tester) async {
+    testWidgets('summary cards display goal, sex, age, height, weight', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestAppWithFrame(
           child: FrequencySummaryStep(onComplete: () {}),
@@ -876,8 +851,9 @@ void main() {
       expect(find.text('4x / week', skipOffstage: false), findsOneWidget);
     });
 
-    testWidgets('Complete button is enabled when state isComplete',
-        (tester) async {
+    testWidgets('Complete button is enabled when state isComplete', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestAppWithFrame(
           child: FrequencySummaryStep(onComplete: () {}),
@@ -892,8 +868,9 @@ void main() {
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('Complete button is disabled when state is incomplete',
-        (tester) async {
+    testWidgets('Complete button is disabled when state is incomplete', (
+      tester,
+    ) async {
       const incompleteState = InitialOnboardingState(
         currentStep: 5,
         workoutsPerWeek: 3,
@@ -914,8 +891,9 @@ void main() {
       expect(button.onPressed, isNull);
     });
 
-    testWidgets('tapping Complete button fires onComplete callback',
-        (tester) async {
+    testWidgets('tapping Complete button fires onComplete callback', (
+      tester,
+    ) async {
       bool completed = false;
 
       await tester.pumpWidget(
@@ -933,45 +911,47 @@ void main() {
     });
 
     testWidgets(
-        'Complete button does not fire callback when isCompleting is true',
-        (tester) async {
-      bool completed = false;
-      const completingState = InitialOnboardingState(
-        currentStep: 5,
-        goal: TrainingGoalUI.buildMuscle,
-        sex: BiologicalSex.male,
-        age: 28,
-        heightCm: 178,
-        bodyweightKg: 80,
-        experience: ExperienceLevelUI.someExperience,
-        workoutsPerWeek: 4,
-        isCompleting: true,
-      );
+      'Complete button does not fire callback when isCompleting is true',
+      (tester) async {
+        bool completed = false;
+        const completingState = InitialOnboardingState(
+          currentStep: 5,
+          goal: TrainingGoalUI.buildMuscle,
+          sex: BiologicalSex.male,
+          age: 28,
+          heightCm: 178,
+          bodyweightKg: 80,
+          experience: ExperienceLevelUI.someExperience,
+          workoutsPerWeek: 4,
+          isCompleting: true,
+        );
 
-      await tester.pumpWidget(
-        buildTestAppWithFrame(
-          child: FrequencySummaryStep(onComplete: () => completed = true),
-          overrides: [buildOnboardingOverride(completingState)],
-        ),
-      );
-      // Use pump instead of pumpAndSettle because LoadingIndicator has a
-      // continuous animation that would cause pumpAndSettle to time out.
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+        await tester.pumpWidget(
+          buildTestAppWithFrame(
+            child: FrequencySummaryStep(onComplete: () => completed = true),
+            overrides: [buildOnboardingOverride(completingState)],
+          ),
+        );
+        // Use pump instead of pumpAndSettle because LoadingIndicator has a
+        // continuous animation that would cause pumpAndSettle to time out.
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
 
-      // When isCompleting = true the button child is LoadingIndicator;
-      // the onPressed callback is set to null (disabled).
-      final filledButtons = tester.widgetList<FilledButton>(
-        find.byType(FilledButton),
-      ).toList();
+        // When isCompleting = true the button child is LoadingIndicator;
+        // the onPressed callback is set to null (disabled).
+        final filledButtons = tester
+            .widgetList<FilledButton>(find.byType(FilledButton))
+            .toList();
 
-      // At least one FilledButton should exist and have onPressed == null
-      expect(filledButtons.any((b) => b.onPressed == null), isTrue);
-      expect(completed, isFalse);
-    });
+        // At least one FilledButton should exist and have onPressed == null
+        expect(filledButtons.any((b) => b.onPressed == null), isTrue);
+        expect(completed, isFalse);
+      },
+    );
 
-    testWidgets('tapping a frequency pill calls setWorkoutsPerWeek',
-        (tester) async {
+    testWidgets('tapping a frequency pill calls setWorkoutsPerWeek', (
+      tester,
+    ) async {
       int? capturedFrequency;
 
       final notifierOverride = initialOnboardingNotifierProvider.overrideWith(
@@ -996,8 +976,9 @@ void main() {
       expect(capturedFrequency, 6);
     });
 
-    testWidgets('renders "Start training!" complete button text',
-        (tester) async {
+    testWidgets('renders "Start training!" complete button text', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestAppWithFrame(
           child: FrequencySummaryStep(onComplete: () {}),
@@ -1024,8 +1005,7 @@ void main() {
       );
     });
 
-    testWidgets('shows error message when errorMessage is set',
-        (tester) async {
+    testWidgets('shows error message when errorMessage is set', (tester) async {
       const errorState = InitialOnboardingState(
         currentStep: 5,
         goal: TrainingGoalUI.buildMuscle,
@@ -1240,16 +1220,15 @@ void main() {
 
     test('nextStep increments currentStep when canProceed', () {
       // Step 0 always can proceed
-      container
-          .read(initialOnboardingNotifierProvider.notifier)
-          .nextStep();
+      container.read(initialOnboardingNotifierProvider.notifier).nextStep();
       final state = container.read(initialOnboardingNotifierProvider);
       expect(state.currentStep, 1);
     });
 
     test('nextStep does not advance past totalSteps - 1', () {
-      final notifier =
-          container.read(initialOnboardingNotifierProvider.notifier);
+      final notifier = container.read(
+        initialOnboardingNotifierProvider.notifier,
+      );
 
       // Fill all required data and advance to last step
       notifier.setGoal(TrainingGoalUI.buildMuscle);
@@ -1269,8 +1248,9 @@ void main() {
     });
 
     test('previousStep decrements currentStep', () {
-      final notifier =
-          container.read(initialOnboardingNotifierProvider.notifier);
+      final notifier = container.read(
+        initialOnboardingNotifierProvider.notifier,
+      );
       notifier.nextStep(); // step 0 → 1
       notifier.previousStep(); // step 1 → 0
       final state = container.read(initialOnboardingNotifierProvider);
@@ -1278,9 +1258,7 @@ void main() {
     });
 
     test('previousStep is a no-op at step 0', () {
-      container
-          .read(initialOnboardingNotifierProvider.notifier)
-          .previousStep();
+      container.read(initialOnboardingNotifierProvider.notifier).previousStep();
       final state = container.read(initialOnboardingNotifierProvider);
       expect(state.currentStep, 0);
     });
@@ -1330,10 +1308,7 @@ void main() {
 
     test('setHeight accepts values in 140-220 range', () {
       container.read(initialOnboardingNotifierProvider.notifier).setHeight(170);
-      expect(
-        container.read(initialOnboardingNotifierProvider).heightCm,
-        170,
-      );
+      expect(container.read(initialOnboardingNotifierProvider).heightCm, 170);
     });
 
     test('setBodyweight rejects weight < 30 kg', () {
@@ -1416,8 +1391,9 @@ void main() {
     });
 
     test('reset returns state to initial values', () {
-      final notifier =
-          container.read(initialOnboardingNotifierProvider.notifier);
+      final notifier = container.read(
+        initialOnboardingNotifierProvider.notifier,
+      );
       notifier.setGoal(TrainingGoalUI.buildMuscle);
       notifier.setSex(BiologicalSex.male);
       notifier.setAge(25);
@@ -1431,25 +1407,21 @@ void main() {
     });
 
     test('goToStep allows going back to earlier step', () {
-      final notifier =
-          container.read(initialOnboardingNotifierProvider.notifier);
+      final notifier = container.read(
+        initialOnboardingNotifierProvider.notifier,
+      );
       notifier.nextStep(); // step 0 → 1
       notifier.goToStep(0); // back to step 0
-      expect(
-        container.read(initialOnboardingNotifierProvider).currentStep,
-        0,
-      );
+      expect(container.read(initialOnboardingNotifierProvider).currentStep, 0);
     });
 
     test('goToStep does not allow skipping forward', () {
-      final notifier =
-          container.read(initialOnboardingNotifierProvider.notifier);
+      final notifier = container.read(
+        initialOnboardingNotifierProvider.notifier,
+      );
       // Currently at step 0; trying to jump to step 3 should be rejected
       notifier.goToStep(3);
-      expect(
-        container.read(initialOnboardingNotifierProvider).currentStep,
-        0,
-      );
+      expect(container.read(initialOnboardingNotifierProvider).currentStep, 0);
     });
   });
 }
@@ -1460,10 +1432,7 @@ void main() {
 
 /// Notifier that records calls to nextStep.
 class _TrackingOnboardingNotifier extends InitialOnboardingNotifier {
-  _TrackingOnboardingNotifier(
-    this._initialState, {
-    required this.onNextStep,
-  });
+  _TrackingOnboardingNotifier(this._initialState, {required this.onNextStep});
 
   final InitialOnboardingState _initialState;
   final VoidCallback onNextStep;
@@ -1480,10 +1449,7 @@ class _TrackingOnboardingNotifier extends InitialOnboardingNotifier {
 
 /// Notifier that captures calls to setGoal.
 class _GoalCapturingNotifier extends InitialOnboardingNotifier {
-  _GoalCapturingNotifier(
-    this._initialState, {
-    required this.onGoalSet,
-  });
+  _GoalCapturingNotifier(this._initialState, {required this.onGoalSet});
 
   final InitialOnboardingState _initialState;
   final void Function(TrainingGoalUI) onGoalSet;
@@ -1522,10 +1488,7 @@ class _ExperienceCapturingNotifier extends InitialOnboardingNotifier {
 
 /// Notifier that captures calls to setSex.
 class _SexCapturingNotifier extends InitialOnboardingNotifier {
-  _SexCapturingNotifier(
-    this._initialState, {
-    required this.onSexSet,
-  });
+  _SexCapturingNotifier(this._initialState, {required this.onSexSet});
 
   final InitialOnboardingState _initialState;
   final void Function(BiologicalSex) onSexSet;

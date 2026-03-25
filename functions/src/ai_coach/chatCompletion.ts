@@ -13,6 +13,7 @@ import * as logger from 'firebase-functions/logger';
 import * as https from 'node:https';
 import * as admin from 'firebase-admin';
 import { withRateLimit, RATE_LIMITS } from '../security/rateLimiterV1';
+import { getEffectiveAccountTier } from '../premium/entitlements';
 
 interface ChatMessage {
   role: string;
@@ -279,20 +280,7 @@ function getDateKeyUTC(date: Date): string {
 
 async function getUserAccountTier(userId: string): Promise<AccountTier> {
   try {
-    const userDoc = await admin.firestore()
-      .collection('users')
-      .doc(userId)
-      .get();
-
-    if (!userDoc.exists) {
-      return 'free';
-    }
-
-    const tier = userDoc.data()?.['accountTier'];
-    if (tier === 'premium' || tier === 'pro') {
-      return 'premium';
-    }
-    return 'free';
+    return await getEffectiveAccountTier(userId);
   } catch (_error) {
     return 'free';
   }

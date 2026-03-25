@@ -129,14 +129,13 @@ class TemplateNotifier extends Notifier<TemplateState> {
       if (kDebugMode) {
         debugPrint(
           '📝 [TemplateProvider] Creating template: ${template.name} '
-          '(maxPrivate: ${entitlements.maxTemplates}, maxPublic: ${entitlements.maxPublicTemplates})',
+          '(maxLibrary: ${entitlements.maxLibraryTemplates})',
         );
       }
 
       final templateId = await _repository.createTemplate(
         template,
-        maxPrivateTemplates: entitlements.maxTemplates,
-        maxPublicTemplates: entitlements.maxPublicTemplates,
+        maxLibraryTemplates: entitlements.maxLibraryTemplates,
       );
 
       if (kDebugMode) {
@@ -170,10 +169,10 @@ class TemplateNotifier extends Notifier<TemplateState> {
       final entitlements = ref.read(tierEntitlementsProvider);
 
       if (visibility == TemplateVisibility.private) {
-        return entitlements.maxTemplates - userTemplateCount;
-      } else {
-        return entitlements.maxPublicTemplates - userTemplateCount;
+        return entitlements.maxLibraryTemplates - userTemplateCount;
       }
+
+      return 999;
     } catch (e) {
       if (kDebugMode) {
         debugPrint(

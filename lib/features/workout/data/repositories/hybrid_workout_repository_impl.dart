@@ -277,7 +277,8 @@ class HybridWorkoutRepositoryImpl
 
   /// Check if current user is premium
   bool get isPremiumUser {
-    return _cachedUserProfile?.accountTier != AccountTier.free;
+    final accountTier = _cachedUserProfile?.accountTier;
+    return accountTier != null && accountTier != AccountTier.free;
   }
 
   /// Check if current user is admin (always has cloud access)
@@ -1037,7 +1038,7 @@ class HybridWorkoutRepositoryImpl
           _analyticsRepository!
               .updateExerciseHistory(
                 userId: userId,
-                exerciseId: exercise.id,
+                exerciseId: exercise.stableExerciseId,
                 exerciseName: exercise.name,
                 muscleGroup: exercise.category.name,
                 session: session,

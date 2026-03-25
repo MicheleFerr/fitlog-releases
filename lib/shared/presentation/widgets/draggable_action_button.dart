@@ -10,6 +10,8 @@
 /// Draggable action button con animazioni spring physics (motor package)
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +25,6 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Opzione aggiuntiva per il menu del long press
 class DraggableActionOption {
-
   const DraggableActionOption({
     required this.icon,
     required this.label,
@@ -37,7 +38,6 @@ class DraggableActionOption {
 }
 
 class DraggableActionButton extends StatefulWidget {
-
   const DraggableActionButton({
     super.key,
     required this.onPressed,
@@ -73,6 +73,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   bool _isAnimatingToHide = false; // Track slide-off animation
   bool _isAnimatingFromHidden = false; // Track slide-in animation
   bool _initialized = false;
+  bool _showHideHint = false;
+  Timer? _hintTimer;
 
   // Layout constants
   static const double _edgePadding = 16.0;
@@ -94,19 +96,32 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   }
 
   // 🔐 User-scoped cache keys
-  String get _positionKey => userCacheKeys.userScopedKey('fab_position_${widget.positionKey}');
-  String get _hiddenKey => userCacheKeys.userScopedKey('fab_hidden_${widget.positionKey}');
+  String get _positionKey =>
+      userCacheKeys.userScopedKey('fab_position_${widget.positionKey}');
+  String get _hiddenKey =>
+      userCacheKeys.userScopedKey('fab_hidden_${widget.positionKey}');
+  String get _hideHintKey =>
+      userCacheKeys.userScopedKey('fab_hide_hint_seen_${widget.positionKey}');
 
   Future<void> _loadPosition() async {
     final prefs = await SharedPreferences.getInstance();
     final savedPosition = prefs.getString(_positionKey);
     final savedHidden = prefs.getBool(_hiddenKey) ?? false;
+    final hideHintSeen = prefs.getBool(_hideHintKey) ?? false;
 
     if (mounted) {
       setState(() {
         _isOnLeft = savedPosition == 'left';
         _isHidden = savedHidden;
         _initialized = true;
+        _showHideHint = !savedHidden && !hideHintSeen;
+      });
+    }
+
+    if (!savedHidden && !hideHintSeen) {
+      _hintTimer?.cancel();
+      _hintTimer = Timer(const Duration(seconds: 6), () {
+        unawaited(_dismissHideHint());
       });
     }
   }
@@ -117,8 +132,27 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     await prefs.setBool(_hiddenKey, _isHidden);
   }
 
+  Future<void> _dismissHideHint() async {
+    _hintTimer?.cancel();
+    if (!_showHideHint) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_hideHintKey, true);
+      return;
+    }
+
+    if (mounted) {
+      setState(() {
+        _showHideHint = false;
+      });
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_hideHintKey, true);
+  }
+
   /// Toggle hide state with haptic feedback
   void _toggleHidden() {
+    unawaited(_dismissHideHint());
     if (_isHidden) {
       // Coming back from hidden - start slide-in animation
       _startShowAnimation();
@@ -138,7 +172,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
     // Set starting position off-screen
     _lastAnimatedX = _isOnLeft
-        ? -buttonWidth - 20 // Start from left off-screen
+        ? -buttonWidth -
+              20 // Start from left off-screen
         : screenWidth + 20; // Start from right off-screen
 
     setState(() {
@@ -180,12 +215,11 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
   double _getTargetX(double screenWidth, bool isCompact) {
     final buttonWidth = isCompact ? _compactButtonSize : _buttonWidth;
-    return _isOnLeft
-        ? _edgePadding
-        : screenWidth - buttonWidth - _edgePadding;
+    return _isOnLeft ? _edgePadding : screenWidth - buttonWidth - _edgePadding;
   }
 
   void _onPanStart(DragStartDetails details) {
+    unawaited(_dismissHideHint());
     setState(() {
       _isDragging = true;
       _dragOffsetX = 0;
@@ -207,7 +241,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     // Check if dragging towards edge to hide
     final isDraggingToHide = _isOnLeft
         ? (currentX < -_hideThreshold || velocity < -800)
-        : (currentX > screenWidth - buttonWidth + _hideThreshold || velocity > 800);
+        : (currentX > screenWidth - buttonWidth + _hideThreshold ||
+              velocity > 800);
 
     if (isDraggingToHide) {
       // Start slide-off animation instead of instant hide
@@ -245,6 +280,12 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   }
 
   @override
+  void dispose() {
+    _hintTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (!_initialized) {
       return const SizedBox.shrink();
@@ -272,7 +313,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     if (_isAnimatingToHide) {
       // Animate to off-screen position
       displayX = _isOnLeft
-          ? -buttonWidth - 20 // Slide left off screen
+          ? -buttonWidth -
+                20 // Slide left off screen
           : screenWidth + 20; // Slide right off screen
     } else if (_isDragging) {
       displayX = _targetX + _dragOffsetX;
@@ -287,8 +329,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     final motion = _isDragging
         ? const NoMotion() // Instant follow during drag
         : _isAnimatingToHide
-            ? const CupertinoMotion() // Smooth slide-off
-            : const CupertinoMotion(); // Smooth spring for normal movement
+        ? const CupertinoMotion() // Smooth slide-off
+        : const CupertinoMotion(); // Smooth spring for normal movement
 
     return SingleMotionBuilder(
       motion: motion,
@@ -311,45 +353,108 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
         return Positioned(
           left: clampedX,
           bottom: bottomInset,
-          child: GestureDetector(
-            onPanStart: _onPanStart,
-            onPanUpdate: _onPanUpdate,
-            onPanEnd: (details) => _onPanEnd(details, screenWidth, isCompact),
-            onLongPress: () => _showOptionsMenu(context),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 100),
-              decoration: BoxDecoration(
-                borderRadius: isCompact
-                    ? BorderRadius.circular(28) // Circolare per compact
-                    : BorderRadius.circular(16),
-                border: _isDragging
-                    ? Border.all(
-                        color: colorScheme.outline.withValues(alpha: 0.3),
-                        width: 1.5,
-                      )
-                    : null,
-              ),
-              child: AbsorbPointer(
-                absorbing: _isDragging,
-                child: isCompact
-                    ? CompactActionButton(
-                        onPressed: widget.onPressed,
-                        icon: widget.icon,
-                        tooltip: widget.label, // Label diventa tooltip
-                        backgroundColor: widget.backgroundColor,
-                        foregroundColor: widget.foregroundColor,
-                      )
-                    : PremiumActionButton(
-                        onPressed: widget.onPressed,
-                        icon: widget.icon,
-                        label: widget.label,
-                        backgroundColor: widget.backgroundColor,
-                        foregroundColor: widget.foregroundColor,
-                        showShadow: !_isDragging,
-                        width: _buttonWidth,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              if (_showHideHint)
+                Positioned(
+                  top: -52,
+                  left: _isOnLeft ? 0 : null,
+                  right: _isOnLeft ? null : 0,
+                  child: IgnorePointer(
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 250),
+                      opacity: _showHideHint ? 1 : 0,
+                      child: AnimatedSlide(
+                        duration: const Duration(milliseconds: 250),
+                        offset: _showHideHint
+                            ? Offset.zero
+                            : const Offset(0, 0.2),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: colorScheme.shadow.withValues(
+                                  alpha: 0.08,
+                                ),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _isOnLeft
+                                    ? AppIcons.chevronLeft
+                                    : AppIcons.chevronRight,
+                                size: 14,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                context.l10n.dragToHideFabHint,
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                    ),
+                  ),
+                ),
+              GestureDetector(
+                onPanStart: _onPanStart,
+                onPanUpdate: _onPanUpdate,
+                onPanEnd: (details) =>
+                    _onPanEnd(details, screenWidth, isCompact),
+                onLongPress: () => _showOptionsMenu(context),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 100),
+                  decoration: BoxDecoration(
+                    borderRadius: isCompact
+                        ? BorderRadius.circular(28) // Circolare per compact
+                        : BorderRadius.circular(16),
+                    border: _isDragging
+                        ? Border.all(
+                            color: colorScheme.outline.withValues(alpha: 0.3),
+                            width: 1.5,
+                          )
+                        : null,
+                  ),
+                  child: AbsorbPointer(
+                    absorbing: _isDragging,
+                    child: isCompact
+                        ? CompactActionButton(
+                            onPressed: widget.onPressed,
+                            icon: widget.icon,
+                            tooltip: widget.label, // Label diventa tooltip
+                            backgroundColor: widget.backgroundColor,
+                            foregroundColor: widget.foregroundColor,
+                          )
+                        : PremiumActionButton(
+                            onPressed: widget.onPressed,
+                            icon: widget.icon,
+                            label: widget.label,
+                            backgroundColor: widget.backgroundColor,
+                            foregroundColor: widget.foregroundColor,
+                            showShadow: !_isDragging,
+                            width: _buttonWidth,
+                          ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         );
       },
@@ -357,7 +462,11 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   }
 
   /// Build the hidden tab - simple, no animation needed
-  Widget _buildHiddenTab(BuildContext context, ColorScheme colorScheme, double bottomInset) {
+  Widget _buildHiddenTab(
+    BuildContext context,
+    ColorScheme colorScheme,
+    double bottomInset,
+  ) {
     final isLeftSide = _isOnLeft;
 
     return Positioned(
@@ -412,7 +521,6 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
 /// Widget wrapper for absolute positioning
 class DraggableActionButtonWrapper extends StatelessWidget {
-
   const DraggableActionButtonWrapper({
     super.key,
     required this.onPressed,
@@ -448,7 +556,8 @@ class DraggableActionButtonWrapper extends StatelessWidget {
 
 /// Provider for global position preferences
 class ActionButtonPosition {
-  static String _userKey(String key) => userCacheKeys.userScopedKey('fab_position_$key');
+  static String _userKey(String key) =>
+      userCacheKeys.userScopedKey('fab_position_$key');
 
   static Future<bool> isOnLeft(String key) async {
     final prefs = await SharedPreferences.getInstance();
@@ -520,10 +629,9 @@ class _ExpandableExerciseMenu extends StatefulWidget {
                       context.l10n.addSingleExerciseHint,
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -544,14 +652,18 @@ class _ExpandableExerciseMenu extends StatefulWidget {
                   children: [
                     Icon(
                       option.icon,
-                      color: option.color ?? Theme.of(context).colorScheme.secondary,
+                      color:
+                          option.color ??
+                          Theme.of(context).colorScheme.secondary,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       option.label,
                       style: TextStyle(
-                        color: option.color ?? Theme.of(context).colorScheme.secondary,
+                        color:
+                            option.color ??
+                            Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -570,7 +682,8 @@ class _ExpandableExerciseMenu extends StatefulWidget {
   }
 
   @override
-  State<_ExpandableExerciseMenu> createState() => _ExpandableExerciseMenuState();
+  State<_ExpandableExerciseMenu> createState() =>
+      _ExpandableExerciseMenuState();
 }
 
 class _ExpandableExerciseMenuState extends State<_ExpandableExerciseMenu> {

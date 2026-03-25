@@ -31,6 +31,16 @@ struct ActualRepsPickerView: View {
         return false
     }
 
+    private var minimumAllowedReps: Int {
+        guard hasRepRange else { return 0 }
+        return minReps ?? 0
+    }
+
+    private var maximumAllowedReps: Int {
+        guard hasRepRange else { return Int(crownMaxValue) }
+        return maxReps ?? Int(crownMaxValue)
+    }
+
     private var contextText: String {
         if let min = minReps, let max = maxReps, min != max {
             return "\(min)-\(max)"
@@ -40,7 +50,7 @@ struct ActualRepsPickerView: View {
 
     private var crownMaxValue: Double {
         if let maxR = maxReps, hasRepRange {
-            return Double(Swift.max(maxR + 15, 40))
+            return Double(maxR)
         }
         return Double(Swift.max(targetReps + 20, 40))
     }
@@ -51,7 +61,10 @@ struct ActualRepsPickerView: View {
         self.maxReps = maxReps
         self.locale = locale
         self.onSelect = onSelect
-        let safeDefault = max(1, targetReps)
+        let hasRange = minReps != nil && maxReps != nil && minReps != maxReps
+        let lowerBound = hasRange ? (minReps ?? 0) : 0
+        let upperBound = hasRange ? (maxReps ?? max(1, targetReps)) : max(1, targetReps)
+        let safeDefault = min(max(max(1, targetReps), lowerBound), upperBound)
         _selectedReps = State(initialValue: safeDefault)
         _crownValue = State(initialValue: Double(safeDefault))
     }
@@ -73,7 +86,7 @@ struct ActualRepsPickerView: View {
             HStack(spacing: 0) {
                 // Minus button
                 Button(action: {
-                    guard selectedReps > 1 else { return }
+                    guard selectedReps > minimumAllowedReps else { return }
                     WKInterfaceDevice.current().play(.click)
                     selectedReps -= 1
                     crownValue = Double(selectedReps)
@@ -84,8 +97,12 @@ struct ActualRepsPickerView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .foregroundColor(selectedReps > 1 ? .primary : .secondary.opacity(0.3))
-                .disabled(selectedReps <= 1)
+                .foregroundColor(
+                    selectedReps > minimumAllowedReps
+                        ? .primary
+                        : .secondary.opacity(0.3)
+                )
+                .disabled(selectedReps <= minimumAllowedReps)
                 .accessibilityLabel(isItalian ? "Diminuisci" : "Decrease")
 
                 Spacer()
@@ -102,6 +119,7 @@ struct ActualRepsPickerView: View {
 
                 // Plus button
                 Button(action: {
+                    guard selectedReps < maximumAllowedReps else { return }
                     WKInterfaceDevice.current().play(.click)
                     selectedReps += 1
                     crownValue = Double(selectedReps)
@@ -112,7 +130,12 @@ struct ActualRepsPickerView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .foregroundColor(.primary)
+                .foregroundColor(
+                    selectedReps < maximumAllowedReps
+                        ? .primary
+                        : .secondary.opacity(0.3)
+                )
+                .disabled(selectedReps >= maximumAllowedReps)
                 .accessibilityLabel(isItalian ? "Aumenta" : "Increase")
             }
             .padding(.horizontal, 4)
@@ -139,7 +162,7 @@ struct ActualRepsPickerView: View {
         .focused($isFocused)
         .digitalCrownRotation(
             $crownValue,
-            from: 1.0,
+            from: Double(minimumAllowedReps),
             through: crownMaxValue,
             by: 1.0,
             sensitivity: .medium,
@@ -147,7 +170,10 @@ struct ActualRepsPickerView: View {
             isHapticFeedbackEnabled: true
         )
         .onChange(of: crownValue) { _, newValue in
-            let newReps = max(1, Int(newValue.rounded()))
+            let newReps = min(
+                maximumAllowedReps,
+                max(minimumAllowedReps, Int(newValue.rounded()))
+            )
             if newReps != selectedReps {
                 selectedReps = newReps
             }

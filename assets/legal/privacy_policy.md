@@ -1,13 +1,13 @@
 # Privacy Policy for FitLog Pro
 
-**Last Updated: February 20, 2026**
+**Last Updated: March 25, 2026**
 
 ## 1. Introduction
 
 Welcome to FitLog Pro ("FitLog Pro", "we", "our", or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our mobile application.
 
 **Contact Information:**
-- Email: privacy@fitlogpro.app
+- Email: privacy@fitlogpro.it
 - Developer: Michele Cozzolino
 - Location: European Union (GDPR Compliant)
 
@@ -102,7 +102,7 @@ You have the right to:
 - **Restrict Processing**: Settings → Privacy Preferences → Restrict Processing
 
 **Contact Us:**
-- Email: privacy@fitlogpro.app
+- Email: privacy@fitlogpro.it
 - Response time: Within 30 days (typically 24-48 hours)
 
 ## 7. Children's Privacy
@@ -169,20 +169,13 @@ FitLog Pro believes in transparency:
 For privacy concerns or questions:
 
 **Data Protection Officer**
-- Email: privacy@fitlogpro.app
+- Email: privacy@fitlogpro.it
 - Response time: 24-48 hours
 
 **Developer Contact**
 - Michele Cozzolino
 - Email: michele.cozzolino93@gmail.com
 - GitHub: @michelecozzolino
-
-**Mailing Address**
-```
-FitLog Pro
-[Address to be provided]
-European Union
-```
 
 ## 16. Consent
 
@@ -209,6 +202,6 @@ By using FitLog Pro, you consent to this Privacy Policy. If you disagree with an
 
 ---
 
-**Privacy Policy Version**: 1.1.0
-**Effective Date**: February 20, 2026
+**Privacy Policy Version**: 1.1.1
+**Effective Date**: March 25, 2026
 **Language**: English (Translations available in Italian)

@@ -1,3 +1,5 @@
+// ignore_for_file: subtype_of_sealed_class
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,15 +18,27 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 // Mocks
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+
 class MockBox extends Mock implements Box {}
-class MockHiveBoxManagerEnhanced extends Mock implements HiveBoxManagerEnhanced {}
+
+class MockHiveBoxManagerEnhanced extends Mock
+    implements HiveBoxManagerEnhanced {}
+
 class MockPRTracker extends Mock implements PRTracker {}
+
 class MockHiveWorkoutDataSource extends Mock implements HiveWorkoutDataSource {}
+
 class MockAnalyticsCacheService extends Mock implements AnalyticsCacheService {}
-class MockCollectionReference<T> extends Mock implements CollectionReference<T> {}
+
+class MockCollectionReference<T> extends Mock
+    implements CollectionReference<T> {}
+
 class MockQuery<T> extends Mock implements Query<T> {}
+
 class MockQuerySnapshot<T> extends Mock implements QuerySnapshot<T> {}
-class MockQueryDocumentSnapshot<T> extends Mock implements QueryDocumentSnapshot<T> {}
+
+class MockQueryDocumentSnapshot<T> extends Mock
+    implements QueryDocumentSnapshot<T> {}
 
 // Fakes for fallback values
 class FakeWorkoutModel extends Fake implements WorkoutModel {}
@@ -55,24 +69,26 @@ void main() {
       id: id,
       name: name,
       status: status,
-      exercises: exercises ?? [
-        Exercise(
-          id: 'exercise-1',
-          name: 'Bench Press',
-          type: ExerciseType.single,
-          category: ExerciseCategory.chest,
-          sets: [
-            ExerciseSet(
-              id: 'set-1',
-              setNumber: 1,
-              weight: 100,
-              reps: 10,
-              actualReps: 10,
-              isCompleted: true,
+      exercises:
+          exercises ??
+          [
+            Exercise(
+              id: 'exercise-1',
+              name: 'Bench Press',
+              type: ExerciseType.single,
+              category: ExerciseCategory.chest,
+              sets: [
+                ExerciseSet(
+                  id: 'set-1',
+                  setNumber: 1,
+                  weight: 100,
+                  reps: 10,
+                  actualReps: 10,
+                  isCompleted: true,
+                ),
+              ],
             ),
           ],
-        ),
-      ],
       startTime: startTime ?? DateTime.now(),
       endTime: endTime ?? DateTime.now(),
       createdAt: DateTime.now(),
@@ -149,33 +165,33 @@ void main() {
     mockCacheService = MockAnalyticsCacheService();
 
     // Setup default cache behavior (no cache by default)
-    when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-      any(),
-      any(),
-    )).thenAnswer((_) async => null);
+    when(
+      () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+    ).thenAnswer((_) async => null);
 
-    when(() => mockCacheService.get<Map<String, dynamic>>(
-      any(),
-      any(),
-    )).thenAnswer((_) async => null);
+    when(
+      () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+    ).thenAnswer((_) async => null);
 
-    when(() => mockCacheService.get<int>(
-      any(),
-    )).thenAnswer((_) async => null);
+    when(() => mockCacheService.get<int>(any())).thenAnswer((_) async => null);
 
-    when(() => mockCacheService.set<List<Map<String, dynamic>>>(
-      any(),
-      any(),
-      any(),
-      any(),
-    )).thenAnswer((_) async {});
+    when(
+      () => mockCacheService.set<List<Map<String, dynamic>>>(
+        any(),
+        any(),
+        any(),
+        any(),
+      ),
+    ).thenAnswer((_) async {});
 
-    when(() => mockCacheService.set<Map<String, dynamic>>(
-      any(),
-      any(),
-      any(),
-      any(),
-    )).thenAnswer((_) async {});
+    when(
+      () => mockCacheService.set<Map<String, dynamic>>(
+        any(),
+        any(),
+        any(),
+        any(),
+      ),
+    ).thenAnswer((_) async {});
 
     repository = WorkoutAnalyticsRepositoryImpl(
       firestore: mockFirestore,
@@ -211,10 +227,9 @@ void main() {
     test('should return cached workouts when cache hit', () async {
       // Arrange
       final cachedWorkouts = [createTestWorkout().toJson()];
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => cachedWorkouts);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => cachedWorkouts);
 
       // Act
       final result = await repository.getHistoricalWorkouts(userId);
@@ -223,23 +238,23 @@ void main() {
       expect(result, isNotEmpty);
       expect(result.length, 1);
       expect(result.first.name, 'Test Workout');
-      verify(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).called(1);
-      verifyNever(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        any(),
-        limit: any(named: 'limit'),
-        since: any(named: 'since'),
-      ));
+      verify(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).called(1);
+      verifyNever(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          any(),
+          limit: any(named: 'limit'),
+          since: any(named: 'since'),
+        ),
+      );
     });
 
     test('should sync from Firebase when Firebase has more workouts', () async {
       // Arrange - No cache for list data
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => null);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => null);
 
       // Firebase count = 2 (via cache hit, skips AggregateQuery which is hard to mock)
       when(() => mockCacheService.get<int>(any())).thenAnswer((_) async => 2);
@@ -250,16 +265,21 @@ void main() {
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
       final mockDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workouts')).thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workouts'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
-      when(() => mockSnapshot.docs).thenReturn([mockDoc, mockDoc]); // 2 docs in Firebase
+      when(
+        () => mockSnapshot.docs,
+      ).thenReturn([mockDoc, mockDoc]); // 2 docs in Firebase
       when(() => mockDoc.data()).thenReturn({
         'userId': userId,
         'name': 'Test Workout',
         'exercises': [
-          {'name': 'Bench Press'}
+          {'name': 'Bench Press'},
         ],
         'status': 'completed',
       });
@@ -267,15 +287,18 @@ void main() {
 
       // Hive returns 1 completed workout (firebaseCount=2 > hiveCount=1 → sync)
       final testWorkoutModel = createTestWorkoutModel();
-      when(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: any(named: 'limit'),
-        since: any(named: 'since'),
-      )).thenAnswer((_) async => [testWorkoutModel]);
+      when(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          userId,
+          limit: any(named: 'limit'),
+          since: any(named: 'since'),
+        ),
+      ).thenAnswer((_) async => [testWorkoutModel]);
 
       // Mock saveWorkout for sync operation
-      when(() => mockHiveWorkoutDataSource.saveWorkout(any(), userId))
-          .thenAnswer((_) async => 'workout-1');
+      when(
+        () => mockHiveWorkoutDataSource.saveWorkout(any(), userId),
+      ).thenAnswer((_) async => 'workout-1');
 
       // Act
       final result = await repository.getHistoricalWorkouts(userId, limit: 50);
@@ -283,33 +306,39 @@ void main() {
       // Assert
       expect(result, isNotEmpty);
       // Called 2 times because we have 2 docs in Firebase (mockDoc, mockDoc)
-      verify(() => mockHiveWorkoutDataSource.saveWorkout(any(), userId)).called(2);
+      verify(
+        () => mockHiveWorkoutDataSource.saveWorkout(any(), userId),
+      ).called(2);
     });
 
     test('should get from Hive when already synced', () async {
       // Arrange - No cache
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => null);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => null);
 
       // Setup counts - Hive has same or more workouts
       final mockCollection = MockCollectionReference<Map<String, dynamic>>();
       final mockQuery = MockQuery<Map<String, dynamic>>();
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workouts')).thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workouts'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
       when(() => mockSnapshot.docs).thenReturn([]); // 0 workouts in Firebase
 
       final testWorkoutModel = createTestWorkoutModel();
-      when(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: any(named: 'limit'),
-        since: any(named: 'since'),
-      )).thenAnswer((_) async => [testWorkoutModel]);
+      when(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          userId,
+          limit: any(named: 'limit'),
+          since: any(named: 'since'),
+        ),
+      ).thenAnswer((_) async => [testWorkoutModel]);
 
       // Act
       final result = await repository.getHistoricalWorkouts(userId);
@@ -317,36 +346,42 @@ void main() {
       // Assert
       expect(result, isNotEmpty);
       // Called once - in-memory _localWorkoutsCache caches first call result
-      verify(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: any(named: 'limit'),
-        since: any(named: 'since'),
-      )).called(1);
+      verify(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          userId,
+          limit: any(named: 'limit'),
+          since: any(named: 'since'),
+        ),
+      ).called(1);
     });
 
     test('should apply limit and since filters', () async {
       // Arrange
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => null);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => null);
 
       final mockCollection = MockCollectionReference<Map<String, dynamic>>();
       final mockQuery = MockQuery<Map<String, dynamic>>();
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workouts')).thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workouts'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
       when(() => mockSnapshot.docs).thenReturn([]);
 
       final testWorkoutModel = createTestWorkoutModel();
-      when(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: any(named: 'limit'),
-        since: any(named: 'since'),
-      )).thenAnswer((_) async => [testWorkoutModel]);
+      when(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          userId,
+          limit: any(named: 'limit'),
+          since: any(named: 'since'),
+        ),
+      ).thenAnswer((_) async => [testWorkoutModel]);
 
       final sinceDate = DateTime.now().subtract(const Duration(days: 7));
 
@@ -361,19 +396,20 @@ void main() {
       expect(result, isNotEmpty);
       // Implementation always calls getWorkoutsForAnalytics(userId, limit: null)
       // then filters by limit/since in memory via _getLocalWorkouts
-      verify(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: any(named: 'limit'),
-        since: any(named: 'since'),
-      )).called(1);
+      verify(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          userId,
+          limit: any(named: 'limit'),
+          since: any(named: 'since'),
+        ),
+      ).called(1);
     });
 
     test('should return empty list on error', () async {
       // Arrange
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenThrow(Exception('Cache error'));
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenThrow(Exception('Cache error'));
 
       // Act
       final result = await repository.getHistoricalWorkouts(userId);
@@ -384,12 +420,13 @@ void main() {
 
     test('should handle malformed cached data gracefully', () async {
       // Arrange - Cache has invalid JSON
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => [
-        {'invalid': 'data'}, // Missing required fields
-      ]);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer(
+        (_) async => [
+          {'invalid': 'data'}, // Missing required fields
+        ],
+      );
 
       // Act
       final result = await repository.getHistoricalWorkouts(userId);
@@ -402,53 +439,53 @@ void main() {
   group('getSimilarWorkouts', () {
     const userId = 'user-123';
 
-    test('should find similar workouts based on muscle group overlap', () async {
-      // Arrange
-      final targetWorkout = createTestWorkout(
-        exercises: [
-          Exercise(
-            id: 'ex-1',
-            name: 'Bench Press',
-            type: ExerciseType.single,
-            category: ExerciseCategory.chest,
-            sets: [],
-          ),
-        ],
-      );
+    test(
+      'should find similar workouts based on muscle group overlap',
+      () async {
+        // Arrange
+        final targetWorkout = createTestWorkout(
+          exercises: [
+            Exercise(
+              id: 'ex-1',
+              name: 'Bench Press',
+              type: ExerciseType.single,
+              category: ExerciseCategory.chest,
+              sets: [],
+            ),
+          ],
+        );
 
-      final similarWorkout = createTestWorkout(
-        id: 'workout-2',
-        exercises: [
-          Exercise(
-            id: 'ex-2',
-            name: 'Incline Press',
-            type: ExerciseType.single,
-            category: ExerciseCategory.chest,
-            sets: [],
-          ),
-        ],
-      );
+        final similarWorkout = createTestWorkout(
+          id: 'workout-2',
+          exercises: [
+            Exercise(
+              id: 'ex-2',
+              name: 'Incline Press',
+              type: ExerciseType.single,
+              category: ExerciseCategory.chest,
+              sets: [],
+            ),
+          ],
+        );
 
-      // Mock getHistoricalWorkouts to return test data
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => [
-        similarWorkout.toJson(),
-      ]);
+        // Mock getHistoricalWorkouts to return test data
+        when(
+          () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+        ).thenAnswer((_) async => [similarWorkout.toJson()]);
 
-      // Act
-      final result = await repository.getSimilarWorkouts(
-        userId,
-        targetWorkout,
-        limit: 10,
-        minSimilarity: 0.3,
-      );
+        // Act
+        final result = await repository.getSimilarWorkouts(
+          userId,
+          targetWorkout,
+          limit: 10,
+          minSimilarity: 0.3,
+        );
 
-      // Assert
-      expect(result, isNotEmpty);
-      expect(result.first.exercises.first.category, ExerciseCategory.chest);
-    });
+        // Assert
+        expect(result, isNotEmpty);
+        expect(result.first.exercises.first.category, ExerciseCategory.chest);
+      },
+    );
 
     test('should filter by minimum similarity threshold', () async {
       // Arrange
@@ -477,12 +514,9 @@ void main() {
         ],
       );
 
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => [
-        dissimilarWorkout.toJson(),
-      ]);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => [dissimilarWorkout.toJson()]);
 
       // Act
       final result = await repository.getSimilarWorkouts(
@@ -499,12 +533,14 @@ void main() {
     test('should respect limit parameter', () async {
       // Arrange
       final targetWorkout = createTestWorkout();
-      final workouts = List.generate(20, (i) => createTestWorkout(id: 'workout-$i'));
+      final workouts = List.generate(
+        20,
+        (i) => createTestWorkout(id: 'workout-$i'),
+      );
 
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => workouts.map((w) => w.toJson()).toList());
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => workouts.map((w) => w.toJson()).toList());
 
       // Act
       final result = await repository.getSimilarWorkouts(
@@ -524,8 +560,9 @@ void main() {
     test('getUserPRs should delegate to PRTracker', () async {
       // Arrange
       final testPRs = [createTestPR()];
-      when(() => mockPRTracker.getUserPRs(userId))
-          .thenAnswer((_) async => testPRs);
+      when(
+        () => mockPRTracker.getUserPRs(userId),
+      ).thenAnswer((_) async => testPRs);
 
       // Act
       final result = await repository.getUserPRs(userId);
@@ -542,8 +579,9 @@ void main() {
         PRType.oneRM: createTestPR(type: PRType.oneRM),
         PRType.weight: createTestPR(type: PRType.weight),
       };
-      when(() => mockPRTracker.getExercisePRs(userId, exerciseId))
-          .thenAnswer((_) async => testPRs);
+      when(
+        () => mockPRTracker.getExercisePRs(userId, exerciseId),
+      ).thenAnswer((_) async => testPRs);
 
       // Act
       final result = await repository.getExercisePRs(userId, exerciseId);
@@ -569,29 +607,38 @@ void main() {
   group('Metrics Methods', () {
     const userId = 'user-123';
 
-    test('getWorkoutMetricsHistory should query Firestore with limit', () async {
-      // Arrange
-      final mockCollection = MockCollectionReference<Map<String, dynamic>>();
-      final mockQuery = MockQuery<Map<String, dynamic>>();
-      final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
+    test(
+      'getWorkoutMetricsHistory should query Firestore with limit',
+      () async {
+        // Arrange
+        final mockCollection = MockCollectionReference<Map<String, dynamic>>();
+        final mockQuery = MockQuery<Map<String, dynamic>>();
+        final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workoutMetrics'))
-          .thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
-      when(() => mockQuery.orderBy('calculatedAt', descending: true))
-          .thenReturn(mockQuery);
-      when(() => mockQuery.limit(30)).thenReturn(mockQuery);
-      when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
-      when(() => mockSnapshot.docs).thenReturn([]);
+        when(
+          () => mockFirestore.collection('workoutMetrics'),
+        ).thenReturn(mockCollection);
+        when(
+          () => mockCollection.where('userId', isEqualTo: userId),
+        ).thenReturn(mockQuery);
+        when(
+          () => mockQuery.orderBy('calculatedAt', descending: true),
+        ).thenReturn(mockQuery);
+        when(() => mockQuery.limit(30)).thenReturn(mockQuery);
+        when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
+        when(() => mockSnapshot.docs).thenReturn([]);
 
-      // Act
-      final result = await repository.getWorkoutMetricsHistory(userId, limit: 30);
+        // Act
+        final result = await repository.getWorkoutMetricsHistory(
+          userId,
+          limit: 30,
+        );
 
-      // Assert
-      expect(result, isEmpty);
-      verify(() => mockQuery.limit(30)).called(1);
-    });
+        // Assert
+        expect(result, isEmpty);
+        verify(() => mockQuery.limit(30)).called(1);
+      },
+    );
 
     test('getWorkoutMetricsHistory should apply since filter', () async {
       // Arrange
@@ -600,15 +647,22 @@ void main() {
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
       final sinceDate = DateTime.now().subtract(const Duration(days: 7));
 
-      when(() => mockFirestore.collection('workoutMetrics'))
-          .thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
-      when(() => mockQuery.orderBy('calculatedAt', descending: true))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workoutMetrics'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
+      when(
+        () => mockQuery.orderBy('calculatedAt', descending: true),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.limit(any())).thenReturn(mockQuery);
-      when(() => mockQuery.where('calculatedAt', isGreaterThan: any(named: 'isGreaterThan')))
-          .thenReturn(mockQuery);
+      when(
+        () => mockQuery.where(
+          'calculatedAt',
+          isGreaterThan: any(named: 'isGreaterThan'),
+        ),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
       when(() => mockSnapshot.docs).thenReturn([]);
 
@@ -620,8 +674,12 @@ void main() {
 
       // Assert
       expect(result, isEmpty);
-      verify(() => mockQuery.where('calculatedAt', isGreaterThan: any(named: 'isGreaterThan')))
-          .called(1);
+      verify(
+        () => mockQuery.where(
+          'calculatedAt',
+          isGreaterThan: any(named: 'isGreaterThan'),
+        ),
+      ).called(1);
     });
 
     test('cacheWorkoutMetrics should save to Hive box', () async {
@@ -633,20 +691,25 @@ void main() {
       await repository.cacheWorkoutMetrics(testMetrics);
 
       // Assert
-      verify(() => mockMetricsCache.put(testMetrics.workoutId, any())).called(1);
+      verify(
+        () => mockMetricsCache.put(testMetrics.workoutId, any()),
+      ).called(1);
     });
 
-    test('getCachedWorkoutMetrics should return null when not cached', () async {
-      // Arrange
-      const workoutId = 'workout-1';
-      when(() => mockMetricsCache.get(workoutId)).thenReturn(null);
+    test(
+      'getCachedWorkoutMetrics should return null when not cached',
+      () async {
+        // Arrange
+        const workoutId = 'workout-1';
+        when(() => mockMetricsCache.get(workoutId)).thenReturn(null);
 
-      // Act
-      final result = await repository.getCachedWorkoutMetrics(workoutId);
+        // Act
+        final result = await repository.getCachedWorkoutMetrics(workoutId);
 
-      // Assert
-      expect(result, isNull);
-    });
+        // Assert
+        expect(result, isNull);
+      },
+    );
 
     test('getCachedWorkoutMetrics should return metrics when cached', () async {
       // Arrange
@@ -688,10 +751,9 @@ void main() {
         'exerciseFrequency': {'Bench Press': 10},
         'exerciseVolumeDistribution': {'Bench Press': 10000.0},
       };
-      when(() => mockCacheService.get<Map<String, dynamic>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => cachedStats);
+      when(
+        () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+      ).thenAnswer((_) async => cachedStats);
 
       // Act
       final result = await repository.getAnalyticsStats(userId);
@@ -699,27 +761,25 @@ void main() {
       // Assert
       expect(result.totalWorkouts, 10);
       expect(result.totalPRs, 5);
-      verify(() => mockCacheService.get<Map<String, dynamic>>(
-        any(),
-        any(),
-      )).called(1);
+      verify(
+        () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+      ).called(1);
     });
 
     test('should calculate stats from workouts when no cache', () async {
       // Arrange
-      when(() => mockCacheService.get<Map<String, dynamic>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => null);
+      when(
+        () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+      ).thenAnswer((_) async => null);
 
       final testWorkout = createTestWorkout();
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => [testWorkout.toJson()]);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => [testWorkout.toJson()]);
 
-      when(() => mockPRTracker.getUserPRs(userId))
-          .thenAnswer((_) async => [createTestPR()]);
+      when(
+        () => mockPRTracker.getUserPRs(userId),
+      ).thenAnswer((_) async => [createTestPR()]);
 
       // Act
       final result = await repository.getAnalyticsStats(userId);
@@ -728,28 +788,27 @@ void main() {
       expect(result.totalWorkouts, 1);
       expect(result.totalPRs, 1);
       expect(result.averageWorkoutVolume, greaterThan(0));
-      verify(() => mockCacheService.set<Map<String, dynamic>>(
-        any(),
-        any(),
-        any(),
-        any(),
-      )).called(1);
+      verify(
+        () => mockCacheService.set<Map<String, dynamic>>(
+          any(),
+          any(),
+          any(),
+          any(),
+        ),
+      ).called(1);
     });
 
     test('should return empty stats when no workouts', () async {
       // Arrange
-      when(() => mockCacheService.get<Map<String, dynamic>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => null);
+      when(
+        () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+      ).thenAnswer((_) async => null);
 
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => []);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => []);
 
-      when(() => mockPRTracker.getUserPRs(userId))
-          .thenAnswer((_) async => []);
+      when(() => mockPRTracker.getUserPRs(userId)).thenAnswer((_) async => []);
 
       // Act
       final result = await repository.getAnalyticsStats(userId);
@@ -763,10 +822,9 @@ void main() {
 
     test('should calculate exercise frequency correctly', () async {
       // Arrange
-      when(() => mockCacheService.get<Map<String, dynamic>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => null);
+      when(
+        () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+      ).thenAnswer((_) async => null);
 
       final workout1 = createTestWorkout(
         id: 'w1',
@@ -812,16 +870,11 @@ void main() {
         ],
       );
 
-      when(() => mockCacheService.get<List<Map<String, dynamic>>>(
-        any(),
-        any(),
-      )).thenAnswer((_) async => [
-        workout1.toJson(),
-        workout2.toJson(),
-      ]);
+      when(
+        () => mockCacheService.get<List<Map<String, dynamic>>>(any(), any()),
+      ).thenAnswer((_) async => [workout1.toJson(), workout2.toJson()]);
 
-      when(() => mockPRTracker.getUserPRs(userId))
-          .thenAnswer((_) async => []);
+      when(() => mockPRTracker.getUserPRs(userId)).thenAnswer((_) async => []);
 
       // Act
       final result = await repository.getAnalyticsStats(userId);
@@ -832,10 +885,9 @@ void main() {
 
     test('should return empty stats on error', () async {
       // Arrange
-      when(() => mockCacheService.get<Map<String, dynamic>>(
-        any(),
-        any(),
-      )).thenThrow(Exception('Cache error'));
+      when(
+        () => mockCacheService.get<Map<String, dynamic>>(any(), any()),
+      ).thenThrow(Exception('Cache error'));
 
       // Act
       final result = await repository.getAnalyticsStats(userId);
@@ -880,9 +932,11 @@ void main() {
       // Create expectation BEFORE notifying
       final expectation = expectLater(
         stream,
-        emits(predicate<WorkoutAnalyticsUpdate>(
-          (update) => update.workoutId == workoutId,
-        )),
+        emits(
+          predicate<WorkoutAnalyticsUpdate>(
+            (update) => update.workoutId == workoutId,
+          ),
+        ),
       );
 
       // Act - notify after setting up listener
@@ -902,9 +956,12 @@ void main() {
       final mockQuery = MockQuery<Map<String, dynamic>>();
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workouts')).thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workouts'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
       when(() => mockSnapshot.docs).thenReturn([]);
 
@@ -922,21 +979,25 @@ void main() {
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
       final mockDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workouts')).thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workouts'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
       when(() => mockSnapshot.docs).thenReturn([mockDoc]);
       when(() => mockDoc.data()).thenReturn({
         'userId': userId,
         'name': 'Test',
         'exercises': [
-          {'name': 'Bench Press'}
+          {'name': 'Bench Press'},
         ],
       });
       when(() => mockDoc.id).thenReturn('workout-1');
-      when(() => mockHiveWorkoutDataSource.saveWorkout(any(), userId))
-          .thenAnswer((_) async => 'workout-1');
+      when(
+        () => mockHiveWorkoutDataSource.saveWorkout(any(), userId),
+      ).thenAnswer((_) async => 'workout-1');
 
       var progressCalls = 0;
       void onProgress(int current, int total) {
@@ -956,16 +1017,21 @@ void main() {
       final mockQuery = MockQuery<Map<String, dynamic>>();
       final mockSnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
-      when(() => mockFirestore.collection('workouts')).thenReturn(mockCollection);
-      when(() => mockCollection.where('userId', isEqualTo: userId))
-          .thenReturn(mockQuery);
+      when(
+        () => mockFirestore.collection('workouts'),
+      ).thenReturn(mockCollection);
+      when(
+        () => mockCollection.where('userId', isEqualTo: userId),
+      ).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenAnswer((_) async => mockSnapshot);
       when(() => mockSnapshot.docs).thenReturn([]);
 
-      when(() => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: null,
-      )).thenAnswer((_) async => []);
+      when(
+        () => mockHiveWorkoutDataSource.getWorkoutsForAnalytics(
+          userId,
+          limit: null,
+        ),
+      ).thenAnswer((_) async => []);
 
       // Act
       final status = await repository.getSyncStatus(userId);
@@ -982,8 +1048,9 @@ void main() {
 
     test('invalidateAnalyticsCache should clear user cache', () async {
       // Arrange
-      when(() => mockCacheService.invalidateUser(userId))
-          .thenAnswer((_) async {});
+      when(
+        () => mockCacheService.invalidateUser(userId),
+      ).thenAnswer((_) async {});
 
       // Act
       await repository.invalidateAnalyticsCache(userId);

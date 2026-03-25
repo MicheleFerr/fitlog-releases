@@ -86,17 +86,17 @@ class _FakeFirebaseWorkoutDataSource implements FirebaseWorkoutDataSource {
     int? limit,
     DateTime? startDate,
     DateTime? endDate,
-  })? onGetWorkouts;
+    bool useUpdatedAt,
+  })?
+  onGetWorkouts;
 
   /// Called when deleteWorkout is invoked; completes or throws.
   Future<void> Function(String workoutId, String userId)? onDeleteWorkout;
 
   /// Called when saveCompletedWorkout is invoked; returns ids or throws.
   // ignore: deprecated_member_use_from_same_package
-  Future<List<String>> Function(
-    WorkoutModel workout,
-    String userEmail,
-  )? onSaveCompletedWorkout;
+  Future<List<String>> Function(WorkoutModel workout, String userEmail)?
+  onSaveCompletedWorkout;
 
   /// Called when updateExerciseSet is invoked; completes or throws.
   Future<void> Function(
@@ -104,38 +104,31 @@ class _FakeFirebaseWorkoutDataSource implements FirebaseWorkoutDataSource {
     String exerciseId,
     ExerciseSet exerciseSet,
     String userId,
-  )? onUpdateExerciseSet;
+  )?
+  onUpdateExerciseSet;
 
   /// Called when addExerciseToWorkout is invoked; completes or throws.
-  Future<void> Function(
-    String workoutId,
-    Exercise exercise,
-    String userId,
-  )? onAddExerciseToWorkout;
+  Future<void> Function(String workoutId, Exercise exercise, String userId)?
+  onAddExerciseToWorkout;
 
   /// Called when removeExerciseFromWorkout is invoked; completes or throws.
-  Future<void> Function(
-    String workoutId,
-    String exerciseId,
-    String userId,
-  )? onRemoveExerciseFromWorkout;
+  Future<void> Function(String workoutId, String exerciseId, String userId)?
+  onRemoveExerciseFromWorkout;
 
   /// Called when getWorkoutStats is invoked; returns stats or throws.
   Future<WorkoutStats> Function(
     String userId, {
     DateTime? startDate,
     DateTime? endDate,
-  })? onGetWorkoutStats;
+  })?
+  onGetWorkoutStats;
 
   /// Stream to emit from watchActiveWorkout.
   Stream<WorkoutModel?> Function(String userId)? onWatchActiveWorkout;
 
   /// Called when getWorkoutHistory is invoked; returns history or throws.
-  Future<WorkoutHistory> Function(
-    String userId, {
-    int page,
-    int limit,
-  })? onGetWorkoutHistory;
+  Future<WorkoutHistory> Function(String userId, {int page, int limit})?
+  onGetWorkoutHistory;
 
   /// Called when getWorkoutsPaginated is invoked; returns paginated or throws.
   Future<PaginatedResult<WorkoutModel>> Function(
@@ -145,7 +138,8 @@ class _FakeFirebaseWorkoutDataSource implements FirebaseWorkoutDataSource {
     DateTime? dateFrom,
     DateTime? dateTo,
     String? status,
-  })? onGetWorkoutsPaginated;
+  })?
+  onGetWorkoutsPaginated;
 
   // -------------------------------------------------------------------------
   // Interface implementation
@@ -172,8 +166,15 @@ class _FakeFirebaseWorkoutDataSource implements FirebaseWorkoutDataSource {
     int? limit,
     DateTime? startDate,
     DateTime? endDate,
+    bool useUpdatedAt = false,
   }) {
-    return onGetWorkouts!(userId, limit: limit, startDate: startDate, endDate: endDate);
+    return onGetWorkouts!(
+      userId,
+      limit: limit,
+      startDate: startDate,
+      endDate: endDate,
+      useUpdatedAt: useUpdatedAt,
+    );
   }
 
   @override
@@ -401,16 +402,18 @@ void main() {
       expect(capturedModel!.name, equals('Leg Day'));
     });
 
-    test('returns Left(AuthenticationFailure) when user is not authenticated',
-        () async {
-      await auth.signOut();
-      final workout = _makeWorkout();
+    test(
+      'returns Left(AuthenticationFailure) when user is not authenticated',
+      () async {
+        await auth.signOut();
+        final workout = _makeWorkout();
 
-      final result = await repository.saveWorkout(workout);
+        final result = await repository.saveWorkout(workout);
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('returns Left(NetworkFailure) on TimeoutException', () async {
       final workout = _makeWorkout();
@@ -425,8 +428,7 @@ void main() {
 
     test('returns Left(UnexpectedFailure) on generic exception', () async {
       final workout = _makeWorkout();
-      dataSource.onSaveWorkout = (_, __) async =>
-          throw Exception('unexpected');
+      dataSource.onSaveWorkout = (_, __) async => throw Exception('unexpected');
 
       final result = await repository.saveWorkout(workout);
 
@@ -449,14 +451,17 @@ void main() {
       expect(result.isRight, isTrue);
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.updateWorkout(_makeWorkout());
+        final result = await repository.updateWorkout(_makeWorkout());
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('returns Left(NetworkFailure) on TimeoutException', () async {
       final workout = _makeWorkout();
@@ -470,8 +475,7 @@ void main() {
     });
 
     test('returns Left(UnexpectedFailure) on unexpected error', () async {
-      dataSource.onUpdateWorkout = (_, __) async =>
-          throw StateError('boom');
+      dataSource.onUpdateWorkout = (_, __) async => throw StateError('boom');
 
       final result = await repository.updateWorkout(_makeWorkout());
 
@@ -496,50 +500,57 @@ void main() {
       expect(result.rightOrNull!.id, equals('wk-001'));
     });
 
-    test('returns Left(Failure) when datasource returns null (workout not found)',
-        () async {
-      // The repository throws WorkoutNotFoundFailure (a Failure, not an
-      // Exception) inside handleFirebaseOperation. The mixin's generic catch
-      // block intercepts it and wraps it as an UnexpectedFailure.
-      dataSource.onGetWorkout = (workoutId, userId) async => null;
+    test(
+      'returns Left(Failure) when datasource returns null (workout not found)',
+      () async {
+        // The repository throws WorkoutNotFoundFailure (a Failure, not an
+        // Exception) inside handleFirebaseOperation. The mixin's generic catch
+        // block intercepts it and wraps it as an UnexpectedFailure.
+        dataSource.onGetWorkout = (workoutId, userId) async => null;
 
-      final result = await repository.getWorkout('does-not-exist');
+        final result = await repository.getWorkout('does-not-exist');
 
-      expect(result.isLeft, isTrue);
-      // WorkoutNotFoundFailure is not an Exception so the mixin maps it
-      // to UnexpectedFailure via the generic catch.
-      expect(result.leftOrNull, isA<Failure>());
-    });
+        expect(result.isLeft, isTrue);
+        // WorkoutNotFoundFailure is not an Exception so the mixin maps it
+        // to UnexpectedFailure via the generic catch.
+        expect(result.leftOrNull, isA<Failure>());
+      },
+    );
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.getWorkout('wk-001');
+        final result = await repository.getWorkout('wk-001');
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
-    test('maps FirebaseException permission-denied to PermissionFailure',
-        () async {
-      dataSource.onGetWorkout = (_, __) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'permission-denied',
-            message: 'Missing permissions',
-          );
+    test(
+      'maps FirebaseException permission-denied to PermissionFailure',
+      () async {
+        dataSource.onGetWorkout = (_, __) async => throw FirebaseException(
+          plugin: 'cloud_firestore',
+          code: 'permission-denied',
+          message: 'Missing permissions',
+        );
 
-      final result = await repository.getWorkout('wk-001');
+        final result = await repository.getWorkout('wk-001');
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<PermissionFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<PermissionFailure>());
+      },
+    );
 
     test('maps FirebaseException unavailable to NetworkFailure', () async {
       dataSource.onGetWorkout = (_, __) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'unavailable',
-            message: 'Service unavailable',
-          );
+        plugin: 'cloud_firestore',
+        code: 'unavailable',
+        message: 'Service unavailable',
+      );
 
       final result = await repository.getWorkout('wk-001');
 
@@ -558,8 +569,9 @@ void main() {
         _makeWorkoutModel(id: 'wk-001'),
         _makeWorkoutModel(id: 'wk-002', name: 'Pull Day'),
       ];
-      dataSource.onGetWorkouts = (userId, {limit, startDate, endDate}) async =>
-          models;
+      dataSource.onGetWorkouts =
+          (userId, {limit, startDate, endDate, useUpdatedAt = false}) async =>
+              models;
 
       final result = await repository.getWorkouts();
 
@@ -577,12 +589,14 @@ void main() {
       DateTime? capturedStart;
       DateTime? capturedEnd;
 
-      dataSource.onGetWorkouts = (userId, {limit, startDate, endDate}) async {
-        capturedLimit = limit;
-        capturedStart = startDate;
-        capturedEnd = endDate;
-        return [];
-      };
+      dataSource.onGetWorkouts =
+          (userId, {limit, startDate, endDate, useUpdatedAt = false}) async {
+            capturedLimit = limit;
+            capturedStart = startDate;
+            capturedEnd = endDate;
+            expect(useUpdatedAt, isFalse);
+            return [];
+          };
 
       await repository.getWorkouts(limit: 5, startDate: start, endDate: end);
 
@@ -592,7 +606,8 @@ void main() {
     });
 
     test('returns empty list when datasource returns no workouts', () async {
-      dataSource.onGetWorkouts = (_, {limit, startDate, endDate}) async => [];
+      dataSource.onGetWorkouts =
+          (_, {limit, startDate, endDate, useUpdatedAt = false}) async => [];
 
       final result = await repository.getWorkouts();
 
@@ -600,18 +615,22 @@ void main() {
       expect(result.rightOrNull, isEmpty);
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.getWorkouts();
+        final result = await repository.getWorkouts();
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('returns Left(NetworkFailure) on TimeoutException', () async {
-      dataSource.onGetWorkouts = (_, {limit, startDate, endDate}) async =>
-          throw TimeoutException('getWorkouts timed out');
+      dataSource.onGetWorkouts =
+          (_, {limit, startDate, endDate, useUpdatedAt = false}) async =>
+              throw TimeoutException('getWorkouts timed out');
 
       final result = await repository.getWorkouts();
 
@@ -647,21 +666,24 @@ void main() {
       expect(capturedUserId, equals('user-123'));
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.deleteWorkout('wk-001');
+        final result = await repository.deleteWorkout('wk-001');
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('maps FirebaseException not-found to NotFoundFailure', () async {
       dataSource.onDeleteWorkout = (_, __) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'not-found',
-            message: 'Workout not found',
-          );
+        plugin: 'cloud_firestore',
+        code: 'not-found',
+        message: 'Workout not found',
+      );
 
       final result = await repository.deleteWorkout('wk-ghost');
 
@@ -688,17 +710,20 @@ void main() {
       expect(result.rightOrNull, isEmpty);
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.saveCompletedWorkout(
-        workout: _makeWorkout(),
-        userEmail: 'test@fitlog.pro',
-      );
+        final result = await repository.saveCompletedWorkout(
+          workout: _makeWorkout(),
+          userEmail: 'test@fitlog.pro',
+        );
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
   });
 
   // =========================================================================
@@ -724,12 +749,13 @@ void main() {
       String? capturedUserId;
       ExerciseSet? capturedSet;
 
-      dataSource.onUpdateExerciseSet = (workoutId, exerciseId, exerciseSet, userId) async {
-        capturedWorkoutId = workoutId;
-        capturedExerciseId = exerciseId;
-        capturedSet = exerciseSet;
-        capturedUserId = userId;
-      };
+      dataSource.onUpdateExerciseSet =
+          (workoutId, exerciseId, exerciseSet, userId) async {
+            capturedWorkoutId = workoutId;
+            capturedExerciseId = exerciseId;
+            capturedSet = exerciseSet;
+            capturedUserId = userId;
+          };
 
       final set = _makeExerciseSet(id: 'set-999');
       await repository.updateExerciseSet(
@@ -744,22 +770,26 @@ void main() {
       expect(capturedUserId, equals('user-123'));
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.updateExerciseSet(
-        workoutId: 'wk-001',
-        exerciseId: 'ex-001',
-        exerciseSet: _makeExerciseSet(),
-      );
+        final result = await repository.updateExerciseSet(
+          workoutId: 'wk-001',
+          exerciseId: 'ex-001',
+          exerciseSet: _makeExerciseSet(),
+        );
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('returns Left(UnexpectedFailure) on unexpected error', () async {
-      dataSource.onUpdateExerciseSet = (workoutId, exerciseId, exerciseSet, userId) async =>
-          throw Exception('set not found');
+      dataSource.onUpdateExerciseSet =
+          (workoutId, exerciseId, exerciseSet, userId) async =>
+              throw Exception('set not found');
 
       final result = await repository.updateExerciseSet(
         workoutId: 'wk-001',
@@ -788,33 +818,39 @@ void main() {
       expect(result.isRight, isTrue);
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.addExerciseToWorkout(
-        workoutId: 'wk-001',
-        exercise: _makeExercise(),
-      );
+        final result = await repository.addExerciseToWorkout(
+          workoutId: 'wk-001',
+          exercise: _makeExercise(),
+        );
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
-    test('maps FirebaseException permission-denied to PermissionFailure',
-        () async {
-      dataSource.onAddExerciseToWorkout = (_, __, ___) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'permission-denied',
-          );
+    test(
+      'maps FirebaseException permission-denied to PermissionFailure',
+      () async {
+        dataSource.onAddExerciseToWorkout = (_, __, ___) async =>
+            throw FirebaseException(
+              plugin: 'cloud_firestore',
+              code: 'permission-denied',
+            );
 
-      final result = await repository.addExerciseToWorkout(
-        workoutId: 'wk-001',
-        exercise: _makeExercise(),
-      );
+        final result = await repository.addExerciseToWorkout(
+          workoutId: 'wk-001',
+          exercise: _makeExercise(),
+        );
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<PermissionFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<PermissionFailure>());
+      },
+    );
   });
 
   // =========================================================================
@@ -837,11 +873,12 @@ void main() {
       String? capturedWorkoutId;
       String? capturedExerciseId;
       String? capturedUserId;
-      dataSource.onRemoveExerciseFromWorkout = (workoutId, exerciseId, userId) async {
-        capturedWorkoutId = workoutId;
-        capturedExerciseId = exerciseId;
-        capturedUserId = userId;
-      };
+      dataSource.onRemoveExerciseFromWorkout =
+          (workoutId, exerciseId, userId) async {
+            capturedWorkoutId = workoutId;
+            capturedExerciseId = exerciseId;
+            capturedUserId = userId;
+          };
 
       await repository.removeExerciseFromWorkout(
         workoutId: 'wk-99',
@@ -853,17 +890,20 @@ void main() {
       expect(capturedUserId, equals('user-123'));
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.removeExerciseFromWorkout(
-        workoutId: 'wk-001',
-        exerciseId: 'ex-001',
-      );
+        final result = await repository.removeExerciseFromWorkout(
+          workoutId: 'wk-001',
+          exerciseId: 'ex-001',
+        );
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
   });
 
   // =========================================================================
@@ -902,14 +942,17 @@ void main() {
       expect(capturedEnd, equals(end));
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.getWorkoutStats();
+        final result = await repository.getWorkoutStats();
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('returns Left(NetworkFailure) on TimeoutException', () async {
       dataSource.onGetWorkoutStats = (_, {startDate, endDate}) async =>
@@ -1016,14 +1059,17 @@ void main() {
       expect(returned.hasMore, isFalse);
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.getWorkoutHistory();
+        final result = await repository.getWorkoutHistory();
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('passes page and limit to datasource', () async {
       int? capturedPage;
@@ -1051,13 +1097,15 @@ void main() {
   // =========================================================================
 
   group('getLastCompletedWorkout', () {
-    test('throws UnimplementedError (Firebase-only repo does not support this)',
-        () async {
-      expect(
-        () => repository.getLastCompletedWorkout('user-123'),
-        throwsA(isA<UnimplementedError>()),
-      );
-    });
+    test(
+      'throws UnimplementedError (Firebase-only repo does not support this)',
+      () async {
+        expect(
+          () => repository.getLastCompletedWorkout('user-123'),
+          throwsA(isA<UnimplementedError>()),
+        );
+      },
+    );
   });
 
   // =========================================================================
@@ -1065,49 +1113,47 @@ void main() {
   // =========================================================================
 
   group('getWorkoutsPaginated', () {
-    test('returns Right(PaginatedResult) with domain workouts on success',
-        () async {
-      final models = [
-        _makeWorkoutModel(id: 'wk-p1'),
-        _makeWorkoutModel(id: 'wk-p2'),
-      ];
-      dataSource.onGetWorkoutsPaginated = (
-        userId, {
-        pageSize = 20,
-        startAfter,
-        dateFrom,
-        dateTo,
-        status,
-      }) async =>
-          PaginatedResult<WorkoutModel>(
-            items: models,
-            hasMore: false,
-          );
+    test(
+      'returns Right(PaginatedResult) with domain workouts on success',
+      () async {
+        final models = [
+          _makeWorkoutModel(id: 'wk-p1'),
+          _makeWorkoutModel(id: 'wk-p2'),
+        ];
+        dataSource.onGetWorkoutsPaginated =
+            (
+              userId, {
+              pageSize = 20,
+              startAfter,
+              dateFrom,
+              dateTo,
+              status,
+            }) async =>
+                PaginatedResult<WorkoutModel>(items: models, hasMore: false);
 
-      final result = await repository.getWorkoutsPaginated(pageSize: 2);
+        final result = await repository.getWorkoutsPaginated(pageSize: 2);
 
-      expect(result.isRight, isTrue);
-      final paginated = result.rightOrNull!;
-      expect(paginated.items.length, equals(2));
-      expect(paginated.items.first, isA<Workout>());
-      expect(paginated.items.first.id, equals('wk-p1'));
-      expect(paginated.hasMore, isFalse);
-    });
+        expect(result.isRight, isTrue);
+        final paginated = result.rightOrNull!;
+        expect(paginated.items.length, equals(2));
+        expect(paginated.items.first, isA<Workout>());
+        expect(paginated.items.first.id, equals('wk-p1'));
+        expect(paginated.hasMore, isFalse);
+      },
+    );
 
     test('forwards hasMore flag from datasource result', () async {
-      final models = List.generate(
-        5,
-        (i) => _makeWorkoutModel(id: 'wk-$i'),
-      );
-      dataSource.onGetWorkoutsPaginated = (
-        userId, {
-        pageSize = 20,
-        startAfter,
-        dateFrom,
-        dateTo,
-        status,
-      }) async =>
-          PaginatedResult<WorkoutModel>(items: models, hasMore: true);
+      final models = List.generate(5, (i) => _makeWorkoutModel(id: 'wk-$i'));
+      dataSource.onGetWorkoutsPaginated =
+          (
+            userId, {
+            pageSize = 20,
+            startAfter,
+            dateFrom,
+            dateTo,
+            status,
+          }) async =>
+              PaginatedResult<WorkoutModel>(items: models, hasMore: true);
 
       final result = await repository.getWorkoutsPaginated(pageSize: 5);
 
@@ -1122,20 +1168,24 @@ void main() {
       DateTime? capturedDateTo;
       int? capturedPageSize;
 
-      dataSource.onGetWorkoutsPaginated = (
-        userId, {
-        pageSize = 20,
-        startAfter,
-        dateFrom,
-        dateTo,
-        status,
-      }) async {
-        capturedPageSize = pageSize;
-        capturedDateFrom = dateFrom;
-        capturedDateTo = dateTo;
-        capturedStatus = status;
-        return const PaginatedResult<WorkoutModel>(items: [], hasMore: false);
-      };
+      dataSource.onGetWorkoutsPaginated =
+          (
+            userId, {
+            pageSize = 20,
+            startAfter,
+            dateFrom,
+            dateTo,
+            status,
+          }) async {
+            capturedPageSize = pageSize;
+            capturedDateFrom = dateFrom;
+            capturedDateTo = dateTo;
+            capturedStatus = status;
+            return const PaginatedResult<WorkoutModel>(
+              items: [],
+              hasMore: false,
+            );
+          };
 
       await repository.getWorkoutsPaginated(
         pageSize: 10,
@@ -1150,25 +1200,28 @@ void main() {
       expect(capturedStatus, equals('completed'));
     });
 
-    test('returns Left(AuthenticationFailure) when not authenticated', () async {
-      await auth.signOut();
+    test(
+      'returns Left(AuthenticationFailure) when not authenticated',
+      () async {
+        await auth.signOut();
 
-      final result = await repository.getWorkoutsPaginated();
+        final result = await repository.getWorkoutsPaginated();
 
-      expect(result.isLeft, isTrue);
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.isLeft, isTrue);
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
     test('returns Left on TimeoutException', () async {
-      dataSource.onGetWorkoutsPaginated = (
-        userId, {
-        pageSize = 20,
-        startAfter,
-        dateFrom,
-        dateTo,
-        status,
-      }) async =>
-          throw TimeoutException('paginated timed out');
+      dataSource.onGetWorkoutsPaginated =
+          (
+            userId, {
+            pageSize = 20,
+            startAfter,
+            dateFrom,
+            dateTo,
+            status,
+          }) async => throw TimeoutException('paginated timed out');
 
       final result = await repository.getWorkoutsPaginated();
 
@@ -1182,57 +1235,64 @@ void main() {
   // =========================================================================
 
   group('FirebaseErrorMapperMixin error mapping', () {
-    test('maps resource-exhausted FirebaseException to RateLimitFailure',
-        () async {
-      dataSource.onGetWorkouts = (_, {limit, startDate, endDate}) async =>
-          throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'resource-exhausted',
-            message: 'Quota exceeded',
-          );
+    test(
+      'maps resource-exhausted FirebaseException to RateLimitFailure',
+      () async {
+        dataSource.onGetWorkouts =
+            (_, {limit, startDate, endDate, useUpdatedAt = false}) async =>
+                throw FirebaseException(
+                  plugin: 'cloud_firestore',
+                  code: 'resource-exhausted',
+                  message: 'Quota exceeded',
+                );
 
-      final result = await repository.getWorkouts();
+        final result = await repository.getWorkouts();
 
-      expect(result.leftOrNull, isA<RateLimitFailure>());
-    });
+        expect(result.leftOrNull, isA<RateLimitFailure>());
+      },
+    );
 
     test('maps already-exists FirebaseException to ConflictFailure', () async {
       dataSource.onSaveWorkout = (_, __) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'already-exists',
-            message: 'Document already exists',
-          );
+        plugin: 'cloud_firestore',
+        code: 'already-exists',
+        message: 'Document already exists',
+      );
 
       final result = await repository.saveWorkout(_makeWorkout());
 
       expect(result.leftOrNull, isA<ConflictFailure>());
     });
 
-    test('maps unauthenticated FirebaseException to AuthenticationFailure',
-        () async {
-      dataSource.onGetWorkout = (_, __) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'unauthenticated',
-            message: 'Token expired',
-          );
+    test(
+      'maps unauthenticated FirebaseException to AuthenticationFailure',
+      () async {
+        dataSource.onGetWorkout = (_, __) async => throw FirebaseException(
+          plugin: 'cloud_firestore',
+          code: 'unauthenticated',
+          message: 'Token expired',
+        );
 
-      final result = await repository.getWorkout('wk-001');
+        final result = await repository.getWorkout('wk-001');
 
-      expect(result.leftOrNull, isA<AuthenticationFailure>());
-    });
+        expect(result.leftOrNull, isA<AuthenticationFailure>());
+      },
+    );
 
-    test('maps invalid-argument FirebaseException to ValidationFailure',
-        () async {
-      dataSource.onDeleteWorkout = (_, __) async => throw FirebaseException(
-            plugin: 'cloud_firestore',
-            code: 'invalid-argument',
-            message: 'Bad document path',
-          );
+    test(
+      'maps invalid-argument FirebaseException to ValidationFailure',
+      () async {
+        dataSource.onDeleteWorkout = (_, __) async => throw FirebaseException(
+          plugin: 'cloud_firestore',
+          code: 'invalid-argument',
+          message: 'Bad document path',
+        );
 
-      final result = await repository.deleteWorkout('bad//path');
+        final result = await repository.deleteWorkout('bad//path');
 
-      expect(result.leftOrNull, isA<ValidationFailure>());
-    });
+        expect(result.leftOrNull, isA<ValidationFailure>());
+      },
+    );
 
     test('maps unknown FirebaseException code to ServerFailure', () async {
       dataSource.onGetWorkoutStats = (_, {startDate, endDate}) async =>

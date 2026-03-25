@@ -1,5 +1,6 @@
 import Foundation
 import os.log
+import Flutter
 
 /// Centralized logging system with levels and categories
 final class Logger {
@@ -120,6 +121,12 @@ final class Logger {
         logToConsole(formattedMessage)
         logToOSLog(level: level, message: message, category: category)
         logToFile(formattedMessage)
+        mirrorToFlutterIfNeeded(
+            level: level,
+            message: message,
+            category: category,
+            formattedMessage: formattedMessage
+        )
         
         // Update metrics
         updateMetrics(for: level)
@@ -220,6 +227,48 @@ final class Logger {
                 // Avoid recursive logging
                 print("Failed to write to log file: \(error)")
             }
+        }
+    }
+
+    private func mirrorToFlutterIfNeeded(
+        level: Level,
+        message: String,
+        category: Category,
+        formattedMessage: String
+    ) {
+        guard shouldMirrorToFlutter(message: message, category: category) else {
+            return
+        }
+
+        let arguments: [String: Any] = [
+            "level": level.rawValue,
+            "category": category.rawValue,
+            "message": formattedMessage,
+        ]
+
+        DispatchQueue.main.async {
+            FlutterChannelRegistry.shared.unified?.invokeMethod(
+                "nativeDebugLog",
+                arguments: arguments
+            )
+        }
+    }
+
+    private func shouldMirrorToFlutter(message: String, category: Category) -> Bool {
+        if category == .audioSession {
+            return true
+        }
+
+        let mirroredMarkers = [
+            "[TIMER",
+            "[REST TIMER SUPPORT]",
+            "[APP LIFECYCLE TRACE]",
+            "[TIMER-NOTIFICATION]",
+            "[TIMER-COORDINATOR]",
+        ]
+
+        return mirroredMarkers.contains { marker in
+            message.contains(marker)
         }
     }
     

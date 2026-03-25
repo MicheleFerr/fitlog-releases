@@ -33,14 +33,10 @@ library;
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 
-enum SnackBarType {
-  success,
-  error,
-  warning,
-  info,
-  custom,
-}
+enum SnackBarType { success, error, warning, info, custom }
 
 class SnackBarService {
   // Durate predefinite
@@ -169,6 +165,9 @@ class SnackBarService {
     final bgColor = backgroundColor ?? colors.background;
     final fgColor = textColor ?? colors.foreground;
     final iconData = icon ?? _getIconForType(type);
+    final textStyle = Theme.of(
+      context,
+    ).textTheme.bodyMedium?.copyWith(color: fgColor);
 
     // Costruisci contenuto
     final content = Row(
@@ -177,12 +176,7 @@ class SnackBarService {
           Icon(iconData, color: fgColor, size: 20),
           const SizedBox(width: 12),
         ],
-        Expanded(
-          child: Text(
-            message,
-            style: TextStyle(color: fgColor),
-          ),
-        ),
+        Expanded(child: Text(message, style: textStyle)),
       ],
     );
 
@@ -192,10 +186,8 @@ class SnackBarService {
       backgroundColor: bgColor,
       duration: duration,
       behavior: behavior ?? SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      margin: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.smRadius),
+      margin: const EdgeInsets.all(AppSpacing.md),
       action: (actionLabel != null && onAction != null)
           ? SnackBarAction(
               label: actionLabel,
@@ -219,8 +211,8 @@ class SnackBarService {
     switch (type) {
       case SnackBarType.success:
         return (
-          background: const Color(0xFF4CAF50), // Verde
-          foreground: context.colors.surface,
+          background: context.successColor,
+          foreground: context.textOnSuccess,
         );
 
       case SnackBarType.error:
@@ -231,13 +223,13 @@ class SnackBarService {
 
       case SnackBarType.warning:
         return (
-          background: const Color(0xFFFF9800), // Arancione
-          foreground: context.colors.surface,
+          background: context.warningColor,
+          foreground: context.textOnWarning,
         );
 
       case SnackBarType.info:
         return (
-          background: context.colors.primaryContainer,
+          background: context.infoContainer,
           foreground: context.colors.onPrimaryContainer,
         );
 

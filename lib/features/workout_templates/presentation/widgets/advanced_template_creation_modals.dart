@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
@@ -24,9 +25,56 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+
+Widget _buildExerciseSelectionSubtitle(
+  BuildContext context,
+  Exercise exercise,
+) {
+  final hasMuscleData =
+      exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+
+  return Padding(
+    padding: const EdgeInsets.only(top: AppSpacing.xs),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasMuscleData)
+          ExerciseTargetMuscleMap(
+            primaryMuscles: exercise.focus,
+            secondaryMuscles: exercise.muscoliSecondari,
+            previewWidth: 78,
+            previewHeight: 58,
+            enableFullscreen: false,
+          ),
+        if (hasMuscleData && exercise.attrezzatura.isNotEmpty)
+          const SizedBox(height: AppSpacing.xs),
+        if (exercise.attrezzatura.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest.withValues(
+                alpha: 0.45,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                EquipmentIconBadge(equipment: exercise.attrezzatura, size: 16),
+                const SizedBox(width: 6),
+                Text(exercise.attrezzatura, style: context.textTheme.bodySmall),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+}
 
 // ============================================================================
 // SUPERSET TEMPLATE CREATION MODAL
@@ -37,7 +85,8 @@ class SupersetTemplateCreationModal extends ConsumerStatefulWidget {
   const SupersetTemplateCreationModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return ModalService.showSheet<void>(context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -275,7 +324,7 @@ class _SupersetTemplateCreationModalState
                   ),
                 ),
                 title: Text(exercise.nome),
-                subtitle: Text(exercise.focus.join(', ')),
+                subtitle: _buildExerciseSelectionSubtitle(context, exercise),
                 trailing: IconButton(
                   icon: SemanticIcon(
                     icon: AppIcons.close,
@@ -324,7 +373,8 @@ class _SupersetTemplateCreationModalState
   }
 
   void _showExercisePicker(BuildContext context) {
-    ModalService.showSheet<Exercise>(context,
+    ModalService.showSheet<Exercise>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -504,7 +554,8 @@ class DropsetTemplateCreationModal extends ConsumerStatefulWidget {
   const DropsetTemplateCreationModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return ModalService.showSheet<void>(context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -756,7 +807,10 @@ class _DropsetTemplateCreationModalState
         child: ListTile(
           leading: Icon(AppIcons.checkCircle, color: context.colors.tertiary),
           title: Text(_selectedExercise!.nome),
-          subtitle: Text(_selectedExercise!.focus.join(', ')),
+          subtitle: _buildExerciseSelectionSubtitle(
+            context,
+            _selectedExercise!,
+          ),
           trailing: IconButton(
             icon: SemanticIcon(
               icon: AppIcons.close,
@@ -785,7 +839,8 @@ class _DropsetTemplateCreationModalState
   }
 
   void _showExercisePicker(BuildContext context) {
-    ModalService.showSheet<Exercise>(context,
+    ModalService.showSheet<Exercise>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -966,7 +1021,8 @@ class RestPauseTemplateCreationModal extends ConsumerStatefulWidget {
   const RestPauseTemplateCreationModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return ModalService.showSheet<void>(context,
+    return ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -1218,7 +1274,10 @@ class _RestPauseTemplateCreationModalState
         child: ListTile(
           leading: Icon(AppIcons.checkCircle, color: context.colors.error),
           title: Text(_selectedExercise!.nome),
-          subtitle: Text(_selectedExercise!.focus.join(', ')),
+          subtitle: _buildExerciseSelectionSubtitle(
+            context,
+            _selectedExercise!,
+          ),
           trailing: IconButton(
             icon: SemanticIcon(
               icon: AppIcons.close,
@@ -1247,7 +1306,8 @@ class _RestPauseTemplateCreationModalState
   }
 
   void _showExercisePicker(BuildContext context) {
-    ModalService.showSheet<Exercise>(context,
+    ModalService.showSheet<Exercise>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(

@@ -206,9 +206,22 @@ class HiveBoxManagerEnhanced {
       );
     }
 
-    // Return existing box if already open (no logging - too verbose in loops)
-    if (_openBoxes.containsKey(name)) {
-      return _openBoxes[name] as Box<E>;
+    // Return existing box if already open. If it was closed outside the manager,
+    // drop the stale reference and reopen it cleanly.
+    final trackedBox = _openBoxes[name];
+    if (trackedBox != null) {
+      if (trackedBox.isOpen && Hive.isBoxOpen(name)) {
+        return trackedBox as Box<E>;
+      }
+
+      _openBoxes.remove(name);
+      _locks.remove(name);
+
+      if (kDebugMode) {
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] ♻️ Discarding stale tracked box: "$name"',
+        );
+      }
     }
 
     // 🔐 SECURITY: Auto-encrypt sensitive boxes if no cipher provided
@@ -360,9 +373,21 @@ class HiveBoxManagerEnhanced {
       );
     }
 
-    // Return existing lazy box if already open (no logging - too verbose in loops)
-    if (_openLazyBoxes.containsKey(name)) {
-      return _openLazyBoxes[name] as LazyBox<E>;
+    // Return existing lazy box if already open. If it was closed outside the
+    // manager, discard the stale reference and reopen it.
+    final trackedBox = _openLazyBoxes[name];
+    if (trackedBox != null) {
+      if (trackedBox.isOpen && Hive.isBoxOpen(name)) {
+        return trackedBox as LazyBox<E>;
+      }
+
+      _openLazyBoxes.remove(name);
+
+      if (kDebugMode) {
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] ♻️ Discarding stale tracked lazy box: "$name"',
+        );
+      }
     }
 
     // 🔐 SECURITY: Auto-encrypt sensitive boxes if no cipher provided

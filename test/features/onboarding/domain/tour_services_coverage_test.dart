@@ -250,25 +250,28 @@ void main() {
       expect(prefs.getBool('templates_tour_completed'), isTrue);
     });
 
-    test('resetTour clears hasCompletedTour and SharedPreferences key', () async {
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+    test(
+      'resetTour clears hasCompletedTour and SharedPreferences key',
+      () async {
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      container.read(templatesTourProvider.notifier).startTour();
-      await container.read(templatesTourProvider.notifier).completeTour();
+        container.read(templatesTourProvider.notifier).startTour();
+        await container.read(templatesTourProvider.notifier).completeTour();
 
-      expect(container.read(templatesTourProvider).hasCompletedTour, isTrue);
+        expect(container.read(templatesTourProvider).hasCompletedTour, isTrue);
 
-      await container.read(templatesTourProvider.notifier).resetTour();
+        await container.read(templatesTourProvider.notifier).resetTour();
 
-      final state = container.read(templatesTourProvider);
-      expect(state.hasCompletedTour, isFalse);
-      expect(state.isActive, isFalse);
-      expect(state.currentStep, TemplatesTourStep.myTemplates);
+        final state = container.read(templatesTourProvider);
+        expect(state.hasCompletedTour, isFalse);
+        expect(state.isActive, isFalse);
+        expect(state.currentStep, TemplatesTourStep.myTemplates);
 
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getBool('templates_tour_completed'), isNull);
-    });
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool('templates_tour_completed'), isNull);
+      },
+    );
 
     test('resetTour without completeTour does not throw', () async {
       final container = _makeContainer();
@@ -305,22 +308,25 @@ void main() {
       expect(container.read(templatesTourProvider).hasCompletedTour, isFalse);
     });
 
-    test('load from SharedPreferences - completed=true restores hasCompletedTour', () async {
-      // Pre-populate SharedPreferences with completed=true
-      SharedPreferences.setMockInitialValues({
-        'templates_tour_completed': true,
-      });
+    test(
+      'load from SharedPreferences - completed=true restores hasCompletedTour',
+      () async {
+        // Pre-populate SharedPreferences with completed=true
+        SharedPreferences.setMockInitialValues({
+          'templates_tour_completed': true,
+        });
 
-      final container = _makeContainer();
+        final container = _makeContainer();
 
-      // Trigger build() by reading the provider first, then wait for _loadState
-      container.read(templatesTourProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+        // Trigger build() by reading the provider first, then wait for _loadState
+        container.read(templatesTourProvider);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      final state = container.read(templatesTourProvider);
-      container.dispose();
-      expect(state.hasCompletedTour, isTrue);
-    });
+        final state = container.read(templatesTourProvider);
+        container.dispose();
+        expect(state.hasCompletedTour, isTrue);
+      },
+    );
 
     test('stopTour while not active does not throw', () {
       final container = _makeContainer();
@@ -352,14 +358,17 @@ void main() {
       expect(HomeTourStep.values.indexOf(HomeTourStep.aiCoachIntro) + 1, 3);
     });
 
-    test('_getNextStep equivalent: last real step before completed has no next', () {
-      // _getNextStep returns null when currentIndex >= values.length - 2
-      // values.length = 4, so length - 2 = 2, aiCoachIntro has index 2 => no next
-      const values = HomeTourStep.values;
-      final aiIndex = values.indexOf(HomeTourStep.aiCoachIntro);
-      final hasNext = aiIndex < values.length - 2;
-      expect(hasNext, isFalse);
-    });
+    test(
+      '_getNextStep equivalent: last real step before completed has no next',
+      () {
+        // _getNextStep returns null when currentIndex >= values.length - 2
+        // values.length = 4, so length - 2 = 2, aiCoachIntro has index 2 => no next
+        const values = HomeTourStep.values;
+        final aiIndex = values.indexOf(HomeTourStep.aiCoachIntro);
+        final hasNext = aiIndex < values.length - 2;
+        expect(hasNext, isFalse);
+      },
+    );
 
     test('_getNextStep equivalent: first step has a next', () {
       const values = HomeTourStep.values;
@@ -386,21 +395,22 @@ void main() {
       SharedPreferences.setMockInitialValues({});
     });
 
-    test('load from SharedPreferences - completed=true restores hasCompletedTour', () async {
-      SharedPreferences.setMockInitialValues({
-        'home_tour_completed': true,
-      });
+    test(
+      'load from SharedPreferences - completed=true restores hasCompletedTour',
+      () async {
+        SharedPreferences.setMockInitialValues({'home_tour_completed': true});
 
-      final container = _makeContainer();
+        final container = _makeContainer();
 
-      // Trigger build() by reading the provider first, then wait for _loadState
-      container.read(homeTourProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+        // Trigger build() by reading the provider first, then wait for _loadState
+        container.read(homeTourProvider);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      final state = container.read(homeTourProvider);
-      container.dispose();
-      expect(state.hasCompletedTour, isTrue);
-    });
+        final state = container.read(homeTourProvider);
+        container.dispose();
+        expect(state.hasCompletedTour, isTrue);
+      },
+    );
 
     test('advanceToStep to all HomeTourStep values when active', () {
       final container = _makeContainer();
@@ -497,10 +507,7 @@ void main() {
       for (final step in WorkoutTutorialStep.values) {
         if (step == WorkoutTutorialStep.completed) continue;
         container.read(workoutTutorialProvider.notifier).advanceToStep(step);
-        expect(
-          container.read(workoutTutorialProvider).currentStep,
-          step,
-        );
+        expect(container.read(workoutTutorialProvider).currentStep, step);
       }
     });
 
@@ -556,7 +563,7 @@ void main() {
       await container.read(workoutTutorialProvider.notifier).startTutorial();
       container
           .read(workoutTutorialProvider.notifier)
-          .advanceToStep(WorkoutTutorialStep.finish);
+          .advanceToStep(WorkoutTutorialStep.completeSetRpe);
       await container.read(workoutTutorialProvider.notifier).completeTutorial();
 
       expect(
@@ -576,22 +583,25 @@ void main() {
       expect(state.hasCompletedTutorial, isFalse);
     });
 
-    test('load from SharedPreferences - completed=true restores state', () async {
-      SharedPreferences.setMockInitialValues({
-        'workout_tutorial_completed': true,
-        'workout_tutorial_started': true,
-      });
+    test(
+      'load from SharedPreferences - completed=true restores state',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'workout_tutorial_completed': true,
+          'workout_tutorial_started': true,
+        });
 
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      final notifier = container.read(workoutTutorialProvider.notifier);
-      await notifier.waitForLoad();
+        final notifier = container.read(workoutTutorialProvider.notifier);
+        await notifier.waitForLoad();
 
-      final state = container.read(workoutTutorialProvider);
-      expect(state.hasCompletedTutorial, isTrue);
-      expect(state.hasStartedTutorial, isTrue);
-    });
+        final state = container.read(workoutTutorialProvider);
+        expect(state.hasCompletedTutorial, isTrue);
+        expect(state.hasStartedTutorial, isTrue);
+      },
+    );
 
     test('isLoaded is false before waitForLoad', () {
       // Just after build, _isLoaded may be false if _loadState has not completed
@@ -617,20 +627,26 @@ void main() {
       expect(notifier.isLoaded, isTrue);
     });
 
-    test('startTutorial when hasStartedTutorial=true does not re-persist', () async {
-      final container = _makeContainer();
-      addTearDown(container.dispose);
+    test(
+      'startTutorial when hasStartedTutorial=true does not re-persist',
+      () async {
+        final container = _makeContainer();
+        addTearDown(container.dispose);
 
-      // First start - persists started=true
-      await container.read(workoutTutorialProvider.notifier).startTutorial();
+        // First start - persists started=true
+        await container.read(workoutTutorialProvider.notifier).startTutorial();
 
-      final prefsAfterFirst = await SharedPreferences.getInstance();
-      expect(prefsAfterFirst.getBool('workout_tutorial_started'), isTrue);
+        final prefsAfterFirst = await SharedPreferences.getInstance();
+        expect(prefsAfterFirst.getBool('workout_tutorial_started'), isTrue);
 
-      // Second start - already started, should not throw
-      await container.read(workoutTutorialProvider.notifier).startTutorial();
-      expect(container.read(workoutTutorialProvider).hasStartedTutorial, isTrue);
-    });
+        // Second start - already started, should not throw
+        await container.read(workoutTutorialProvider.notifier).startTutorial();
+        expect(
+          container.read(workoutTutorialProvider).hasStartedTutorial,
+          isTrue,
+        );
+      },
+    );
 
     test('pause/resume cycle preserves isActive', () async {
       final container = _makeContainer();
@@ -668,7 +684,7 @@ void main() {
       expect(state.isActive, isFalse);
       expect(state.hasCompletedTutorial, isFalse);
       expect(state.hasStartedTutorial, isFalse);
-      expect(state.currentStep, WorkoutTutorialStep.addExercise);
+      expect(state.currentStep, WorkoutTutorialStep.welcome);
     });
   });
 
@@ -679,7 +695,7 @@ void main() {
     test('copyWith preserves isPaused when not specified', () {
       const state = WorkoutTutorialState(
         isActive: true,
-        currentStep: WorkoutTutorialStep.tapSet,
+        currentStep: WorkoutTutorialStep.editSetGestures,
         hasCompletedTutorial: false,
         hasStartedTutorial: true,
         isPaused: true,
@@ -692,32 +708,32 @@ void main() {
     test('copyWith with all fields specified creates fully new state', () {
       const original = WorkoutTutorialState(
         isActive: false,
-        currentStep: WorkoutTutorialStep.addExercise,
+        currentStep: WorkoutTutorialStep.welcome,
         hasCompletedTutorial: false,
         hasStartedTutorial: false,
         isPaused: false,
       );
       final updated = original.copyWith(
         isActive: true,
-        currentStep: WorkoutTutorialStep.finish,
+        currentStep: WorkoutTutorialStep.completeSetRpe,
         hasCompletedTutorial: true,
         hasStartedTutorial: true,
         isPaused: true,
       );
       expect(updated.isActive, isTrue);
-      expect(updated.currentStep, WorkoutTutorialStep.finish);
+      expect(updated.currentStep, WorkoutTutorialStep.completeSetRpe);
       expect(updated.hasCompletedTutorial, isTrue);
       expect(updated.hasStartedTutorial, isTrue);
       expect(updated.isPaused, isTrue);
       // Original unchanged
       expect(original.isActive, isFalse);
-      expect(original.currentStep, WorkoutTutorialStep.addExercise);
+      expect(original.currentStep, WorkoutTutorialStep.welcome);
     });
 
     test('copyWith with no args returns equivalent state', () {
       const state = WorkoutTutorialState(
         isActive: true,
-        currentStep: WorkoutTutorialStep.reorder,
+        currentStep: WorkoutTutorialStep.completeSetRpe,
         hasCompletedTutorial: false,
         hasStartedTutorial: true,
         isPaused: false,
@@ -737,27 +753,33 @@ void main() {
   group('WorkoutTutorialStep ordering', () {
     test('steps are in correct workflow order', () {
       const steps = WorkoutTutorialStep.values;
-      expect(steps[0], WorkoutTutorialStep.addExercise);
-      expect(steps[1], WorkoutTutorialStep.tapSet);
-      expect(steps[2], WorkoutTutorialStep.exerciseMenu);
-      expect(steps[3], WorkoutTutorialStep.reorder);
-      expect(steps[4], WorkoutTutorialStep.finish);
-      expect(steps[5], WorkoutTutorialStep.completed);
+      expect(steps[0], WorkoutTutorialStep.welcome);
+      expect(steps[1], WorkoutTutorialStep.addExercise);
+      expect(steps[2], WorkoutTutorialStep.browseDatabase);
+      expect(steps[3], WorkoutTutorialStep.filtersAndCustom);
+      expect(steps[4], WorkoutTutorialStep.customizeExercise);
+      expect(steps[5], WorkoutTutorialStep.workoutSettings);
+      expect(steps[6], WorkoutTutorialStep.editSetGestures);
+      expect(steps[7], WorkoutTutorialStep.completeSetRpe);
+      expect(steps[8], WorkoutTutorialStep.completed);
     });
 
     test('step indices align with step number display (index + 1)', () {
       // The tutorial shows "stepNumber = step.index + 1" in the UI
-      expect(WorkoutTutorialStep.addExercise.index + 1, 1);
-      expect(WorkoutTutorialStep.tapSet.index + 1, 2);
-      expect(WorkoutTutorialStep.exerciseMenu.index + 1, 3);
-      expect(WorkoutTutorialStep.reorder.index + 1, 4);
-      expect(WorkoutTutorialStep.finish.index + 1, 5);
+      expect(WorkoutTutorialStep.welcome.index + 1, 1);
+      expect(WorkoutTutorialStep.addExercise.index + 1, 2);
+      expect(WorkoutTutorialStep.browseDatabase.index + 1, 3);
+      expect(WorkoutTutorialStep.filtersAndCustom.index + 1, 4);
+      expect(WorkoutTutorialStep.customizeExercise.index + 1, 5);
+      expect(WorkoutTutorialStep.workoutSettings.index + 1, 6);
+      expect(WorkoutTutorialStep.editSetGestures.index + 1, 7);
+      expect(WorkoutTutorialStep.completeSetRpe.index + 1, 8);
     });
 
     test('totalSteps count excludes completed step', () {
       // The UI uses: WorkoutTutorialStep.values.length - 1
       final totalSteps = WorkoutTutorialStep.values.length - 1;
-      expect(totalSteps, 5);
+      expect(totalSteps, 8);
     });
   });
 }

@@ -61,6 +61,7 @@ mixin WorkoutWatchTypeMixin on Notifier<Workout?>, WorkoutWatchNotifyMixin {
 
     // Send update with superset info
     _getFormCuesAndNotifyWatch(
+      workoutId: state!.id,
       exerciseName: currentExerciseName, // Current sub-exercise name
       exerciseId: currentExerciseId,
       currentSet: currentRoundIndex + 1, // Use round as "set" for Watch display
@@ -139,6 +140,7 @@ mixin WorkoutWatchTypeMixin on Notifier<Workout?>, WorkoutWatchNotifyMixin {
 
     // Send startup notification with superset info
     _getFormCuesAndNotifyWatch(
+      workoutId: state!.id,
       exerciseName: firstExerciseName, // First sub-exercise name
       exerciseId: firstExerciseId,
       currentSet: 1, // First round
@@ -174,9 +176,7 @@ mixin WorkoutWatchTypeMixin on Notifier<Workout?>, WorkoutWatchNotifyMixin {
     required String locale,
   }) {
     // Find current stage (first incomplete)
-    final currentStageIndex = dropset.stages.indexWhere(
-      (s) => !s.isCompleted,
-    );
+    final currentStageIndex = dropset.stages.indexWhere((s) => !s.isCompleted);
     if (currentStageIndex < 0) return;
 
     final currentStage = dropset.stages[currentStageIndex];
@@ -201,10 +201,13 @@ mixin WorkoutWatchTypeMixin on Notifier<Workout?>, WorkoutWatchNotifyMixin {
     debugPrint('⌚ [FLUTTER DEBUG] 🔥 DROPSET Watch Update:');
     debugPrint('   - Dropset: ${dropset.name}');
     debugPrint('   - Current Stage: ${currentStageIndex + 1}/$totalStages');
-    debugPrint('   - Stage Weight: ${currentStage.weight}kg × ${currentStage.reps} reps');
+    debugPrint(
+      '   - Stage Weight: ${currentStage.weight}kg × ${currentStage.reps} reps',
+    );
 
     // Send update with dropset info
     _getFormCuesAndNotifyWatch(
+      workoutId: state!.id,
       exerciseName: dropset.name,
       exerciseId: dropset.id,
       currentSet: currentStageIndex + 1, // Use stage as "set" for Watch display
@@ -254,7 +257,9 @@ mixin WorkoutWatchTypeMixin on Notifier<Workout?>, WorkoutWatchNotifyMixin {
         .length;
 
     // Build sets data for Watch
-    final restPauseSetsData = restPause.restPauseSets.asMap().entries.map((entry) {
+    final restPauseSetsData = restPause.restPauseSets.asMap().entries.map((
+      entry,
+    ) {
       final set = entry.value;
       return {
         'reps': set.reps,
@@ -267,13 +272,17 @@ mixin WorkoutWatchTypeMixin on Notifier<Workout?>, WorkoutWatchNotifyMixin {
     debugPrint('⌚ [FLUTTER DEBUG] 🔥 REST-PAUSE Watch Update:');
     debugPrint('   - Rest-Pause: ${restPause.name}');
     debugPrint('   - Current Set: ${currentSetIndex + 1}/$totalSets');
-    debugPrint('   - Weight: ${restPause.weight}kg, Target Reps: ${restPause.targetReps}');
+    debugPrint(
+      '   - Weight: ${restPause.weight}kg, Target Reps: ${restPause.targetReps}',
+    );
 
     // Send update with rest-pause info
     _getFormCuesAndNotifyWatch(
+      workoutId: state!.id,
       exerciseName: restPause.name,
       exerciseId: restPause.id,
-      currentSet: currentSetIndex + 1, // Use mini-set as "set" for Watch display
+      currentSet:
+          currentSetIndex + 1, // Use mini-set as "set" for Watch display
       totalSets: totalSets,
       targetWeight: restPause.weight,
       targetReps: currentSet.reps,

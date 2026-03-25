@@ -162,34 +162,52 @@ void main() {
     });
 
     test('should not show nudge when dismissed recently', () {
-      const isDismissed = true;
-      const daysSinceLastUpdate = 30;
+      bool computeShouldShow({
+        required bool isDismissed,
+        required int daysSinceLastUpdate,
+      }) {
+        return !isDismissed &&
+            daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
+      }
 
-      final shouldShow =
-          !isDismissed &&
-          daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
+      final shouldShow = computeShouldShow(
+        isDismissed: true,
+        daysSinceLastUpdate: 30,
+      );
 
       expect(shouldShow, false);
     });
 
     test('should not show nudge when days < interval', () {
-      const isDismissed = false;
-      const daysSinceLastUpdate = 20;
+      bool computeShouldShow({
+        required bool isDismissed,
+        required int daysSinceLastUpdate,
+      }) {
+        return !isDismissed &&
+            daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
+      }
 
-      final shouldShow =
-          !isDismissed &&
-          daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
+      final shouldShow = computeShouldShow(
+        isDismissed: false,
+        daysSinceLastUpdate: 20,
+      );
 
       expect(shouldShow, false);
     });
 
     test('should not show nudge when both dismissed and days < interval', () {
-      const isDismissed = true;
-      const daysSinceLastUpdate = 10;
+      bool computeShouldShow({
+        required bool isDismissed,
+        required int daysSinceLastUpdate,
+      }) {
+        return !isDismissed &&
+            daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
+      }
 
-      final shouldShow =
-          !isDismissed &&
-          daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
+      final shouldShow = computeShouldShow(
+        isDismissed: true,
+        daysSinceLastUpdate: 10,
+      );
 
       expect(shouldShow, false);
     });
@@ -238,6 +256,50 @@ void main() {
           daysSinceDismissal < WeightUpdateNudgeConfig.dismissalCooldownDays;
 
       expect(isDismissed, false);
+    });
+
+    group('WeightUpdateNudgeLogic', () {
+      test('prefers synced weight date when newer than manual update', () {
+        final manualDate = DateTime(2026, 2, 1);
+        final syncedDate = DateTime(2026, 3, 1);
+
+        final result = WeightUpdateNudgeLogic.resolveLatestUpdateDate(
+          manualUpdateDate: manualDate,
+          syncedWeightDate: syncedDate,
+        );
+
+        expect(result, syncedDate);
+      });
+
+      test('prefers manual update date when newer than synced weight', () {
+        final manualDate = DateTime(2026, 3, 2);
+        final syncedDate = DateTime(2026, 3, 1);
+
+        final result = WeightUpdateNudgeLogic.resolveLatestUpdateDate(
+          manualUpdateDate: manualDate,
+          syncedWeightDate: syncedDate,
+        );
+
+        expect(result, manualDate);
+      });
+
+      test('handles missing manual update date', () {
+        final syncedDate = DateTime(2026, 3, 1);
+
+        final result = WeightUpdateNudgeLogic.resolveLatestUpdateDate(
+          syncedWeightDate: syncedDate,
+        );
+
+        expect(result, syncedDate);
+      });
+
+      test('returns zero days when no update date exists', () {
+        final days = WeightUpdateNudgeLogic.daysSinceLastUpdate(
+          now: DateTime(2026, 3, 12),
+        );
+
+        expect(days, 0);
+      });
     });
   });
 }

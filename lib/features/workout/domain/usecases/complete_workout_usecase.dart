@@ -209,7 +209,7 @@ class CompleteWorkoutParams {
   const CompleteWorkoutParams({
     required this.workout,
     required this.userEmail,
-    this.saveAsActivities = true,
+    this.saveAsActivities = false,
   });
   final Workout workout;
   final String userEmail;

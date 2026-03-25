@@ -468,7 +468,6 @@ enum AppState { foreground, background }
 enum BugType { none, doublePlay, noSound, raceCondition }
 
 class TestCase {
-
   const TestCase({
     required this.id,
     required this.name,
@@ -488,7 +487,6 @@ class TestCase {
 }
 
 class TestResult {
-
   const TestResult({
     required this.testId,
     required this.testName,
@@ -595,7 +593,6 @@ class TestResult {
 }
 
 class TestProgress {
-
   const TestProgress({
     required this.currentTest,
     required this.totalTests,
@@ -613,7 +610,6 @@ class TestProgress {
 }
 
 class QuickTestResults {
-
   const QuickTestResults({
     required this.tests,
     required this.startTime,
@@ -670,7 +666,7 @@ class QuickTestResults {
     } else if (successRate >= 0.5) {
       return '⚠️ Hotfix Recommended\n\nSuccess rate 50-90% suggests fixable race conditions.\n\nActions:\n• Add mutex to deduplication check\n• Cancel notifications BEFORE audio play\n• Add emergency logging';
     } else {
-      return '🚨 URGENT - Structural Fix Required\n\nSuccess rate < 50% indicates systematic issues.\n\nActions:\n• Implement centralized AudioCoordinator\n• Add state machine for audio paths\n• Synchronize Live Activity with BackgroundAudioManager';
+      return '🚨 URGENT - Structural Fix Required\n\nSuccess rate < 50% indicates systematic issues.\n\nActions:\n• Implement centralized timer audio coordination\n• Add state machine for audio paths\n• Synchronize Live Activity with the shared completion owner';
     }
   }
 
@@ -684,7 +680,6 @@ class QuickTestResults {
 }
 
 class FullTestResults extends QuickTestResults {
-
   const FullTestResults({
     required super.tests,
     required super.startTime,

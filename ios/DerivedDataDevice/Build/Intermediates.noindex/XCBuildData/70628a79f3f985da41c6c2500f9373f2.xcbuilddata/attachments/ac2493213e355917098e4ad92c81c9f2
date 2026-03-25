@@ -1,0 +1,279 @@
+{
+  "" : {
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Runner-primary.dia",
+    "emit-module-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Runner-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Runner-primary-emit-module.dia",
+    "pch" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Runner-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Runner-primary.swiftdeps"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/GymBroScheduleAttributes.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroScheduleAttributes~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/GymBroTimerAttributes.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/GymBroTimerAttributes~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/GymBroTimerWidget/WidgetLocalization.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WidgetLocalization~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/AppDelegate.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AppDelegate~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Config/ChannelNames.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ChannelNames~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Config/FeatureFlags.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FeatureFlags~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Config/FlutterChannelRegistry.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/FlutterChannelRegistry~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/LiveActivityHandler.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/LiveActivityHandler~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/AdSupportManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AdSupportManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/AudioDebugTestHandler.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/AudioDebugTestHandler~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/BackgroundTaskManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/BackgroundTaskManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/DirectNotificationManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/DirectNotificationManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/ErrorRecoveryManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/ErrorRecoveryManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/HealthKitActivityManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/HealthKitActivityManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/KeyboardManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/KeyboardManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/Logger.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/Logger~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/MetronomeManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/MetronomeManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/NetworkConfiguration.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/NetworkConfiguration~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/PermissionManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/PermissionManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/RestTimerNotificationSupport.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/RestTimerNotificationSupport~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/TimerSoundFix.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/TimerSoundFix~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/UnifiedTimerCoordinator.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/UnifiedTimerCoordinator~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/WatchConnectivityManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WatchConnectivityManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/WorkoutSessionAttributes.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionAttributes~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/Managers/WorkoutSessionManager.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/WorkoutSessionManager~partial.swiftmodule"
+  },
+  "/Users/michele/gymbro_flutter_new/ios/Runner/SceneDelegate.swift" : {
+    "const-values" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.swiftconstvalues",
+    "dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.d",
+    "diagnostics" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.dia",
+    "index-unit-output-path" : "/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.o",
+    "llvm-bc" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.bc",
+    "object" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.o",
+    "swift-dependencies" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate.swiftdeps",
+    "swiftmodule" : "/Users/michele/gymbro_flutter_new/ios/DerivedDataDevice/Build/Intermediates.noindex/Runner.build/Debug-iphoneos/Runner.build/Objects-normal/arm64/SceneDelegate~partial.swiftmodule"
+  }
+}

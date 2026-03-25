@@ -42,6 +42,19 @@ final localNotificationDatasourceProvider =
 /// app is running. Listened to by [FitLogApp] to trigger GoRouter navigation.
 final pendingNotificationDeepLinkProvider = createStateProvider<String?>(null);
 
+/// Extract deep link path from notification payload.
+///
+/// Expected shape: `type:recordId:/deep-link`.
+String? extractNotificationDeepLink(String? payload) {
+  if (payload == null) return null;
+
+  final parts = payload.split(':');
+  if (parts.length < 3) return null;
+
+  final deepLink = parts.sublist(2).join(':');
+  return deepLink.isEmpty ? null : deepLink;
+}
+
 /// Provider for the notification repository
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   ref.keepAlive(); // FIX: previene ricreazione repository

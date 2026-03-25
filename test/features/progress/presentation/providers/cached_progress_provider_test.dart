@@ -126,9 +126,7 @@ void main() {
       });
 
       test('fromJson handles int weeklyFrequency', () {
-        final stats = CachedDashboardStats.fromJson({
-          'weeklyFrequency': 3,
-        });
+        final stats = CachedDashboardStats.fromJson({'weeklyFrequency': 3});
         expect(stats.weeklyFrequency, 3.0);
       });
     });
@@ -246,9 +244,7 @@ void main() {
         final yesterdayKey =
             '${yesterdayDate.year}-${yesterdayDate.month.toString().padLeft(2, '0')}-${yesterdayDate.day.toString().padLeft(2, '0')}';
 
-        final stats = _make(
-          workoutDates: {yesterdayKey: true},
-        );
+        final stats = _make(workoutDates: {yesterdayKey: true});
         final updated = stats.addWorkout(todayKey);
         expect(updated.currentStreak, greaterThanOrEqualTo(2));
       });
@@ -257,10 +253,7 @@ void main() {
         final oldTime = DateTime(2026, 1, 1);
         final stats = _make(lastCalculated: oldTime);
         final updated = stats.addWorkout('2026-02-20');
-        expect(
-          updated.lastCalculated.isAfter(oldTime),
-          isTrue,
-        );
+        expect(updated.lastCalculated.isAfter(oldTime), isTrue);
       });
     });
 
@@ -269,7 +262,6 @@ void main() {
         final stats = CachedDashboardStats.empty();
         // addWorkout adds one date, should give streak of 0 or 1
         // depending on if it's today
-        final now = DateTime.now();
         final farDate = '2025-01-01'; // old date
         final updated = stats.addWorkout(farDate);
         // Far date won't match recent days
@@ -500,8 +492,9 @@ void main() {
   group('ProgressCacheRepository with SharedPreferences', () {
     late SharedPreferences prefs;
 
-    Future<SharedPreferences> getPrefs(
-        [Map<String, Object> initial = const {}]) async {
+    Future<SharedPreferences> getPrefs([
+      Map<String, Object> initial = const {},
+    ]) async {
       SharedPreferences.setMockInitialValues(initial);
       return SharedPreferences.getInstance();
     }

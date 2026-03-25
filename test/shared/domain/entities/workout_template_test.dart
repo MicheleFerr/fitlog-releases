@@ -321,7 +321,8 @@ void main() {
       );
       final exercise = et.toWorkoutExercise();
       expect(exercise, isA<Exercise>());
-      expect(exercise.id, 'ex-1');
+      expect(exercise.id, isNot('ex-1'));
+      expect(exercise.databaseExerciseId, 'ex-1');
       expect(exercise.name, 'Curl');
       expect(exercise.category, ExerciseCategory.arms);
       expect(exercise.sets.length, 1);
@@ -343,6 +344,8 @@ void main() {
       final exercise = et.toWorkoutExercise();
       expect(exercise, isA<DropSetExercise>());
       final dropSet = exercise as DropSetExercise;
+      expect(dropSet.id, isNot('ex-1'));
+      expect(dropSet.databaseExerciseId, 'ex-1');
       expect(dropSet.stages.length, 2);
       expect(dropSet.stages[0].weight, 80.0);
       expect(dropSet.stages[1].weight, 60.0);
@@ -362,6 +365,8 @@ void main() {
       final exercise = et.toWorkoutExercise();
       expect(exercise, isA<RestPauseExercise>());
       final rp = exercise as RestPauseExercise;
+      expect(rp.id, isNot('ex-1'));
+      expect(rp.databaseExerciseId, 'ex-1');
       expect(rp.weight, 20.0);
       expect(rp.targetReps, 10);
       expect(rp.restPauseSets.length, 2);
@@ -393,8 +398,11 @@ void main() {
       final exercise = et.toWorkoutExercise();
       expect(exercise, isA<SupersetExercise>());
       final superset = exercise as SupersetExercise;
+      expect(superset.id, isNot('super-1'));
       expect(superset.exercises.length, 2);
       expect(superset.supersetSets.length, 1);
+      expect(superset.exercises[0].databaseExerciseId, 'sub-1');
+      expect(superset.exercises[1].databaseExerciseId, 'sub-2');
     });
   });
 

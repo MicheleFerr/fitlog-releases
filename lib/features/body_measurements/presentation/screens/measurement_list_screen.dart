@@ -95,10 +95,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
     final results = await Future.wait([
       measurementRepo.getLatestMeasurementsByType(widget.userId),
-      measurementRepo.getMeasurements(
-        widget.userId,
-        dateFrom: ninetyDaysAgo,
-      ),
+      measurementRepo.getMeasurements(widget.userId, dateFrom: ninetyDaysAgo),
     ]);
 
     final latestResult = results[0] as dynamic;
@@ -137,6 +134,25 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     if (hasVitalsData) {
       setState(() => _vitalsExpanded = true);
     }
+  }
+
+  String _measurementIdentityKey(Measurement measurement) {
+    return [
+      measurement.metricType.name,
+      measurement.timestamp.toIso8601String(),
+      measurement.value.toStringAsFixed(4),
+      measurement.unit,
+      measurement.source.name,
+    ].join('|');
+  }
+
+  Future<Set<String>> _loadExistingMeasurementKeys() async {
+    final measurementRepo = ref.read(measurementRepositoryProvider);
+    final result = await measurementRepo.getMeasurements(widget.userId);
+    return result.fold(
+      (_) => <String>{},
+      (measurements) => measurements.map(_measurementIdentityKey).toSet(),
+    );
   }
 
   /// Navigate to input screen for a specific metric
@@ -238,79 +254,89 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             SnackBarService.showError(context, failure.message);
             return null;
           },
-        (result) async {
-          debugPrint('✅ [Import] Sync completed: ${result.readCount} read');
-          debugPrint(
-            '   importedMeasurements: ${result.importedMeasurements.length}',
-          );
-
-          // Edge case: No data found in Apple Health
-          if (result.importedMeasurements.isEmpty) {
-            if (!mounted) return;
-            SnackBarService.showInfo(
-              context,
-              context.l10n.bodyMeasurementsImportNoData,
+          (result) async {
+            debugPrint('✅ [Import] Sync completed: ${result.readCount} read');
+            debugPrint(
+              '   importedMeasurements: ${result.importedMeasurements.length}',
             );
-            return;
-          }
 
-          // Save imported measurements to local repository with validation
-          final measurementRepo = ref.read(measurementRepositoryProvider);
-          int savedCount = 0;
-          int skippedCount = 0;
-
-          for (final measurement in result.importedMeasurements) {
-            // Data validation - skip invalid values
-            if (!_isValidMeasurement(measurement)) {
-              debugPrint(
-                '   ⚠️ Invalid value skipped: ${measurement.metricType.name} = ${measurement.value}',
+            // Edge case: No data found in Apple Health
+            if (result.importedMeasurements.isEmpty) {
+              if (!mounted) return;
+              SnackBarService.showInfo(
+                context,
+                context.l10n.bodyMeasurementsImportNoData,
               );
-              skippedCount++;
-              continue;
+              return;
             }
 
+            // Save imported measurements to local repository with validation
+            final measurementRepo = ref.read(measurementRepositoryProvider);
+            final existingKeys = await _loadExistingMeasurementKeys();
+            int savedCount = 0;
+            int skippedCount = 0;
+
+            for (final measurement in result.importedMeasurements) {
+              // Data validation - skip invalid values
+              if (!_isValidMeasurement(measurement)) {
+                debugPrint(
+                  '   ⚠️ Invalid value skipped: ${measurement.metricType.name} = ${measurement.value}',
+                );
+                skippedCount++;
+                continue;
+              }
+
+              final measurementKey = _measurementIdentityKey(measurement);
+              if (!existingKeys.add(measurementKey)) {
+                debugPrint(
+                  '   ℹ️ Duplicate skipped: ${measurement.metricType.name} at ${measurement.timestamp}',
+                );
+                skippedCount++;
+                continue;
+              }
+
+              debugPrint(
+                '   Saving: ${measurement.metricType.name} = ${measurement.value} ${measurement.unit}',
+              );
+              final saveResult = await measurementRepo.addMeasurement(
+                measurement,
+                hasConsent: true, // Already verified consent above
+              );
+              saveResult.fold((failure) {
+                debugPrint('   ❌ Save failed: $failure');
+                skippedCount++;
+              }, (_) => savedCount++);
+            }
             debugPrint(
-              '   Saving: ${measurement.metricType.name} = ${measurement.value} ${measurement.unit}',
+              '   ✅ Saved $savedCount/${result.importedMeasurements.length} measurements',
             );
-            final saveResult = await measurementRepo.addMeasurement(
-              measurement,
-              hasConsent: true, // Already verified consent above
-            );
-            saveResult.fold((failure) {
-              debugPrint('   ❌ Save failed: $failure');
-              skippedCount++;
-            }, (_) => savedCount++);
-          }
-          debugPrint(
-            '   ✅ Saved $savedCount/${result.importedMeasurements.length} measurements',
-          );
 
-          if (!mounted) return;
+            if (!mounted) return;
 
-          // Show appropriate message based on results
-          if (savedCount == 0 && skippedCount > 0) {
-            SnackBarService.showError(
-              context,
-              context.l10n.bodyMeasurementsInvalidValue,
-            );
-          } else if (skippedCount > 0) {
-            // Partial success
-            SnackBarService.showInfo(
-              context,
-              context.l10n.bodyMeasurementsImportPartialSuccess(
-                savedCount,
-                result.importedMeasurements.length,
-              ),
-            );
-          } else {
-            // Full success
-            SnackBarService.showSuccess(
-              context,
-              context.l10n.bodyMeasurementsImportSuccess(savedCount),
-            );
-          }
-          unawaited(_loadData());
-        },
+            // Show appropriate message based on results
+            if (savedCount == 0 && skippedCount > 0) {
+              SnackBarService.showError(
+                context,
+                context.l10n.bodyMeasurementsInvalidValue,
+              );
+            } else if (skippedCount > 0) {
+              // Partial success
+              SnackBarService.showInfo(
+                context,
+                context.l10n.bodyMeasurementsImportPartialSuccess(
+                  savedCount,
+                  result.importedMeasurements.length,
+                ),
+              );
+            } else {
+              // Full success
+              SnackBarService.showSuccess(
+                context,
+                context.l10n.bodyMeasurementsImportSuccess(savedCount),
+              );
+            }
+            unawaited(_loadData());
+          },
         ),
       );
     } catch (e) {
@@ -507,34 +533,54 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             SnackBarService.showError(context, failure.message);
             return null;
           },
-        (result) async {
-          if (result.importedMeasurements.isEmpty) {
+          (result) async {
+            if (result.importedMeasurements.isEmpty) {
+              if (!mounted) return;
+              SnackBarService.showInfo(
+                context,
+                context.l10n.bodyMeasurementsImportNoData,
+              );
+              return;
+            }
+
+            final measurementRepo = ref.read(measurementRepositoryProvider);
+            final existingKeys = await _loadExistingMeasurementKeys();
+            int savedCount = 0;
+            int skippedCount = 0;
+            for (final measurement in result.importedMeasurements) {
+              if (!_isValidMeasurement(measurement)) {
+                skippedCount++;
+                continue;
+              }
+              final measurementKey = _measurementIdentityKey(measurement);
+              if (!existingKeys.add(measurementKey)) {
+                skippedCount++;
+                continue;
+              }
+              final saveResult = await measurementRepo.addMeasurement(
+                measurement,
+                hasConsent: true,
+              );
+              saveResult.fold((_) => skippedCount++, (_) => savedCount++);
+            }
+
             if (!mounted) return;
-            SnackBarService.showInfo(
-              context,
-              context.l10n.bodyMeasurementsImportNoData,
-            );
-            return;
-          }
-
-          final measurementRepo = ref.read(measurementRepositoryProvider);
-          int savedCount = 0;
-          for (final measurement in result.importedMeasurements) {
-            if (!_isValidMeasurement(measurement)) continue;
-            final saveResult = await measurementRepo.addMeasurement(
-              measurement,
-              hasConsent: true,
-            );
-            saveResult.fold((_) {}, (_) => savedCount++);
-          }
-
-          if (!mounted) return;
-          SnackBarService.showSuccess(
-            context,
-            context.l10n.bodyMeasurementsImportSuccess(savedCount),
-          );
-          unawaited(_loadData());
-        },
+            if (skippedCount > 0) {
+              SnackBarService.showInfo(
+                context,
+                context.l10n.bodyMeasurementsImportPartialSuccess(
+                  savedCount,
+                  result.importedMeasurements.length,
+                ),
+              );
+            } else {
+              SnackBarService.showSuccess(
+                context,
+                context.l10n.bodyMeasurementsImportSuccess(savedCount),
+              );
+            }
+            unawaited(_loadData());
+          },
         ),
       );
     } catch (e) {
@@ -1141,7 +1187,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             : _buildDashboard(),
       ),
       // Accessibility: Add measurement button with tooltip
-      floatingActionButtonLocation: _MeasurementFabLocation(context.tabBarInset),
+      floatingActionButtonLocation: _MeasurementFabLocation(
+        context.tabBarInset,
+      ),
       floatingActionButton: Platform.isIOS
           ? _buildIOSPopupMenu()
           : _buildAndroidFAB(),
@@ -1172,7 +1220,11 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             },
             child: Row(
               children: [
-                Icon(AppIcons.weight, size: 20, color: this.context.colors.primary),
+                Icon(
+                  AppIcons.weight,
+                  size: 20,
+                  color: this.context.colors.primary,
+                ),
                 const SizedBox(width: 12),
                 Text(this.context.l10n.bodyMeasurementsMetricWeight),
               ],
@@ -1185,7 +1237,11 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             },
             child: Row(
               children: [
-                Icon(AppIcons.height, size: 20, color: this.context.colors.primary),
+                Icon(
+                  AppIcons.height,
+                  size: 20,
+                  color: this.context.colors.primary,
+                ),
                 const SizedBox(width: 12),
                 Text(this.context.l10n.bodyMeasurementsMetricHeight),
               ],
@@ -1198,7 +1254,11 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             },
             child: Row(
               children: [
-                Icon(AppIcons.percent, size: 20, color: this.context.colors.primary),
+                Icon(
+                  AppIcons.percent,
+                  size: 20,
+                  color: this.context.colors.primary,
+                ),
                 const SizedBox(width: 12),
                 Text(this.context.l10n.bodyMeasurementsMetricBodyFat),
               ],
@@ -1211,7 +1271,11 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             },
             child: Row(
               children: [
-                Icon(AppIcons.workout, size: 20, color: this.context.colors.primary),
+                Icon(
+                  AppIcons.workout,
+                  size: 20,
+                  color: this.context.colors.primary,
+                ),
                 const SizedBox(width: 12),
                 Text(this.context.l10n.bodyMeasurementsMetricLeanMass),
               ],
@@ -1224,7 +1288,11 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             },
             child: Row(
               children: [
-                Icon(AppIcons.moreHoriz, size: 20, color: this.context.colors.onSurfaceVariant),
+                Icon(
+                  AppIcons.moreHoriz,
+                  size: 20,
+                  color: this.context.colors.onSurfaceVariant,
+                ),
                 const SizedBox(width: 12),
                 Text(this.context.l10n.bodyMeasurementsOtherMetrics),
               ],
@@ -1390,34 +1458,34 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             onTap: onToggle,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              children: [
-                Icon(
-                  isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
-                  color: context.colors.onSurfaceVariant,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
+                    color: context.colors.onSurfaceVariant,
                   ),
-                ),
-                if (!hasAnyData) ...[
                   const SizedBox(width: 8),
                   Text(
-                    context.l10n.bodyMeasurementsTapToAdd,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
+                    title,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.primary,
                     ),
                   ),
+                  if (!hasAnyData) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.bodyMeasurementsTapToAdd,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-        ),
         ),
         if (isExpanded) ...[
           const SizedBox(height: 8),
@@ -1440,12 +1508,14 @@ class _MeasurementFabLocation extends FloatingActionButtonLocation {
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
     // Start with standard endFloat position
-    final fabX = scaffoldGeometry.scaffoldSize.width -
+    final fabX =
+        scaffoldGeometry.scaffoldSize.width -
         scaffoldGeometry.floatingActionButtonSize.width -
         16.0; // 16px margin from right edge
 
     // Lift FAB above tab bar + extra 8px margin
-    final fabY = scaffoldGeometry.scaffoldSize.height -
+    final fabY =
+        scaffoldGeometry.scaffoldSize.height -
         scaffoldGeometry.floatingActionButtonSize.height -
         tabBarInset -
         8.0; // 8px extra margin above tab bar

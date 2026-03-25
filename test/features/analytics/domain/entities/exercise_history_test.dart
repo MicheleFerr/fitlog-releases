@@ -29,7 +29,11 @@ void main() {
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 1),
             sets: [
-              AnalyticsSet(weight: 80, reps: 8, date: DateTime(2024, 1, 1)), // 1RM ≈ 97.07 kg
+              AnalyticsSet(
+                weight: 80,
+                reps: 8,
+                date: DateTime(2024, 1, 1),
+              ), // 1RM ≈ 97.07 kg
             ],
           ),
           ExerciseSession(
@@ -37,7 +41,11 @@ void main() {
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 8),
             sets: [
-              AnalyticsSet(weight: 100, reps: 5, date: DateTime(2024, 1, 8)), // 1RM ≈ 113.33 kg (PR)
+              AnalyticsSet(
+                weight: 100,
+                reps: 5,
+                date: DateTime(2024, 1, 8),
+              ), // 1RM ≈ 113.33 kg (PR)
             ],
           ),
           ExerciseSession(
@@ -45,7 +53,11 @@ void main() {
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 15),
             sets: [
-              AnalyticsSet(weight: 90, reps: 6, date: DateTime(2024, 1, 15)), // 1RM ≈ 104.4 kg
+              AnalyticsSet(
+                weight: 90,
+                reps: 6,
+                date: DateTime(2024, 1, 15),
+              ), // 1RM ≈ 104.4 kg
             ],
           ),
         ];
@@ -73,7 +85,11 @@ void main() {
               muscleGroup: 'legs',
               date: DateTime(2024, 1, 1),
               sets: [
-                AnalyticsSet(weight: 120, reps: 3, date: DateTime(2024, 1, 1)), // 1RM ≈ 129.6 kg
+                AnalyticsSet(
+                  weight: 120,
+                  reps: 3,
+                  date: DateTime(2024, 1, 1),
+                ), // 1RM ≈ 129.6 kg
               ],
             ),
           ],
@@ -108,7 +124,11 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 2)),
               sets: [
-                AnalyticsSet(weight: 80, reps: 8, date: now.subtract(const Duration(days: 2))), // Volume: 640
+                AnalyticsSet(
+                  weight: 80,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 2)),
+                ), // Volume: 640
               ],
             ),
           ],
@@ -135,7 +155,11 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 10)),
               sets: [
-                AnalyticsSet(weight: 80, reps: 8, date: now.subtract(const Duration(days: 10))), // 640
+                AnalyticsSet(
+                  weight: 80,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 10)),
+                ), // 640
               ],
             ),
             ExerciseSession(
@@ -143,7 +167,11 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 12)),
               sets: [
-                AnalyticsSet(weight: 80, reps: 8, date: now.subtract(const Duration(days: 12))), // 640
+                AnalyticsSet(
+                  weight: 80,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 12)),
+                ), // 640
               ],
             ),
             // This week (last 7 days)
@@ -152,7 +180,11 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 2)),
               sets: [
-                AnalyticsSet(weight: 100, reps: 8, date: now.subtract(const Duration(days: 2))), // 800
+                AnalyticsSet(
+                  weight: 100,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 2)),
+                ), // 800
               ],
             ),
             ExerciseSession(
@@ -160,7 +192,11 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 4)),
               sets: [
-                AnalyticsSet(weight: 100, reps: 8, date: now.subtract(const Duration(days: 4))), // 800
+                AnalyticsSet(
+                  weight: 100,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 4)),
+                ), // 800
               ],
             ),
           ],
@@ -186,8 +222,16 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 10)),
               sets: [
-                AnalyticsSet(weight: 100, reps: 8, date: now.subtract(const Duration(days: 10))), // 800
-                AnalyticsSet(weight: 100, reps: 8, date: now.subtract(const Duration(days: 10))), // 800
+                AnalyticsSet(
+                  weight: 100,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 10)),
+                ), // 800
+                AnalyticsSet(
+                  weight: 100,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 10)),
+                ), // 800
               ],
             ),
             // This week
@@ -196,8 +240,16 @@ void main() {
               muscleGroup: 'chest',
               date: now.subtract(const Duration(days: 2)),
               sets: [
-                AnalyticsSet(weight: 80, reps: 8, date: now.subtract(const Duration(days: 2))), // 640
-                AnalyticsSet(weight: 80, reps: 8, date: now.subtract(const Duration(days: 2))), // 640
+                AnalyticsSet(
+                  weight: 80,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 2)),
+                ), // 640
+                AnalyticsSet(
+                  weight: 80,
+                  reps: 8,
+                  date: now.subtract(const Duration(days: 2)),
+                ), // 640
               ],
             ),
           ],
@@ -225,19 +277,25 @@ void main() {
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 15),
-            sets: [AnalyticsSet(weight: 90, reps: 6, date: DateTime(2024, 1, 15))],
+            sets: [
+              AnalyticsSet(weight: 90, reps: 6, date: DateTime(2024, 1, 15)),
+            ],
           ),
           ExerciseSession(
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 1),
-            sets: [AnalyticsSet(weight: 80, reps: 8, date: DateTime(2024, 1, 1))],
+            sets: [
+              AnalyticsSet(weight: 80, reps: 8, date: DateTime(2024, 1, 1)),
+            ],
           ),
           ExerciseSession(
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 8),
-            sets: [AnalyticsSet(weight: 85, reps: 7, date: DateTime(2024, 1, 8))],
+            sets: [
+              AnalyticsSet(weight: 85, reps: 7, date: DateTime(2024, 1, 8)),
+            ],
           ),
         ];
 
@@ -266,7 +324,9 @@ void main() {
               exerciseName: 'Squat',
               muscleGroup: 'legs',
               date: DateTime(2024, 1, 1),
-              sets: [AnalyticsSet(weight: 120, reps: 5, date: DateTime(2024, 1, 1))],
+              sets: [
+                AnalyticsSet(weight: 120, reps: 5, date: DateTime(2024, 1, 1)),
+              ],
             ),
           ],
         );
@@ -302,19 +362,37 @@ void main() {
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: now.subtract(const Duration(days: 45)),
-            sets: [AnalyticsSet(weight: 80, reps: 8, date: now.subtract(const Duration(days: 45)))],
+            sets: [
+              AnalyticsSet(
+                weight: 80,
+                reps: 8,
+                date: now.subtract(const Duration(days: 45)),
+              ),
+            ],
           ),
           ExerciseSession(
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: now.subtract(const Duration(days: 20)),
-            sets: [AnalyticsSet(weight: 85, reps: 7, date: now.subtract(const Duration(days: 20)))],
+            sets: [
+              AnalyticsSet(
+                weight: 85,
+                reps: 7,
+                date: now.subtract(const Duration(days: 20)),
+              ),
+            ],
           ),
           ExerciseSession(
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: now.subtract(const Duration(days: 5)),
-            sets: [AnalyticsSet(weight: 90, reps: 6, date: now.subtract(const Duration(days: 5)))],
+            sets: [
+              AnalyticsSet(
+                weight: 90,
+                reps: 6,
+                date: now.subtract(const Duration(days: 5)),
+              ),
+            ],
           ),
         ];
 
@@ -342,13 +420,17 @@ void main() {
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: DateTime(2024, 1, 1),
-            sets: [AnalyticsSet(weight: 80, reps: 8, date: DateTime(2024, 1, 1))],
+            sets: [
+              AnalyticsSet(weight: 80, reps: 8, date: DateTime(2024, 1, 1)),
+            ],
           ),
           ExerciseSession(
             exerciseName: 'Bench Press',
             muscleGroup: 'chest',
             date: DateTime(2024, 2, 1),
-            sets: [AnalyticsSet(weight: 85, reps: 7, date: DateTime(2024, 2, 1))],
+            sets: [
+              AnalyticsSet(weight: 85, reps: 7, date: DateTime(2024, 2, 1)),
+            ],
           ),
         ];
 
@@ -366,6 +448,36 @@ void main() {
         );
 
         expect(filtered.length, 2);
+      });
+
+      test('includes sessions exactly on start and end boundaries', () {
+        final start = DateTime(2024, 1, 1);
+        final end = DateTime(2024, 1, 31);
+        final history = ExerciseHistory(
+          exerciseId: 'bench-press',
+          exerciseName: 'Bench Press',
+          muscleGroup: 'chest',
+          sessions: [
+            ExerciseSession(
+              exerciseName: 'Bench Press',
+              muscleGroup: 'chest',
+              date: start,
+              sets: [AnalyticsSet(weight: 80, reps: 8, date: start)],
+            ),
+            ExerciseSession(
+              exerciseName: 'Bench Press',
+              muscleGroup: 'chest',
+              date: end,
+              sets: [AnalyticsSet(weight: 90, reps: 6, date: end)],
+            ),
+          ],
+        );
+
+        final filtered = history.getSessionsByTimeframe(start, end);
+
+        expect(filtered.length, 2);
+        expect(filtered.first.date, start);
+        expect(filtered.last.date, end);
       });
     });
   });

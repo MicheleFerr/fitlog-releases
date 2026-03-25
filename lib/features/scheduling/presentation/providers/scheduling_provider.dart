@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/scheduling/data/services/scheduling_calendar_export_service.dart';
 import 'package:gymbro_flutter_new/features/scheduling/data/repositories/scheduling_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/scheduling/data/services/scheduling_notification_service.dart';
 import 'package:gymbro_flutter_new/features/scheduling/domain/entities/scheduled_workout.dart';
@@ -19,6 +20,12 @@ final schedulingRepositoryProvider = Provider<SchedulingRepository>((ref) {
 final schedulingNotificationServiceProvider =
     Provider<SchedulingNotificationService>((ref) {
       return SchedulingNotificationService();
+    });
+
+/// Provider for exporting scheduled workouts as calendar events
+final schedulingCalendarExportServiceProvider =
+    Provider<SchedulingCalendarExportService>((ref) {
+      return SchedulingCalendarExportService();
     });
 
 /// Provider for the schedule Live Activity service
@@ -145,7 +152,7 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
   }
 
   /// Schedule workouts for multiple dates
-  Future<void> scheduleWorkouts({
+  Future<List<ScheduledWorkout>> scheduleWorkouts({
     required String templateId,
     required String templateName,
     required List<DateTime> selectedDates,
@@ -168,15 +175,39 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
         workouts.add(workout);
       }
 
-      // Save to repository
-      await _repository.scheduleMultipleWorkouts(workouts);
+      final hasPastReminder = workouts.any(
+        (workout) => workout.reminderDateTime.isBefore(DateTime.now()),
+      );
+      if (hasPastReminder) {
+        throw const SchedulingNotificationException(
+          SchedulingNotificationExceptionType.reminderTimeInPast,
+        );
+      }
 
       // Schedule notifications
-      await _notificationService.scheduleMultipleReminders(
-        workouts: workouts,
-        titleBuilder: (_) => l10n.workoutReminderTitle,
-        bodyBuilder: (w) => l10n.workoutReminderBody(w.templateName),
-      );
+      final notificationIds = await _notificationService
+          .scheduleMultipleReminders(
+            workouts: workouts,
+            titleBuilder: (_) => l10n.workoutReminderTitle,
+            bodyBuilder: (w) => l10n.workoutReminderBody(w.templateName),
+          );
+
+      final persistedWorkouts = workouts
+          .map(
+            (workout) => workout.copyWith(
+              notificationId: notificationIds[workout.id]?.toString(),
+            ),
+          )
+          .toList();
+
+      try {
+        await _repository.scheduleMultipleWorkouts(persistedWorkouts);
+      } catch (e) {
+        for (final workout in workouts) {
+          await _notificationService.cancelReminder(workout.id);
+        }
+        rethrow;
+      }
 
       // Refresh state
       final updated = await _repository.getScheduledWorkouts();
@@ -184,8 +215,10 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
 
       // Check if any newly scheduled workout is within threshold and start Live Activity
       await _checkAndStartLiveActivity();
+      return persistedWorkouts;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e);
+      rethrow;
     }
   }
 

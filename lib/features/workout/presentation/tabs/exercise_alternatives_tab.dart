@@ -4,10 +4,12 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/alternative_exercises_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 
 /// Tab Esercizi Alternativi: mostra esercizi simili nella stessa categoria
 class ExerciseAlternativesTab extends ConsumerWidget {
@@ -114,34 +116,24 @@ class ExerciseAlternativesTab extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // Metadata chips row
+                  if (exercise.focus.isNotEmpty ||
+                      exercise.muscoliSecondari.isNotEmpty)
+                    ExerciseTargetMuscleMap(
+                      primaryMuscles: exercise.focus,
+                      secondaryMuscles: exercise.muscoliSecondari,
+                      previewWidth: 94,
+                      previewHeight: 70,
+                    ),
+                  if (exercise.focus.isNotEmpty ||
+                      exercise.muscoliSecondari.isNotEmpty)
+                    const SizedBox(height: 8),
                   Wrap(
                     spacing: 6,
                     runSpacing: 6,
                     children: [
-                      // Difficulty
-                      _buildMetadataChip(
-                        context,
-                        _getDifficultyIcon(exercise.difficolta),
-                        exercise.difficolta,
-                        _getDifficultyColor(context, exercise.difficolta),
-                      ),
-                      // Equipment
+                      _buildDifficultyChip(context, exercise.difficolta),
                       if (exercise.attrezzatura.isNotEmpty)
-                        _buildMetadataChip(
-                          context,
-                          AppIcons.construction,
-                          exercise.attrezzatura,
-                          context.colors.tertiary,
-                        ),
-                      // Primary muscles
-                      if (exercise.focus.isNotEmpty)
-                        _buildMetadataChip(
-                          context,
-                          AppIcons.accessibility,
-                          exercise.focus.join(', '),
-                          context.colors.secondary,
-                        ),
+                        _buildEquipmentChip(context, exercise.attrezzatura),
                     ],
                   ),
                 ],
@@ -153,28 +145,41 @@ class ExerciseAlternativesTab extends ConsumerWidget {
     );
   }
 
-  /// Build metadata chip
-  Widget _buildMetadataChip(
-    BuildContext context,
-    IconData icon,
-    String label,
-    Color color,
-  ) {
+  Widget _buildDifficultyChip(BuildContext context, String difficulty) {
+    final color = _getDifficultyColor(context, difficulty);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
+      child: Text(
+        difficulty,
+        style: context.textTheme.bodySmall?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEquipmentChip(BuildContext context, String equipment) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: context.colors.tertiary.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: AppIconSize.tiny, color: color),
-          const SizedBox(width: 4),
+          EquipmentIconBadge(equipment: equipment, size: 16),
+          const SizedBox(width: 6),
           Text(
-            label,
+            equipment,
             style: context.textTheme.bodySmall?.copyWith(
-              color: color,
+              color: context.colors.tertiary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -217,23 +222,6 @@ class ExerciseAlternativesTab extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  /// Get difficulty icon (supports both IT and EN values)
-  IconData _getDifficultyIcon(String difficulty) {
-    switch (difficulty.toLowerCase()) {
-      case 'principiante':
-      case 'beginner':
-        return AppIcons.star;
-      case 'intermedio':
-      case 'intermediate':
-        return AppIcons.starHalf;
-      case 'avanzato':
-      case 'advanced':
-        return AppIcons.stars;
-      default:
-        return AppIcons.help;
-    }
   }
 
   /// Get difficulty color (supports both IT and EN values)

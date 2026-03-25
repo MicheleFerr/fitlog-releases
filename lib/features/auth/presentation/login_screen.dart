@@ -33,7 +33,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
       next.when(
         data: (_) {
-          if (mounted) {
+          if (mounted && ref.read(authServiceProvider).currentUser != null) {
             context.goNamed('home');
           }
         },

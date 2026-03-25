@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_sync_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
@@ -10,10 +11,13 @@ import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 // Mocks
 class MockHiveWorkoutDataSource extends Mock implements HiveWorkoutDataSource {}
-class MockFirebaseWorkoutDataSource extends Mock implements FirebaseWorkoutDataSource {}
+
+class MockFirebaseWorkoutDataSource extends Mock
+    implements FirebaseWorkoutDataSource {}
+
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockUser extends Mock implements User {}
-class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, dynamic>> {}
 
 // Fakes for registerFallbackValue
 class FakeWorkoutModel extends Fake implements WorkoutModel {}
@@ -24,12 +28,15 @@ void main() {
   late MockFirebaseWorkoutDataSource mockRemoteDataSource;
   late MockFirebaseAuth mockAuth;
   late MockUser mockUser;
+  late FakeFirebaseFirestore firestore;
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     mockLocalDataSource = MockHiveWorkoutDataSource();
     mockRemoteDataSource = MockFirebaseWorkoutDataSource();
     mockAuth = MockFirebaseAuth();
     mockUser = MockUser();
+    firestore = FakeFirebaseFirestore();
 
     // Register fallback values
     registerFallbackValue(FakeWorkoutModel());
@@ -38,12 +45,15 @@ void main() {
     when(() => mockAuth.currentUser).thenReturn(mockUser);
     when(() => mockUser.uid).thenReturn('test-user-id');
     when(() => mockUser.email).thenReturn('test@example.com');
-    when(() => mockAuth.authStateChanges()).thenAnswer((_) => Stream.value(mockUser));
+    when(
+      () => mockAuth.authStateChanges(),
+    ).thenAnswer((_) => Stream.value(mockUser));
 
     syncService = WorkoutSyncService(
       localDataSource: mockLocalDataSource,
       remoteDataSource: mockRemoteDataSource,
       auth: mockAuth,
+      firestore: firestore,
     );
   });
 
@@ -105,10 +115,10 @@ void main() {
   group('WorkoutSyncService - Process Sync Items', () {
     test('should handle empty pending sync queue', () async {
       // Arrange
-      when(() => mockLocalDataSource.getPendingSyncItems('test-user-id'))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems('test-user-id'),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act
       final result = await syncService.syncNow();
@@ -138,16 +148,23 @@ void main() {
         'key': 'test-user-id_workout-123',
       };
 
-      when(() => mockLocalDataSource.getPendingSyncItems('test-user-id'))
-          .thenAnswer((_) async => [pendingItem]);
-      when(() => mockLocalDataSource.getWorkout('workout-123', 'test-user-id'))
-          .thenAnswer((_) async => _createTestWorkoutModel());
-      when(() => mockRemoteDataSource.updateWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async {});
-      when(() => mockRemoteDataSource.getWorkouts('test-user-id', startDate: any(named: 'startDate')))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems('test-user-id'),
+      ).thenAnswer((_) async => [pendingItem]);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-123', 'test-user-id'),
+      ).thenAnswer((_) async => _createTestWorkoutModel());
+      when(
+        () => mockRemoteDataSource.updateWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockRemoteDataSource.getWorkouts(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          useUpdatedAt: any(named: 'useUpdatedAt'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act & Assert - Logic validated
       expect(pendingItem['operation'], equals('update'));
@@ -160,14 +177,20 @@ void main() {
         'key': 'test-user-id_workout-123',
       };
 
-      when(() => mockLocalDataSource.getPendingSyncItems('test-user-id'))
-          .thenAnswer((_) async => [pendingItem]);
-      when(() => mockRemoteDataSource.deleteWorkout('workout-123', 'test-user-id'))
-          .thenAnswer((_) async {});
-      when(() => mockRemoteDataSource.getWorkouts('test-user-id', startDate: any(named: 'startDate')))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems('test-user-id'),
+      ).thenAnswer((_) async => [pendingItem]);
+      when(
+        () => mockRemoteDataSource.deleteWorkout('workout-123', 'test-user-id'),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockRemoteDataSource.getWorkouts(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          useUpdatedAt: any(named: 'useUpdatedAt'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act & Assert - Logic validated
       expect(pendingItem['operation'], equals('delete'));
@@ -180,14 +203,20 @@ void main() {
         'key': 'test-user-id_workout-123',
       };
 
-      when(() => mockLocalDataSource.getPendingSyncItems('test-user-id'))
-          .thenAnswer((_) async => [pendingItem]);
-      when(() => mockLocalDataSource.getWorkout('workout-123', 'test-user-id'))
-          .thenThrow(Exception('Database error'));
-      when(() => mockRemoteDataSource.getWorkouts('test-user-id', startDate: any(named: 'startDate')))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems('test-user-id'),
+      ).thenAnswer((_) async => [pendingItem]);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-123', 'test-user-id'),
+      ).thenThrow(Exception('Database error'));
+      when(
+        () => mockRemoteDataSource.getWorkouts(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          useUpdatedAt: any(named: 'useUpdatedAt'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act & Assert - Errors should be caught
       expect(true, isTrue); // Logic exists to handle errors
@@ -199,16 +228,23 @@ void main() {
       // Arrange
       final cloudWorkout = _createTestWorkoutModel(id: 'cloud-workout-1');
 
-      when(() => mockLocalDataSource.getPendingSyncItems('test-user-id'))
-          .thenAnswer((_) async => []);
-      when(() => mockRemoteDataSource.getWorkouts('test-user-id', startDate: any(named: 'startDate')))
-          .thenAnswer((_) async => [cloudWorkout]);
-      when(() => mockLocalDataSource.getWorkout('cloud-workout-1', 'test-user-id'))
-          .thenAnswer((_) async => null); // Not found locally
-      when(() => mockLocalDataSource.saveWorkout(cloudWorkout, 'test-user-id'))
-          .thenAnswer((_) async => 'cloud-workout-1');
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems('test-user-id'),
+      ).thenAnswer((_) async => []);
+      when(
+        () => mockRemoteDataSource.getWorkouts(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          useUpdatedAt: any(named: 'useUpdatedAt'),
+        ),
+      ).thenAnswer((_) async => [cloudWorkout]);
+      when(
+        () => mockLocalDataSource.getWorkout('cloud-workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => null); // Not found locally
+      when(
+        () => mockLocalDataSource.saveWorkout(cloudWorkout, 'test-user-id'),
+      ).thenAnswer((_) async => 'cloud-workout-1');
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act
       await syncService.syncNow();
@@ -228,16 +264,23 @@ void main() {
         updatedAt: DateTime(2024, 1, 15), // Newer
       );
 
-      when(() => mockLocalDataSource.getPendingSyncItems('test-user-id'))
-          .thenAnswer((_) async => []);
-      when(() => mockRemoteDataSource.getWorkouts('test-user-id', startDate: any(named: 'startDate')))
-          .thenAnswer((_) async => [newerCloud]);
-      when(() => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => oldLocal);
-      when(() => mockLocalDataSource.updateWorkout(newerCloud, 'test-user-id'))
-          .thenAnswer((_) async {});
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems('test-user-id'),
+      ).thenAnswer((_) async => []);
+      when(
+        () => mockRemoteDataSource.getWorkouts(
+          'test-user-id',
+          startDate: any(named: 'startDate'),
+          useUpdatedAt: any(named: 'useUpdatedAt'),
+        ),
+      ).thenAnswer((_) async => [newerCloud]);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => oldLocal);
+      when(
+        () => mockLocalDataSource.updateWorkout(newerCloud, 'test-user-id'),
+      ).thenAnswer((_) async {});
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act & Assert - Logic for conflict resolution validated
       expect(newerCloud.updatedAt.isAfter(oldLocal.updatedAt), isTrue);
@@ -262,15 +305,24 @@ void main() {
   group('WorkoutSyncService - Conflict Resolution', () {
     test('should resolve conflict with keepLocal strategy', () async {
       // Arrange
-      final localWorkout = _createTestWorkoutModel(id: 'workout-1', name: 'Local Version');
-      final cloudWorkout = _createTestWorkoutModel(id: 'workout-1', name: 'Cloud Version');
+      final localWorkout = _createTestWorkoutModel(
+        id: 'workout-1',
+        name: 'Local Version',
+      );
+      final cloudWorkout = _createTestWorkoutModel(
+        id: 'workout-1',
+        name: 'Cloud Version',
+      );
 
-      when(() => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => localWorkout);
-      when(() => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => cloudWorkout);
-      when(() => mockRemoteDataSource.updateWorkout(localWorkout, 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => localWorkout);
+      when(
+        () => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => cloudWorkout);
+      when(
+        () => mockRemoteDataSource.updateWorkout(localWorkout, 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await syncService.resolveConflict(
@@ -280,20 +332,31 @@ void main() {
 
       // Assert
       expect(result.success, isTrue);
-      verify(() => mockRemoteDataSource.updateWorkout(localWorkout, 'test-user-id')).called(1);
+      verify(
+        () => mockRemoteDataSource.updateWorkout(localWorkout, 'test-user-id'),
+      ).called(1);
     });
 
     test('should resolve conflict with keepCloud strategy', () async {
       // Arrange
-      final localWorkout = _createTestWorkoutModel(id: 'workout-1', name: 'Local Version');
-      final cloudWorkout = _createTestWorkoutModel(id: 'workout-1', name: 'Cloud Version');
+      final localWorkout = _createTestWorkoutModel(
+        id: 'workout-1',
+        name: 'Local Version',
+      );
+      final cloudWorkout = _createTestWorkoutModel(
+        id: 'workout-1',
+        name: 'Cloud Version',
+      );
 
-      when(() => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => localWorkout);
-      when(() => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => cloudWorkout);
-      when(() => mockLocalDataSource.updateWorkout(cloudWorkout, 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => localWorkout);
+      when(
+        () => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => cloudWorkout);
+      when(
+        () => mockLocalDataSource.updateWorkout(cloudWorkout, 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await syncService.resolveConflict(
@@ -303,7 +366,9 @@ void main() {
 
       // Assert
       expect(result.success, isTrue);
-      verify(() => mockLocalDataSource.updateWorkout(cloudWorkout, 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.updateWorkout(cloudWorkout, 'test-user-id'),
+      ).called(1);
     });
 
     test('should resolve conflict with merge strategy', () async {
@@ -311,14 +376,18 @@ void main() {
       final localWorkout = _createTestWorkoutModel(id: 'workout-1');
       final cloudWorkout = _createTestWorkoutModel(id: 'workout-1');
 
-      when(() => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => localWorkout);
-      when(() => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => cloudWorkout);
-      when(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async {});
-      when(() => mockRemoteDataSource.updateWorkout(any(), 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => localWorkout);
+      when(
+        () => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => cloudWorkout);
+      when(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockRemoteDataSource.updateWorkout(any(), 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       final result = await syncService.resolveConflict(
@@ -328,16 +397,22 @@ void main() {
 
       // Assert
       expect(result.success, isTrue);
-      verify(() => mockLocalDataSource.updateWorkout(any(), 'test-user-id')).called(1);
-      verify(() => mockRemoteDataSource.updateWorkout(any(), 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.updateWorkout(any(), 'test-user-id'),
+      ).called(1);
+      verify(
+        () => mockRemoteDataSource.updateWorkout(any(), 'test-user-id'),
+      ).called(1);
     });
 
     test('should return failure when workout not found', () async {
       // Arrange
-      when(() => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => null);
-      when(() => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockLocalDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => null);
+      when(
+        () => mockRemoteDataSource.getWorkout('workout-1', 'test-user-id'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await syncService.resolveConflict(
@@ -369,14 +444,11 @@ void main() {
   group('WorkoutSyncService - Data Export/Import', () {
     test('should export all data successfully', () async {
       // Arrange
-      final exportData = {
-        'workouts': [],
-        'templates': [],
-        'version': '1.0',
-      };
+      final exportData = {'workouts': [], 'templates': [], 'version': '1.0'};
 
-      when(() => mockLocalDataSource.exportAllData('test-user-id'))
-          .thenAnswer((_) async => exportData);
+      when(
+        () => mockLocalDataSource.exportAllData('test-user-id'),
+      ).thenAnswer((_) async => exportData);
 
       // Act
       final result = await syncService.exportAllData();
@@ -391,28 +463,24 @@ void main() {
       when(() => mockAuth.currentUser).thenReturn(null);
 
       // Act & Assert
-      expect(
-        () => syncService.exportAllData(),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => syncService.exportAllData(), throwsA(isA<Exception>()));
     });
 
     test('should import data successfully', () async {
       // Arrange
-      final importData = {
-        'workouts': [],
-        'templates': [],
-        'version': '1.0',
-      };
+      final importData = {'workouts': [], 'templates': [], 'version': '1.0'};
 
-      when(() => mockLocalDataSource.importData(importData, 'test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.importData(importData, 'test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       await syncService.importData(importData);
 
       // Assert
-      verify(() => mockLocalDataSource.importData(importData, 'test-user-id')).called(1);
+      verify(
+        () => mockLocalDataSource.importData(importData, 'test-user-id'),
+      ).called(1);
     });
 
     test('should throw when import fails without authentication', () async {
@@ -431,8 +499,9 @@ void main() {
   group('WorkoutSyncService - Data Cleanup', () {
     test('should clear all user data', () async {
       // Arrange
-      when(() => mockLocalDataSource.clearUserData('test-user-id'))
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.clearUserData('test-user-id'),
+      ).thenAnswer((_) async {});
 
       // Act
       await syncService.clearAllData();
@@ -456,10 +525,10 @@ void main() {
   group('WorkoutSyncService - Periodic Sync', () {
     test('should start periodic sync timer', () {
       // Arrange - Mock dependencies for syncNow
-      when(() => mockLocalDataSource.getPendingSyncItems(any()))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems(any()),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       // Act
       syncService.startPeriodicSync();
@@ -470,10 +539,10 @@ void main() {
 
     test('should stop periodic sync timer', () {
       // Arrange
-      when(() => mockLocalDataSource.getPendingSyncItems(any()))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems(any()),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       syncService.startPeriodicSync();
 
@@ -488,10 +557,10 @@ void main() {
   group('WorkoutSyncService - Disposal', () {
     test('should properly dispose resources', () {
       // Arrange
-      when(() => mockLocalDataSource.getPendingSyncItems(any()))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems(any()),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       syncService.startPeriodicSync();
 
@@ -504,10 +573,10 @@ void main() {
 
     test('should cancel periodic sync on dispose', () {
       // Arrange
-      when(() => mockLocalDataSource.getPendingSyncItems(any()))
-          .thenAnswer((_) async => []);
-      when(() => mockLocalDataSource.cleanSyncQueue())
-          .thenAnswer((_) async {});
+      when(
+        () => mockLocalDataSource.getPendingSyncItems(any()),
+      ).thenAnswer((_) async => []);
+      when(() => mockLocalDataSource.cleanSyncQueue()).thenAnswer((_) async {});
 
       syncService.startPeriodicSync();
 
@@ -578,7 +647,7 @@ WorkoutModel _createTestWorkoutModel({
   DateTime? updatedAt,
 }) {
   final workout = Workout(
-      id: id ?? 'workout-id',
+    id: id ?? 'workout-id',
     name: name,
     exercises: [],
     status: WorkoutStatus.planned,

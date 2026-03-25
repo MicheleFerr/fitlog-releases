@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/professional_body_heatmap.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/streak_modal.dart';
@@ -46,9 +47,7 @@ class DashboardTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListView(
-      padding: EdgeInsets.only(
-        bottom: AppSpacing.xs + context.tabBarInset,
-      ),
+      padding: EdgeInsets.only(bottom: AppSpacing.xs + context.tabBarInset),
       children: [
         WeeklySummaryBanner(exerciseHistories: exerciseHistories),
         const SizedBox(height: AppSpacing.xs),
@@ -62,6 +61,63 @@ class DashboardTab extends ConsumerWidget {
       ],
     );
   }
+}
+
+DateTime _dashboardDateOnly(DateTime dateTime) {
+  return DateTime(dateTime.year, dateTime.month, dateTime.day);
+}
+
+bool _isWithinDashboardRange(DateTime date, DateTime start, DateTime end) {
+  final value = _dashboardDateOnly(date);
+  return !value.isBefore(start) && !value.isAfter(end);
+}
+
+double? _maxSession1RM(Iterable<ExerciseSession> sessions) {
+  double? maxValue;
+  for (final session in sessions) {
+    final value = session.highestEstimated1RM;
+    if (maxValue == null || value > maxValue) {
+      maxValue = value;
+    }
+  }
+  return maxValue;
+}
+
+bool _hasNewPrInWindow(
+  ExerciseHistory history, {
+  required DateTime start,
+  required DateTime end,
+}) {
+  final sessionsInWindow = history.sessions
+      .where((session) => _isWithinDashboardRange(session.date, start, end))
+      .toList();
+
+  if (sessionsInWindow.isEmpty) {
+    return false;
+  }
+
+  final currentMax = _maxSession1RM(sessionsInWindow);
+  if (currentMax == null || currentMax <= 0) {
+    return false;
+  }
+
+  final previousMax = _maxSession1RM(
+    history.sessions.where(
+      (session) => _dashboardDateOnly(session.date).isBefore(start),
+    ),
+  );
+
+  return previousMax == null ? true : currentMax > previousMax;
+}
+
+int _countNewPrsInWindow(
+  List<ExerciseHistory> exerciseHistories, {
+  required DateTime start,
+  required DateTime end,
+}) {
+  return exerciseHistories
+      .where((history) => _hasNewPrInWindow(history, start: start, end: end))
+      .length;
 }
 
 // ============================================================================
@@ -174,8 +230,7 @@ class QuickStatsSummary extends ConsumerWidget {
         );
 
         // Current week
-        if (!dateOnly.isBefore(currentWeekStart) &&
-            !dateOnly.isAfter(today)) {
+        if (!dateOnly.isBefore(currentWeekStart) && !dateOnly.isAfter(today)) {
           currentWeekDates.add(dateOnly);
         }
 
@@ -242,48 +297,20 @@ class QuickStatsSummary extends ConsumerWidget {
 
     // Current week (last 7 days)
     final currentWeekStart = today.subtract(const Duration(days: 6));
-    int currentPRCount = 0;
 
     // Previous week (days 7-13 ago)
     final previousWeekStart = today.subtract(const Duration(days: 13));
     final previousWeekEnd = today.subtract(const Duration(days: 7));
-    int previousPRCount = 0;
-
-    for (final history in exerciseHistories) {
-      if (history.sessions.isEmpty) continue;
-
-      final pr = history.personalRecord;
-
-      // Count PRs in current week
-      for (final session in history.sessions) {
-        final sessionDate = DateTime(
-          session.date.year,
-          session.date.month,
-          session.date.day,
-        );
-        if (!sessionDate.isBefore(currentWeekStart) &&
-            !sessionDate.isAfter(today) &&
-            session.highestEstimated1RM >= pr * 0.99) {
-          currentPRCount++;
-          break; // Count once per exercise
-        }
-      }
-
-      // Count PRs in previous week
-      for (final session in history.sessions) {
-        final sessionDate = DateTime(
-          session.date.year,
-          session.date.month,
-          session.date.day,
-        );
-        if (!sessionDate.isBefore(previousWeekStart) &&
-            !sessionDate.isAfter(previousWeekEnd) &&
-            session.highestEstimated1RM >= pr * 0.99) {
-          previousPRCount++;
-          break; // Count once per exercise
-        }
-      }
-    }
+    final currentPRCount = _countNewPrsInWindow(
+      exerciseHistories,
+      start: currentWeekStart,
+      end: today,
+    );
+    final previousPRCount = _countNewPrsInWindow(
+      exerciseHistories,
+      start: previousWeekStart,
+      end: previousWeekEnd,
+    );
 
     return currentPRCount - previousPRCount;
   }
@@ -311,33 +338,11 @@ class QuickStatsSummary extends ConsumerWidget {
     final today = DateTime(now.year, now.month, now.day);
     // 6 days back = 7 day range (today + 6 previous days)
     final weekStart = today.subtract(const Duration(days: 6));
-
-    int prCount = 0;
-
-    for (final history in exerciseHistories) {
-      if (history.sessions.isEmpty) continue;
-
-      // Find personal record (highest 1RM)
-      final pr = history.personalRecord;
-
-      // Check if any session in last 7 days achieved this PR
-      for (final session in history.sessions) {
-        final sessionDate = DateTime(
-          session.date.year,
-          session.date.month,
-          session.date.day,
-        );
-        if (!sessionDate.isBefore(weekStart) &&
-            !sessionDate.isAfter(today) &&
-            session.highestEstimated1RM >= pr * 0.99) {
-          // Within 1% of PR (accounts for rounding)
-          prCount++;
-          break; // Count once per exercise
-        }
-      }
-    }
-
-    return prCount;
+    return _countNewPrsInWindow(
+      exerciseHistories,
+      start: weekStart,
+      end: today,
+    );
   }
 
   @override
@@ -390,13 +395,13 @@ class QuickStatsSummary extends ConsumerWidget {
               trend: streakDelta > 0
                   ? 'up'
                   : streakDelta < 0
-                      ? 'down'
-                      : null,
+                  ? 'down'
+                  : null,
               trendColor: streakDelta > 0
                   ? context.colors.success
                   : streakDelta < 0
-                      ? context.colors.warning
-                      : null,
+                  ? context.colors.warning
+                  : null,
               onTap: () {
                 HapticFeedback.lightImpact();
                 ModalService.showSheet(
@@ -467,13 +472,13 @@ class QuickStatsSummary extends ConsumerWidget {
               trend: weeklyDelta > 0
                   ? 'up'
                   : weeklyDelta < 0
-                      ? 'down'
-                      : null,
+                  ? 'down'
+                  : null,
               trendColor: weeklyDelta > 0
                   ? context.colors.success
                   : weeklyDelta < 0
-                      ? context.colors.warning
-                      : null,
+                  ? context.colors.warning
+                  : null,
               onTap: () {
                 HapticFeedback.lightImpact();
                 ModalService.showSheet(
@@ -510,13 +515,13 @@ class QuickStatsSummary extends ConsumerWidget {
               trend: prDelta > 0
                   ? 'up'
                   : prDelta < 0
-                      ? 'down'
-                      : null,
+                  ? 'down'
+                  : null,
               trendColor: prDelta > 0
                   ? context.colors.success
                   : prDelta < 0
-                      ? context.colors.warning
-                      : null,
+                  ? context.colors.warning
+                  : null,
               onTap: () {
                 HapticFeedback.lightImpact();
                 ModalService.showSheet(
@@ -579,33 +584,13 @@ class WeeklySummaryBanner extends ConsumerWidget {
   /// Calculate recent PRs (last 7 days)
   int _calculateRecentPRs() {
     final now = DateTime.now();
-    final weekAgo = now.subtract(const Duration(days: 7));
-
-    int prs = 0;
-    for (final history in exerciseHistories) {
-      final recentSessions =
-          history.sessions.where((s) => s.date.isAfter(weekAgo)).toList();
-
-      if (recentSessions.isNotEmpty) {
-        final recentMaxWeight = recentSessions
-            .map((s) => s.highestEstimated1RM)
-            .reduce((a, b) => a > b ? a : b);
-        final olderSessions =
-            history.sessions.where((s) => s.date.isBefore(weekAgo)).toList();
-
-        if (olderSessions.isNotEmpty) {
-          final previousMaxWeight = olderSessions
-              .map((s) => s.highestEstimated1RM)
-              .reduce((a, b) => a > b ? a : b);
-          if (recentMaxWeight > previousMaxWeight) {
-            prs++;
-          }
-        } else if (recentMaxWeight > 0) {
-          prs++; // First ever PR
-        }
-      }
-    }
-    return prs;
+    final today = DateTime(now.year, now.month, now.day);
+    final weekStart = today.subtract(const Duration(days: 6));
+    return _countNewPrsInWindow(
+      exerciseHistories,
+      start: weekStart,
+      end: today,
+    );
   }
 
   /// Calculate average volume progression
@@ -679,9 +664,7 @@ class WeeklySummaryBanner extends ConsumerWidget {
         context.colors.surfaceContainer,
         context.colors.surfaceContainer,
       ];
-    } else if (weeklyWorkouts >= 4 &&
-        recentPRs >= 1 &&
-        volumeProgression > 0) {
+    } else if (weeklyWorkouts >= 4 && recentPRs >= 1 && volumeProgression > 0) {
       // Strong week
       message = context.l10n.weeklySummaryStrong(
         weeklyWorkouts,
@@ -724,11 +707,7 @@ class WeeklySummaryBanner extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: context.colors.primary,
-              size: AppIconSize.large,
-            ),
+            Icon(icon, color: context.colors.primary, size: AppIconSize.large),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
@@ -813,10 +792,7 @@ class _MuscleBodyMapCard extends StatelessWidget {
             // Header
             Row(
               children: [
-                Icon(
-                  AppIcons.accessibility,
-                  color: context.colors.primary,
-                ),
+                Icon(AppIcons.accessibility, color: context.colors.primary),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
                   context.l10n.weeklyMuscleMap,
@@ -908,10 +884,14 @@ class _VolumeCard extends StatelessWidget {
     final prevWeekEnd = today.subtract(const Duration(days: 7));
     final prevWeekStart = today.subtract(const Duration(days: 13));
 
-    final thisWeek =
-        _volumeForWindow(thisWeekStart, today.add(const Duration(days: 1)));
-    final prevWeek =
-        _volumeForWindow(prevWeekStart, prevWeekEnd.add(const Duration(days: 1)));
+    final thisWeek = _volumeForWindow(
+      thisWeekStart,
+      today.add(const Duration(days: 1)),
+    );
+    final prevWeek = _volumeForWindow(
+      prevWeekStart,
+      prevWeekEnd.add(const Duration(days: 1)),
+    );
 
     if (prevWeek == 0) return 0;
     return ((thisWeek - prevWeek) / prevWeek) * 100;
@@ -971,8 +951,9 @@ class _VolumeCard extends StatelessWidget {
                   const SizedBox(width: AppSpacing.xs),
                   Text(
                     context.l10n.weeklyVolumeCard,
-                    style: context.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -1037,8 +1018,9 @@ class _VolumeCard extends StatelessWidget {
                         child: Container(
                           height: height.clamp(4.0, 40.0),
                           decoration: BoxDecoration(
-                            color: context.colors.primary
-                                .withValues(alpha: val == maxVal ? 1.0 : 0.45),
+                            color: context.colors.primary.withValues(
+                              alpha: val == maxVal ? 1.0 : 0.45,
+                            ),
                             borderRadius: BorderRadius.circular(3),
                           ),
                         ),
@@ -1099,8 +1081,9 @@ class _RepZoneCard extends ConsumerWidget {
                   const SizedBox(width: AppSpacing.xs),
                   Text(
                     context.l10n.repZoneCard,
-                    style: context.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -1164,8 +1147,9 @@ class _RepZoneCard extends ConsumerWidget {
                 // Dominant zone label
                 if (analysis.dominantZone != null)
                   Text(
-                    context.l10n
-                        .dominantZoneLabel(analysis.dominantZone!.label),
+                    context.l10n.dominantZoneLabel(
+                      analysis.dominantZone!.label,
+                    ),
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colors.onSurfaceVariant,
                       fontStyle: FontStyle.italic,

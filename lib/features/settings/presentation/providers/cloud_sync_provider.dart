@@ -9,14 +9,19 @@
 library;
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/data/datasources/custom_exercise_local_datasource.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
 
 /// Cloud sync state
 class CloudSyncState {
@@ -93,12 +98,14 @@ class SyncSummary {
 /// Cloud sync provider
 class CloudSyncNotifier extends Notifier<CloudSyncState> {
   late final HiveBoxManagerEnhanced _boxManager;
+  late final CustomExerciseLocalDatasource _customExerciseLocalDatasource;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   CloudSyncState build() {
     _boxManager = ref.watch(hiveBoxManagerProvider);
+    _customExerciseLocalDatasource = CustomExerciseLocalDatasource(_boxManager);
     _loadLastSyncTime();
     return const CloudSyncState();
   }
@@ -246,52 +253,76 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       // ✅ FIX: Use 'workouts' box (same as HiveWorkoutDataSource)
       // Previously used 'workouts_data' which caused progress providers to read empty box
       final box = await _boxManager.openBox<Map>('workouts');
+      final existingKeys = box.keys
+          .where((key) => key.toString().startsWith('${userId}_'))
+          .map((key) => key.toString())
+          .toSet();
+      final syncedKeys = <String>{};
+      const pageSize = 500;
+      QueryDocumentSnapshot<Map<String, dynamic>>? lastDoc;
+      var syncedCount = 0;
 
-      // ✅ FIX: Get workouts from correct Firestore path
-      // Workouts are stored at users/{userId}/workouts/{workoutId}
-      // NOT at root collection 'workouts' with userId field
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('workouts')
-          .orderBy('createdAt', descending: true)
-          .limit(500) // Limit to prevent memory issues
-          .get();
+      while (true) {
+        Query<Map<String, dynamic>> pageQuery = _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('workouts')
+            .orderBy('createdAt', descending: true)
+            .limit(pageSize);
 
-      if (kDebugMode) {
-        debugPrint('📥 Found ${snapshot.docs.length} workouts in cloud');
+        if (lastDoc != null) {
+          pageQuery = pageQuery.startAfterDocument(lastDoc);
+        }
+
+        final snapshot = await pageQuery.get();
+        if (snapshot.docs.isEmpty) {
+          break;
+        }
+
+        final entries = <String, Map<dynamic, dynamic>>{};
+        for (final doc in snapshot.docs) {
+          final data = Map<String, dynamic>.from(doc.data());
+          data['id'] = doc.id;
+          _convertTimestampsToStrings(data);
+
+          final key = '${userId}_${doc.id}';
+          entries[key] = data;
+          syncedKeys.add(key);
+        }
+
+        if (entries.isNotEmpty) {
+          await box.putAll(entries);
+          syncedCount += entries.length;
+        }
+
+        lastDoc = snapshot.docs.last;
+        if (snapshot.docs.length < pageSize) {
+          break;
+        }
       }
 
-      // PERFORMANCE FIX: Batch operation instead of sequential puts
-      final entries = <String, Map<dynamic, dynamic>>{};
-      for (final doc in snapshot.docs) {
-        final data = Map<String, dynamic>.from(doc.data());
-        data['id'] = doc.id; // Ensure ID is included
-
-        // Convert Timestamps to ISO strings for Hive storage
-        _convertTimestampsToStrings(data);
-
-        // Prepare batch entry
-        final key = '${userId}_${doc.id}';
-        entries[key] = data;
+      final staleKeys = existingKeys.difference(syncedKeys).toList();
+      if (staleKeys.isNotEmpty) {
+        await box.deleteAll(staleKeys);
       }
-
-      // Single batch I/O operation
-      await box.putAll(entries);
 
       // Update progress after batch
       state = state.copyWith(
         progress: SyncProgress(
-          currentItem: 'Synced ${entries.length} workouts',
-          totalItems: snapshot.docs.length,
-          syncedItems: entries.length,
+          currentItem: 'Synced $syncedCount workouts',
+          totalItems: syncedCount,
+          syncedItems: syncedCount,
         ),
       );
 
       if (kDebugMode) {
-        debugPrint('✅ Synced ${entries.length} workouts to local storage');
+        debugPrint('📥 Found $syncedCount workouts in cloud');
+        if (staleKeys.isNotEmpty) {
+          debugPrint('🧹 Removed ${staleKeys.length} stale local workouts');
+        }
+        debugPrint('✅ Synced $syncedCount workouts to local storage');
       }
-      return entries.length;
+      return syncedCount;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync workouts: $e');
@@ -303,11 +334,6 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// Sync templates from Firestore to local
   Future<int> _syncTemplates(String userId) async {
     try {
-      final box = await _boxManager.openBox<Map>('templates_data');
-
-      // ✅ FIX: Use 'workoutTemplates' collection (same as TemplateRepository)
-      // Previously used 'templates' which doesn't exist
-      // Get user's templates
       final snapshot = await _firestore
           .collection('workoutTemplates')
           .where('userId', isEqualTo: userId)
@@ -320,31 +346,33 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           .limit(100)
           .get();
 
-      final allTemplates = [...snapshot.docs, ...publicSnapshot.docs];
+      final dedupedTemplates = <String, Map<String, dynamic>>{};
+      for (final doc in [...snapshot.docs, ...publicSnapshot.docs]) {
+        final data = Map<String, dynamic>.from(doc.data());
+        data['id'] = doc.id;
+        _convertTimestampsToStrings(data);
+        dedupedTemplates[doc.id] = data;
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        userCacheKeys.templatesCacheKey,
+        json.encode(dedupedTemplates.values.toList()),
+      );
+      await prefs.setInt(
+        userCacheKeys.templatesLastSyncKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
+
+      final allTemplates = dedupedTemplates.values.toList();
       if (kDebugMode) {
         debugPrint('📥 Found ${allTemplates.length} templates in cloud');
       }
 
-      // PERFORMANCE FIX: Batch operation instead of sequential puts
-      final entries = <String, Map<dynamic, dynamic>>{};
-      for (final doc in allTemplates) {
-        final data = Map<String, dynamic>.from(doc.data());
-        data['id'] = doc.id;
-
-        // Convert Timestamps to ISO strings for Hive storage
-        _convertTimestampsToStrings(data);
-
-        // Prepare batch entry
-        entries[doc.id] = data;
-      }
-
-      // Single batch I/O operation
-      await box.putAll(entries);
-
       if (kDebugMode) {
-        debugPrint('✅ Synced ${entries.length} templates to local storage');
+        debugPrint('✅ Synced ${allTemplates.length} templates to active cache');
       }
-      return entries.length;
+      return allTemplates.length;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync templates: $e');
@@ -356,42 +384,59 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// Sync custom exercises from Firestore to local
   Future<int> _syncExercises(String userId) async {
     try {
-      final box = await _boxManager.openBox<Map>('exercises_data');
+      final cloudExercises = <String, Map<String, dynamic>>{};
 
-      // Get user's custom exercises
-      final snapshot = await _firestore
+      final primarySnapshot = await _firestore
+          .collection('custom_exercises')
+          .doc(userId)
+          .collection('exercises')
+          .get();
+      for (final doc in primarySnapshot.docs) {
+        final data = Map<String, dynamic>.from(doc.data());
+        data['id'] = doc.id;
+        cloudExercises[doc.id] = data;
+      }
+
+      final legacySnapshot = await _firestore
           .collection('users')
           .doc(userId)
           .collection('customExercises')
           .get();
+      for (final doc in legacySnapshot.docs) {
+        final data = Map<String, dynamic>.from(doc.data());
+        data['id'] = doc.id;
+        cloudExercises.putIfAbsent(doc.id, () => data);
+      }
 
       if (kDebugMode) {
         debugPrint(
-          '📥 Found ${snapshot.docs.length} custom exercises in cloud',
+          '📥 Found ${cloudExercises.length} custom exercises in cloud',
         );
       }
 
-      // PERFORMANCE FIX: Batch operation instead of sequential puts
-      final entries = <String, Map<dynamic, dynamic>>{};
-      for (final doc in snapshot.docs) {
-        final data = Map<String, dynamic>.from(doc.data());
-        data['id'] = doc.id;
+      await _customExerciseLocalDatasource.clear();
 
-        // Convert Timestamps to ISO strings for Hive storage (recursive)
+      int synced = 0;
+      for (final data in cloudExercises.values) {
         _convertTimestampsToStrings(data);
+        data['userId'] ??= userId;
 
-        // Prepare batch entry
-        final key = '${userId}_${doc.id}';
-        entries[key] = data;
+        try {
+          await _customExerciseLocalDatasource.save(
+            CustomExercise.fromJson(data),
+          );
+          synced++;
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('⚠️ Failed to sync custom exercise ${data['id']}: $e');
+          }
+        }
       }
-
-      // Single batch I/O operation
-      await box.putAll(entries);
 
       if (kDebugMode) {
-        debugPrint('✅ Synced ${entries.length} exercises to local storage');
+        debugPrint('✅ Synced $synced exercises to custom_exercises store');
       }
-      return entries.length;
+      return synced;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync exercises: $e');
@@ -422,6 +467,13 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         );
       }
 
+      final staleKeys = box.keys
+          .where((key) => key.toString().startsWith('${userId}_'))
+          .toList();
+      if (staleKeys.isNotEmpty) {
+        await box.deleteAll(staleKeys);
+      }
+
       // PERFORMANCE FIX: Batch operation instead of sequential puts
       final entries = <String, Map<dynamic, dynamic>>{};
       for (final doc in snapshot.docs) {
@@ -440,7 +492,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       await box.putAll(entries);
 
       if (kDebugMode) {
-        debugPrint('✅ Synced ${entries.length} personal records to local storage');
+        debugPrint(
+          '✅ Synced ${entries.length} personal records to local storage',
+        );
       }
       return entries.length;
     } catch (e) {
@@ -502,7 +556,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         debugPrint('🗑️ Clearing local data...');
       }
 
-      // Open all boxes in parallel
+      final prefs = await SharedPreferences.getInstance();
       final boxes = await Future.wait([
         _boxManager.openBox<Map>('workouts'),
         _boxManager.openBox<Map>('templates_data'),
@@ -510,8 +564,10 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         _boxManager.openBox<Map>('personal_records_data'),
       ]);
 
-      // Clear all boxes in parallel
       await Future.wait(boxes.map((box) => box.clear()));
+      await _customExerciseLocalDatasource.clear();
+      await prefs.remove(userCacheKeys.templatesCacheKey);
+      await prefs.remove(userCacheKeys.templatesLastSyncKey);
 
       if (kDebugMode) {
         debugPrint('✅ Local data cleared');

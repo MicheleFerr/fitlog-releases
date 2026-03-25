@@ -12,7 +12,7 @@ class WorkoutSessionManager: NSObject {
     private var methodChannel: FlutterMethodChannel?
     private var eventObserver: CFRunLoopObserver?
 
-    private let sharedSuiteName = "group.com.michele.gymbro.flutter"
+    private let sharedSuiteName = RestTimerNotificationSupport.sharedSuiteName
     private let eventKey = "workout_session_event"
 
     private override init() {
@@ -161,7 +161,7 @@ class WorkoutSessionManager: NSObject {
     // MARK: - Update Workout Session
 
     private func updateWorkoutSession(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
         }
@@ -195,7 +195,7 @@ class WorkoutSessionManager: NSObject {
     // MARK: - Transition to Rest
 
     private func transitionToRest(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
         }
@@ -385,7 +385,8 @@ class WorkoutSessionManager: NSObject {
                     if updatedActivity.content.state.mode == .exercise {
                         print("   ✅ MODE SUCCESSFULLY CHANGED TO EXERCISE!")
                     } else {
-                        print("   ❌ MODE STILL \(updatedActivity.content.state.mode) - UPDATE FAILED!")
+                        print("   ⚠️ Content mode still \(updatedActivity.content.state.mode) after update")
+                        print("   ℹ️ Widget UI may still render EXERCISE via effectiveMode when rest has expired")
                     }
                 }
 
@@ -398,7 +399,7 @@ class WorkoutSessionManager: NSObject {
     // MARK: - Transition to RPE
 
     private func transitionToRPE(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
         }
@@ -427,7 +428,7 @@ class WorkoutSessionManager: NSObject {
     // MARK: - Update Selected RPE
 
     private func updateSelectedRPE(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
         }
@@ -512,8 +513,7 @@ class WorkoutSessionManager: NSObject {
     /// Called from Flutter after +30s to guarantee the LA matches Flutter's internal state,
     /// regardless of whether the AppIntent update already applied.
     private func syncRestEndTime(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        let activity = currentActivity ?? Activity<WorkoutSessionAttributes>.activities.first
-        guard let activity = activity else {
+        guard let activity = resolveCurrentActivity() else {
             result(false)
             return
         }
@@ -570,7 +570,7 @@ class WorkoutSessionManager: NSObject {
     private func pauseRestTimer(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
         print("⏸️ [WorkoutSession] pauseRestTimer called")
 
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             print("❌ [WorkoutSession] No activity found for pause")
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
@@ -624,7 +624,7 @@ class WorkoutSessionManager: NSObject {
     private func resumeRestTimer(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
         print("▶️ [WorkoutSession] resumeRestTimer called")
 
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             print("❌ [WorkoutSession] No activity found for resume")
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
@@ -765,7 +765,8 @@ class WorkoutSessionManager: NSObject {
     // MARK: - End Workout Session
 
     private func endWorkoutSession(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
+            currentActivity = nil
             result(true) // No activity to end
             return
         }
@@ -797,11 +798,11 @@ class WorkoutSessionManager: NSObject {
     // MARK: - Status Methods
 
     private func isWorkoutSessionActive(result: @escaping FlutterResult) {
-        result(currentActivity != nil)
+        result(resolveCurrentActivity() != nil)
     }
 
     private func getWorkoutSessionState(result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        guard let activity = resolveCurrentActivity() else {
             result(nil)
             return
         }
@@ -888,6 +889,20 @@ class WorkoutSessionManager: NSObject {
     }
 
     // MARK: - Helpers
+
+    private func resolveCurrentActivity() -> Activity<WorkoutSessionAttributes>? {
+        if let systemActivity = Activity<WorkoutSessionAttributes>.activities.first {
+            currentActivity = systemActivity
+            return systemActivity
+        }
+
+        if currentActivity != nil {
+            Logger.shared.debug("⚠️ WorkoutSession currentActivity stale - clearing local reference", category: .general)
+            currentActivity = nil
+        }
+
+        return nil
+    }
 
     private func endAllExistingSessions() async {
         let activities = Activity<WorkoutSessionAttributes>.activities

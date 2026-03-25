@@ -5,11 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     as ExerciseDB;
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_round_config_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tier-1 UX widget for creating supersets with professional fitness app design
@@ -265,7 +267,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             fontWeight: FontWeight.w500,
           ),
         ),
-        subtitle: Text('${exercise.focus} • ${exercise.attrezzatura}'),
+        subtitle: _buildExerciseSummary(theme, exercise),
         trailing: IconButton(
           onPressed: () {
             setState(() {
@@ -275,6 +277,52 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
           },
           icon: Icon(AppIcons.close, color: theme.colorScheme.error),
         ),
+      ),
+    );
+  }
+
+  Widget _buildExerciseSummary(ThemeData theme, ExerciseDB.Exercise exercise) {
+    final hasMuscleData =
+        exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasMuscleData)
+            ExerciseTargetMuscleMap(
+              primaryMuscles: exercise.focus,
+              secondaryMuscles: exercise.muscoliSecondari,
+              previewWidth: 78,
+              previewHeight: 58,
+              enableFullscreen: false,
+            ),
+          if (hasMuscleData && exercise.attrezzatura.isNotEmpty)
+            const SizedBox(height: 6),
+          if (exercise.attrezzatura.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  EquipmentIconBadge(
+                    equipment: exercise.attrezzatura,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(exercise.attrezzatura, style: theme.textTheme.bodySmall),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

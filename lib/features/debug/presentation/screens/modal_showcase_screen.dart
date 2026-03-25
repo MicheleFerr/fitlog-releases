@@ -390,7 +390,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
 
   // Working Modals
   void _showCreateTemplateModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const CreateTemplateModal(),
@@ -402,7 +403,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void _showWeeklyModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => WeeklyModal(
@@ -413,7 +415,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showStreakModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) =>
@@ -422,7 +425,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showVolumeModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => VolumeModal(
@@ -433,7 +437,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showPRModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => PRModal(
@@ -552,7 +557,9 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showRestTimePickerModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => RestTimePickerModal(
@@ -604,7 +611,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void _showEditSetModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => EditSetModal(
@@ -623,7 +631,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showEditExerciseModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => EditExerciseModal(
@@ -640,7 +649,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showExerciseOptionsModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => ExerciseOptionsModal(
@@ -687,7 +697,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void _showAutoAdjustmentModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => AutoAdjustmentModal(
@@ -731,7 +742,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showSupersetRoundEditModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => SupersetRoundEditModal(
@@ -763,7 +775,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
       now: 3000.0, // Sunday
     };
 
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => VolumeDetailsModal(
@@ -774,7 +787,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showWeeklyDistributionModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const WeeklyDistributionModal(
@@ -797,7 +811,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void _showWorkoutDetailModal(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) =>
@@ -815,7 +830,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showMuscleGroupCorrectionSheet(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const MuscleGroupCorrectionSheet(
@@ -831,7 +847,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void _showTourBottomSheet(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => TourBottomSheet(step: DemoModalData.demoTourStep),

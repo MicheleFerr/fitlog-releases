@@ -1,5 +1,5 @@
-/// Health Sync entities tests - HealthDataType, HealthPermissionStatus,
-/// HealthSyncStatus JSON, BodyMeasurement JSON + computed properties.
+// Health Sync entities tests - HealthDataType, HealthPermissionStatus,
+// HealthSyncStatus JSON, BodyMeasurement JSON + computed properties.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
@@ -14,13 +14,22 @@ void main() {
 
     test('displayNameKey for all types', () {
       expect(HealthDataType.workout.displayNameKey, 'healthDataTypeWorkout');
-      expect(HealthDataType.bodyWeight.displayNameKey, 'healthDataTypeBodyWeight');
+      expect(
+        HealthDataType.bodyWeight.displayNameKey,
+        'healthDataTypeBodyWeight',
+      );
       expect(HealthDataType.height.displayNameKey, 'healthDataTypeHeight');
       expect(HealthDataType.bodyFat.displayNameKey, 'healthDataTypeBodyFat');
       expect(HealthDataType.leanMass.displayNameKey, 'healthDataTypeLeanMass');
-      expect(HealthDataType.heartRate.displayNameKey, 'healthDataTypeHeartRate');
+      expect(
+        HealthDataType.heartRate.displayNameKey,
+        'healthDataTypeHeartRate',
+      );
       expect(HealthDataType.sleep.displayNameKey, 'healthDataTypeSleep');
-      expect(HealthDataType.nutrition.displayNameKey, 'healthDataTypeNutrition');
+      expect(
+        HealthDataType.nutrition.displayNameKey,
+        'healthDataTypeNutrition',
+      );
     });
 
     test('isMvp for phase 1 types', () {
@@ -47,14 +56,14 @@ void main() {
   });
 
   group('PermissionState', () {
-    test('has 4 values', () {
-      expect(PermissionState.values.length, 4);
+    test('has 5 values', () {
+      expect(PermissionState.values.length, 5);
     });
   });
 
   group('HealthPermissionStatus', () {
     test('constructor with all fields', () {
-      final status = HealthPermissionStatus(
+      const status = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.denied,
@@ -66,14 +75,14 @@ void main() {
     });
 
     test('healthConnectAvailable defaults to false', () {
-      final status = HealthPermissionStatus(
+      const status = HealthPermissionStatus(
         permissions: {HealthDataType.workout: PermissionState.notDetermined},
       );
       expect(status.healthConnectAvailable, isFalse);
     });
 
     test('canSync returns true for authorized', () {
-      final status = HealthPermissionStatus(
+      const status = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.denied,
@@ -84,12 +93,21 @@ void main() {
     });
 
     test('canSync returns false for missing type', () {
-      final status = HealthPermissionStatus(permissions: {});
+      const status = HealthPermissionStatus(permissions: {});
       expect(status.canSync(HealthDataType.workout), isFalse);
     });
 
+    test('canAttemptSync returns true for unverified iOS state', () {
+      const status = HealthPermissionStatus(
+        permissions: {HealthDataType.workout: PermissionState.unverified},
+      );
+      expect(status.canSync(HealthDataType.workout), isFalse);
+      expect(status.canAttemptSync(HealthDataType.workout), isTrue);
+      expect(status.hasAnySyncAccess, isTrue);
+    });
+
     test('hasFullPermissions', () {
-      final full = HealthPermissionStatus(
+      const full = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.authorized,
@@ -101,7 +119,7 @@ void main() {
     });
 
     test('hasPartialPermissions', () {
-      final partial = HealthPermissionStatus(
+      const partial = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.denied,
@@ -113,7 +131,7 @@ void main() {
     });
 
     test('hasNoPermissions', () {
-      final none = HealthPermissionStatus(
+      const none = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.denied,
           HealthDataType.bodyWeight: PermissionState.notDetermined,
@@ -124,20 +142,32 @@ void main() {
       expect(none.hasFullPermissions, isFalse);
     });
 
+    test('hasNoPermissions is false for unverified permissions', () {
+      const status = HealthPermissionStatus(
+        permissions: {HealthDataType.bodyWeight: PermissionState.unverified},
+      );
+      expect(status.hasNoPermissions, isFalse);
+      expect(status.attemptableDataTypes, [HealthDataType.bodyWeight]);
+      expect(status.unverifiedDataTypes, [HealthDataType.bodyWeight]);
+    });
+
     test('authorizedDataTypes', () {
-      final status = HealthPermissionStatus(
+      const status = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.denied,
           HealthDataType.height: PermissionState.authorized,
         },
       );
-      expect(status.authorizedDataTypes, containsAll([HealthDataType.workout, HealthDataType.height]));
+      expect(
+        status.authorizedDataTypes,
+        containsAll([HealthDataType.workout, HealthDataType.height]),
+      );
       expect(status.authorizedDataTypes.length, 2);
     });
 
     test('deniedDataTypes', () {
-      final status = HealthPermissionStatus(
+      const status = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.denied,
@@ -147,15 +177,15 @@ void main() {
     });
 
     test('needsSequentialPermission', () {
-      final needs = HealthPermissionStatus(
+      const needs = HealthPermissionStatus(
         permissions: {
-          HealthDataType.workout: PermissionState.authorized,
+          HealthDataType.workout: PermissionState.unverified,
           HealthDataType.bodyWeight: PermissionState.notDetermined,
         },
       );
       expect(needs.needsSequentialPermission, isTrue);
 
-      final doesNot = HealthPermissionStatus(
+      const doesNot = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.authorized,
           HealthDataType.bodyWeight: PermissionState.authorized,
@@ -163,7 +193,7 @@ void main() {
       );
       expect(doesNot.needsSequentialPermission, isFalse);
 
-      final workoutNotReady = HealthPermissionStatus(
+      const workoutNotReady = HealthPermissionStatus(
         permissions: {
           HealthDataType.workout: PermissionState.notDetermined,
           HealthDataType.bodyWeight: PermissionState.notDetermined,
@@ -198,7 +228,7 @@ void main() {
     });
 
     test('round-trip with defaults', () {
-      final status = HealthSyncStatus(
+      const status = HealthSyncStatus(
         dataType: HealthDataType.workout,
         lastSyncTime: null,
         lastResult: SyncResult.idle,
@@ -266,7 +296,7 @@ void main() {
     });
 
     test('shouldAutoSync true when never synced', () {
-      final status = HealthSyncStatus(
+      const status = HealthSyncStatus(
         dataType: HealthDataType.workout,
         lastSyncTime: null,
         lastResult: SyncResult.idle,
@@ -293,7 +323,7 @@ void main() {
     });
 
     test('statusMessageKey for idle never synced', () {
-      final status = HealthSyncStatus(
+      const status = HealthSyncStatus(
         dataType: HealthDataType.workout,
         lastSyncTime: null,
         lastResult: SyncResult.idle,
@@ -311,7 +341,7 @@ void main() {
     });
 
     test('statusMessageKey for syncing', () {
-      final status = HealthSyncStatus(
+      const status = HealthSyncStatus(
         dataType: HealthDataType.workout,
         lastSyncTime: null,
         lastResult: SyncResult.syncing,
@@ -329,7 +359,7 @@ void main() {
     });
 
     test('statusMessageKey for error', () {
-      final status = HealthSyncStatus(
+      const status = HealthSyncStatus(
         dataType: HealthDataType.workout,
         lastSyncTime: null,
         lastResult: SyncResult.error,
@@ -481,25 +511,31 @@ void main() {
     test('isSyncedFromHealth', () {
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
           recordedAt: DateTime(2025, 1, 1),
-          dataType: HealthDataType.bodyWeight, source: 'HealthKit',
+          dataType: HealthDataType.bodyWeight,
+          source: 'HealthKit',
         ).isSyncedFromHealth,
         isTrue,
       );
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
           recordedAt: DateTime(2025, 1, 1),
-          dataType: HealthDataType.bodyWeight, source: 'Health Connect',
+          dataType: HealthDataType.bodyWeight,
+          source: 'Health Connect',
         ).isSyncedFromHealth,
         isTrue,
       );
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
           recordedAt: DateTime(2025, 1, 1),
-          dataType: HealthDataType.bodyWeight, source: 'FitLog',
+          dataType: HealthDataType.bodyWeight,
+          source: 'FitLog',
         ).isSyncedFromHealth,
         isFalse,
       );
@@ -508,15 +544,18 @@ void main() {
     test('isManualEntry', () {
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
           recordedAt: DateTime(2025, 1, 1),
-          dataType: HealthDataType.bodyWeight, source: 'FitLog',
+          dataType: HealthDataType.bodyWeight,
+          source: 'FitLog',
         ).isManualEntry,
         isTrue,
       );
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
           recordedAt: DateTime(2025, 1, 1),
           dataType: HealthDataType.bodyWeight,
         ).isManualEntry,
@@ -524,9 +563,11 @@ void main() {
       );
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
           recordedAt: DateTime(2025, 1, 1),
-          dataType: HealthDataType.bodyWeight, source: 'HealthKit',
+          dataType: HealthDataType.bodyWeight,
+          source: 'HealthKit',
         ).isManualEntry,
         isFalse,
       );
@@ -535,50 +576,64 @@ void main() {
     test('unitDisplayKey for all units', () {
       expect(
         BodyMeasurement(
-          value: 80, unit: MeasurementUnit.kilograms,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.bodyWeight,
+          value: 80,
+          unit: MeasurementUnit.kilograms,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.bodyWeight,
         ).unitDisplayKey,
         'unitKilograms',
       );
       expect(
         BodyMeasurement(
-          value: 176, unit: MeasurementUnit.pounds,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.bodyWeight,
+          value: 176,
+          unit: MeasurementUnit.pounds,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.bodyWeight,
         ).unitDisplayKey,
         'unitPounds',
       );
       expect(
         BodyMeasurement(
-          value: 15, unit: MeasurementUnit.percent,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.bodyFat,
+          value: 15,
+          unit: MeasurementUnit.percent,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.bodyFat,
         ).unitDisplayKey,
         'unitPercent',
       );
       expect(
         BodyMeasurement(
-          value: 60, unit: MeasurementUnit.minutes,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.workout,
+          value: 60,
+          unit: MeasurementUnit.minutes,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.workout,
         ).unitDisplayKey,
         'unitMinutes',
       );
       expect(
         BodyMeasurement(
-          value: 72, unit: MeasurementUnit.bpm,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.heartRate,
+          value: 72,
+          unit: MeasurementUnit.bpm,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.heartRate,
         ).unitDisplayKey,
         'unitBpm',
       );
       expect(
         BodyMeasurement(
-          value: 1.75, unit: MeasurementUnit.meters,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.height,
+          value: 1.75,
+          unit: MeasurementUnit.meters,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.height,
         ).unitDisplayKey,
         'unitMeters',
       );
       expect(
         BodyMeasurement(
-          value: 175, unit: MeasurementUnit.centimeters,
-          recordedAt: DateTime(2025, 1, 1), dataType: HealthDataType.height,
+          value: 175,
+          unit: MeasurementUnit.centimeters,
+          recordedAt: DateTime(2025, 1, 1),
+          dataType: HealthDataType.height,
         ).unitDisplayKey,
         'unitCentimeters',
       );

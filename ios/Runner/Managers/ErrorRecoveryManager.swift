@@ -277,7 +277,7 @@ final class ErrorRecoveryManager {
     private func triggerRetry(for context: ErrorContext) {
         switch context {
         case .audioSession:
-            AudioSessionManager.shared.reactivate()
+            Logger.shared.log(.debug, "Audio-session retry skipped: timer audio session is no longer centrally managed")
             
         case .backgroundTask:
             if #available(iOS 13.0, *) {

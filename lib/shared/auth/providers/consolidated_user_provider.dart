@@ -196,16 +196,25 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) {
               'photoURL': firebaseUser.photoURL,
               'accountTier': 'free',
               'templateQuota': {
+                'maxLibraryTemplates': 4,
+                'usedLibraryTemplates': 0,
+                'libraryEditableCount': 0,
                 'maxPrivateTemplates': 4,
-                'maxPublicTemplates': 2,
                 'usedPrivateTemplates': 0,
+                'maxPublicTemplates': 999,
+                'maxSharedTemplates': 999,
                 'usedPublicTemplates': 0,
+                'usedSharedTemplates': 0,
+                'distributedTemplateCount': 0,
+                'distributionMetered': false,
               },
               'createdAt': DateTime.now().toIso8601String(),
               'lastLoginAt': DateTime.now().toIso8601String(),
               'preferences': {},
               'stats': {},
               'isGuest': firebaseUser.isAnonymous,
+              'onboardingCompleted': false,
+              'onboardingCompletedAt': null,
             };
 
             await docRef.set(data);
@@ -342,9 +351,11 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
     final currentProfile = state.value;
     if (currentProfile == null) return false;
 
-    return isPublic
-        ? currentProfile.templateQuota.canSavePublic
-        : currentProfile.templateQuota.canSavePrivate;
+    if (isPublic) {
+      return true;
+    }
+
+    return currentProfile.templateQuota.canSaveToLibrary;
   }
 
   /// Get remaining quota
@@ -352,9 +363,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
     final currentProfile = state.value;
     if (currentProfile == null) return 0;
 
-    return isPublic
-        ? currentProfile.templateQuota.remainingPublic
-        : currentProfile.templateQuota.remainingPrivate;
+    return currentProfile.templateQuota.remainingLibrary;
   }
 
   /// Upgrade user tier via Cloud Function (admin-only)
@@ -380,8 +389,8 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
       // Update local state immediately after Cloud Function succeeds
       final newQuota = TemplateQuota.forTier(
         newTier,
-        usedPrivate: currentProfile.templateQuota.usedPrivateTemplates,
-        usedPublic: currentProfile.templateQuota.usedPublicTemplates,
+        usedLibrary: currentProfile.templateQuota.usedLibraryTemplates,
+        distributedCount: currentProfile.templateQuota.distributedTemplateCount,
       );
 
       final updatedProfile = currentProfile.copyWith(
@@ -427,23 +436,30 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
           .where('userId', isEqualTo: currentProfile.uid)
           .get();
 
-      int privateCount = 0;
-      int publicCount = 0;
+      int libraryCount = 0;
+      int distributedCount = 0;
 
       for (final doc in templatesSnapshot.docs) {
         final data = doc.data();
-        if (data['isPublic'] as bool? ?? false) {
-          publicCount++;
-        } else {
-          privateCount++;
+        final visibility =
+            data['visibility'] as String? ??
+            ((data['isPublic'] as bool? ?? false) ? 'public' : 'private');
+        final distributionStatus =
+            data['distributionStatus'] as String? ?? 'active';
+
+        if (visibility == 'private') {
+          libraryCount++;
+        } else if (distributionStatus == 'active') {
+          distributedCount++;
         }
       }
 
       final updatedQuota = TemplateQuota(
-        maxPrivateTemplates: currentProfile.templateQuota.maxPrivateTemplates,
-        maxPublicTemplates: currentProfile.templateQuota.maxPublicTemplates,
-        usedPrivateTemplates: privateCount,
-        usedPublicTemplates: publicCount,
+        maxLibraryTemplates: currentProfile.templateQuota.maxLibraryTemplates,
+        usedLibraryTemplates: libraryCount,
+        distributedTemplateCount: distributedCount,
+        maxDistributionTemplates:
+            currentProfile.templateQuota.maxDistributionTemplates,
       );
 
       final updatedProfile = currentProfile.copyWith(
@@ -592,7 +608,8 @@ final canSaveTemplateProvider = Provider.family<bool, bool>((ref, isPublic) {
   );
 
   if (templateQuota == null) return false;
-  return isPublic ? templateQuota.canSavePublic : templateQuota.canSavePrivate;
+  if (isPublic) return true;
+  return templateQuota.canSaveToLibrary;
 });
 
 /// Get remaining template quota
@@ -609,9 +626,7 @@ final remainingTemplateQuotaProvider = Provider.family<int, bool>((
   );
 
   if (templateQuota == null) return 0;
-  return isPublic
-      ? templateQuota.remainingPublic
-      : templateQuota.remainingPrivate;
+  return templateQuota.remainingLibrary;
 });
 
 /// ============================================================================

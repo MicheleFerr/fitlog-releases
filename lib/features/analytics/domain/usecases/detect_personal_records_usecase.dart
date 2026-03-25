@@ -48,9 +48,13 @@ class DetectPersonalRecordsUseCase {
     ExerciseSet completedSet,
   ) async {
     final potentialPRs = <PersonalRecordAchieved>[];
+    final stableExerciseId = exercise.stableExerciseId;
 
     // Get existing PRs for this exercise
-    final existingPRs = await _prTracker.getExercisePRs(userId, exercise.id);
+    final existingPRs = await _prTracker.getExercisePRs(
+      userId,
+      stableExerciseId,
+    );
 
     // Check weight PR
     final weightPR = _checkWeightPR(exercise, completedSet, existingPRs);
@@ -73,7 +77,10 @@ class DetectPersonalRecordsUseCase {
     Exercise exercise,
   ) async {
     final predictions = <PRPrediction>[];
-    final existingPRs = await _prTracker.getExercisePRs(userId, exercise.id);
+    final existingPRs = await _prTracker.getExercisePRs(
+      userId,
+      exercise.stableExerciseId,
+    );
 
     // Analyze current sets to predict potential PRs
     for (final set in exercise.sets.where((s) => !s.isCompleted)) {
@@ -121,7 +128,10 @@ class DetectPersonalRecordsUseCase {
     Exercise exercise,
   ) async {
     final prs = <PersonalRecordAchieved>[];
-    final existingPRs = await _prTracker.getExercisePRs(userId, exercise.id);
+    final existingPRs = await _prTracker.getExercisePRs(
+      userId,
+      exercise.stableExerciseId,
+    );
 
     final completedSets = exercise.sets.where((s) => s.isCompleted).toList();
     if (completedSets.isEmpty) return prs;
@@ -155,7 +165,7 @@ class DetectPersonalRecordsUseCase {
     if (currentRecord != null && weight <= currentRecord.value) return null;
 
     return PersonalRecordAchieved(
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       type: PRType.weight,
       newValue: weight,
@@ -195,7 +205,7 @@ class DetectPersonalRecordsUseCase {
     }
 
     return PersonalRecordAchieved(
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       type: PRType.reps,
       newValue: actualReps.toDouble(),
@@ -224,7 +234,7 @@ class DetectPersonalRecordsUseCase {
     }
 
     return PersonalRecordAchieved(
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       type: PRType.oneRM,
       newValue: estimated1RM,
@@ -257,7 +267,7 @@ class DetectPersonalRecordsUseCase {
     }
 
     return PersonalRecordAchieved(
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       type: PRType.volume,
       newValue: totalVolume,
@@ -291,7 +301,7 @@ class DetectPersonalRecordsUseCase {
     }
 
     return PersonalRecordAchieved(
-      exerciseId: exercise.id,
+      exerciseId: exercise.stableExerciseId,
       exerciseName: exercise.name,
       type: PRType.totalSets,
       newValue: completedSets.toDouble(),

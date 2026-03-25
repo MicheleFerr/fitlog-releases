@@ -10,9 +10,6 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
-import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
-import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
-import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
@@ -21,6 +18,7 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_state.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/stress_index_calculator.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_bodyweight_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 // ====================
@@ -477,16 +475,7 @@ class StressIndexNotifier extends Notifier<AsyncValue<StressIndexState>> {
   /// Falls back to default 70kg in calculator if null.
   Future<double?> _getUserBodyWeightKg() async {
     try {
-      final weightMeasurements = await ref.read(
-        bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
-      );
-      if (weightMeasurements.isNotEmpty) {
-        final latestWeight = weightMeasurements.first;
-        // Convert to kg if stored in pounds
-        return latestWeight.unit == MeasurementUnit.pounds
-            ? latestWeight.value * 0.453592
-            : latestWeight.value;
-      }
+      return await ref.read(userBodyweightProvider.future);
     } catch (_) {
       // Ignore - bodyweight exercises will use default fallback (70kg)
     }

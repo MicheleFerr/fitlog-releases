@@ -1,4 +1,4 @@
-/// Full-width template card for Discover vertical list
+/// Full-width template card for the Store vertical list
 ///
 /// UX Research Base (Netflix Thumbnail Research):
 /// - Larger thumbnails preferred over smaller ones with text
@@ -37,6 +37,8 @@ class DiscoverTemplateCard extends StatefulWidget {
     required this.template,
     required this.onTap,
     required this.onUse,
+    this.primaryActionLabel,
+    this.onReport,
   });
 
   /// Template to display
@@ -45,8 +47,14 @@ class DiscoverTemplateCard extends StatefulWidget {
   /// Callback when card is tapped (preview)
   final VoidCallback onTap;
 
-  /// Callback when "Use" button is tapped
+  /// Callback when "Save to Library" button is tapped
   final VoidCallback onUse;
+
+  /// Optional override for the primary CTA label.
+  final String? primaryActionLabel;
+
+  /// Optional callback to report the template.
+  final VoidCallback? onReport;
 
   @override
   State<DiscoverTemplateCard> createState() => _DiscoverTemplateCardState();
@@ -130,10 +138,7 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                context.colors.surface,
-                color.withValues(alpha: 0.03),
-              ],
+              colors: [context.colors.surface, color.withValues(alpha: 0.03)],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -219,19 +224,15 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
-                                      categoryIcon,
-                                      size: 12,
-                                      color: color,
-                                    ),
+                                    Icon(categoryIcon, size: 12, color: color),
                                     const SizedBox(width: 4),
                                     Text(
                                       categoryName,
-                                      style:
-                                          context.textTheme.labelSmall?.copyWith(
-                                        color: color,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: context.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color: color,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -259,6 +260,18 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
+
+                          if (widget.template.authorName != null) ...[
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              l10n.byAuthor(widget.template.authorName!),
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
 
                           const Spacer(),
 
@@ -292,6 +305,34 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
+                              const SizedBox(width: AppSpacing.md),
+                              Icon(
+                                AppIcons.download,
+                                size: AppIconSize.small,
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${widget.template.downloadCount}',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.md),
+                              Icon(
+                                AppIcons.merge,
+                                size: AppIconSize.small,
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${widget.template.forkCount}',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -304,7 +345,7 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Use button
+                        // Save to Library button
                         FilledButton(
                           onPressed: () {
                             HapticFeedback.mediumImpact();
@@ -319,7 +360,7 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
                             ),
                           ),
                           child: Text(
-                            l10n.use,
+                            widget.primaryActionLabel ?? l10n.addToMyTemplates,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -336,6 +377,16 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
                             ),
                           ),
                         ),
+                        if (widget.onReport != null)
+                          TextButton(
+                            onPressed: widget.onReport,
+                            child: Text(
+                              l10n.templateReportAction,
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: context.colors.error,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ],
@@ -351,10 +402,7 @@ class _DiscoverTemplateCardState extends State<DiscoverTemplateCard> {
 
 /// Difficulty badge widget with semantic colors
 class _DifficultyBadge extends StatelessWidget {
-  const _DifficultyBadge({
-    required this.difficulty,
-    required this.isDark,
-  });
+  const _DifficultyBadge({required this.difficulty, required this.isDark});
 
   final DifficultyLevel difficulty;
   final bool isDark;
@@ -368,10 +416,7 @@ class _DifficultyBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Text(
         difficulty.localizedName(context),

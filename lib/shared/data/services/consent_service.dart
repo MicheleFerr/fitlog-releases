@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// - Check stato consenso
 /// - Circuit breaker per prevenire crash ripetuti
 class ConsentService {
-
   factory ConsentService() => _instance;
 
   ConsentService._internal();
@@ -42,9 +41,10 @@ class ConsentService {
   /// Initialize consent system
   ///
   /// Da chiamare all'avvio dell'app, PRIMA di inizializzare le ads.
-  /// Mostra automaticamente il dialog se necessario.
+  /// Aggiorna sempre lo stato del consenso e, se richiesto, puo mostrare
+  /// automaticamente il dialog.
   /// ✅ FIXED: Circuit breaker prevents repeated crashes
-  Future<void> initialize() async {
+  Future<void> initialize({bool autoShowConsentForm = true}) async {
     debugPrint('📋 Initializing GDPR consent...');
 
     try {
@@ -52,7 +52,9 @@ class ConsentService {
       await _checkCircuitBreaker();
 
       if (_umpDisabled) {
-        debugPrint('⚠️ UMP SDK disabled due to repeated crashes. Skipping initialization.');
+        debugPrint(
+          '⚠️ UMP SDK disabled due to repeated crashes. Skipping initialization.',
+        );
         debugPrint('   App will continue without GDPR consent dialog.');
         return;
       }
@@ -63,23 +65,32 @@ class ConsentService {
       await _requestConsentInfoUpdate(params);
 
       // Check if form is available
-      _isConsentFormAvailable =
-          await ConsentInformation.instance.isConsentFormAvailable();
+      _isConsentFormAvailable = await ConsentInformation.instance
+          .isConsentFormAvailable();
 
       _consentStatus = await ConsentInformation.instance.getConsentStatus();
 
       debugPrint('   - Form available: $_isConsentFormAvailable');
       debugPrint('   - Status: $_consentStatus');
 
-      // If consent is required and form is available, show it
-      if (_consentStatus == ConsentStatus.required &&
-          _isConsentFormAvailable) {
+      // On iOS we keep ATT as the only automatic tracking-related prompt.
+      // Ad privacy options remain available from Settings.
+      final shouldAutoShowConsentForm =
+          autoShowConsentForm &&
+          _consentStatus == ConsentStatus.required &&
+          _isConsentFormAvailable;
+
+      if (shouldAutoShowConsentForm) {
         await _loadAndShowConsentForm();
+      } else if (_consentStatus == ConsentStatus.required &&
+          _isConsentFormAvailable) {
+        debugPrint(
+          'ℹ️ Consent form available but not shown automatically. Users can review ad privacy choices from Settings.',
+        );
       }
 
       // ✅ Success: reset crash counter
       await _resetCrashCounter();
-
     } catch (error) {
       debugPrint('❌ Error initializing consent: $error');
 
@@ -91,7 +102,9 @@ class ConsentService {
   }
 
   /// Helper to convert callback-based consent info update to Future
-  Future<void> _requestConsentInfoUpdate(ConsentRequestParameters params) async {
+  Future<void> _requestConsentInfoUpdate(
+    ConsentRequestParameters params,
+  ) async {
     final completer = Completer<void>();
 
     try {
@@ -118,7 +131,9 @@ class ConsentService {
         const Duration(seconds: 30),
         onTimeout: () {
           debugPrint('⏱️ Consent info update timed out');
-          throw TimeoutException('Consent info update timed out after 30 seconds');
+          throw TimeoutException(
+            'Consent info update timed out after 30 seconds',
+          );
         },
       );
     } catch (e) {
@@ -154,15 +169,10 @@ class ConsentService {
 
   /// Check if user can request ads
   ///
-  /// Returns true se l'utente ha dato il consenso o se non è richiesto
+  /// Uses the official UMP gate so existing consent from previous sessions is
+  /// respected after requestConsentInfoUpdate() runs.
   Future<bool> canRequestAds() async {
-    final status = await ConsentInformation.instance.getConsentStatus();
-
-    // Can show ads if:
-    // - User gave consent (obtained)
-    // - Consent not required (not required)
-    return status == ConsentStatus.obtained ||
-        status == ConsentStatus.notRequired;
+    return ConsentInformation.instance.canRequestAds();
   }
 
   /// Check if consent is required
@@ -179,6 +189,71 @@ class ConsentService {
   /// Check if consent form is available
   bool get isConsentFormAvailable => _isConsentFormAvailable;
 
+  /// Get privacy options requirement status.
+  ///
+  /// If this returns [PrivacyOptionsRequirementStatus.required], the app
+  /// should expose a visible entry point that reopens the privacy options UI.
+  Future<PrivacyOptionsRequirementStatus>
+  getPrivacyOptionsRequirementStatus() async {
+    await _checkCircuitBreaker();
+
+    if (_umpDisabled) {
+      return PrivacyOptionsRequirementStatus.unknown;
+    }
+
+    return ConsentInformation.instance.getPrivacyOptionsRequirementStatus();
+  }
+
+  /// Show the UMP privacy options form.
+  ///
+  /// This lets users revisit and update ad privacy choices from Settings.
+  Future<void> showPrivacyOptionsForm() async {
+    await _checkCircuitBreaker();
+
+    if (_umpDisabled) {
+      throw StateError('UMP SDK is currently disabled.');
+    }
+
+    final completer = Completer<void>();
+
+    try {
+      await ConsentForm.showPrivacyOptionsForm((formError) {
+        if (formError != null) {
+          debugPrint(
+            '❌ Error showing privacy options form: ${formError.message} (code: ${formError.errorCode})',
+          );
+          if (!completer.isCompleted) {
+            completer.completeError(formError);
+          }
+          return;
+        }
+
+        if (!completer.isCompleted) {
+          completer.complete();
+        }
+      }).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException(
+            'Privacy options form timed out after 30 seconds',
+          );
+        },
+      );
+
+      await completer.future;
+      _isConsentFormAvailable = await ConsentInformation.instance
+          .isConsentFormAvailable();
+      _consentStatus = await ConsentInformation.instance.getConsentStatus();
+
+      debugPrint(
+        '✅ Privacy options form completed. New status: $_consentStatus',
+      );
+    } catch (error) {
+      debugPrint('❌ Error opening privacy options form: $error');
+      rethrow;
+    }
+  }
+
   // ============================================================================
   // PRIVATE METHODS
   // ============================================================================
@@ -191,7 +266,9 @@ class ConsentService {
       await ConsentForm.loadAndShowConsentFormIfRequired((formError) {
         // onConsentFormLoadFailure
         if (formError != null) {
-          debugPrint('❌ Error loading consent form: ${formError.message} (code: ${formError.errorCode})');
+          debugPrint(
+            '❌ Error loading consent form: ${formError.message} (code: ${formError.errorCode})',
+          );
         }
       }).timeout(
         const Duration(seconds: 30),
@@ -228,7 +305,9 @@ class ConsentService {
         // Check crash count
         final crashCount = prefs.getInt(_prefKeyUmpCrashCount) ?? 0;
         if (crashCount >= _maxCrashCount) {
-          debugPrint('⚠️ UMP crash count ($crashCount) exceeded threshold ($_maxCrashCount)');
+          debugPrint(
+            '⚠️ UMP crash count ($crashCount) exceeded threshold ($_maxCrashCount)',
+          );
           debugPrint('   Disabling UMP SDK to prevent repeated crashes');
           await prefs.setBool(_prefKeyUmpDisabled, true);
           _umpDisabled = true;
@@ -246,7 +325,9 @@ class ConsentService {
       final prefs = await SharedPreferences.getInstance();
       final crashCount = (prefs.getInt(_prefKeyUmpCrashCount) ?? 0) + 1;
       await prefs.setInt(_prefKeyUmpCrashCount, crashCount);
-      debugPrint('⚠️ UMP crash count incremented to: $crashCount/$_maxCrashCount');
+      debugPrint(
+        '⚠️ UMP crash count incremented to: $crashCount/$_maxCrashCount',
+      );
     } catch (e) {
       debugPrint('⚠️ Error incrementing crash counter: $e');
     }
@@ -303,9 +384,10 @@ class ConsentService {
         .collection('consents')
         .doc('social')
         .set({
-      'granted': true,
-      'grantedAt': FieldValue.serverTimestamp(),
-    });
+          'granted': true,
+          'grantedAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
   }
 
   /// Revoke social consent
@@ -319,9 +401,10 @@ class ConsentService {
         .collection('consents')
         .doc('social')
         .set({
-      'granted': false,
-      'revokedAt': FieldValue.serverTimestamp(),
-    });
+          'granted': false,
+          'revokedAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
   }
 
   // ============================================================================
@@ -333,8 +416,8 @@ class ConsentService {
     if (kDebugMode) {
       final status = await getConsentStatus();
       final canRequest = await canRequestAds();
-      final privacyOptionsRequired =
-          await ConsentInformation.instance.getPrivacyOptionsRequirementStatus();
+      final privacyOptionsRequired = await ConsentInformation.instance
+          .getPrivacyOptionsRequirementStatus();
 
       debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       debugPrint('📋 GDPR Consent Information:');

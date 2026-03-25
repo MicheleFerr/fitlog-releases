@@ -46,9 +46,7 @@ class FakeHiveSchedulingDatasource implements HiveSchedulingDatasource {
   }
 
   @override
-  Future<void> saveScheduledWorkouts(
-    List<ScheduledWorkoutModel> models,
-  ) async {
+  Future<void> saveScheduledWorkouts(List<ScheduledWorkoutModel> models) async {
     if (saveError != null) throw saveError!;
     for (final m in models) {
       _store[m.id] = m;
@@ -89,17 +87,9 @@ class FakeHiveSchedulingDatasource implements HiveSchedulingDatasource {
     required DateTime endDate,
   }) async {
     final start = DateTime(startDate.year, startDate.month, startDate.day);
-    final end = DateTime(
-      endDate.year,
-      endDate.month,
-      endDate.day,
-      23,
-      59,
-      59,
-    );
+    final end = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
     return _store.values.where((m) {
-      return !m.scheduledDate.isBefore(start) &&
-          !m.scheduledDate.isAfter(end);
+      return !m.scheduledDate.isBefore(start) && !m.scheduledDate.isAfter(end);
     }).toList();
   }
 
@@ -107,9 +97,7 @@ class FakeHiveSchedulingDatasource implements HiveSchedulingDatasource {
   Future<List<ScheduledWorkoutModel>> getScheduledWorkoutsForTemplate(
     String templateId,
   ) async {
-    return _store.values
-        .where((m) => m.templateId == templateId)
-        .toList();
+    return _store.values.where((m) => m.templateId == templateId).toList();
   }
 
   @override
@@ -136,8 +124,10 @@ class FakeHiveSchedulingDatasource implements HiveSchedulingDatasource {
 
   @override
   Future<void> deleteScheduledWorkoutsForTemplate(String templateId) async {
-    final ids =
-        _store.values.where((m) => m.templateId == templateId).map((m) => m.id).toList();
+    final ids = _store.values
+        .where((m) => m.templateId == templateId)
+        .map((m) => m.id)
+        .toList();
     for (final id in ids) {
       _store.remove(id);
       deletedIds.add(id);
@@ -162,9 +152,7 @@ class FakeHiveSchedulingDatasource implements HiveSchedulingDatasource {
   }
 
   @override
-  Future<List<DateTime>> getScheduledDatesForTemplate(
-    String templateId,
-  ) async {
+  Future<List<DateTime>> getScheduledDatesForTemplate(String templateId) async {
     return _store.values
         .where((m) => m.templateId == templateId)
         .map(
@@ -266,7 +254,7 @@ void main() {
       final result = await repository.getScheduledWorkouts();
 
       expect(result.length, 2);
-      expect(result.every((e) => e is ScheduledWorkout), isTrue);
+      expect(result, everyElement(isA<ScheduledWorkout>()));
     });
 
     test('sorts results by scheduledDate ascending', () async {
@@ -295,18 +283,11 @@ void main() {
     test('returns only workouts scheduled for the given date', () async {
       final targetDate = DateTime(2025, 6, 15);
       fakeDatasource.seedAll([
-        _makeModel(
-          id: 'match',
-          scheduledDate: DateTime(2025, 6, 15, 10, 30),
-        ),
-        _makeModel(
-          id: 'no-match',
-          scheduledDate: DateTime(2025, 6, 16),
-        ),
+        _makeModel(id: 'match', scheduledDate: DateTime(2025, 6, 15, 10, 30)),
+        _makeModel(id: 'no-match', scheduledDate: DateTime(2025, 6, 16)),
       ]);
 
-      final result =
-          await repository.getScheduledWorkoutsForDate(targetDate);
+      final result = await repository.getScheduledWorkoutsForDate(targetDate);
 
       expect(result.length, 1);
       expect(result.first.id, 'match');
@@ -315,8 +296,9 @@ void main() {
     test('returns empty list when no workouts match the date', () async {
       fakeDatasource.seed(_makeModel(scheduledDate: DateTime(2025, 7, 1)));
 
-      final result =
-          await repository.getScheduledWorkoutsForDate(DateTime(2025, 6, 1));
+      final result = await repository.getScheduledWorkoutsForDate(
+        DateTime(2025, 6, 1),
+      );
 
       expect(result, isEmpty);
     });
@@ -372,22 +354,25 @@ void main() {
       expect(ids, isNot(contains('after')));
     });
 
-    test('results within range are sorted by scheduledDate ascending', () async {
-      fakeDatasource.seedAll([
-        _makeModel(id: 'z', scheduledDate: DateTime(2025, 6, 30)),
-        _makeModel(id: 'a', scheduledDate: DateTime(2025, 6, 1)),
-        _makeModel(id: 'm', scheduledDate: DateTime(2025, 6, 15)),
-      ]);
+    test(
+      'results within range are sorted by scheduledDate ascending',
+      () async {
+        fakeDatasource.seedAll([
+          _makeModel(id: 'z', scheduledDate: DateTime(2025, 6, 30)),
+          _makeModel(id: 'a', scheduledDate: DateTime(2025, 6, 1)),
+          _makeModel(id: 'm', scheduledDate: DateTime(2025, 6, 15)),
+        ]);
 
-      final result = await repository.getScheduledWorkoutsInRange(
-        startDate: DateTime(2025, 6, 1),
-        endDate: DateTime(2025, 6, 30),
-      );
+        final result = await repository.getScheduledWorkoutsInRange(
+          startDate: DateTime(2025, 6, 1),
+          endDate: DateTime(2025, 6, 30),
+        );
 
-      expect(result[0].id, 'a');
-      expect(result[1].id, 'm');
-      expect(result[2].id, 'z');
-    });
+        expect(result[0].id, 'a');
+        expect(result[1].id, 'm');
+        expect(result[2].id, 'z');
+      },
+    );
 
     test('returns empty list when range contains no workouts', () async {
       fakeDatasource.seed(_makeModel(scheduledDate: DateTime(2025, 12, 1)));
@@ -410,8 +395,7 @@ void main() {
         _makeModel(id: 'c', templateId: 'tmpl-A'),
       ]);
 
-      final result =
-          await repository.getScheduledWorkoutsForTemplate('tmpl-A');
+      final result = await repository.getScheduledWorkoutsForTemplate('tmpl-A');
 
       expect(result.map((e) => e.id).toList(), containsAll(['a', 'c']));
       expect(result.map((e) => e.id).toList(), isNot(contains('b')));
@@ -431,19 +415,22 @@ void main() {
         ),
       ]);
 
-      final result =
-          await repository.getScheduledWorkoutsForTemplate('tmpl-X');
+      final result = await repository.getScheduledWorkoutsForTemplate('tmpl-X');
 
       expect(result[0].id, 'first');
       expect(result[1].id, 'last');
     });
 
-    test('returns empty list when template has no scheduled workouts', () async {
-      final result =
-          await repository.getScheduledWorkoutsForTemplate('unknown-tmpl');
+    test(
+      'returns empty list when template has no scheduled workouts',
+      () async {
+        final result = await repository.getScheduledWorkoutsForTemplate(
+          'unknown-tmpl',
+        );
 
-      expect(result, isEmpty);
-    });
+        expect(result, isEmpty);
+      },
+    );
   });
 
   // -------------------------------------------------------------------------
@@ -500,26 +487,11 @@ void main() {
   group('getUpcomingScheduledWorkouts', () {
     test('returns only pending and due workouts', () async {
       fakeDatasource.seedAll([
-        _makeModel(
-          id: 'pending',
-          status: ScheduleStatusModel.pending,
-        ),
-        _makeModel(
-          id: 'due',
-          status: ScheduleStatusModel.due,
-        ),
-        _makeModel(
-          id: 'completed',
-          status: ScheduleStatusModel.completed,
-        ),
-        _makeModel(
-          id: 'skipped',
-          status: ScheduleStatusModel.skipped,
-        ),
-        _makeModel(
-          id: 'missed',
-          status: ScheduleStatusModel.missed,
-        ),
+        _makeModel(id: 'pending', status: ScheduleStatusModel.pending),
+        _makeModel(id: 'due', status: ScheduleStatusModel.due),
+        _makeModel(id: 'completed', status: ScheduleStatusModel.completed),
+        _makeModel(id: 'skipped', status: ScheduleStatusModel.skipped),
+        _makeModel(id: 'missed', status: ScheduleStatusModel.missed),
       ]);
 
       final result = await repository.getUpcomingScheduledWorkouts();
@@ -551,16 +523,19 @@ void main() {
       expect(result[1].id, 'far');
     });
 
-    test('returns empty list when all workouts are completed or past', () async {
-      fakeDatasource.seedAll([
-        _makeModel(id: 'done', status: ScheduleStatusModel.completed),
-        _makeModel(id: 'miss', status: ScheduleStatusModel.missed),
-      ]);
+    test(
+      'returns empty list when all workouts are completed or past',
+      () async {
+        fakeDatasource.seedAll([
+          _makeModel(id: 'done', status: ScheduleStatusModel.completed),
+          _makeModel(id: 'miss', status: ScheduleStatusModel.missed),
+        ]);
 
-      final result = await repository.getUpcomingScheduledWorkouts();
+        final result = await repository.getUpcomingScheduledWorkouts();
 
-      expect(result, isEmpty);
-    });
+        expect(result, isEmpty);
+      },
+    );
   });
 
   // -------------------------------------------------------------------------
@@ -594,10 +569,7 @@ void main() {
     test('propagates exceptions from datasource', () async {
       fakeDatasource.saveError = Exception('disk full');
 
-      expect(
-        () => repository.scheduleWorkout(_makeEntity()),
-        throwsException,
-      );
+      expect(() => repository.scheduleWorkout(_makeEntity()), throwsException);
     });
   });
 
@@ -645,10 +617,7 @@ void main() {
     test('propagates exceptions from datasource', () async {
       fakeDatasource.updateError = Exception('update failed');
 
-      expect(
-        () => repository.updateSchedule(_makeEntity()),
-        throwsException,
-      );
+      expect(() => repository.updateSchedule(_makeEntity()), throwsException);
     });
   });
 
@@ -666,10 +635,7 @@ void main() {
     test('propagates exceptions from datasource', () async {
       fakeDatasource.deleteError = Exception('delete failed');
 
-      expect(
-        () => repository.deleteSchedule('any-id'),
-        throwsException,
-      );
+      expect(() => repository.deleteSchedule('any-id'), throwsException);
     });
   });
 
@@ -721,7 +687,9 @@ void main() {
       expect(updated.completedAt, isNotNull);
       // Allow 2-second window to avoid test flakiness
       expect(
-        updated.completedAt!.isAfter(before.subtract(const Duration(seconds: 2))),
+        updated.completedAt!.isAfter(
+          before.subtract(const Duration(seconds: 2)),
+        ),
         isTrue,
       );
     });
@@ -765,8 +733,10 @@ void main() {
 
       await repository.markAsSkipped('skip-1');
 
-      expect(fakeDatasource.updatedModels.first.status,
-          ScheduleStatusModel.skipped);
+      expect(
+        fakeDatasource.updatedModels.first.status,
+        ScheduleStatusModel.skipped,
+      );
     });
 
     test('does nothing when workout id does not exist', () async {
@@ -798,8 +768,10 @@ void main() {
 
       await repository.markAsMissed('miss-1');
 
-      expect(fakeDatasource.updatedModels.first.status,
-          ScheduleStatusModel.missed);
+      expect(
+        fakeDatasource.updatedModels.first.status,
+        ScheduleStatusModel.missed,
+      );
     });
 
     test('does nothing when workout id does not exist', () async {
@@ -1045,8 +1017,9 @@ void main() {
         ),
       ]);
 
-      final result =
-          await repository.getScheduledDatesForTemplate('tmpl-dates');
+      final result = await repository.getScheduledDatesForTemplate(
+        'tmpl-dates',
+      );
 
       expect(result.length, 2);
       // Dates must be normalized to midnight
@@ -1059,8 +1032,9 @@ void main() {
     });
 
     test('returns empty list when no dates for template', () async {
-      final result =
-          await repository.getScheduledDatesForTemplate('tmpl-no-dates');
+      final result = await repository.getScheduledDatesForTemplate(
+        'tmpl-no-dates',
+      );
 
       expect(result, isEmpty);
     });
@@ -1069,61 +1043,65 @@ void main() {
   // -------------------------------------------------------------------------
   group('Model <-> Entity conversion', () {
     test(
-        'ScheduleStatus enum values map correctly through round-trip conversion',
-        () {
-      final statusPairs = [
-        (ScheduleStatusModel.pending, ScheduleStatus.pending),
-        (ScheduleStatusModel.due, ScheduleStatus.due),
-        (ScheduleStatusModel.completed, ScheduleStatus.completed),
-        (ScheduleStatusModel.skipped, ScheduleStatus.skipped),
-        (ScheduleStatusModel.missed, ScheduleStatus.missed),
-      ];
+      'ScheduleStatus enum values map correctly through round-trip conversion',
+      () {
+        final statusPairs = [
+          (ScheduleStatusModel.pending, ScheduleStatus.pending),
+          (ScheduleStatusModel.due, ScheduleStatus.due),
+          (ScheduleStatusModel.completed, ScheduleStatus.completed),
+          (ScheduleStatusModel.skipped, ScheduleStatus.skipped),
+          (ScheduleStatusModel.missed, ScheduleStatus.missed),
+        ];
 
-      for (final (model, entity) in statusPairs) {
-        expect(model.toEntity(), entity,
-            reason: 'Model $model should map to entity $entity');
-        expect(
-          ScheduleStatusModelExtension.fromEntity(entity),
-          model,
-          reason: 'Entity $entity should map back to model $model',
-        );
-      }
-    });
+        for (final (model, entity) in statusPairs) {
+          expect(
+            model.toEntity(),
+            entity,
+            reason: 'Model $model should map to entity $entity',
+          );
+          expect(
+            ScheduleStatusModelExtension.fromEntity(entity),
+            model,
+            reason: 'Entity $entity should map back to model $model',
+          );
+        }
+      },
+    );
 
     test(
-        'ScheduledWorkoutModel.fromEntity captures all fields without loss',
-        () {
-      final completedAt = DateTime(2025, 6, 15, 14, 0);
-      final createdAt = DateTime(2025, 6, 1);
-      final entity = _makeEntity(
-        id: 'round-trip',
-        templateId: 'tmpl-rt',
-        templateName: 'Round Trip',
-        scheduledDate: DateTime(2025, 6, 15),
-        reminderHour: 6,
-        reminderMinute: 30,
-        status: ScheduleStatus.completed,
-        completedAt: completedAt,
-        createdAt: createdAt,
-        notificationId: 'notif-rt',
-      );
+      'ScheduledWorkoutModel.fromEntity captures all fields without loss',
+      () {
+        final completedAt = DateTime(2025, 6, 15, 14, 0);
+        final createdAt = DateTime(2025, 6, 1);
+        final entity = _makeEntity(
+          id: 'round-trip',
+          templateId: 'tmpl-rt',
+          templateName: 'Round Trip',
+          scheduledDate: DateTime(2025, 6, 15),
+          reminderHour: 6,
+          reminderMinute: 30,
+          status: ScheduleStatus.completed,
+          completedAt: completedAt,
+          createdAt: createdAt,
+          notificationId: 'notif-rt',
+        );
 
-      final model = ScheduledWorkoutModel.fromEntity(entity);
+        final model = ScheduledWorkoutModel.fromEntity(entity);
 
-      expect(model.id, entity.id);
-      expect(model.templateId, entity.templateId);
-      expect(model.templateName, entity.templateName);
-      expect(model.scheduledDate, entity.scheduledDate);
-      expect(model.reminderHour, entity.reminderHour);
-      expect(model.reminderMinute, entity.reminderMinute);
-      expect(model.status, ScheduleStatusModel.completed);
-      expect(model.completedAt, completedAt);
-      expect(model.createdAt, createdAt);
-      expect(model.notificationId, 'notif-rt');
-    });
+        expect(model.id, entity.id);
+        expect(model.templateId, entity.templateId);
+        expect(model.templateName, entity.templateName);
+        expect(model.scheduledDate, entity.scheduledDate);
+        expect(model.reminderHour, entity.reminderHour);
+        expect(model.reminderMinute, entity.reminderMinute);
+        expect(model.status, ScheduleStatusModel.completed);
+        expect(model.completedAt, completedAt);
+        expect(model.createdAt, createdAt);
+        expect(model.notificationId, 'notif-rt');
+      },
+    );
 
-    test('ScheduledWorkoutModel.toEntity() produces correct domain object',
-        () {
+    test('ScheduledWorkoutModel.toEntity() produces correct domain object', () {
       final model = _makeModel(
         id: 'to-entity',
         templateId: 'tmpl-te',
@@ -1149,11 +1127,7 @@ void main() {
 
     test('reminderTime getter reconstructs TimeOfDay correctly', () async {
       fakeDatasource.seed(
-        _makeModel(
-          id: 'reminder',
-          reminderHour: 6,
-          reminderMinute: 45,
-        ),
+        _makeModel(id: 'reminder', reminderHour: 6, reminderMinute: 45),
       );
 
       final entity = await repository.getScheduledWorkout('reminder');

@@ -2,7 +2,7 @@
  * 🔐 ADMIN: Cloud Function to set a user's account tier
  *
  * Only callable by authenticated admins (custom claim: admin=true).
- * Updates accountTier and templateQuota atomically.
+ * Updates accountTier and Library quota atomically.
  *
  * **Usage** (Flutter):
  * ```dart
@@ -15,13 +15,9 @@
 import { HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { withRateLimit, RATE_LIMITS } from '../security/rateLimiterV1';
+import { applyPremiumEntitlements } from '../premium/entitlements';
 
 type AccountTier = 'free' | 'premium';
-
-const TEMPLATE_QUOTAS: Record<AccountTier, { maxPrivateTemplates: number; maxPublicTemplates: number }> = {
-  free: { maxPrivateTemplates: 4, maxPublicTemplates: 2 },
-  premium: { maxPrivateTemplates: 999, maxPublicTemplates: 999 },
-};
 
 /**
  * Check if the caller has admin custom claims
@@ -67,7 +63,6 @@ export const setAccountTier = withRateLimit<SetAccountTierData>(
     }
 
     const accountTier = tier as AccountTier;
-    const quota = TEMPLATE_QUOTAS[accountTier];
 
     // 4. Verify target user exists
     const userRef = admin.firestore().collection('users').doc(targetUserId);
@@ -77,21 +72,12 @@ export const setAccountTier = withRateLimit<SetAccountTierData>(
       throw new HttpsError('not-found', `User ${targetUserId} not found`);
     }
 
-    const currentData = userDoc.data();
-    const currentUsed = {
-      private: currentData?.templateQuota?.usedPrivateTemplates ?? 0,
-      public: currentData?.templateQuota?.usedPublicTemplates ?? 0,
-    };
-
     // 5. Update atomically
-    await userRef.update({
-      accountTier: accountTier,
-      templateQuota: {
-        maxPrivateTemplates: quota.maxPrivateTemplates,
-        maxPublicTemplates: quota.maxPublicTemplates,
-        usedPrivateTemplates: currentUsed.private,
-        usedPublicTemplates: currentUsed.public,
-      },
+    const snapshot = await applyPremiumEntitlements(targetUserId, {
+      accountTier,
+      source: 'admin',
+      isLifetime: false,
+      willRenew: false,
     });
 
     console.log(`Admin ${callerUid} set account tier for ${targetUserId} to ${accountTier}`);
@@ -100,12 +86,9 @@ export const setAccountTier = withRateLimit<SetAccountTierData>(
       success: true,
       targetUserId,
       tier: accountTier,
-      quota: {
-        maxPrivateTemplates: quota.maxPrivateTemplates,
-        maxPublicTemplates: quota.maxPublicTemplates,
-        usedPrivateTemplates: currentUsed.private,
-        usedPublicTemplates: currentUsed.public,
-      },
+      premiumActive: snapshot.premiumActive,
+      plan: snapshot.plan,
+      expiresAt: snapshot.expiresAt?.toISOString() ?? null,
     };
   },
   { ...RATE_LIMITS.STRICT, identifier: 'setAccountTier' }

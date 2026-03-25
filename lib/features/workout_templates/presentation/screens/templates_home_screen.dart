@@ -28,7 +28,6 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/wo
     hide TemplateCategory;
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart'
     as workout_template;
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_quota_indicator.dart';
@@ -48,7 +47,8 @@ import 'package:gymbro_flutter_new/features/workout/services/pdf_template_servic
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart'
+    hide templateQuotaProvider;
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/providers/custom_exercise_providers.dart';
@@ -59,6 +59,7 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_target_muscle_map.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/superset_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/dropset_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/rest_pause_template_provider.dart';
@@ -68,16 +69,23 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/widge
 import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/workout_import_screen.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/cards/discover_template_card.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/for_you_section.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/templates_tour_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/equipment_icon_badge.dart';
+
+enum _TemplateDistributionAction { shareUnlisted, publishPublic }
+
+enum _StoreSection { app, community }
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({
     super.key,
     this.showTour = false,
     this.initialTab,
+    this.openUseCodeOnLaunch = false,
   });
 
   /// Whether to show the guided tour when screen opens
@@ -85,6 +93,9 @@ class TemplatesHomeScreen extends ConsumerStatefulWidget {
 
   /// Optional initial tab index to show
   final int? initialTab;
+
+  /// Whether to open the "use code" flow after the screen loads.
+  final bool openUseCodeOnLaunch;
 
   @override
   ConsumerState<TemplatesHomeScreen> createState() =>
@@ -125,6 +136,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   // null = show all categories, otherwise show only selected category
   // ═══════════════════════════════════════════════════════════════════════════
   String? _selectedCategory;
+  late _StoreSection _selectedStoreSection;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // UX REDESIGN: Toggle removed - advanced techniques now integrated as section
@@ -139,6 +151,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       vsync: this,
       initialIndex: widget.initialTab?.clamp(0, 2) ?? 0,
     );
+    _selectedStoreSection = widget.openUseCodeOnLaunch
+        ? _StoreSection.community
+        : _StoreSection.app;
     _tabController.addListener(() {
       if (mounted) {
         setState(() {});
@@ -152,6 +167,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     if (widget.showTour) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _startGuidedTour();
+      });
+    }
+
+    if (widget.openUseCodeOnLaunch) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _openSharedTemplateByCodeDialog(context);
       });
     }
   }
@@ -274,9 +296,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                       fontWeight: FontWeight.bold,
                     ),
                     tabs: [
-                      Tab(key: _myTemplatesTabKey, text: l10n.myTemplates),
+                      Tab(key: _myTemplatesTabKey, text: l10n.libraryTab),
                       Tab(key: _exercisesTabKey, text: l10n.exercises),
-                      Tab(key: _discoverTabKey, text: l10n.discover),
+                      Tab(key: _discoverTabKey, text: l10n.storeTab),
                     ],
                   ),
                   backgroundColor: context.colors.surface,
@@ -330,6 +352,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       loading: () => const Center(child: LoadingIndicator()),
       error: (error, stack) => Center(child: Text(l10n.errorLoadingTemplates)),
       data: (templates) {
+        final libraryTemplates = templates
+            .where((template) => template.isLibraryTemplate)
+            .toList();
+        final distributedTemplates = templates
+            .where((template) => template.isDistributedTemplate)
+            .toList();
+
         return RefreshIndicator(
           onRefresh: () => ref.refresh(customWorkoutTemplatesProvider.future),
           child: CustomScrollView(
@@ -339,10 +368,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   child: TemplateQuotaIndicator(
-                    usedPrivate: templates.where((t) => !t.isPublic).length,
-                    usedPublic: templates.where((t) => t.isPublic).length,
-                    maxPrivate: entitlements.maxTemplates,
-                    maxPublic: entitlements.maxPublicTemplates,
+                    usedLibrary: libraryTemplates.length,
+                    maxLibrary: entitlements.maxLibraryTemplates,
+                    distributedCount: distributedTemplates.length,
                     isExpanded: _isQuotaExpanded,
                     onTap: () {
                       setState(() {
@@ -354,16 +382,41 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               ),
 
               // Templates content
-              if (templates.isEmpty)
+              if (libraryTemplates.isEmpty && distributedTemplates.isEmpty)
                 SliverFillRemaining(
                   child: EmptyTemplatesState(
                     onCreateTap: () => _createNewTemplate(context),
                   ),
                 )
-              else
-                _isGridView
-                    ? _buildMyTemplatesGrid(templates, context)
-                    : _buildMyTemplatesList(templates, context),
+              else ...[
+                if (libraryTemplates.isNotEmpty) ...[
+                  if (distributedTemplates.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: _buildSectionHeader(
+                        context,
+                        icon: AppIcons.lock,
+                        title: l10n.libraryTab,
+                        subtitle: l10n.librarySectionDescription,
+                        countLabel: '${libraryTemplates.length}',
+                      ),
+                    ),
+                  _isGridView
+                      ? _buildMyTemplatesGrid(libraryTemplates, context)
+                      : _buildMyTemplatesList(libraryTemplates, context),
+                ],
+                if (distributedTemplates.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: _buildSectionHeader(
+                      context,
+                      icon: AppIcons.public,
+                      title: l10n.distributionSectionTitle,
+                      subtitle: l10n.distributionSectionDescription,
+                      countLabel: '${distributedTemplates.length}',
+                    ),
+                  ),
+                  _buildMyTemplatesList(distributedTemplates, context),
+                ],
+              ],
 
               // Bottom padding for FAB
               const SliverTabBarBottomPadding(),
@@ -371,6 +424,68 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    String? countLabel,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        AppSpacing.sm,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: context.colors.primaryContainer.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, size: 18, color: context.colors.primary),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (countLabel != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                countLabel,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -395,12 +510,23 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           final template = templates[index];
           return WorkoutTemplateCard(
             template: template,
-            onTap: () => _editWorkoutTemplate(context, template), // Tap → Edit
+            onTap: () => _openLibraryTemplate(context, template),
             onStartWorkout: () =>
                 _openWorkoutTemplate(context, template), // Menu → Start workout
-            onDuplicate: () => _duplicateTemplate(context, template),
+            onDuplicate: () => _duplicateOrCustomizeTemplate(context, template),
             onShare: () => _shareTemplate(context, template),
-            onMakePublic: () => _makeTemplatePublic(context, template),
+            onMakePublic: _canManageDistribution(template)
+                ? () => _makeTemplatePublic(context, template)
+                : null,
+            onShowShareCode:
+                template.visibility ==
+                    workout_template.TemplateVisibility.unlisted
+                ? () => _showShareCodeDialog(
+                    context,
+                    templateId: template.id,
+                    templateName: template.name,
+                  )
+                : null,
             onDelete: () => _deleteWorkoutTemplate(context, template),
             preloadedStats: allStats[template.id], // Pass pre-calculated stats
           );
@@ -424,11 +550,22 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           final template = templates[index];
           return WorkoutTemplateListItem(
             template: template,
-            onTap: () => _editWorkoutTemplate(context, template),
+            onTap: () => _openLibraryTemplate(context, template),
             onStartWorkout: () => _openWorkoutTemplate(context, template),
-            onDuplicate: () => _duplicateTemplate(context, template),
+            onDuplicate: () => _duplicateOrCustomizeTemplate(context, template),
             onShare: () => _shareTemplate(context, template),
-            onMakePublic: () => _makeTemplatePublic(context, template),
+            onMakePublic: _canManageDistribution(template)
+                ? () => _makeTemplatePublic(context, template)
+                : null,
+            onShowShareCode:
+                template.visibility ==
+                    workout_template.TemplateVisibility.unlisted
+                ? () => _showShareCodeDialog(
+                    context,
+                    templateId: template.id,
+                    templateName: template.name,
+                  )
+                : null,
             onDelete: () => _deleteWorkoutTemplate(context, template),
             preloadedStats: allStats[template.id],
           );
@@ -473,15 +610,141 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     }
   }
 
-  void _editWorkoutTemplate(
+  Future<void> _editWorkoutTemplate(
     BuildContext context,
     workout_template.WorkoutTemplate template,
-  ) {
-    Navigator.of(context).push(
+  ) async {
+    if (!template.isEditable) {
+      await _customizeDistributedTemplate(context, template);
+      return;
+    }
+
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditTemplateScreen(template: template),
       ),
     );
+  }
+
+  void _openLibraryTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) {
+    if (template.isEditable) {
+      unawaited(_editWorkoutTemplate(context, template));
+      return;
+    }
+
+    context.push(AppRoutes.templateDetailPath, extra: template.id);
+  }
+
+  Future<void> _duplicateOrCustomizeTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    if (template.isEditable) {
+      await _duplicateTemplate(context, template);
+      return;
+    }
+
+    await _customizeDistributedTemplate(context, template);
+  }
+
+  workout_template.WorkoutTemplate? _findEditableSourceTemplate(
+    workout_template.WorkoutTemplate template,
+  ) {
+    final templates =
+        ref.read(customWorkoutTemplatesProvider).value ?? const [];
+    final matches =
+        templates.where((candidate) {
+          if (!candidate.isEditable) return false;
+          if (candidate.id == template.parentTemplateId) return true;
+          if (candidate.id == template.rootTemplateId) return true;
+          if (candidate.effectiveRootTemplateId ==
+              template.effectiveRootTemplateId) {
+            return true;
+          }
+          return false;
+        }).toList()..sort((a, b) {
+          int score(workout_template.WorkoutTemplate item) {
+            var value = 0;
+            if (item.id == template.parentTemplateId) value += 6;
+            if (item.id == template.rootTemplateId) value += 4;
+            if (item.effectiveRootTemplateId ==
+                template.effectiveRootTemplateId) {
+              value += 2;
+            }
+            if (item.isOriginalTemplate == template.isOriginalTemplate) {
+              value += 1;
+            }
+            return value;
+          }
+
+          final scoreCompare = score(b).compareTo(score(a));
+          if (scoreCompare != 0) return scoreCompare;
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+
+    return matches.isEmpty ? null : matches.first;
+  }
+
+  Future<void> _customizeDistributedTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    final existingSource = _findEditableSourceTemplate(template);
+    if (existingSource != null) {
+      if (!mounted) return;
+      await Navigator.of(this.context).push(
+        MaterialPageRoute(
+          builder: (context) => EditTemplateScreen(template: existingSource),
+        ),
+      );
+      return;
+    }
+
+    if (_isSaving) return;
+
+    setState(() => _isSaving = true);
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final draft = await repository.createDraftFromSharedTemplate(template.id);
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(templateQuotaProvider);
+
+      if (!mounted) return;
+
+      SnackBarService.showInfo(
+        this.context,
+        this.context.l10n.templatePrivateDraftCreated(template.name),
+      );
+      await Navigator.of(this.context).push(
+        MaterialPageRoute(
+          builder: (context) => EditTemplateScreen(template: draft),
+        ),
+      );
+    } catch (e) {
+      if (mounted) {
+        final message = localizeTemplateErrorMessage(this.context, e);
+        SnackBarService.showError(this.context, message);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  bool _canManageDistribution(workout_template.WorkoutTemplate template) {
+    if (template.visibility == workout_template.TemplateVisibility.public) {
+      return false;
+    }
+
+    if (template.visibility == workout_template.TemplateVisibility.unlisted) {
+      return template.canPublishPublic;
+    }
+
+    return template.canShareUnlisted;
   }
 
   Future<void> _deleteWorkoutTemplate(
@@ -642,35 +905,200 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     BuildContext context,
     workout_template.WorkoutTemplate template,
   ) async {
-    final result = await showSocialConsentDialog(context: context);
+    if (_isSaving) return;
 
+    if (template.visibility == workout_template.TemplateVisibility.unlisted) {
+      await _showExistingUnlistedOptions(context, template);
+      return;
+    }
+
+    final action = await _showDistributionActionDialog(context, template);
+    if (action == null || !context.mounted) return;
+
+    switch (action) {
+      case _TemplateDistributionAction.shareUnlisted:
+        await _shareTemplatePrivately(context, template);
+        break;
+      case _TemplateDistributionAction.publishPublic:
+        await _publishTemplatePublicly(context, template);
+        break;
+    }
+  }
+
+  Future<_TemplateDistributionAction?> _showDistributionActionDialog(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    return showDialog<_TemplateDistributionAction>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(AppLocalizations.of(dialogContext).shareTemplate),
+        content: Text(
+          template.isForkTemplate
+              ? AppLocalizations.of(
+                  dialogContext,
+                ).templateDistributionForkPrompt
+              : AppLocalizations.of(
+                  dialogContext,
+                ).templateDistributionOriginalPrompt,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(AppLocalizations.of(dialogContext).cancel),
+          ),
+          OutlinedButton(
+            onPressed: () => Navigator.of(
+              dialogContext,
+            ).pop(_TemplateDistributionAction.shareUnlisted),
+            child: Text(AppLocalizations.of(dialogContext).sharePrivately),
+          ),
+          if (template.canPublishPublic)
+            FilledButton(
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(_TemplateDistributionAction.publishPublic),
+              child: Text(AppLocalizations.of(dialogContext).publishPublicly),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showExistingUnlistedOptions(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    final shouldPublish = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final l10n = AppLocalizations.of(dialogContext);
+        return AlertDialog(
+          title: Text(l10n.templatePrivateShareCodeTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.templatePrivateShareCodeDescription(template.name)),
+              const SizedBox(height: AppSpacing.sm),
+              SelectableText(
+                template.id,
+                style: dialogContext.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(AppLocalizations.of(dialogContext).cancel),
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: template.id));
+                if (dialogContext.mounted) {
+                  SnackBarService.showSuccess(dialogContext, l10n.codeCopied);
+                  Navigator.of(dialogContext).pop(false);
+                }
+              },
+              child: Text(l10n.copyCode),
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                await SharePlus.instance.share(
+                  ShareParams(
+                    text:
+                        '${l10n.templatePrivateShareCodeMessage(template.name, template.id)}\n'
+                        '${l10n.templatePrivateShareCodeInstructions}',
+                  ),
+                );
+                if (dialogContext.mounted) {
+                  Navigator.of(dialogContext).pop(false);
+                }
+              },
+              child: Text(l10n.shareCode),
+            ),
+            if (template.canPublishPublic)
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(true);
+                },
+                child: Text(l10n.publishPublicly),
+              ),
+          ],
+        );
+      },
+    );
+
+    if (shouldPublish == true && template.canPublishPublic && context.mounted) {
+      await _publishTemplatePublicly(context, template);
+    }
+  }
+
+  Future<void> _shareTemplatePrivately(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final sharedTemplateId = await repository.shareTemplateUnlisted(
+        template.id,
+      );
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(storeWorkoutTemplatesProvider);
+      ref.invalidate(templateQuotaProvider);
+
+      if (!mounted || !context.mounted) return;
+
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.templateSharedPrivately,
+      );
+      await _showShareCodeDialog(
+        context,
+        templateId: sharedTemplateId,
+        templateName: template.name,
+      );
+    } catch (e) {
+      if (mounted && context.mounted) {
+        final errorMessage = localizeTemplateErrorMessage(context, e);
+        SnackBarService.showError(context, errorMessage);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  Future<void> _publishTemplatePublicly(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    if (_isSaving) return;
+
+    final result = await showSocialConsentDialog(context: context);
     if (!context.mounted) return;
 
     final isAnonymous = result == SocialConsentResult.publishAnonymous;
     if (result == SocialConsentResult.cancelled) return;
 
+    setState(() => _isSaving = true);
+
     try {
-      final userId = ref.read(currentUserIdProvider);
-      final notifier = ref.read(templateProvider.notifier);
-
-      // Convert internal template exercises to community format
-      final communityExercises = template.exercises
-          .map((e) => Exercise.fromJson(e.toJson()))
-          .toList();
-
-      // Convert internal template to community template for publishing
-      final communityTemplate = CommunityWorkoutTemplate(
-        id: '',
-        userId: userId ?? '',
-        name: template.name,
-        description: template.description,
-        exercises: communityExercises,
-        visibility: TemplateVisibility.public,
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      await repository.makeTemplatePublic(
+        template.id,
         isAnonymous: isAnonymous,
-        createdAt: DateTime.now(),
       );
-
-      await notifier.createTemplate(communityTemplate);
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(storeWorkoutTemplatesProvider);
+      ref.invalidate(templateQuotaProvider);
 
       if (context.mounted) {
         final l10n = AppLocalizations.of(context);
@@ -678,16 +1106,707 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       }
     } catch (e) {
       if (context.mounted) {
-        SnackBarService.showError(
-          context,
-          AppLocalizations.of(context).errorGeneric,
-        );
+        final errorMessage = localizeTemplateErrorMessage(context, e);
+        if (errorMessage.toLowerCase().contains('quota') ||
+            errorMessage.toLowerCase().contains('limit')) {
+          SnackBarService.showError(context, errorMessage);
+        } else {
+          SnackBarService.showError(
+            context,
+            AppLocalizations.of(context).errorGeneric,
+          );
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
       }
     }
   }
 
+  Future<void> _showShareCodeDialog(
+    BuildContext context, {
+    required String templateId,
+    required String templateName,
+  }) async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        final l10n = AppLocalizations.of(dialogContext);
+        return AlertDialog(
+          title: Text(l10n.templatePrivateShareCodeTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.templatePrivateShareCodeDescription(templateName)),
+              const SizedBox(height: AppSpacing.sm),
+              SelectableText(
+                templateId,
+                style: dialogContext.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(AppLocalizations.of(dialogContext).cancel),
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: templateId));
+                if (dialogContext.mounted) {
+                  SnackBarService.showSuccess(dialogContext, l10n.codeCopied);
+                }
+              },
+              child: Text(l10n.copyCode),
+            ),
+            FilledButton(
+              onPressed: () async {
+                await SharePlus.instance.share(
+                  ShareParams(
+                    text:
+                        '${l10n.templatePrivateShareCodeMessage(templateName, templateId)}\n'
+                        '${l10n.templatePrivateShareCodeInstructions}',
+                  ),
+                );
+                if (dialogContext.mounted) {
+                  Navigator.of(dialogContext).pop();
+                }
+              },
+              child: Text(l10n.shareCode),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _openSharedTemplateByCodeDialog(BuildContext context) async {
+    final controller = TextEditingController();
+    final template = await showDialog<workout_template.WorkoutTemplate>(
+      context: context,
+      builder: (dialogContext) {
+        final l10n = AppLocalizations.of(dialogContext);
+        return AlertDialog(
+          title: Text(l10n.useShareCode),
+          content: TextField(
+            controller: controller,
+            textCapitalization: TextCapitalization.none,
+            decoration: InputDecoration(hintText: l10n.pasteTemplateCode),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(AppLocalizations.of(dialogContext).cancel),
+            ),
+            FilledButton(
+              onPressed: () async {
+                final code = controller.text.trim();
+                if (code.isEmpty) return;
+                try {
+                  final repository = ref.read(
+                    workoutTemplateRepositoryProvider,
+                  );
+                  final sharedTemplate = await repository.getSharedTemplateById(
+                    code,
+                  );
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop(sharedTemplate);
+                  }
+                } catch (e) {
+                  if (dialogContext.mounted) {
+                    SnackBarService.showError(
+                      dialogContext,
+                      l10n.sharedTemplateNotFound,
+                    );
+                  }
+                }
+              },
+              child: Text(l10n.open),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (template != null && context.mounted) {
+      _previewDefaultTemplate(context, template);
+    }
+  }
+
+  Future<void> _downloadPublicTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    if (_isSaving) return;
+
+    final l10n = AppLocalizations.of(context);
+    final userId = ref.read(currentUserIdProvider);
+    if (userId == null) {
+      if (context.mounted) {
+        SnackBarService.showWarning(context, l10n.pleaseLogin);
+      }
+      return;
+    }
+
+    final entitlements = ref.read(tierEntitlementsProvider);
+    final existingTemplates =
+        ref.read(customWorkoutTemplatesProvider).value ?? [];
+    final privateTemplateCount = existingTemplates
+        .where((existing) => existing.isEditable)
+        .length;
+
+    if (!entitlements.canSaveTemplate(privateTemplateCount)) {
+      if (context.mounted) {
+        _showQuotaExceededDialog(context, entitlements.maxLibraryTemplates);
+      }
+      return;
+    }
+
+    if (mounted) {
+      setState(() => _isSaving = true);
+    }
+
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      await repository.downloadPublicTemplate(template.id);
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(storeWorkoutTemplatesProvider);
+      ref.invalidate(templateQuotaProvider);
+
+      if (mounted && context.mounted) {
+        SnackBarService.showCustom(
+          context,
+          message: l10n.templateDownloaded(template.name),
+          backgroundColor: context.successColor,
+          actionLabel: l10n.view,
+          onAction: () {
+            if (mounted && _tabController.length > 0) {
+              _tabController.animateTo(0);
+            }
+          },
+          duration: const Duration(seconds: 4),
+        );
+      }
+    } catch (e) {
+      if (mounted && context.mounted) {
+        final errorMessage = e.toString().toLowerCase();
+        if (errorMessage.contains('quota') || errorMessage.contains('limit')) {
+          _showQuotaExceededDialog(context, entitlements.maxLibraryTemplates);
+        } else {
+          SnackBarService.showError(context, l10n.failedToDownload);
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  Future<void> _reportSharedTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    String selectedReason = 'spam';
+    final detailsController = TextEditingController();
+
+    final shouldSubmit = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          title: Text(l10n.templateReportTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButtonFormField<String>(
+                initialValue: selectedReason,
+                decoration: InputDecoration(
+                  labelText: l10n.templateReportReasonLabel,
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: 'spam',
+                    child: Text(l10n.templateReportReasonSpam),
+                  ),
+                  DropdownMenuItem(
+                    value: 'inappropriate',
+                    child: Text(l10n.templateReportReasonInappropriate),
+                  ),
+                  DropdownMenuItem(
+                    value: 'misleading',
+                    child: Text(l10n.templateReportReasonMisleading),
+                  ),
+                  DropdownMenuItem(
+                    value: 'copyright',
+                    child: Text(l10n.templateReportReasonCopyright),
+                  ),
+                  DropdownMenuItem(
+                    value: 'other',
+                    child: Text(l10n.templateReportReasonOther),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value == null) return;
+                  setDialogState(() => selectedReason = value);
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextField(
+                controller: detailsController,
+                minLines: 3,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  labelText: l10n.templateReportDetailsLabel,
+                  hintText: l10n.templateReportDetailsHint,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(l10n.templateReportSubmit),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (shouldSubmit != true || !context.mounted) return;
+
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      await repository.reportTemplate(
+        templateId: template.id,
+        reason: selectedReason,
+        details: detailsController.text.trim(),
+      );
+      if (context.mounted) {
+        SnackBarService.showSuccess(context, l10n.templateReportSuccess);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        final message = e.toString().toLowerCase();
+        if (message.contains('already')) {
+          SnackBarService.showInfo(context, l10n.templateReportAlreadyReported);
+        } else {
+          SnackBarService.showError(context, l10n.errorGeneric);
+        }
+      }
+    }
+  }
+
+  List<Widget> _buildPublicTemplateSlivers(
+    BuildContext context,
+    List<workout_template.WorkoutTemplate> publicTemplates,
+  ) {
+    if (publicTemplates.isEmpty) {
+      return const [];
+    }
+
+    final l10n = AppLocalizations.of(context);
+
+    return [
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.sm,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: context.colors.primaryContainer.withValues(alpha: 0.55),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.colors.primary.withValues(alpha: 0.15),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.public,
+                      semanticLabel: l10n.communityStoreTitle,
+                      size: AppIconSize.medium,
+                      color: context.colors.primary,
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        l10n.communityStoreTitle,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${publicTemplates.length}',
+                      style: context.textTheme.labelLarge?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _openSharedTemplateByCodeDialog(context),
+                    icon: const Icon(Icons.pin_outlined, size: 18),
+                    label: Text(l10n.useCode),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l10n.communityStoreDescription,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final template = publicTemplates[index];
+            final currentUserId = ref.read(currentUserIdProvider);
+            final isOwnedByCurrentUser =
+                currentUserId != null && template.userId == currentUserId;
+            return DiscoverTemplateCard(
+              template: template,
+              onTap: () => _previewDefaultTemplate(context, template),
+              onUse: () => isOwnedByCurrentUser
+                  ? _openOwnedCommunityTemplate(context, template)
+                  : _downloadPublicTemplate(context, template),
+              primaryActionLabel: isOwnedByCurrentUser
+                  ? context.l10n.openInLibrary
+                  : null,
+              onReport: isOwnedByCurrentUser
+                  ? null
+                  : () => _reportSharedTemplate(context, template),
+            );
+          }, childCount: publicTemplates.length),
+        ),
+      ),
+    ];
+  }
+
+  Future<void> _openOwnedCommunityTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    final existingSource = _findEditableSourceTemplate(template);
+    if (existingSource != null) {
+      if (!mounted || !context.mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => EditTemplateScreen(template: existingSource),
+        ),
+      );
+      return;
+    }
+
+    await _customizeDistributedTemplate(context, template);
+  }
+
+  Widget _buildStoreSectionSwitcher(
+    BuildContext context, {
+    required int officialCount,
+    required int communityCount,
+  }) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.sm,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.xs),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildStoreSectionCard(
+                context,
+                value: _StoreSection.app,
+                icon: AppIcons.star,
+                title: l10n.appStoreTitle,
+                subtitle: l10n.appStoreSelectorSubtitle,
+                count: officialCount,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Expanded(
+              child: _buildStoreSectionCard(
+                context,
+                value: _StoreSection.community,
+                icon: AppIcons.public,
+                title: l10n.communityStoreTitle,
+                subtitle: l10n.communityStoreSelectorSubtitle,
+                count: communityCount,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoreSectionCard(
+    BuildContext context, {
+    required _StoreSection value,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required int count,
+  }) {
+    final isSelected = _selectedStoreSection == value;
+    final accentColor = value == _StoreSection.app
+        ? context.colors.secondary
+        : context.colors.primary;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          if (_selectedStoreSection == value) return;
+          HapticFeedback.selectionClick();
+          setState(() {
+            _selectedStoreSection = value;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: isSelected ? context.colors.surface : Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected
+                  ? accentColor.withValues(alpha: 0.35)
+                  : context.colors.outline.withValues(alpha: 0.08),
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: accentColor.withValues(alpha: 0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: accentColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(icon, size: 16, color: accentColor),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? accentColor.withValues(alpha: 0.14)
+                          : context.colors.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '$count',
+                      style: context.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isSelected
+                            ? accentColor
+                            : context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                title,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: isSelected ? accentColor : context.colors.onSurface,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  height: 1.2,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCommunityStoreEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.4),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.public,
+                size: 28,
+                color: context.colors.primary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l10n.communityStoreEmptyTitle,
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.communityStoreEmptyDescription,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            OutlinedButton.icon(
+              onPressed: () => _openSharedTemplateByCodeDialog(context),
+              icon: const Icon(Icons.pin_outlined, size: 18),
+              label: Text(l10n.useCode),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppStoreIntro(BuildContext context, int templateCount) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.sm,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: context.colors.secondaryContainer.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: context.colors.secondary.withValues(alpha: 0.15),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: context.colors.secondary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                AppIcons.star,
+                size: 18,
+                color: context.colors.secondary,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.appStoreTitle,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.appStoreDescription,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              '$templateCount',
+              style: context.textTheme.labelLarge?.copyWith(
+                color: context.colors.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDiscoverTab(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final storeTemplates =
+        ref.watch(storeWorkoutTemplatesProvider).value ??
+        const <workout_template.WorkoutTemplate>[];
     // Watch default templates from bundled JSON
     final defaultTemplatesAsync = ref.watch(defaultTemplatesProvider);
     // Watch predefined advanced technique templates
@@ -707,6 +1826,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     return RefreshIndicator(
       onRefresh: () async {
+        ref.invalidate(storeWorkoutTemplatesProvider);
         ref.invalidate(defaultTemplatesProvider);
         ref.invalidate(predefinedSupersetTemplatesProvider);
         ref.invalidate(predefinedDropsetTemplatesProvider);
@@ -717,318 +1837,295 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       },
       child: CustomScrollView(
         slivers: [
-          // ═══════════════════════════════════════════════════════════════════
-          // UX REDESIGN: Unified feed without toggle
-          // All workout templates shown first, then advanced techniques at bottom
-          // ═══════════════════════════════════════════════════════════════════
-
-          // "For You" section - personalized recommendations
-          defaultTemplatesAsync.maybeWhen(
-            data: (templates) {
-              if (templates.isEmpty) {
-                return const SliverToBoxAdapter(child: SizedBox.shrink());
-              }
-              return SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.md),
-                  child: ForYouSection(
-                    allTemplates: templates,
-                    onTemplateUse: (t) => _useDefaultTemplate(context, t),
-                    onTemplatePreview: (t) =>
-                        _previewDefaultTemplate(context, t),
-                  ),
-                ),
-              );
-            },
-            orElse: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
-          ),
-
-          // Category Filter Chips (sticky) - existing implementation
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: CategoryFilterDelegate(
-              selectedCategory: _selectedCategory,
-              onCategorySelected: (category) {
-                HapticFeedback.selectionClick();
-                setState(() => _selectedCategory = category);
-              },
+          SliverToBoxAdapter(
+            child: _buildStoreSectionSwitcher(
+              context,
+              officialCount: defaultTemplatesAsync.value?.length ?? 0,
+              communityCount: storeTemplates.length,
             ),
           ),
 
-          // Workout Templates (filtered by category)
-          defaultTemplatesAsync.when(
-            loading: () => const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(AppSpacing.lg),
-                child: Center(child: LoadingIndicator()),
+          if (_selectedStoreSection == _StoreSection.community) ...[
+            if (storeTemplates.isEmpty)
+              _buildCommunityStoreEmptyState(context)
+            else
+              ..._buildPublicTemplateSlivers(context, storeTemplates),
+          ] else ...[
+            defaultTemplatesAsync.maybeWhen(
+              data: (templates) => SliverToBoxAdapter(
+                child: _buildAppStoreIntro(context, templates.length),
               ),
+              orElse: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
             ),
-            error: (error, _) => SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Center(child: Text(l10n.errorLoadingTemplates)),
-              ),
-            ),
-            data: (templates) {
-              if (templates.isEmpty) {
+            defaultTemplatesAsync.maybeWhen(
+              data: (templates) {
+                if (templates.isEmpty) {
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                }
                 return SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Center(child: Text(l10n.noTemplatesFound)),
-                  ),
-                );
-              }
-
-              // Group templates by category
-              final categories =
-                  <String, List<workout_template.WorkoutTemplate>>{};
-              for (final t in templates) {
-                final cat = t.category ?? 'other';
-                categories.putIfAbsent(cat, () => []).add(t);
-              }
-
-              // Category display info
-              final categoryInfo = {
-                'beginner': (l10n.beginner, AppIcons.school),
-                'intermediate': (l10n.intermediate, AppIcons.trendUp),
-                'advanced': (l10n.advanced, AppIcons.localFireDepartment),
-                'home': (l10n.homeWorkouts, AppIcons.home),
-                'dumbbell': (l10n.dumbbellOnly, AppIcons.workout),
-                'express': (l10n.express, AppIcons.timer),
-                'specialty': (l10n.specialty, AppIcons.star),
-              };
-
-              // Order of categories (UX-optimized: quick wins first, intimidating last)
-              // 1. Express: ⚡ Quick wins for everyone (Chiara's priority)
-              // 2. Beginner: 🌱 Non-intimidating for Marco
-              // 3. Home: 🏠 Accessible (no gym needed)
-              // 4. Dumbbell: 💪 Minimal equipment
-              // 5. Intermediate: 📈 Growth path
-              // 6. Specialty: ⭐ Niche programs
-              // 7. Advanced: 🔥 Last - for those seeking challenge
-              final orderedCategories = [
-                'express',
-                'beginner',
-                'home',
-                'dumbbell',
-                'intermediate',
-                'specialty',
-                'advanced',
-              ];
-
-              // Filter categories based on selection
-              final categoriesToShow = _selectedCategory != null
-                  ? [_selectedCategory!]
-                  : orderedCategories;
-
-              return SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final categoryKey = categoriesToShow[index];
-                    final categoryTemplates = categories[categoryKey];
-                    if (categoryTemplates == null ||
-                        categoryTemplates.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
-
-                    final (categoryName, categoryIcon) =
-                        categoryInfo[categoryKey] ??
-                        (categoryKey, AppIcons.workout);
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Compact category header (only show if viewing all)
-                        if (_selectedCategory == null)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: AppSpacing.sm,
-                            ),
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: categoryIcon,
-                                  semanticLabel: categoryName,
-                                  size: AppIconSize.small,
-                                  color: context.colors.primary,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  categoryName,
-                                  style: context.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '${categoryTemplates.length}',
-                                  style: context.textTheme.labelMedium
-                                      ?.copyWith(
-                                        color: context.colors.onSurfaceVariant,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                        // UX REDESIGN: Vertical list with large cards
-                        // Replaces horizontal scroll of small cards
-                        // Better readability and touch targets
-                        ...categoryTemplates.map(
-                          (template) => DiscoverTemplateCard(
-                            template: template,
-                            onTap: () =>
-                                _previewDefaultTemplate(context, template),
-                            onUse: () => _useDefaultTemplate(context, template),
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
-                    );
-                  }, childCount: categoriesToShow.length),
-                ),
-              );
-            },
-          ),
-
-          // ═══════════════════════════════════════════════════════════════════
-          // ADVANCED TECHNIQUES SECTION (integrated at bottom of unified feed)
-          // UX: No more toggle - always visible as final section
-          // ═══════════════════════════════════════════════════════════════════
-
-          // Section header for advanced techniques
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                AppSpacing.xl,
-                AppSpacing.md,
-                AppSpacing.sm,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              context.colors.tertiary,
-                              context.colors.secondary,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          AppIcons.science,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Text(
-                        l10n.advancedTechniques,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    l10n.advancedTechniquesDesc,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
+                    padding: const EdgeInsets.only(top: AppSpacing.md),
+                    child: ForYouSection(
+                      allTemplates: templates,
+                      onTemplateUse: (t) => _useDefaultTemplate(context, t),
+                      onTemplatePreview: (t) =>
+                          _previewDefaultTemplate(context, t),
                     ),
                   ),
-                ],
+                );
+              },
+              orElse: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
+            ),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: CategoryFilterDelegate(
+                selectedCategory: _selectedCategory,
+                onCategorySelected: (category) {
+                  HapticFeedback.selectionClick();
+                  setState(() => _selectedCategory = category);
+                },
               ),
             ),
-          ),
+            defaultTemplatesAsync.when(
+              loading: () => const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.lg),
+                  child: Center(child: LoadingIndicator()),
+                ),
+              ),
+              error: (error, _) => SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Center(child: Text(l10n.errorLoadingTemplates)),
+                ),
+              ),
+              data: (templates) {
+                if (templates.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      child: Center(child: Text(l10n.noTemplatesFound)),
+                    ),
+                  );
+                }
 
-          // ═══════════════════════════════════════════════════════════════════
-          // Superset Templates (Custom first, then Predefined)
-          // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
-            context: context,
-            title: l10n.superset,
-            icon: AppIcons.link,
-            color: context.colors.secondary,
-            customAsync: customSupersetsAsync,
-            predefinedAsync: predefinedSupersetsAsync,
-            isExpanded: _isSupersetsExpanded,
-            onToggleExpanded: () =>
-                setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
-            customCardBuilder: (template) => CompactSupersetCard(
-              template: template,
-              onTap: () => _previewPredefinedSuperset(context, template),
-              onUse: () => _usePredefinedSuperset(context, template),
-              isCustom: true,
-            ),
-            predefinedCardBuilder: (template) => CompactSupersetCard(
-              template: template,
-              onTap: () => _previewPredefinedSuperset(context, template),
-              onUse: () => _usePredefinedSuperset(context, template),
-            ),
-          ),
+                final categories =
+                    <String, List<workout_template.WorkoutTemplate>>{};
+                for (final t in templates) {
+                  final cat = t.category ?? 'other';
+                  categories.putIfAbsent(cat, () => []).add(t);
+                }
 
-          // ═══════════════════════════════════════════════════════════════════
-          // Dropset Templates (Custom first, then Predefined)
-          // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
-            context: context,
-            title: l10n.dropset,
-            icon: AppIcons.trendDown,
-            color: context.colors.tertiary,
-            customAsync: customDropsetsAsync,
-            predefinedAsync: predefinedDropsetsAsync,
-            isExpanded: _isDropsetsExpanded,
-            onToggleExpanded: () =>
-                setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
-            customCardBuilder: (template) => CompactDropsetCard(
-              template: template,
-              onTap: () => _previewPredefinedDropset(context, template),
-              onUse: () => _usePredefinedDropset(context, template),
-              isCustom: true,
-            ),
-            predefinedCardBuilder: (template) => CompactDropsetCard(
-              template: template,
-              onTap: () => _previewPredefinedDropset(context, template),
-              onUse: () => _usePredefinedDropset(context, template),
-            ),
-          ),
+                final categoryInfo = {
+                  'beginner': (l10n.beginner, AppIcons.school),
+                  'intermediate': (l10n.intermediate, AppIcons.trendUp),
+                  'advanced': (l10n.advanced, AppIcons.localFireDepartment),
+                  'home': (l10n.homeWorkouts, AppIcons.home),
+                  'dumbbell': (l10n.dumbbellOnly, AppIcons.workout),
+                  'express': (l10n.express, AppIcons.timer),
+                  'specialty': (l10n.specialty, AppIcons.star),
+                };
 
-          // ═══════════════════════════════════════════════════════════════════
-          // Rest-Pause Templates (Custom first, then Predefined)
-          // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
-            context: context,
-            title: l10n.restPause,
-            icon: AppIcons.timer,
-            color: context.colors.error,
-            customAsync: customRestPauseAsync,
-            predefinedAsync: predefinedRestPauseAsync,
-            isExpanded: _isRestPauseExpanded,
-            onToggleExpanded: () =>
-                setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
-            customCardBuilder: (template) => CompactRestPauseCard(
-              template: template,
-              onTap: () => _previewPredefinedRestPause(context, template),
-              onUse: () => _usePredefinedRestPause(context, template),
-              isCustom: true,
+                final orderedCategories = [
+                  'express',
+                  'beginner',
+                  'home',
+                  'dumbbell',
+                  'intermediate',
+                  'specialty',
+                  'advanced',
+                ];
+
+                final categoriesToShow = _selectedCategory != null
+                    ? [_selectedCategory!]
+                    : orderedCategories;
+
+                return SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final categoryKey = categoriesToShow[index];
+                      final categoryTemplates = categories[categoryKey];
+                      if (categoryTemplates == null ||
+                          categoryTemplates.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final (categoryName, categoryIcon) =
+                          categoryInfo[categoryKey] ??
+                          (categoryKey, AppIcons.workout);
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (_selectedCategory == null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                              ),
+                              child: Row(
+                                children: [
+                                  SemanticIcon(
+                                    icon: categoryIcon,
+                                    semanticLabel: categoryName,
+                                    size: AppIconSize.small,
+                                    color: context.colors.primary,
+                                  ),
+                                  const SizedBox(width: AppSpacing.sm),
+                                  Text(
+                                    categoryName,
+                                    style: context.textTheme.titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    '${categoryTemplates.length}',
+                                    style: context.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color:
+                                              context.colors.onSurfaceVariant,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ...categoryTemplates.map(
+                            (template) => DiscoverTemplateCard(
+                              template: template,
+                              onTap: () =>
+                                  _previewDefaultTemplate(context, template),
+                              onUse: () =>
+                                  _useDefaultTemplate(context, template),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                        ],
+                      );
+                    }, childCount: categoriesToShow.length),
+                  ),
+                );
+              },
             ),
-            predefinedCardBuilder: (template) => CompactRestPauseCard(
-              template: template,
-              onTap: () => _previewPredefinedRestPause(context, template),
-              onUse: () => _usePredefinedRestPause(context, template),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.xl,
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                context.colors.tertiary,
+                                context.colors.secondary,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            AppIcons.science,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          l10n.advancedTechniques,
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.advancedTechniquesDesc,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+            _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
+              context: context,
+              title: l10n.superset,
+              icon: AppIcons.link,
+              color: context.colors.secondary,
+              customAsync: customSupersetsAsync,
+              predefinedAsync: predefinedSupersetsAsync,
+              isExpanded: _isSupersetsExpanded,
+              onToggleExpanded: () =>
+                  setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
+              customCardBuilder: (template) => CompactSupersetCard(
+                template: template,
+                onTap: () => _previewPredefinedSuperset(context, template),
+                onUse: () => _usePredefinedSuperset(context, template),
+                isCustom: true,
+              ),
+              predefinedCardBuilder: (template) => CompactSupersetCard(
+                template: template,
+                onTap: () => _previewPredefinedSuperset(context, template),
+                onUse: () => _usePredefinedSuperset(context, template),
+              ),
+            ),
+            _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
+              context: context,
+              title: l10n.dropset,
+              icon: AppIcons.trendDown,
+              color: context.colors.tertiary,
+              customAsync: customDropsetsAsync,
+              predefinedAsync: predefinedDropsetsAsync,
+              isExpanded: _isDropsetsExpanded,
+              onToggleExpanded: () =>
+                  setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
+              customCardBuilder: (template) => CompactDropsetCard(
+                template: template,
+                onTap: () => _previewPredefinedDropset(context, template),
+                onUse: () => _usePredefinedDropset(context, template),
+                isCustom: true,
+              ),
+              predefinedCardBuilder: (template) => CompactDropsetCard(
+                template: template,
+                onTap: () => _previewPredefinedDropset(context, template),
+                onUse: () => _usePredefinedDropset(context, template),
+              ),
+            ),
+            _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
+              context: context,
+              title: l10n.restPause,
+              icon: AppIcons.timer,
+              color: context.colors.error,
+              customAsync: customRestPauseAsync,
+              predefinedAsync: predefinedRestPauseAsync,
+              isExpanded: _isRestPauseExpanded,
+              onToggleExpanded: () =>
+                  setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
+              customCardBuilder: (template) => CompactRestPauseCard(
+                template: template,
+                onTap: () => _previewPredefinedRestPause(context, template),
+                onUse: () => _usePredefinedRestPause(context, template),
+                isCustom: true,
+              ),
+              predefinedCardBuilder: (template) => CompactRestPauseCard(
+                template: template,
+                onTap: () => _previewPredefinedRestPause(context, template),
+                onUse: () => _usePredefinedRestPause(context, template),
+              ),
+            ),
+          ],
 
           // Bottom padding for tab bar overlay
           const SliverTabBarBottomPadding(),
@@ -1405,7 +2502,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     if (!entitlements.canSaveTemplate(currentCount)) {
       if (context.mounted) {
-        _showQuotaExceededDialog(context, entitlements.maxTemplates);
+        _showQuotaExceededDialog(context, entitlements.maxLibraryTemplates);
       }
       return;
     }
@@ -1506,7 +2603,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
         final errorMessage = e.toString().toLowerCase();
         if (errorMessage.contains('quota') || errorMessage.contains('limit')) {
-          _showQuotaExceededDialog(context, entitlements.maxTemplates);
+          _showQuotaExceededDialog(context, entitlements.maxLibraryTemplates);
         } else if (errorMessage.contains('network') ||
             errorMessage.contains('timeout')) {
           SnackBarService.showError(context, l10n.networkError);
@@ -2625,30 +3722,73 @@ class _CustomExerciseCard extends StatelessWidget {
           child: Center(
             child: SemanticIcon(
               icon: exercise.isVariant ? AppIcons.copy : AppIcons.workout,
-              semanticLabel: exercise.nome,
+              semanticLabel: exercise.displayName,
               size: AppIconSize.small,
               color: context.colors.tertiary,
             ),
           ),
         ),
         title: Text(
-          exercise.nome,
+          exercise.displayName,
           style: context.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        subtitle: Text(
-          exercise.isVariant
-              ? l10n.variant
-              : '${exercise.focus} • ${exercise.tipoEsercizio}',
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        subtitle: exercise.isVariant
+            ? Text(
+                exercise.inclinazioneGradi != null
+                    ? '${l10n.variant} • ${exercise.inclinazioneGradi}°'
+                    : l10n.variant,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (exercise.focus.isNotEmpty ||
+                        exercise.muscoliSecondari.isNotEmpty)
+                      ExerciseTargetMuscleMap(
+                        primaryMuscles: exercise.focus,
+                        secondaryMuscles: exercise.muscoliSecondari,
+                        previewWidth: 78,
+                        previewHeight: 58,
+                        enableFullscreen: false,
+                      ),
+                    if ((exercise.focus.isNotEmpty ||
+                            exercise.muscoliSecondari.isNotEmpty) &&
+                        exercise.attrezzatura.isNotEmpty)
+                      const SizedBox(height: 6),
+                    if (exercise.attrezzatura.isNotEmpty)
+                      Row(
+                        children: [
+                          EquipmentIconBadge(
+                            equipment: exercise.attrezzatura,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              exercise.attrezzatura,
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
         trailing: CNPopupMenuButton.icon(
           buttonIcon: const CNSymbol('ellipsis', size: 16),
           buttonStyle: CNButtonStyle.plain,

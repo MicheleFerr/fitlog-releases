@@ -129,7 +129,11 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
     final today = DateTime(now.year, now.month, now.day);
 
     for (final workout in allWorkouts) {
-      if (workout.status != ScheduleStatusModel.pending) continue;
+      if (workout.status == ScheduleStatusModel.completed ||
+          workout.status == ScheduleStatusModel.skipped ||
+          workout.status == ScheduleStatusModel.missed) {
+        continue;
+      }
 
       final scheduleDate = DateTime(
         workout.scheduledDate.year,

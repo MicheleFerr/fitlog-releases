@@ -23,14 +23,13 @@ ExerciseSet makeSet({
   double? weight = 80.0,
   int? reps = 10,
   int? restTime,
-}) =>
-    ExerciseSet(
-      id: 'set_$setNumber',
-      setNumber: setNumber,
-      weight: weight,
-      reps: reps,
-      restTime: restTime,
-    );
+}) => ExerciseSet(
+  id: 'set_$setNumber',
+  setNumber: setNumber,
+  weight: weight,
+  reps: reps,
+  restTime: restTime,
+);
 
 Exercise makeExercise({
   String id = 'ex1',
@@ -38,15 +37,14 @@ Exercise makeExercise({
   ExerciseCategory category = ExerciseCategory.chest,
   List<ExerciseSet>? sets,
   int? restTime,
-}) =>
-    Exercise(
-      id: id,
-      name: name,
-      type: ExerciseType.single,
-      category: category,
-      sets: sets ?? [makeSet()],
-      restTime: restTime,
-    );
+}) => Exercise(
+  id: id,
+  name: name,
+  type: ExerciseType.single,
+  category: category,
+  sets: sets ?? [makeSet()],
+  restTime: restTime,
+);
 
 CommunityWorkoutTemplate makeTemplate({
   String id = 'tmpl1',
@@ -61,7 +59,8 @@ CommunityWorkoutTemplate makeTemplate({
     id: id,
     userId: userId,
     name: name,
-    exercises: exercises ??
+    exercises:
+        exercises ??
         [
           makeExercise(id: 'ex1', name: 'Bench Press'),
           makeExercise(id: 'ex2', name: 'Overhead Press'),
@@ -334,9 +333,9 @@ void main() {
     });
 
     test('minReps/maxReps are swapped when minReps > maxReps', () {
-      int? safeMin = 20;
-      int? safeMax = 10;
-      if (safeMin != null && safeMax != null && safeMin > safeMax) {
+      int safeMin = 20;
+      int safeMax = 10;
+      if (safeMin > safeMax) {
         final tmp = safeMin;
         safeMin = safeMax;
         safeMax = tmp;
@@ -346,9 +345,9 @@ void main() {
     });
 
     test('minReps/maxReps are not swapped when minReps <= maxReps', () {
-      int? safeMin = 8;
-      int? safeMax = 12;
-      if (safeMin != null && safeMax != null && safeMin > safeMax) {
+      int safeMin = 8;
+      int safeMax = 12;
+      if (safeMin > safeMax) {
         final tmp = safeMin;
         safeMin = safeMax;
         safeMax = tmp;
@@ -364,9 +363,7 @@ void main() {
   group('addExerciseToTemplate – duplicate detection logic (pure)', () {
     bool isDuplicate(List<Exercise> exercises, String newName) {
       final normalized = newName.trim().toLowerCase();
-      return exercises.any(
-        (e) => e.name.trim().toLowerCase() == normalized,
-      );
+      return exercises.any((e) => e.name.trim().toLowerCase() == normalized);
     }
 
     test('detects exact match as duplicate', () {
@@ -529,28 +526,31 @@ void main() {
   // replaceExerciseInTemplate – match logic
   // -------------------------------------------------------------------------
   group('replaceExerciseInTemplate – match and replace logic (pure)', () {
-    test('replaces only first matching exercise when replaceAllMatches=false', () {
-      final exercises = [
-        makeExercise(id: 'e1', name: 'Squat'),
-        makeExercise(id: 'e2', name: 'Squat'),
-        makeExercise(id: 'e3', name: 'Deadlift'),
-      ];
-      final newExercise = makeExercise(id: 'new', name: 'Box Squat');
-      final indexed = exercises.asMap().entries.toList();
-      final target = 'squat';
-      final exactMatches = indexed
-          .where((e) => e.value.name.trim().toLowerCase() == target)
-          .toList();
-      final toReplace = {exactMatches.first.key}; // first only
-      final result = indexed.map((e) {
-        if (toReplace.contains(e.key)) return newExercise;
-        return e.value;
-      }).toList();
+    test(
+      'replaces only first matching exercise when replaceAllMatches=false',
+      () {
+        final exercises = [
+          makeExercise(id: 'e1', name: 'Squat'),
+          makeExercise(id: 'e2', name: 'Squat'),
+          makeExercise(id: 'e3', name: 'Deadlift'),
+        ];
+        final newExercise = makeExercise(id: 'new', name: 'Box Squat');
+        final indexed = exercises.asMap().entries.toList();
+        final target = 'squat';
+        final exactMatches = indexed
+            .where((e) => e.value.name.trim().toLowerCase() == target)
+            .toList();
+        final toReplace = {exactMatches.first.key}; // first only
+        final result = indexed.map((e) {
+          if (toReplace.contains(e.key)) return newExercise;
+          return e.value;
+        }).toList();
 
-      expect(result[0].name, equals('Box Squat'));
-      expect(result[1].name, equals('Squat')); // unchanged
-      expect(result[2].name, equals('Deadlift'));
-    });
+        expect(result[0].name, equals('Box Squat'));
+        expect(result[1].name, equals('Squat')); // unchanged
+        expect(result[2].name, equals('Deadlift'));
+      },
+    );
 
     test('replaces all matching exercises when replaceAllMatches=true', () {
       final exercises = [
@@ -588,9 +588,7 @@ void main() {
       int? safeMaxReps,
     }) {
       final useRange = safeMinReps != null && safeMaxReps != null;
-      final resolvedReps = useRange
-          ? null
-          : (safeReps ?? base?.reps ?? 10);
+      final resolvedReps = useRange ? null : (safeReps ?? base?.reps ?? 10);
       final resolvedMin = useRange
           ? safeMinReps
           : (safeReps != null ? null : base?.minReps);
@@ -635,9 +633,12 @@ void main() {
       expect(result.reps, equals(15));
     });
 
-    test('falls back to default reps (10) when base and safeReps both null', () {
-      final result = buildSet(base: null, setNumber: 1);
-      expect(result.reps, equals(10));
-    });
+    test(
+      'falls back to default reps (10) when base and safeReps both null',
+      () {
+        final result = buildSet(base: null, setNumber: 1);
+        expect(result.reps, equals(10));
+      },
+    );
   });
 }

@@ -14,7 +14,7 @@
 ///
 /// **Usage**:
 /// ```dart
-/// final patterns = ref.watch(trainingPatternProvider(exerciseId));
+/// final patterns = ref.watch(trainingPatternProvider(exerciseName));
 /// patterns.when(
 ///   data: (results) => _buildPatternCards(results),
 ///   loading: () => const SizedBox.shrink(),
@@ -36,10 +36,15 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exe
 final trainingPatternProvider =
     FutureProvider.family<TrainingPatternResults, String>((
       ref,
-      exerciseId,
+      exerciseName,
     ) async {
       // Wait for analytics data to be available
-      final analyticsAsync = ref.watch(exerciseAnalyticsProvider(exerciseId));
+      final analyticsAsync = ref.watch(
+        exerciseAnalyticsProvider((
+          exerciseName: exerciseName,
+          exerciseId: null,
+        )),
+      );
 
       // If analytics is still loading or errored, return empty
       if (analyticsAsync.isLoading || analyticsAsync.hasError) {
@@ -71,9 +76,9 @@ final trainingPatternProvider =
 /// Useful for showing/hiding pattern indicators in lists
 final hasActionablePatternProvider = Provider.family<bool, String>((
   ref,
-  exerciseId,
+  exerciseName,
 ) {
-  final patternsAsync = ref.watch(trainingPatternProvider(exerciseId));
+  final patternsAsync = ref.watch(trainingPatternProvider(exerciseName));
 
   return patternsAsync.maybeWhen(
     data: (results) => results.hasPatterns && results.primaryPattern != null,
@@ -86,9 +91,9 @@ final hasActionablePatternProvider = Provider.family<bool, String>((
 /// Useful for showing warning indicators in lists
 final hasPatternWarningProvider = Provider.family<bool, String>((
   ref,
-  exerciseId,
+  exerciseName,
 ) {
-  final patternsAsync = ref.watch(trainingPatternProvider(exerciseId));
+  final patternsAsync = ref.watch(trainingPatternProvider(exerciseName));
 
   return patternsAsync.maybeWhen(
     data: (results) => results.hasWarnings,

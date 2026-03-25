@@ -35,6 +35,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/utils/template_error_localizer.dart';
 
 /// Rep Zone Suggestion Deck v2 - Swipeable cards with tap-to-expand
 class RepZoneSuggestionDeck extends ConsumerStatefulWidget {
@@ -281,9 +282,14 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
         countingMode: suggestion.countingMode,
       );
 
-      // Add to template
-      final updatedExercises = [...targetTemplate.exercises, newExercise];
-      final updatedTemplate = targetTemplate.copyWith(
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate = await repository.ensureEditableTemplate(
+        targetTemplate,
+      );
+
+      // Add to template or to a newly-created private draft.
+      final updatedExercises = [...editableTemplate.exercises, newExercise];
+      final updatedTemplate = editableTemplate.copyWith(
         exercises: updatedExercises,
         updatedAt: DateTime.now(),
       );
@@ -294,6 +300,12 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
 
       // Update state
       if (mounted) {
+        if (editableTemplate.id != targetTemplate.id) {
+          SnackBarService.showInfo(
+            context,
+            context.l10n.templatePrivateDraftCreated(targetTemplate.name),
+          );
+        }
         setState(() {
           _addedCount++;
           _isProcessing = false;
@@ -316,7 +328,10 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
     } catch (e) {
       if (mounted) {
         setState(() => _isProcessing = false);
-        SnackBarService.showError(context, context.l10n.errorAddingExercise);
+        SnackBarService.showError(
+          context,
+          localizeTemplateErrorMessage(context, e),
+        );
       }
     }
   }
@@ -378,9 +393,14 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
         countingMode: alternative.countingMode,
       );
 
-      // Add to template
-      final updatedExercises = [...targetTemplate.exercises, newExercise];
-      final updatedTemplate = targetTemplate.copyWith(
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      final editableTemplate = await repository.ensureEditableTemplate(
+        targetTemplate,
+      );
+
+      // Add to template or to a newly-created private draft.
+      final updatedExercises = [...editableTemplate.exercises, newExercise];
+      final updatedTemplate = editableTemplate.copyWith(
         exercises: updatedExercises,
         updatedAt: DateTime.now(),
       );
@@ -391,6 +411,12 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
 
       // Update state
       if (mounted) {
+        if (editableTemplate.id != targetTemplate.id) {
+          SnackBarService.showInfo(
+            context,
+            context.l10n.templatePrivateDraftCreated(targetTemplate.name),
+          );
+        }
         setState(() {
           _addedCount++;
           _isProcessing = false;
@@ -416,7 +442,10 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
     } catch (e) {
       if (mounted) {
         setState(() => _isProcessing = false);
-        SnackBarService.showError(context, context.l10n.errorAddingExercise);
+        SnackBarService.showError(
+          context,
+          localizeTemplateErrorMessage(context, e),
+        );
       }
     }
   }

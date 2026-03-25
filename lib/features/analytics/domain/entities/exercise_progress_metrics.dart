@@ -23,27 +23,31 @@ abstract class ExerciseProgressMetrics with _$ExerciseProgressMetrics {
 
   /// Get sets within a specific time period
   List<ExerciseSetData> getSetsInPeriod(TimePeriod period) {
-    final now = DateTime.now();
+    final today = DateTime.now();
+    final endDate = DateTime(today.year, today.month, today.day);
     DateTime cutoffDate;
 
     switch (period) {
       case TimePeriod.week:
-        cutoffDate = now.subtract(const Duration(days: 7));
+        cutoffDate = endDate.subtract(const Duration(days: 6));
         break;
       case TimePeriod.month:
-        cutoffDate = now.subtract(const Duration(days: 30));
+        cutoffDate = endDate.subtract(const Duration(days: 29));
         break;
       case TimePeriod.threeMonths:
-        cutoffDate = now.subtract(const Duration(days: 90));
+        cutoffDate = endDate.subtract(const Duration(days: 89));
         break;
       case TimePeriod.year:
-        cutoffDate = now.subtract(const Duration(days: 365));
+        cutoffDate = endDate.subtract(const Duration(days: 364));
         break;
       case TimePeriod.all:
         return allSets;
     }
 
-    return allSets.where((set) => set.date.isAfter(cutoffDate)).toList();
+    return allSets.where((set) {
+      final setDate = DateTime(set.date.year, set.date.month, set.date.day);
+      return !setDate.isBefore(cutoffDate) && !setDate.isAfter(endDate);
+    }).toList();
   }
 }
 

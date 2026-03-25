@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_d
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/utils/onboarding_health_permissions.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/initial_onboarding_style.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -234,388 +235,357 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
           )
         : true;
 
-    return KeyboardActions(
-      config: _buildKeyboardActionsConfig(context),
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
-          children: [
-            // Scrollable content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: InitialOnboardingStyle.horizontalPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: InitialOnboardingStyle.topSpacing),
-
-                    // Title
-                    Text(
-                      context.l10n.initialOnboardingBodyMeasurementsTitle,
-                      style: context.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: context.colors.onSurface,
-                        letterSpacing: -0.4,
-                      ),
+    final content = GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: InitialOnboardingStyle.horizontalPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: InitialOnboardingStyle.topSpacing),
+                  Text(
+                    context.l10n.initialOnboardingBodyMeasurementsTitle,
+                    style: context.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: context.colors.onSurface,
+                      letterSpacing: -0.4,
                     ),
-
-                    const SizedBox(height: 8),
-
-                    // Subtitle with info tooltip
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            context
-                                .l10n
-                                .initialOnboardingBodyMeasurementsSubtitle,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurface.withValues(
-                                alpha: 0.7,
-                              ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          context
+                              .l10n
+                              .initialOnboardingBodyMeasurementsSubtitle,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.onSurface.withValues(
+                              alpha: 0.7,
                             ),
                           ),
                         ),
-                        // Info tooltip button
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _showInfoTooltip = !_showInfoTooltip;
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showInfoTooltip = !_showInfoTooltip;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: context.colors.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            AppIcons.infoOutline,
+                            size: 18,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    child: _showInfoTooltip
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 12),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: context.colors.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Icon(
-                              AppIcons.infoOutline,
-                              size: 18,
-                              color: context.colors.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Expandable info tooltip
-                    AnimatedSize(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      child: _showInfoTooltip
-                          ? Container(
-                              margin: const EdgeInsets.only(top: 12),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: context.colors.surfaceContainerHighest,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                context.l10n.initialOnboardingBodyInfo,
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  color: context.colors.onSurface.withValues(
-                                    alpha: 0.7,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Height section
-                    Text(
-                      context.l10n.initialOnboardingHeightLabel,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: context.colors.onSurface,
-                      ),
-                    ),
-
-                    const SizedBox(height: 14),
-
-                    // Height value display (larger, more prominent)
-                    Center(
-                      child: Text(
-                        '${heightCm.round()} ${context.l10n.initialOnboardingHeightCm}',
-                        style: context.textTheme.displayLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: context.colors.primary,
-                          fontSize: 48,
-                          letterSpacing: -1.0,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 14),
-
-                    // Centimeter-style ruler slider
-                    _CentimeterRulerSlider(
-                      value: heightCm,
-                      onChanged: (value) {
-                        ref
-                            .read(initialOnboardingNotifierProvider.notifier)
-                            .setHeight(value);
-                      },
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Weight section
-                    Text(
-                      context.l10n.initialOnboardingWeightLabel,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: context.colors.onSurface,
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    // Weight text field
-                    TextField(
-                      controller: _weightController,
-                      focusNode: _weightFocusNode,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      textInputAction: TextInputAction.done,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d*'),
-                        ),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: '75',
-                        suffixText: 'kg',
-                        filled: true,
-                        fillColor: context.colors.surface.withValues(
-                          alpha: 0.56,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            InitialOnboardingStyle.cardRadius,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            InitialOnboardingStyle.cardRadius,
-                          ),
-                          borderSide: BorderSide(
-                            color: context.colors.outline.withValues(
-                              alpha: 0.2,
-                            ),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            InitialOnboardingStyle.cardRadius,
-                          ),
-                          borderSide: const BorderSide(
-                            color: _selectedBorderColor,
-                            width: 2,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                      ),
-                      onChanged: (value) {
-                        final weight = double.tryParse(value);
-                        if (weight != null) {
-                          ref
-                              .read(initialOnboardingNotifierProvider.notifier)
-                              .setBodyweight(weight);
-                        }
-                      },
-                      onSubmitted: (_) => FocusScope.of(context).unfocus(),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Health import card (Apple Health / Health Connect)
-                    if (Platform.isIOS ||
-                        Platform.isMacOS ||
-                        Platform.isAndroid)
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              context.colors.surface.withValues(alpha: 0.72),
-                              context.colors.surfaceContainerHighest.withValues(
-                                alpha: 0.3,
-                              ),
-                            ],
-                          ),
-                          border: Border.all(
-                            color: context.colors.outline.withValues(
-                              alpha: 0.18,
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            InitialOnboardingStyle.cardRadius,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.14),
-                              blurRadius: 16,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              Platform.isIOS || Platform.isMacOS
-                                  ? context.l10n.featureAppleHealth
-                                  : 'Health Connect',
-                              style: context.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              Platform.isAndroid && !isHealthConnectAvailable
-                                  ? context
-                                        .l10n
-                                        .bodyMeasurementsHealthConnectRequired
-                                  : context
-                                        .l10n
-                                        .bodyMeasurementsImportFromHealth,
+                            child: Text(
+                              context.l10n.initialOnboardingBodyInfo,
                               style: context.textTheme.bodySmall?.copyWith(
                                 color: context.colors.onSurface.withValues(
-                                  alpha: 0.72,
+                                  alpha: 0.7,
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              width: double.infinity,
-                              child:
-                                  Platform.isAndroid &&
-                                      !isHealthConnectAvailable
-                                  ? FilledButton.icon(
-                                      onPressed: _installHealthConnect,
-                                      icon: const Icon(
-                                        AppIcons.download,
-                                        size: 18,
-                                      ),
-                                      label: Text(
-                                        context
-                                            .l10n
-                                            .bodyMeasurementsInstallHealthConnect,
-                                      ),
-                                      style: FilledButton.styleFrom(
-                                        minimumSize: const Size.fromHeight(44),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            14,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : FilledButton.icon(
-                                      onPressed: _isImportingFromHealth
-                                          ? null
-                                          : _importFromHealth,
-                                      icon: _isImportingFromHealth
-                                          ? const SizedBox(
-                                              width: 18,
-                                              height: 18,
-                                              child: LoadingIndicator(
-                                                size: 18,
-                                                color: _brandForeground,
-                                              ),
-                                            )
-                                          : SvgPicture.asset(
-                                              Platform.isIOS || Platform.isMacOS
-                                                  ? 'assets/images/apple_logo.svg'
-                                                  : 'assets/images/google_logo.svg',
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.contain,
-                                              colorFilter:
-                                                  Platform.isIOS ||
-                                                      Platform.isMacOS
-                                                  ? ColorFilter.mode(
-                                                      context.colors.onSurface,
-                                                      BlendMode.srcIn,
-                                                    )
-                                                  : null,
-                                            ),
-                                      label: Text(
-                                        Platform.isIOS || Platform.isMacOS
-                                            ? context
-                                                  .l10n
-                                                  .bodyMeasurementsImportFromHealth
-                                            : _androidImportLabel(context),
-                                      ),
-                                      style: FilledButton.styleFrom(
-                                        minimumSize: const Size.fromHeight(44),
-                                        elevation: 0,
-                                        shadowColor: Colors.transparent,
-                                        backgroundColor: context.colors.surface
-                                            .withValues(alpha: 0.6),
-                                        foregroundColor:
-                                            context.colors.onSurface,
-                                        disabledBackgroundColor:
-                                            _brandDisabledBackground,
-                                        disabledForegroundColor:
-                                            _brandDisabledForeground,
-                                        side: BorderSide(
-                                          color: _selectedBorderColor
-                                              .withValues(alpha: 0.7),
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    context.l10n.initialOnboardingHeightLabel,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Center(
+                    child: Text(
+                      '${heightCm.round()} ${context.l10n.initialOnboardingHeightCm}',
+                      style: context.textTheme.displayLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: context.colors.primary,
+                        fontSize: 48,
+                        letterSpacing: -1.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  _CentimeterRulerSlider(
+                    value: heightCm,
+                    onChanged: (value) {
+                      ref
+                          .read(initialOnboardingNotifierProvider.notifier)
+                          .setHeight(value);
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    context.l10n.initialOnboardingWeightLabel,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _weightController,
+                    focusNode: _weightFocusNode,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    textInputAction: TextInputAction.done,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d*'),
+                      ),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: '75',
+                      suffixText: 'kg',
+                      filled: true,
+                      fillColor: context.colors.surface.withValues(alpha: 0.56),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          InitialOnboardingStyle.cardRadius,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          InitialOnboardingStyle.cardRadius,
+                        ),
+                        borderSide: BorderSide(
+                          color: context.colors.outline.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          InitialOnboardingStyle.cardRadius,
+                        ),
+                        borderSide: const BorderSide(
+                          color: _selectedBorderColor,
+                          width: 2,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      final weight = double.tryParse(value);
+                      if (weight != null) {
+                        ref
+                            .read(initialOnboardingNotifierProvider.notifier)
+                            .setBodyweight(weight);
+                      }
+                    },
+                    onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                  ),
+                  const SizedBox(height: 20),
+                  if (Platform.isIOS || Platform.isMacOS || Platform.isAndroid)
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            context.colors.surface.withValues(alpha: 0.72),
+                            context.colors.surfaceContainerHighest.withValues(
+                              alpha: 0.3,
                             ),
                           ],
                         ),
+                        border: Border.all(
+                          color: context.colors.outline.withValues(alpha: 0.18),
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          InitialOnboardingStyle.cardRadius,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.14),
+                            blurRadius: 16,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-
-                    const SizedBox(height: 12),
-                  ],
-                ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Platform.isIOS || Platform.isMacOS
+                                ? context.l10n.featureAppleHealth
+                                : 'Health Connect',
+                            style: context.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            Platform.isAndroid && !isHealthConnectAvailable
+                                ? context
+                                      .l10n
+                                      .bodyMeasurementsHealthConnectRequired
+                                : context.l10n.bodyMeasurementsImportFromHealth,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colors.onSurface.withValues(
+                                alpha: 0.72,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child:
+                                Platform.isAndroid && !isHealthConnectAvailable
+                                    ? FilledButton.icon(
+                                        onPressed: _installHealthConnect,
+                                        icon: const Icon(
+                                          AppIcons.download,
+                                          size: 18,
+                                        ),
+                                        label: Text(
+                                          context
+                                              .l10n
+                                              .bodyMeasurementsInstallHealthConnect,
+                                        ),
+                                        style: FilledButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(44),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                          ),
+                                        ),
+                                      )
+                                    : FilledButton.icon(
+                                        onPressed: _isImportingFromHealth
+                                            ? null
+                                            : _importFromHealth,
+                                        icon: _isImportingFromHealth
+                                            ? const SizedBox(
+                                                width: 18,
+                                                height: 18,
+                                                child: LoadingIndicator(
+                                                  size: 18,
+                                                  color: _brandForeground,
+                                                ),
+                                              )
+                                            : SvgPicture.asset(
+                                                Platform.isIOS ||
+                                                        Platform.isMacOS
+                                                    ? 'assets/images/apple_logo.svg'
+                                                    : 'assets/images/google_logo.svg',
+                                                width: 18,
+                                                height: 18,
+                                                fit: BoxFit.contain,
+                                                colorFilter:
+                                                    Platform.isIOS ||
+                                                            Platform.isMacOS
+                                                        ? ColorFilter.mode(
+                                                            context
+                                                                .colors
+                                                                .onSurface,
+                                                            BlendMode.srcIn,
+                                                          )
+                                                        : null,
+                                              ),
+                                        label: Text(
+                                          Platform.isIOS || Platform.isMacOS
+                                              ? context.l10n
+                                                  .bodyMeasurementsImportFromHealth
+                                              : _androidImportLabel(context),
+                                        ),
+                                        style: FilledButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(44),
+                                          elevation: 0,
+                                          shadowColor: Colors.transparent,
+                                          backgroundColor: context
+                                              .colors
+                                              .surface
+                                              .withValues(alpha: 0.6),
+                                          foregroundColor:
+                                              context.colors.onSurface,
+                                          disabledBackgroundColor:
+                                              _brandDisabledBackground,
+                                          disabledForegroundColor:
+                                              _brandDisabledForeground,
+                                          side: BorderSide(
+                                            color: _selectedBorderColor
+                                                .withValues(alpha: 0.7),
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                          ),
+                                        ),
+                                      ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                ],
               ),
             ),
-
-            // Continue button - fixed at bottom
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  InitialOnboardingStyle.horizontalPadding,
-                  0,
-                  InitialOnboardingStyle.horizontalPadding,
-                  16,
-                ),
-                child: FilledButton(
-                  onPressed: state.canProceedFromStep(3)
-                      ? () => ref
-                            .read(initialOnboardingNotifierProvider.notifier)
-                            .nextStep()
-                      : null,
-                  style: InitialOnboardingStyle.primaryButtonStyle(context),
-                  child: Text(context.l10n.initialOnboardingContinue),
-                ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                InitialOnboardingStyle.horizontalPadding,
+                0,
+                InitialOnboardingStyle.horizontalPadding,
+                16,
+              ),
+              child: FilledButton(
+                onPressed: state.canProceedFromStep(3)
+                    ? () => ref
+                          .read(initialOnboardingNotifierProvider.notifier)
+                          .nextStep()
+                    : null,
+                style: InitialOnboardingStyle.primaryButtonStyle(context),
+                child: Text(context.l10n.initialOnboardingContinue),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+
+    if (Platform.isAndroid) {
+      return content;
+    }
+
+    return KeyboardActions(
+      config: _buildKeyboardActionsConfig(context),
+      child: content,
     );
   }
 
@@ -651,40 +621,41 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
     setState(() => _isImportingFromHealth = true);
 
     try {
-      // 1. Request ALL essential permissions (workout + bodyWeight + height)
-      // This way user grants everything the app needs in one dialog
-      debugPrint(
-        '[HealthKit] Requesting essential permissions (workout + bodyWeight + height)...',
+      // 1. Only request missing core permissions to avoid duplicate prompts.
+      final currentPermissionStatus = await ref.read(
+        healthPermissionStatusProvider.future,
       );
+      final missingTypes = missingOnboardingCoreHealthTypes(
+        currentPermissionStatus,
+      );
+
       final permissionController = ref.read(
         healthPermissionControllerProvider.notifier,
       );
-      await permissionController.requestPermissions(
-        dataTypes: [
-          HealthDataType.workout,
-          HealthDataType.bodyWeight,
-          HealthDataType.height,
-        ],
-      );
+      if (missingTypes.isNotEmpty) {
+        debugPrint(
+          '[HealthKit] Requesting missing core permissions: $missingTypes',
+        );
+        await permissionController.requestPermissions(dataTypes: missingTypes);
+      } else {
+        debugPrint('[HealthKit] Core permissions already available');
+      }
 
       if (!mounted) return;
 
-      // 2. Check if bodyWeight permission was granted (we need this for import)
-      final permissionState = ref.read(healthPermissionControllerProvider);
-      final hasWeightPermission = permissionState.when(
-        data: (status) => status.canSync(HealthDataType.bodyWeight),
-        loading: () => false,
-        error: (_, __) => false,
+      // 2. Refresh runtime status after the optional permission request.
+      ref.invalidate(healthPermissionStatusProvider);
+      final permissionStatus = await ref.read(
+        healthPermissionStatusProvider.future,
       );
-      final hasHeightPermission = permissionState.when(
-        data: (status) => status.canSync(HealthDataType.height),
-        loading: () => false,
-        error: (_, __) => false,
+      final hasWeightPermission = permissionStatus.canAttemptSync(
+        HealthDataType.bodyWeight,
       );
-      final hasWorkoutPermission = permissionState.when(
-        data: (status) => status.canSync(HealthDataType.workout),
-        loading: () => false,
-        error: (_, __) => false,
+      final hasHeightPermission = permissionStatus.canAttemptSync(
+        HealthDataType.height,
+      );
+      final hasWorkoutPermission = permissionStatus.canAttemptSync(
+        HealthDataType.workout,
       );
       debugPrint(
         '[HealthKit] Permissions granted - workout: $hasWorkoutPermission, '

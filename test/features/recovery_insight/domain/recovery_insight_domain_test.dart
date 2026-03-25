@@ -169,19 +169,22 @@ void main() {
         expect(insight.formattedLastNight, equals('--'));
       });
 
-      test('returns "--" when lastNightSleep is Duration.zero with sleep data', () {
-        final insight = RecoveryInsight(
-          score: 75,
-          category: RecoveryCategory.good,
-          recommendation: 'test',
-          lastNightSleep: Duration.zero,
-          weeklyAverageHours: 7.0,
-          consecutiveBadNights: 0,
-          streakDays: 0,
-          hasSleepData: true,
-        );
-        expect(insight.formattedLastNight, equals('--'));
-      });
+      test(
+        'returns "--" when lastNightSleep is Duration.zero with sleep data',
+        () {
+          final insight = RecoveryInsight(
+            score: 75,
+            category: RecoveryCategory.good,
+            recommendation: 'test',
+            lastNightSleep: Duration.zero,
+            weeklyAverageHours: 7.0,
+            consecutiveBadNights: 0,
+            streakDays: 0,
+            hasSleepData: true,
+          );
+          expect(insight.formattedLastNight, equals('--'));
+        },
+      );
 
       test('returns "8h" when minutes are 0', () {
         final insight = RecoveryInsight(
@@ -414,43 +417,73 @@ void main() {
   group('RecoveryCategoryExtension', () {
     group('fromScore()', () {
       test('returns optimal for score 85', () {
-        expect(RecoveryCategoryExtension.fromScore(85), equals(RecoveryCategory.optimal));
+        expect(
+          RecoveryCategoryExtension.fromScore(85),
+          equals(RecoveryCategory.optimal),
+        );
       });
 
       test('returns optimal for score 100', () {
-        expect(RecoveryCategoryExtension.fromScore(100), equals(RecoveryCategory.optimal));
+        expect(
+          RecoveryCategoryExtension.fromScore(100),
+          equals(RecoveryCategory.optimal),
+        );
       });
 
       test('returns good for score 70', () {
-        expect(RecoveryCategoryExtension.fromScore(70), equals(RecoveryCategory.good));
+        expect(
+          RecoveryCategoryExtension.fromScore(70),
+          equals(RecoveryCategory.good),
+        );
       });
 
       test('returns good for score 84', () {
-        expect(RecoveryCategoryExtension.fromScore(84), equals(RecoveryCategory.good));
+        expect(
+          RecoveryCategoryExtension.fromScore(84),
+          equals(RecoveryCategory.good),
+        );
       });
 
       test('returns moderate for score 55', () {
-        expect(RecoveryCategoryExtension.fromScore(55), equals(RecoveryCategory.moderate));
+        expect(
+          RecoveryCategoryExtension.fromScore(55),
+          equals(RecoveryCategory.moderate),
+        );
       });
 
       test('returns moderate for score 69', () {
-        expect(RecoveryCategoryExtension.fromScore(69), equals(RecoveryCategory.moderate));
+        expect(
+          RecoveryCategoryExtension.fromScore(69),
+          equals(RecoveryCategory.moderate),
+        );
       });
 
       test('returns low for score 40', () {
-        expect(RecoveryCategoryExtension.fromScore(40), equals(RecoveryCategory.low));
+        expect(
+          RecoveryCategoryExtension.fromScore(40),
+          equals(RecoveryCategory.low),
+        );
       });
 
       test('returns low for score 54', () {
-        expect(RecoveryCategoryExtension.fromScore(54), equals(RecoveryCategory.low));
+        expect(
+          RecoveryCategoryExtension.fromScore(54),
+          equals(RecoveryCategory.low),
+        );
       });
 
       test('returns critical for score 39', () {
-        expect(RecoveryCategoryExtension.fromScore(39), equals(RecoveryCategory.critical));
+        expect(
+          RecoveryCategoryExtension.fromScore(39),
+          equals(RecoveryCategory.critical),
+        );
       });
 
       test('returns critical for score 0', () {
-        expect(RecoveryCategoryExtension.fromScore(0), equals(RecoveryCategory.critical));
+        expect(
+          RecoveryCategoryExtension.fromScore(0),
+          equals(RecoveryCategory.critical),
+        );
       });
     });
 
@@ -622,39 +655,66 @@ void main() {
 
     group('SleepQualityExtension.fromHours()', () {
       test('returns critical for 5.9h (less than 6)', () {
-        expect(SleepQualityExtension.fromHours(5.9), equals(SleepQuality.critical));
+        expect(
+          SleepQualityExtension.fromHours(5.9),
+          equals(SleepQuality.critical),
+        );
       });
 
       test('returns critical for 0h', () {
-        expect(SleepQualityExtension.fromHours(0), equals(SleepQuality.critical));
+        expect(
+          SleepQualityExtension.fromHours(0),
+          equals(SleepQuality.critical),
+        );
       });
 
       test('boundary: returns suboptimal for exactly 6h', () {
-        expect(SleepQualityExtension.fromHours(6.0), equals(SleepQuality.suboptimal));
+        expect(
+          SleepQualityExtension.fromHours(6.0),
+          equals(SleepQuality.suboptimal),
+        );
       });
 
       test('returns suboptimal for 6.5h', () {
-        expect(SleepQualityExtension.fromHours(6.5), equals(SleepQuality.suboptimal));
+        expect(
+          SleepQualityExtension.fromHours(6.5),
+          equals(SleepQuality.suboptimal),
+        );
       });
 
       test('boundary: returns optimal for exactly 7h', () {
-        expect(SleepQualityExtension.fromHours(7.0), equals(SleepQuality.optimal));
+        expect(
+          SleepQualityExtension.fromHours(7.0),
+          equals(SleepQuality.optimal),
+        );
       });
 
       test('returns optimal for 8h', () {
-        expect(SleepQualityExtension.fromHours(8.0), equals(SleepQuality.optimal));
+        expect(
+          SleepQualityExtension.fromHours(8.0),
+          equals(SleepQuality.optimal),
+        );
       });
 
       test('boundary: returns optimal for exactly 9h', () {
-        expect(SleepQualityExtension.fromHours(9.0), equals(SleepQuality.optimal));
+        expect(
+          SleepQualityExtension.fromHours(9.0),
+          equals(SleepQuality.optimal),
+        );
       });
 
       test('returns excessive for 9.1h', () {
-        expect(SleepQualityExtension.fromHours(9.1), equals(SleepQuality.excessive));
+        expect(
+          SleepQualityExtension.fromHours(9.1),
+          equals(SleepQuality.excessive),
+        );
       });
 
       test('returns excessive for 11h', () {
-        expect(SleepQualityExtension.fromHours(11.0), equals(SleepQuality.excessive));
+        expect(
+          SleepQualityExtension.fromHours(11.0),
+          equals(SleepQuality.excessive),
+        );
       });
     });
 
@@ -982,85 +1042,100 @@ void main() {
         expect(correlation.summaryMessageKey, equals('not_enough_data'));
       });
 
-      test('returns "consistently_good:..." when pattern is consistentlyGood', () {
-        const correlation = SleepWorkoutCorrelation(
-          volumeChangeAbove7h: 5.0,
-          volumeChangeBelow6h: 0.0,
-          workoutSampleSize: 10,
-          sleepSampleSize: 14,
-          isSignificant: false,
-          sleepPattern: SleepPattern.consistentlyGood,
-          averageSleepHours: 8.0,
-          averageVolume: 5000.0,
-        );
-        final key = correlation.summaryMessageKey;
-        expect(key, startsWith('consistently_good:'));
-        expect(key, contains('8.0h'));
-        expect(key, contains('5000kg'));
-      });
+      test(
+        'returns "consistently_good:..." when pattern is consistentlyGood',
+        () {
+          const correlation = SleepWorkoutCorrelation(
+            volumeChangeAbove7h: 5.0,
+            volumeChangeBelow6h: 0.0,
+            workoutSampleSize: 10,
+            sleepSampleSize: 14,
+            isSignificant: false,
+            sleepPattern: SleepPattern.consistentlyGood,
+            averageSleepHours: 8.0,
+            averageVolume: 5000.0,
+          );
+          final key = correlation.summaryMessageKey;
+          expect(key, startsWith('consistently_good:'));
+          expect(key, contains('8.0h'));
+          expect(key, contains('5000kg'));
+        },
+      );
 
-      test('returns "consistently_poor:..." when pattern is consistentlyPoor', () {
-        const correlation = SleepWorkoutCorrelation(
-          volumeChangeAbove7h: 0.0,
-          volumeChangeBelow6h: -20.0,
-          workoutSampleSize: 8,
-          sleepSampleSize: 10,
-          isSignificant: false,
-          sleepPattern: SleepPattern.consistentlyPoor,
-          averageSleepHours: 5.5,
-          averageVolume: 3000.0,
-        );
-        final key = correlation.summaryMessageKey;
-        expect(key, startsWith('consistently_poor:'));
-        expect(key, contains('5.5h'));
-        expect(key, contains('3000kg'));
-      });
+      test(
+        'returns "consistently_poor:..." when pattern is consistentlyPoor',
+        () {
+          const correlation = SleepWorkoutCorrelation(
+            volumeChangeAbove7h: 0.0,
+            volumeChangeBelow6h: -20.0,
+            workoutSampleSize: 8,
+            sleepSampleSize: 10,
+            isSignificant: false,
+            sleepPattern: SleepPattern.consistentlyPoor,
+            averageSleepHours: 5.5,
+            averageVolume: 3000.0,
+          );
+          final key = correlation.summaryMessageKey;
+          expect(key, startsWith('consistently_poor:'));
+          expect(key, contains('5.5h'));
+          expect(key, contains('3000kg'));
+        },
+      );
 
-      test('returns "not_significant" when variable but isSignificant is false', () {
-        const correlation = SleepWorkoutCorrelation(
-          volumeChangeAbove7h: 3.0,
-          volumeChangeBelow6h: -2.0,
-          workoutSampleSize: 8,
-          sleepSampleSize: 10,
-          isSignificant: false,
-          sleepPattern: SleepPattern.variable,
-        );
-        expect(correlation.summaryMessageKey, equals('not_significant'));
-      });
+      test(
+        'returns "not_significant" when variable but isSignificant is false',
+        () {
+          const correlation = SleepWorkoutCorrelation(
+            volumeChangeAbove7h: 3.0,
+            volumeChangeBelow6h: -2.0,
+            workoutSampleSize: 8,
+            sleepSampleSize: 10,
+            isSignificant: false,
+            sleepPattern: SleepPattern.variable,
+          );
+          expect(correlation.summaryMessageKey, equals('not_significant'));
+        },
+      );
 
-      test('returns "significant:..." when variable and isSignificant is true', () {
-        const correlation = SleepWorkoutCorrelation(
-          volumeChangeAbove7h: 12.0,
-          volumeChangeBelow6h: -15.0,
-          workoutSampleSize: 15,
-          sleepSampleSize: 20,
-          isSignificant: true,
-          sleepPattern: SleepPattern.variable,
-        );
-        final key = correlation.summaryMessageKey;
-        expect(key, startsWith('significant:'));
-        // good effect is "increase" (12 > 0), poor effect is "decrease" (-15 < 0)
-        expect(key, contains('increase'));
-        expect(key, contains('decrease'));
-      });
+      test(
+        'returns "significant:..." when variable and isSignificant is true',
+        () {
+          const correlation = SleepWorkoutCorrelation(
+            volumeChangeAbove7h: 12.0,
+            volumeChangeBelow6h: -15.0,
+            workoutSampleSize: 15,
+            sleepSampleSize: 20,
+            isSignificant: true,
+            sleepPattern: SleepPattern.variable,
+          );
+          final key = correlation.summaryMessageKey;
+          expect(key, startsWith('significant:'));
+          // good effect is "increase" (12 > 0), poor effect is "decrease" (-15 < 0)
+          expect(key, contains('increase'));
+          expect(key, contains('decrease'));
+        },
+      );
 
-      test('significant key encodes correct effect directions for both increase cases', () {
-        // volumeChangeAbove7h < 0 → "decrease"
-        // volumeChangeBelow6h >= 0 → "increase"
-        const correlation = SleepWorkoutCorrelation(
-          volumeChangeAbove7h: -5.0,
-          volumeChangeBelow6h: 3.0,
-          workoutSampleSize: 12,
-          sleepSampleSize: 15,
-          isSignificant: true,
-          sleepPattern: SleepPattern.variable,
-        );
-        final key = correlation.summaryMessageKey;
-        expect(key, startsWith('significant:'));
-        final parts = key.split(':');
-        expect(parts[1], equals('decrease')); // goodEffect
-        expect(parts[2], equals('increase')); // poorEffect
-      });
+      test(
+        'significant key encodes correct effect directions for both increase cases',
+        () {
+          // volumeChangeAbove7h < 0 → "decrease"
+          // volumeChangeBelow6h >= 0 → "increase"
+          const correlation = SleepWorkoutCorrelation(
+            volumeChangeAbove7h: -5.0,
+            volumeChangeBelow6h: 3.0,
+            workoutSampleSize: 12,
+            sleepSampleSize: 15,
+            isSignificant: true,
+            sleepPattern: SleepPattern.variable,
+          );
+          final key = correlation.summaryMessageKey;
+          expect(key, startsWith('significant:'));
+          final parts = key.split(':');
+          expect(parts[1], equals('decrease')); // goodEffect
+          expect(parts[2], equals('increase')); // poorEffect
+        },
+      );
     });
   });
 
@@ -1211,7 +1286,9 @@ void main() {
           sleepHistory: sleepHistory,
           workoutHistory: [],
         );
-        final expectedCategory = RecoveryCategoryExtension.fromScore(result.score);
+        final expectedCategory = RecoveryCategoryExtension.fromScore(
+          result.score,
+        );
         expect(result.category, equals(expectedCategory));
       });
 
@@ -1272,6 +1349,7 @@ void main() {
 
         // The penalty version has 3 consecutive bad nights → -10%
         // so it should have a lower score than identical average without the streak
+        expect(withPenaltyResult.score, lessThan(noPenaltyResult.score));
         expect(withPenaltyResult.consecutiveBadNights, greaterThanOrEqualTo(2));
       });
 
@@ -1279,7 +1357,10 @@ void main() {
         final sleepHistory = [
           buildSleepRecordForNight(daysAgo: 0, asleepHours: 5.0), // bad
           buildSleepRecordForNight(daysAgo: 1, asleepHours: 5.0), // bad
-          buildSleepRecordForNight(daysAgo: 2, asleepHours: 8.0), // good → stops
+          buildSleepRecordForNight(
+            daysAgo: 2,
+            asleepHours: 8.0,
+          ), // good → stops
         ];
         final result = service.calculateRecovery(
           sleepHistory: sleepHistory,
@@ -1390,42 +1471,60 @@ void main() {
         for (int i = 0; i < 3; i++) {
           final workoutDate = DateTime.now().subtract(Duration(days: i + 1));
           final sleepDate = DateTime.now().subtract(Duration(days: i + 2));
-          workouts.add(Workout(
-            id: 'good-$i',
-            name: 'Good Sleep Workout $i',
-            exercises: [buildExercise()],
-            status: WorkoutStatus.completed,
-            startTime: workoutDate.subtract(const Duration(hours: 1)),
-            endTime: DateTime(workoutDate.year, workoutDate.month, workoutDate.day, 10),
-            createdAt: workoutDate,
-            updatedAt: workoutDate,
-          ));
-          sleepRecords.add(SleepRecord.fromHealthData(
-            date: DateTime(sleepDate.year, sleepDate.month, sleepDate.day),
-            asleepMinutes: 480, // 8h - good
-            inBedMinutes: 510,
-          ));
+          workouts.add(
+            Workout(
+              id: 'good-$i',
+              name: 'Good Sleep Workout $i',
+              exercises: [buildExercise()],
+              status: WorkoutStatus.completed,
+              startTime: workoutDate.subtract(const Duration(hours: 1)),
+              endTime: DateTime(
+                workoutDate.year,
+                workoutDate.month,
+                workoutDate.day,
+                10,
+              ),
+              createdAt: workoutDate,
+              updatedAt: workoutDate,
+            ),
+          );
+          sleepRecords.add(
+            SleepRecord.fromHealthData(
+              date: DateTime(sleepDate.year, sleepDate.month, sleepDate.day),
+              asleepMinutes: 480, // 8h - good
+              inBedMinutes: 510,
+            ),
+          );
         }
 
         // Days 10-12: workout with poor sleep night before
         for (int i = 0; i < 3; i++) {
           final workoutDate = DateTime.now().subtract(Duration(days: i + 10));
           final sleepDate = DateTime.now().subtract(Duration(days: i + 11));
-          workouts.add(Workout(
-            id: 'poor-$i',
-            name: 'Poor Sleep Workout $i',
-            exercises: [buildExercise()],
-            status: WorkoutStatus.completed,
-            startTime: workoutDate.subtract(const Duration(hours: 1)),
-            endTime: DateTime(workoutDate.year, workoutDate.month, workoutDate.day, 10),
-            createdAt: workoutDate,
-            updatedAt: workoutDate,
-          ));
-          sleepRecords.add(SleepRecord.fromHealthData(
-            date: DateTime(sleepDate.year, sleepDate.month, sleepDate.day),
-            asleepMinutes: 300, // 5h - poor
-            inBedMinutes: 360,
-          ));
+          workouts.add(
+            Workout(
+              id: 'poor-$i',
+              name: 'Poor Sleep Workout $i',
+              exercises: [buildExercise()],
+              status: WorkoutStatus.completed,
+              startTime: workoutDate.subtract(const Duration(hours: 1)),
+              endTime: DateTime(
+                workoutDate.year,
+                workoutDate.month,
+                workoutDate.day,
+                10,
+              ),
+              createdAt: workoutDate,
+              updatedAt: workoutDate,
+            ),
+          );
+          sleepRecords.add(
+            SleepRecord.fromHealthData(
+              date: DateTime(sleepDate.year, sleepDate.month, sleepDate.day),
+              asleepMinutes: 300, // 5h - poor
+              inBedMinutes: 360,
+            ),
+          );
         }
 
         final result = service.calculateCorrelation(
@@ -1434,7 +1533,8 @@ void main() {
         );
 
         // With 3 workouts in good group and 3 in poor group → should be significant
-        if (result.workoutsWithGoodSleep >= 3 && result.workoutsWithPoorSleep >= 3) {
+        if (result.workoutsWithGoodSleep >= 3 &&
+            result.workoutsWithPoorSleep >= 3) {
           expect(result.isSignificant, isTrue);
         }
       });
@@ -1496,79 +1596,108 @@ void main() {
         expect(result.isSignificant, isFalse);
       });
 
-      test('volume change above 7h is positive when good sleep workouts have higher volume', () {
-        // Create scenario where good-sleep workouts have higher volume than average
-        final now = DateTime.now();
+      test(
+        'volume change above 7h is positive when good sleep workouts have higher volume',
+        () {
+          // Create scenario where good-sleep workouts have higher volume than average
+          final now = DateTime.now();
 
-        // Three good-sleep workout days (8h sleep → next day workout at 100kg×10 per set)
-        // Three poor-sleep workout days (5h sleep → next day workout at 50kg×5 per set)
-        final workouts = <Workout>[];
-        final sleepRecords = <SleepRecord>[];
+          // Three good-sleep workout days (8h sleep → next day workout at 100kg×10 per set)
+          // Three poor-sleep workout days (5h sleep → next day workout at 50kg×5 per set)
+          final workouts = <Workout>[];
+          final sleepRecords = <SleepRecord>[];
 
-        for (int i = 0; i < 3; i++) {
-          // Good sleep day (offset by chunks to avoid date clashes)
-          final goodWorkoutDate = DateTime(now.year, now.month, now.day - (i * 2 + 1), 10);
-          final goodSleepDate = DateTime(now.year, now.month, now.day - (i * 2 + 2));
+          for (int i = 0; i < 3; i++) {
+            // Good sleep day (offset by chunks to avoid date clashes)
+            final goodWorkoutDate = DateTime(
+              now.year,
+              now.month,
+              now.day - (i * 2 + 1),
+              10,
+            );
+            final goodSleepDate = DateTime(
+              now.year,
+              now.month,
+              now.day - (i * 2 + 2),
+            );
 
-          workouts.add(Workout(
-            id: 'g$i',
-            name: 'Heavy',
-            exercises: [
-              buildExercise(
-                sets: [buildSet(weight: 100, reps: 10, isCompleted: true)],
+            workouts.add(
+              Workout(
+                id: 'g$i',
+                name: 'Heavy',
+                exercises: [
+                  buildExercise(
+                    sets: [buildSet(weight: 100, reps: 10, isCompleted: true)],
+                  ),
+                ],
+                status: WorkoutStatus.completed,
+                startTime: goodWorkoutDate.subtract(const Duration(hours: 1)),
+                endTime: goodWorkoutDate,
+                createdAt: goodWorkoutDate,
+                updatedAt: goodWorkoutDate,
               ),
-            ],
-            status: WorkoutStatus.completed,
-            startTime: goodWorkoutDate.subtract(const Duration(hours: 1)),
-            endTime: goodWorkoutDate,
-            createdAt: goodWorkoutDate,
-            updatedAt: goodWorkoutDate,
-          ));
-          sleepRecords.add(SleepRecord.fromHealthData(
-            date: goodSleepDate,
-            asleepMinutes: 480, // 8h
-            inBedMinutes: 510,
-          ));
-        }
-
-        for (int i = 0; i < 3; i++) {
-          // Poor sleep day
-          final poorWorkoutDate = DateTime(now.year, now.month, now.day - (i * 2 + 13), 10);
-          final poorSleepDate = DateTime(now.year, now.month, now.day - (i * 2 + 14));
-
-          workouts.add(Workout(
-            id: 'p$i',
-            name: 'Light',
-            exercises: [
-              buildExercise(
-                sets: [buildSet(weight: 50, reps: 5, isCompleted: true)],
+            );
+            sleepRecords.add(
+              SleepRecord.fromHealthData(
+                date: goodSleepDate,
+                asleepMinutes: 480, // 8h
+                inBedMinutes: 510,
               ),
-            ],
-            status: WorkoutStatus.completed,
-            startTime: poorWorkoutDate.subtract(const Duration(hours: 1)),
-            endTime: poorWorkoutDate,
-            createdAt: poorWorkoutDate,
-            updatedAt: poorWorkoutDate,
-          ));
-          sleepRecords.add(SleepRecord.fromHealthData(
-            date: poorSleepDate,
-            asleepMinutes: 300, // 5h
-            inBedMinutes: 360,
-          ));
-        }
+            );
+          }
 
-        final result = service.calculateCorrelation(
-          sleepHistory: sleepRecords,
-          workoutHistory: workouts,
-        );
+          for (int i = 0; i < 3; i++) {
+            // Poor sleep day
+            final poorWorkoutDate = DateTime(
+              now.year,
+              now.month,
+              now.day - (i * 2 + 13),
+              10,
+            );
+            final poorSleepDate = DateTime(
+              now.year,
+              now.month,
+              now.day - (i * 2 + 14),
+            );
 
-        // If matching worked: good sleep group has 1000 vol/workout, poor has 250 vol/workout
-        // volumeChangeAbove7h should be positive, volumeChangeBelow6h should be negative
-        if (result.workoutSampleSize > 0) {
-          expect(result.volumeChangeAbove7h, greaterThan(0));
-          expect(result.volumeChangeBelow6h, lessThan(0));
-        }
-      });
+            workouts.add(
+              Workout(
+                id: 'p$i',
+                name: 'Light',
+                exercises: [
+                  buildExercise(
+                    sets: [buildSet(weight: 50, reps: 5, isCompleted: true)],
+                  ),
+                ],
+                status: WorkoutStatus.completed,
+                startTime: poorWorkoutDate.subtract(const Duration(hours: 1)),
+                endTime: poorWorkoutDate,
+                createdAt: poorWorkoutDate,
+                updatedAt: poorWorkoutDate,
+              ),
+            );
+            sleepRecords.add(
+              SleepRecord.fromHealthData(
+                date: poorSleepDate,
+                asleepMinutes: 300, // 5h
+                inBedMinutes: 360,
+              ),
+            );
+          }
+
+          final result = service.calculateCorrelation(
+            sleepHistory: sleepRecords,
+            workoutHistory: workouts,
+          );
+
+          // If matching worked: good sleep group has 1000 vol/workout, poor has 250 vol/workout
+          // volumeChangeAbove7h should be positive, volumeChangeBelow6h should be negative
+          if (result.workoutSampleSize > 0) {
+            expect(result.volumeChangeAbove7h, greaterThan(0));
+            expect(result.volumeChangeBelow6h, lessThan(0));
+          }
+        },
+      );
 
       test('workouts without endTime are skipped', () {
         final sleepHistory = [
@@ -1643,4 +1772,3 @@ void main() {
     });
   });
 }
-

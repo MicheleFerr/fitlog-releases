@@ -162,8 +162,10 @@ class AnalyticsRepositoryImpl
     }
 
     // Cancel any existing listener for this user (prevent memory leak)
-    _activeListeners[userId]?.cancel();
-    _streamControllers[userId]?.close();
+    unawaited(_activeListeners[userId]?.cancel());
+    _activeListeners.remove(userId);
+    unawaited(_streamControllers[userId]?.close());
+    _streamControllers.remove(userId);
 
     if (kDebugMode) {
       debugPrint(
@@ -172,8 +174,13 @@ class AnalyticsRepositoryImpl
     }
 
     // Create a new controller for this user
-    final controller =
-        StreamController<Either<Failure, List<ExerciseHistory>>>();
+    final controller = StreamController<Either<Failure, List<ExerciseHistory>>>(
+      onCancel: () async {
+        final subscription = _activeListeners.remove(userId);
+        await subscription?.cancel();
+        _streamControllers.remove(userId);
+      },
+    );
     _streamControllers[userId] = controller;
 
     // Subscribe to Firestore snapshots
@@ -217,23 +224,29 @@ class AnalyticsRepositoryImpl
                 );
               }
 
-              controller.add(Right(histories));
+              if (!controller.isClosed && controller.hasListener) {
+                controller.add(Right(histories));
+              }
             } catch (e) {
               if (kDebugMode) {
                 debugPrint('❌ [ANALYTICS] Parse error: $e');
               }
-              controller.add(
-                Left(CacheFailure('Failed to parse analytics: $e')),
-              );
+              if (!controller.isClosed && controller.hasListener) {
+                controller.add(
+                  Left(CacheFailure('Failed to parse analytics: $e')),
+                );
+              }
             }
           },
           onError: (Object e) {
             if (kDebugMode) {
               debugPrint('❌ [ANALYTICS] Stream error: $e');
             }
-            controller.add(
-              Left(ServerFailure('Failed to fetch analytics: $e')),
-            );
+            if (!controller.isClosed && controller.hasListener) {
+              controller.add(
+                Left(ServerFailure('Failed to fetch analytics: $e')),
+              );
+            }
           },
         );
 

@@ -655,6 +655,13 @@
   "upgradeToUnlimited": "Passa a illimitati",
   "templateQuotaWarning": "La tua Libreria sta usando {used} di {max} template modificabili.",
   "unlimitedTemplates": "Template illimitati",
+  "@unlimitedTemplates": {
+    "description": "Feature premium: template modificabili illimitati"
+  },
+  "unlimitedTemplatesDescription": "Salva più di 4 template allenamento modificabili nella tua Libreria",
+  "@unlimitedTemplatesDescription": {
+    "description": "Descrizione feature premium per template modificabili illimitati"
+  },
   "welcomeToGymBro": "Benvenuto nel tuo nuovo compagno fitness!",
   "homeWelcomeDescription": "Traccia i tuoi allenamenti con precisione. Inizia una nuova sessione o continua da dove avevi lasciato.",
   "quickActions": "Azioni Rapide",
@@ -1103,7 +1110,7 @@
   "weeklyFrequencyInfo": "Numero medio di giorni di allenamento per settimana nelle ultime 4 settimane.",
   "retry": "Riprova",
   "offlineMode": "Visualizzazione versione offline",
-  "tosAcceptanceRequired": "Devi accettare i Termini di Servizio per continuare",
+  "tosAcceptanceRequired": "Devi accettare i Termini di Utilizzo per continuare",
   "iAcceptThe": "Accetto i ",
   "andThe": " e la ",
   "tosCheckboxHint": "Richiesto per creare account",
@@ -6210,7 +6217,7 @@
   "@legalDisclaimerTitle": {
     "description": "Titolo per il modal del disclaimer legale"
   },
-  "legalDisclaimerContent": "⚠️ AVVISO IMPORTANTE\n\nFITlog Pro è uno strumento di tracciamento workout.\n\nNON è sostituto di:\n• Consulenza medica\n• Personal trainer\n• Medico sportivo\n• Consulente fitness\n\nDEVI:\n✓ Consultare un medico prima di iniziare qualsiasi programma di allenamento\n✓ Interrompere immediatamente in caso di dolore o disagio\n✓ Assumerti la piena responsabilità per la tua sicurezza durante l'allenamento\n\nIl fornitore NON è responsabile per:\n• Infortuni fisici\n• Peggioramento condizioni mediche\n• Mancato raggiungimento obiettivi fitness\n\nAccettando, riconosci questi rischi e accetti i Termini di Servizio e l'Informativa Privacy.",
+  "legalDisclaimerContent": "⚠️ AVVISO IMPORTANTE\n\nFITlog Pro è uno strumento di tracciamento workout.\n\nNON è sostituto di:\n• Consulenza medica\n• Personal trainer\n• Medico sportivo\n• Consulente fitness\n\nDEVI:\n✓ Consultare un medico prima di iniziare qualsiasi programma di allenamento\n✓ Interrompere immediatamente in caso di dolore o disagio\n✓ Assumerti la piena responsabilità per la tua sicurezza durante l'allenamento\n\nIl fornitore NON è responsabile per:\n• Infortuni fisici\n• Peggioramento condizioni mediche\n• Mancato raggiungimento obiettivi fitness\n\nAccettando, riconosci questi rischi e accetti i Termini di Utilizzo e l'Informativa Privacy.",
   "@legalDisclaimerContent": {
     "description": "Testo del contenuto per il modal del disclaimer legale"
   },
@@ -6234,9 +6241,17 @@
   "@privacyPolicySubtitle": {
     "description": "Sottotitolo dell'Informativa sulla Privacy"
   },
-  "termsOfService": "Termini di Servizio",
+  "termsOfUseEula": "Condizioni d'uso (EULA)",
+  "@termsOfUseEula": {
+    "description": "Etichetta per le condizioni d'uso standard Apple"
+  },
+  "termsOfService": "Termini di Utilizzo",
   "@termsOfService": {
-    "description": "Titolo dei Termini di Servizio"
+    "description": "Titolo dei Termini di Utilizzo"
+  },
+  "serviceTerms": "Termini di Servizio",
+  "@serviceTerms": {
+    "description": "Etichetta per i termini di servizio specifici dell'app"
   },
   "coachAgreement": "Accordo Coach",
   "tosSubtitle": "Accordi utente e limitazioni di responsabilità",
@@ -19706,7 +19721,7 @@
   "openSourceLicenses": "Licenze Open Source",
   "openSourceLicensesDesc": "Visualizza licenze di terze parti",
   "privacyPolicyDesc": "Leggi la nostra informativa privacy",
-  "termsOfServiceDesc": "Leggi i termini di servizio",
+  "termsOfServiceDesc": "Leggi i termini di utilizzo",
   "betaFeedback": "Invia Feedback",
   "betaFeedbackDesc": "Segnala bug o suggerisci miglioramenti",
   "betaFeedbackSubject": "FitLog Pro Beta Feedback",
@@ -21023,6 +21038,33 @@
   "premiumExportData": "Esporta Dati",
   "premiumExportDataDesc": "Esporta tutto lo storico allenamenti in CSV o PDF",
   "continueWithPremium": "Continua con Premium",
+  "continueWithPremiumMonthlyPlan": "{productName} 1 Mese",
+  "@continueWithPremiumMonthlyPlan": {
+    "description": "Etichetta CTA acquisto per il piano mensile",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "continueWithPremiumYearlyPlan": "{productName} 1 Anno",
+  "@continueWithPremiumYearlyPlan": {
+    "description": "Etichetta CTA acquisto per il piano annuale",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "continueWithPremiumLifetimePlan": "{productName} a Vita",
+  "@continueWithPremiumLifetimePlan": {
+    "description": "Etichetta CTA acquisto per il piano lifetime",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
   "everythingInFree": "Tutto della versione Free, più:",
   "joinThousandsOfAthletes": "Unisciti a migliaia di atleti che si allenano meglio",
   "storeNotAvailable": "Store non disponibile. Riprova più tardi.",

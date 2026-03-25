@@ -66,13 +66,22 @@ void main() {
 
         expect(photo.id, equals('photo-001'));
         expect(photo.userId, equals('user-abc'));
-        expect(photo.photoUrl, equals('https://storage.example.com/photo.webp'));
-        expect(photo.thumbnailUrl,
-            equals('https://storage.example.com/photo_thumb.webp'));
-        expect(photo.storagePath,
-            equals('users/user-abc/progress_photos/2025-06-15_front.webp'));
-        expect(photo.thumbnailStoragePath,
-            equals('users/user-abc/progress_photos/2025-06-15_front_thumb.webp'));
+        expect(
+          photo.photoUrl,
+          equals('https://storage.example.com/photo.webp'),
+        );
+        expect(
+          photo.thumbnailUrl,
+          equals('https://storage.example.com/photo_thumb.webp'),
+        );
+        expect(
+          photo.storagePath,
+          equals('users/user-abc/progress_photos/2025-06-15_front.webp'),
+        );
+        expect(
+          photo.thumbnailStoragePath,
+          equals('users/user-abc/progress_photos/2025-06-15_front_thumb.webp'),
+        );
         expect(photo.pose, equals(PhotoPose.frontRelaxed));
         expect(photo.takenAt, equals(baseDate));
         expect(photo.fileSizeBytes, equals(150000));
@@ -165,7 +174,10 @@ void main() {
       test('creates a copy marking photo as deleted', () {
         final deletedAt = DateTime(2025, 7, 1);
         final original = makePhoto();
-        final deleted = original.copyWith(isDeleted: true, deletedAt: deletedAt);
+        final deleted = original.copyWith(
+          isDeleted: true,
+          deletedAt: deletedAt,
+        );
 
         expect(deleted.isDeleted, isTrue);
         expect(deleted.deletedAt, equals(deletedAt));
@@ -188,8 +200,9 @@ void main() {
 
       test('original is unchanged after copyWith', () {
         final original = makePhoto(fileSizeBytes: 100000);
-        original.copyWith(fileSizeBytes: 200000);
+        final copy = original.copyWith(fileSizeBytes: 200000);
 
+        expect(copy.fileSizeBytes, equals(200000));
         expect(original.fileSizeBytes, equals(100000));
       });
     });
@@ -201,9 +214,14 @@ void main() {
 
         expect(json['id'], equals('photo-001'));
         expect(json['userId'], equals('user-abc'));
-        expect(json['photoUrl'], equals('https://storage.example.com/photo.webp'));
-        expect(json['thumbnailUrl'],
-            equals('https://storage.example.com/photo_thumb.webp'));
+        expect(
+          json['photoUrl'],
+          equals('https://storage.example.com/photo.webp'),
+        );
+        expect(
+          json['thumbnailUrl'],
+          equals('https://storage.example.com/photo_thumb.webp'),
+        );
         expect(json['pose'], equals('frontRelaxed'));
         expect(json['fileSizeBytes'], equals(150000));
         expect(json['isSharedWithCoach'], isFalse);
@@ -227,14 +245,19 @@ void main() {
         expect(restored.photoUrl, equals(original.photoUrl));
         expect(restored.thumbnailUrl, equals(original.thumbnailUrl));
         expect(restored.storagePath, equals(original.storagePath));
-        expect(restored.thumbnailStoragePath, equals(original.thumbnailStoragePath));
+        expect(
+          restored.thumbnailStoragePath,
+          equals(original.thumbnailStoragePath),
+        );
         expect(restored.pose, equals(original.pose));
         expect(restored.takenAt, equals(original.takenAt));
         expect(restored.fileSizeBytes, equals(original.fileSizeBytes));
         expect(restored.notes, equals(original.notes));
         expect(restored.weightKg, equals(original.weightKg));
-        expect(restored.originalFileSizeBytes,
-            equals(original.originalFileSizeBytes));
+        expect(
+          restored.originalFileSizeBytes,
+          equals(original.originalFileSizeBytes),
+        );
         expect(restored.syncStatus, equals(original.syncStatus));
       });
 
@@ -328,8 +351,11 @@ void main() {
 
       test('all enum values have non-empty labels', () {
         for (final pose in PhotoPose.values) {
-          expect(pose.label, isNotEmpty,
-              reason: '${pose.name} label should not be empty');
+          expect(
+            pose.label,
+            isNotEmpty,
+            reason: '${pose.name} label should not be empty',
+          );
         }
       });
     });
@@ -356,8 +382,11 @@ void main() {
 
       test('all enum values have non-empty icon names', () {
         for (final pose in PhotoPose.values) {
-          expect(pose.iconName, isNotEmpty,
-              reason: '${pose.name} iconName should not be empty');
+          expect(
+            pose.iconName,
+            isNotEmpty,
+            reason: '${pose.name} iconName should not be empty',
+          );
         }
       });
     });
@@ -369,12 +398,15 @@ void main() {
 
   group('SyncStatus', () {
     test('has all expected values', () {
-      expect(SyncStatus.values, containsAll([
-        SyncStatus.pending,
-        SyncStatus.uploading,
-        SyncStatus.synced,
-        SyncStatus.failed,
-      ]));
+      expect(
+        SyncStatus.values,
+        containsAll([
+          SyncStatus.pending,
+          SyncStatus.uploading,
+          SyncStatus.synced,
+          SyncStatus.failed,
+        ]),
+      );
     });
   });
 
@@ -625,14 +657,17 @@ void main() {
 
   group('UploadStatus', () {
     test('has all expected values', () {
-      expect(UploadStatus.values, containsAll([
-        UploadStatus.pending,
-        UploadStatus.compressing,
-        UploadStatus.uploading,
-        UploadStatus.completed,
-        UploadStatus.failed,
-        UploadStatus.cancelled,
-      ]));
+      expect(
+        UploadStatus.values,
+        containsAll([
+          UploadStatus.pending,
+          UploadStatus.compressing,
+          UploadStatus.uploading,
+          UploadStatus.completed,
+          UploadStatus.failed,
+          UploadStatus.cancelled,
+        ]),
+      );
     });
   });
 }

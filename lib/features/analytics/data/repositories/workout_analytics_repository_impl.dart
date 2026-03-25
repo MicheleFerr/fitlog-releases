@@ -141,7 +141,7 @@ class WorkoutAnalyticsRepositoryImpl
   @override
   Future<List<Workout>> getHistoricalWorkouts(
     String userId, {
-    int limit = 50,
+    int? limit = 50,
     DateTime? since,
   }) async {
     try {
@@ -186,14 +186,9 @@ class WorkoutAnalyticsRepositoryImpl
 
       // ✅ HiveBoxManagerEnhanced handles initialization automatically
 
-      // 🎯 PAGINATION: Default to 30 days if no since date provided
-      final effectiveSince =
-          since ?? DateTime.now().subtract(const Duration(days: 30));
-
       if (kDebugMode) {
-        debugPrint(
-          '📊 [Analytics] Fetching workouts since: ${effectiveSince.toIso8601String()}',
-        );
+        final scope = since == null ? 'all history' : since.toIso8601String();
+        debugPrint('📊 [Analytics] Fetching workouts since: $scope');
       }
 
       // 🎯 SMART SYNC: Check if Firebase has more workouts than Hive
@@ -225,7 +220,7 @@ class WorkoutAnalyticsRepositoryImpl
       final localWorkouts = await _getLocalWorkouts(
         userId,
         limit: limit,
-        since: effectiveSince,
+        since: since,
       );
 
       if (localWorkouts.isNotEmpty) {
@@ -286,8 +281,9 @@ class WorkoutAnalyticsRepositoryImpl
         // This reduces Firestore reads from N documents to 1 aggregation read
         // Saves ~65% on Firestore costs for large datasets
         final countQuery = await _firestore
+            .collection('users')
+            .doc(userId)
             .collection('workouts')
-            .where('userId', isEqualTo: userId)
             .count()
             .get();
 
@@ -380,8 +376,9 @@ class WorkoutAnalyticsRepositoryImpl
         // Get ALL workouts from Firebase (many have status=null)
         // We can't use .where('status', isEqualTo: 'completed') because many workouts have null status
         final snapshot = await _firestore
+            .collection('users')
+            .doc(userId)
             .collection('workouts')
-            .where('userId', isEqualTo: userId)
             .get();
 
         if (kDebugMode) {
@@ -726,8 +723,7 @@ class WorkoutAnalyticsRepositoryImpl
           // Only count exercises that have at least one completed set
           if (completedSets.isEmpty) continue;
 
-          exerciseFreq[exercise.name] =
-              (exerciseFreq[exercise.name] ?? 0) + 1;
+          exerciseFreq[exercise.name] = (exerciseFreq[exercise.name] ?? 0) + 1;
 
           final exerciseVolume = completedSets.fold(
             0.0,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_progress_metrics.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/landscape_graph_screen.dart';
@@ -23,17 +24,65 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/chart
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_bar_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/reps_line_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/rpe_gauge_widget.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/exercise_strength_level_section.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+
+class NotificationPrHighlight {
+  const NotificationPrHighlight({
+    this.prType,
+    this.prValue,
+    this.previousValue,
+    this.achievedAt,
+  });
+
+  static NotificationPrHighlight? fromUri(Uri uri) {
+    if (uri.queryParameters['source'] != 'notification') {
+      return null;
+    }
+
+    final highlight = NotificationPrHighlight(
+      prType: uri.queryParameters['prType'],
+      prValue: double.tryParse(uri.queryParameters['prValue'] ?? ''),
+      previousValue: double.tryParse(
+        uri.queryParameters['previousValue'] ?? '',
+      ),
+      achievedAt: DateTime.tryParse(uri.queryParameters['achievedAt'] ?? ''),
+    );
+
+    return highlight.hasContent ? highlight : null;
+  }
+
+  final String? prType;
+  final double? prValue;
+  final double? previousValue;
+  final DateTime? achievedAt;
+
+  bool get hasContent =>
+      prType != null ||
+      prValue != null ||
+      previousValue != null ||
+      achievedAt != null;
+
+  double? get improvementPercentage {
+    if (prValue == null || previousValue == null || previousValue == 0) {
+      return null;
+    }
+
+    return ((prValue! - previousValue!) / previousValue!) * 100;
+  }
+}
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
     super.key,
     required this.exerciseName,
     this.exerciseId,
+    this.notificationPrHighlight,
   });
 
   final String exerciseName;
   final String? exerciseId;
+  final NotificationPrHighlight? notificationPrHighlight;
 
   @override
   ConsumerState<ExerciseDetailScreen> createState() =>
@@ -204,7 +253,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             onPressed: () {
               ExerciseCorrelationsSheet.show(
                 context,
-                exerciseId: widget.exerciseName,
+                exerciseId: widget.exerciseId,
                 exerciseName: widget.exerciseName,
               );
             },
@@ -240,10 +289,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md, AppSpacing.md, AppSpacing.md, 0,
+                AppSpacing.md,
+                AppSpacing.md,
+                AppSpacing.md,
+                0,
               ),
               child: Column(
                 children: [
+                  if (widget.notificationPrHighlight?.hasContent == true) ...[
+                    _buildNotificationPrCard(widget.notificationPrHighlight!),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
                   // Card 1: Trend
                   _buildTrendCard(filteredSets, hasRpeData),
                   const SizedBox(height: AppSpacing.md),
@@ -265,13 +321,148 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     );
   }
 
+  Widget _buildNotificationPrCard(NotificationPrHighlight highlight) {
+    final prTypeLabel = _prTypeLabel(highlight.prType);
+    final prValueLabel = _formatPrValue(highlight);
+    final improvement = highlight.improvementPercentage;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final achievedAt = highlight.achievedAt;
+
+    return Container(
+      width: double.infinity,
+      padding: AppSpacing.card,
+      decoration: BoxDecoration(
+        color: context.colors.successContainer,
+        borderRadius: AppBorderRadius.mdRadius,
+        border: Border.all(
+          color: context.colors.onSuccessContainer.withValues(alpha: 0.12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                AppIcons.achievement,
+                color: context.colors.onSuccessContainer,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  context.l10n.notificationPrTitle,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    color: context.colors.onSuccessContainer,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              if (improvement != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colors.onSuccessContainer.withValues(
+                      alpha: 0.1,
+                    ),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    '+${improvement.toStringAsFixed(1)}%',
+                    style: context.textTheme.labelMedium?.copyWith(
+                      color: context.colors.onSuccessContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          if (prTypeLabel != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              prTypeLabel,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSuccessContainer.withValues(alpha: 0.8),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+          if (prValueLabel != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              prValueLabel,
+              style: context.textTheme.headlineSmall?.copyWith(
+                color: context.colors.onSuccessContainer,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+          if (achievedAt != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              DateFormat.yMMMd(locale).add_Hm().format(achievedAt),
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSuccessContainer.withValues(alpha: 0.8),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String? _prTypeLabel(String? prType) {
+    switch (prType) {
+      case 'weight':
+        return context.l10n.weight;
+      case 'volume':
+        return context.l10n.volume;
+      case 'reps':
+        return context.l10n.reps;
+      case 'oneRM':
+        return context.l10n.analyticsEstimated1RM;
+      case 'totalSets':
+        return context.l10n.sets;
+      case 'duration':
+        return context.l10n.duration;
+      default:
+        return null;
+    }
+  }
+
+  String? _formatPrValue(NotificationPrHighlight highlight) {
+    final value = highlight.prValue;
+    if (value == null) return null;
+
+    switch (highlight.prType) {
+      case 'reps':
+      case 'totalSets':
+        return value.toStringAsFixed(0);
+      case 'duration':
+        final minutes = value ~/ 60;
+        final seconds = value.round() % 60;
+        return '$minutes:${seconds.toString().padLeft(2, '0')}';
+      case 'volume':
+        return '${value.toStringAsFixed(0)} kg';
+      case 'weight':
+      case 'oneRM':
+      default:
+        return '${value.toStringAsFixed(1)} kg';
+    }
+  }
+
   // ==========================================================================
   // CARD 1: Trend Card
   // ==========================================================================
 
   Widget _buildTrendCard(List<ExerciseSetData> filteredSets, bool hasRpeData) {
     final trendData = _calculateTrendData(_selectedChartType, filteredSets);
-    final (_, _, chartColor, chart) = _getChartData(_selectedChartType, filteredSets);
+    final (_, _, chartColor, chart) = _getChartData(
+      _selectedChartType,
+      filteredSets,
+    );
 
     return Card(
       elevation: 2,
@@ -380,6 +571,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ? setsWithRPE.fold<double>(0, (sum, set) => sum + (set.rpe ?? 0)) /
               setsWithRPE.length
         : 0.0;
+    final allTimeBestOneRepMax = _calculateBestOneRepMax(metrics.allSets);
 
     // Watch Form Cues
     final formCuesAsync = ref.watch(
@@ -454,6 +646,32 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               ],
             ),
 
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+              child: Divider(),
+            ),
+            Row(
+              children: [
+                Icon(AppIcons.emojiEvents, color: context.colors.secondary),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  context.l10n.strengthLevel,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            ExerciseStrengthLevelSection(
+              exerciseName: widget.exerciseName,
+              exerciseId: widget.exerciseId,
+              userOneRepMax: allTimeBestOneRepMax > 0
+                  ? allTimeBestOneRepMax
+                  : null,
+            ),
+
             // Training Patterns
             _buildPatternCardsInline(),
 
@@ -469,6 +687,21 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ),
       ),
     );
+  }
+
+  double _calculateBestOneRepMax(List<ExerciseSetData> sets) {
+    double bestOneRepMax = 0.0;
+
+    for (final set in sets) {
+      if (set.weight <= 0 || set.reps <= 0) continue;
+
+      final estimated = OneRMCalculator.calculateBrzycki(set.weight, set.reps);
+      if (estimated > bestOneRepMax) {
+        bestOneRepMax = estimated;
+      }
+    }
+
+    return bestOneRepMax;
   }
 
   /// Gradient stat card matching ExerciseSummaryTab pattern
@@ -498,9 +731,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(
-            color: color.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -924,7 +1155,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       ),
     };
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: RoundedRectangleBorder(

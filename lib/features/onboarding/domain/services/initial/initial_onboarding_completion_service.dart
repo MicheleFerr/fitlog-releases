@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/initial_onboarding_data.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/initial/onboarding_completion_identity_store.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/fitness_profile_local_datasource.dart';
@@ -11,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:uuid/uuid.dart';
 
 /// Service for completing initial onboarding and persisting collected data.
 ///
@@ -22,6 +27,8 @@ class InitialOnboardingCompletionService {
   InitialOnboardingCompletionService(this._ref);
 
   final Ref _ref;
+  static const _maskedIpAddress = '0.0.0.***';
+  static const _uuid = Uuid();
 
   /// Complete onboarding and save all data
   ///
@@ -45,16 +52,19 @@ class InitialOnboardingCompletionService {
       // 1. Save fitness questionnaire
       await _saveFitnessQuestionnaire(data, userId);
 
-      // 2. Save user goals (workouts per week)
+      // 2. Seed the main measurements store so onboarding data is visible app-wide.
+      await _persistEssentialMeasurementsIfMissing(data, userId);
+
+      // 3. Save user goals (workouts per week)
       await _saveUserGoals(data);
 
-      // 3. Apply experience-based defaults (persona-driven)
+      // 4. Apply experience-based defaults (persona-driven)
       await _applyExperienceBasedDefaults(data);
 
-      // 4. Mark onboarding as completed
+      // 5. Mark onboarding as completed
       await _markOnboardingCompleted(userId);
 
-      // 5. Sync to Firestore in background (non-blocking)
+      // 6. Sync to Firestore in background (non-blocking)
       unawaited(_syncToFirestore(data, userId));
 
       debugPrint('✅ Initial onboarding completed successfully');
@@ -86,6 +96,88 @@ class InitialOnboardingCompletionService {
     await goalsNotifier.setWorkoutsPerWeek(data.workoutsPerWeek);
 
     debugPrint('💾 Saved user goals: ${data.workoutsPerWeek} workouts/week');
+  }
+
+  Future<void> _persistEssentialMeasurementsIfMissing(
+    InitialOnboardingData data,
+    String userId,
+  ) async {
+    try {
+      final consentRepository = _ref.read(consentRepositoryProvider);
+
+      final createConsentResult = await consentRepository.createInitialConsent(
+        userId: userId,
+        ipAddress: _maskedIpAddress,
+      );
+
+      if (createConsentResult.isRight()) {
+        await consentRepository.grantConsent(
+          userId: userId,
+          group: MetricGroup.essential,
+          ipAddress: _maskedIpAddress,
+        );
+      } else {
+        await consentRepository.grantConsent(
+          userId: userId,
+          group: MetricGroup.essential,
+          ipAddress: _maskedIpAddress,
+        );
+      }
+
+      final measurementRepository = _ref.read(measurementRepositoryProvider);
+      final latestMeasurementsResult = await measurementRepository
+          .getLatestMeasurementsByType(userId);
+      final latestMeasurements = latestMeasurementsResult.getOrElse(
+        (_) => <MetricType, Measurement>{},
+      );
+      final recordedAt = data.completedAt ?? DateTime.now();
+
+      if (!latestMeasurements.containsKey(MetricType.weight)) {
+        final weightMeasurement = Measurement(
+          id: _uuid.v4(),
+          userId: userId,
+          metricType: MetricType.weight,
+          value: data.bodyweightKg,
+          unit: MetricType.weight.defaultUnit,
+          timestamp: recordedAt,
+          source: MeasurementSource.manual,
+          notes: 'Saved from onboarding',
+          createdAt: recordedAt,
+          updatedAt: recordedAt,
+        );
+
+        await measurementRepository.addMeasurement(
+          weightMeasurement,
+          hasConsent: true,
+        );
+      }
+
+      if (!latestMeasurements.containsKey(MetricType.height)) {
+        final heightMeasurement = Measurement(
+          id: _uuid.v4(),
+          userId: userId,
+          metricType: MetricType.height,
+          value: data.heightCm,
+          unit: MetricType.height.defaultUnit,
+          timestamp: recordedAt,
+          source: MeasurementSource.manual,
+          notes: 'Saved from onboarding',
+          createdAt: recordedAt,
+          updatedAt: recordedAt,
+        );
+
+        await measurementRepository.addMeasurement(
+          heightMeasurement,
+          hasConsent: true,
+        );
+      }
+
+      debugPrint('💾 Seeded essential measurements from onboarding');
+    } catch (e) {
+      debugPrint(
+        '⚠️ Failed to seed onboarding measurements (non-blocking): $e',
+      );
+    }
   }
 
   /// 🌱 PERSONA-DRIVEN: Apply defaults based on experience level
@@ -136,6 +228,8 @@ class InitialOnboardingCompletionService {
       await authService.updateUserDocument(userId, {
         'onboardingCompleted': true,
         'onboardingCompletedAt': FieldValue.serverTimestamp(),
+        // Clear admin reset marker once onboarding is completed again.
+        'onboardingLastResetAt': FieldValue.delete(),
         'onboardingSummary': {
           'goal': data.goal.name,
           'sex': data.sex.name,

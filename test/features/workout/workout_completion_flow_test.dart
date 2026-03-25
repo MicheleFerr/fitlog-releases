@@ -73,14 +73,63 @@ void main() {
       // TODO: Verificare notifiche generate
     });
 
-    test('CRITICO: workout completion should update user stats atomically', () async {
-      // TODO: Test transazione Firestore per stats
-      // Verifica che aggiornamenti concorrenti non causino perdita dati
+    test('should reorder exercises when dropped at end of list', () async {
+      final notifier = container.read(currentWorkoutProvider.notifier);
+      notifier.createWorkout('Reorder Test');
+
+      notifier.addExercise(
+        Exercise(
+          id: 'ex-1',
+          name: 'Bench Press',
+          type: ExerciseType.single,
+          category: ExerciseCategory.chest,
+          sets: [ExerciseSet(setNumber: 1, weight: 80, reps: 8)],
+        ),
+      );
+      notifier.addExercise(
+        Exercise(
+          id: 'ex-2',
+          name: 'Squat',
+          type: ExerciseType.single,
+          category: ExerciseCategory.legs,
+          sets: [ExerciseSet(setNumber: 1, weight: 100, reps: 5)],
+        ),
+      );
+      notifier.addExercise(
+        Exercise(
+          id: 'ex-3',
+          name: 'Deadlift',
+          type: ExerciseType.single,
+          category: ExerciseCategory.back,
+          sets: [ExerciseSet(setNumber: 1, weight: 120, reps: 5)],
+        ),
+      );
+
+      notifier.reorderExercises(0, 3);
+
+      final workout = container.read(currentWorkoutProvider);
+      expect(workout, isNotNull);
+      expect(workout!.exercises.map((e) => e.id).toList(), [
+        'ex-2',
+        'ex-3',
+        'ex-1',
+      ]);
     });
 
-    test('CRITICO: should auto-complete routine day if template matches', () async {
-      // TODO: Test auto-completamento routine
-    });
+    test(
+      'CRITICO: workout completion should update user stats atomically',
+      () async {
+        // TODO: Test transazione Firestore per stats
+        // Verifica che aggiornamenti concorrenti non causino perdita dati
+      },
+    );
+
+    test(
+      'CRITICO: should auto-complete routine day if template matches',
+      () async {
+        // TODO: Test auto-completamento routine
+      },
+    );
 
     test('should handle completion errors gracefully', () async {
       // TODO: Test error handling durante salvataggio

@@ -57,7 +57,6 @@ class FastScrollPhysics extends FixedExtentScrollPhysics {
 /// Prevents the modal bottom sheet's drag-to-dismiss from intercepting
 /// vertical drags on the fast scrub sidebar.
 class _EagerVerticalDragRecognizer extends VerticalDragGestureRecognizer {
-
   @override
   void rejectGesture(int pointer) {
     // Instead of rejecting, always accept - this wins the gesture arena
@@ -165,6 +164,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         '   - onApplyToAll: ${widget.onApplyToAll != null ? "✅ presente" : "❌ null"}',
       );
       debugPrint('   - _isFirstSet: $_isFirstSet');
+      debugPrint('   - _isFirstUsefulSet: $_isFirstUsefulSet');
     }
 
     _weight = widget.exerciseSet.weight ?? 0;
@@ -173,7 +173,8 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     _selectedRpe = widget.exerciseSet.rpe;
 
     // ✅ Initialize rep range mode from existing data
-    final hasRange = widget.exerciseSet.minReps != null &&
+    final hasRange =
+        widget.exerciseSet.minReps != null &&
         widget.exerciseSet.maxReps != null &&
         widget.exerciseSet.minReps != widget.exerciseSet.maxReps;
     _isRangeMode = hasRange;
@@ -191,8 +192,14 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       (_maxSeconds - _minSeconds) ~/ _secondsStep,
     );
     // ✅ Range mode indices
-    final minRepsIndex = (_selectedMinReps - _repsMin).clamp(0, _repsMax - _repsMin);
-    final maxRepsIndex = (_selectedMaxReps - _repsMin).clamp(0, _repsMax - _repsMin);
+    final minRepsIndex = (_selectedMinReps - _repsMin).clamp(
+      0,
+      _repsMax - _repsMin,
+    );
+    final maxRepsIndex = (_selectedMaxReps - _repsMin).clamp(
+      0,
+      _repsMax - _repsMin,
+    );
 
     _weightController = FixedExtentScrollController(initialItem: weightIndex);
     _repsController = FixedExtentScrollController(initialItem: repsIndex);
@@ -202,7 +209,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     _maxRepsController = FixedExtentScrollController(initialItem: maxRepsIndex);
     _weightTextController = TextEditingController(text: _formatWeight(_weight));
     _repsTextController = TextEditingController(text: '$_reps');
-    _secondsTextController = TextEditingController(text: _formatDuration(_seconds));
+    _secondsTextController = TextEditingController(
+      text: _formatDuration(_seconds),
+    );
 
     // Select all text when focus is gained
     _weightFocusNode.addListener(() {
@@ -266,6 +275,23 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   }
 
   bool get _isFirstSet => (widget.currentSetIndex ?? 0) == 0;
+  bool get _isFirstUsefulSet {
+    final index = widget.currentSetIndex;
+    final allSets = widget.allSets;
+    if (index == null || allSets == null || index >= allSets.length) {
+      return _isFirstSet && !widget.exerciseSet.isWarmup;
+    }
+
+    // Warmup sets are never considered the first useful set.
+    if (allSets[index].isWarmup) return false;
+
+    // First useful set = first non-warmup set in the exercise.
+    for (var i = 0; i < index; i++) {
+      if (!allSets[i].isWarmup) return false;
+    }
+    return true;
+  }
+
   bool get _hasMultipleSets => (widget.totalSets ?? 1) > 1;
 
   bool get _canSwipeNext =>
@@ -482,8 +508,14 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           _selectedMaxReps = (_reps + 2).clamp(_repsMin, _repsMax);
         }
         // Update controllers
-        final minIndex = (_selectedMinReps - _repsMin).clamp(0, _repsMax - _repsMin);
-        final maxIndex = (_selectedMaxReps - _repsMin).clamp(0, _repsMax - _repsMin);
+        final minIndex = (_selectedMinReps - _repsMin).clamp(
+          0,
+          _repsMax - _repsMin,
+        );
+        final maxIndex = (_selectedMaxReps - _repsMin).clamp(
+          0,
+          _repsMax - _repsMin,
+        );
         _minRepsController.jumpToItem(minIndex);
         _maxRepsController.jumpToItem(maxIndex);
       } else {
@@ -507,10 +539,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       final parsedWeight = double.tryParse(weightText);
       if (parsedWeight != null && parsedWeight >= _minWeight) {
         _weight = parsedWeight;
-        final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
-          0,
-          _weightItemCount - 1,
-        );
+        final weightIndex = ((_weight - _minWeight) / _weightStep)
+            .round()
+            .clamp(0, _weightItemCount - 1);
         _weightController.jumpToItem(weightIndex);
       }
     }
@@ -641,61 +672,64 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       child: GestureDetector(
         onHorizontalDragEnd: _handleHorizontalSwipe,
         child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Drag handle
-              _buildDragHandle(),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Drag handle
+                _buildDragHandle(),
 
-              // Dot indicators for sets
-              if (_hasMultipleSets) _buildDotIndicators(),
+                // Dot indicators for sets
+                if (_hasMultipleSets) _buildDotIndicators(),
 
-              // Suggested weight chip
-              if (widget.suggestedWeight != null) _buildSuggestionChip(),
+                // Suggested weight chip
+                if (widget.suggestedWeight != null) _buildSuggestionChip(),
 
-              // Recent weights chips
-              if (widget.recentWeights != null &&
-                  widget.recentWeights!.isNotEmpty)
-                _buildRecentWeightsChips(),
+                // Recent weights chips
+                if (widget.recentWeights != null &&
+                    widget.recentWeights!.isNotEmpty)
+                  _buildRecentWeightsChips(),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // Main content: Weight + Reps pickers
-              _buildPickers(),
+                // Main content: Weight + Reps pickers
+                _buildPickers(),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // Action buttons row (Apply to all / Copy previous)
-              _buildActionRow(),
+                // Action buttons row (Apply to all / Copy previous)
+                _buildActionRow(),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // Hint: swipe down to save (tappable as shortcut)
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
-                  child: Text(
-                    '↓ ${context.l10n.swipeDownToSave}',
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.outline,
+                // Hint: swipe down to save (tappable as shortcut)
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 24,
+                    ),
+                    child: Text(
+                      '↓ ${context.l10n.swipeDownToSave}',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.outline,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 8),
-            ],
+                const SizedBox(height: 8),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -920,7 +954,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             ),
 
           // ✅ Pickers layout - horizontal for range mode too
-          if (_isRangeMode && widget.countingMode.requiresReps && !_isManualInput)
+          if (_isRangeMode &&
+              widget.countingMode.requiresReps &&
+              !_isManualInput)
             Row(
               children: [
                 // Weight picker (if weighted) - larger
@@ -967,7 +1003,8 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   ),
 
                 // Spacing between weight and min
-                if (widget.countingMode.requiresWeight) const SizedBox(width: 12),
+                if (widget.countingMode.requiresWeight)
+                  const SizedBox(width: 12),
 
                 // Min reps picker - smaller
                 Expanded(
@@ -1053,147 +1090,165 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                             suffix: widget.measurementUnit,
                           )
                         : _buildWheelPicker(
-                          label: context.l10n.weightKg.replaceAll(
-                            'kg',
-                            widget.measurementUnit,
+                            label: context.l10n.weightKg.replaceAll(
+                              'kg',
+                              widget.measurementUnit,
+                            ),
+                            controller: _weightController,
+                            itemCount: _weightItemCount,
+                            itemBuilder: (index) {
+                              final weight = _minWeight + (index * _weightStep);
+                              final isSelected =
+                                  (weight - _weight).abs() < 0.01;
+                              return _buildPickerItem(
+                                text: _formatWeight(weight),
+                                isSelected: isSelected,
+                              );
+                            },
+                            onSelectedItemChanged: (index) {
+                              setState(() {
+                                _weight = _minWeight + (index * _weightStep);
+                              });
+                              HapticFeedback.selectionClick();
+                            },
+                            // Fast scrub sidebar - fewer values, easier to hit
+                            showFastScrub: true,
+                            fastScrubValues: [0, 20, 40, 60, 80, 100, 150, 200],
+                            onFastScrubSelect: (value) {
+                              final index = ((value - _minWeight) / _weightStep)
+                                  .round()
+                                  .clamp(0, _weightItemCount - 1);
+                              _weightController.jumpToItem(index);
+                              setState(() => _weight = value.toDouble());
+                            },
+                            isFastScrubActive: _isWeightFastScrubActive,
+                            onFastScrubStart: () =>
+                                setState(() => _isWeightFastScrubActive = true),
+                            onFastScrubEnd: () => setState(
+                              () => _isWeightFastScrubActive = false,
+                            ),
+                            currentValue: _weight,
                           ),
-                          controller: _weightController,
-                          itemCount: _weightItemCount,
-                          itemBuilder: (index) {
-                            final weight = _minWeight + (index * _weightStep);
-                            final isSelected = (weight - _weight).abs() < 0.01;
-                            return _buildPickerItem(
-                              text: _formatWeight(weight),
-                              isSelected: isSelected,
-                            );
-                          },
-                          onSelectedItemChanged: (index) {
-                            setState(() {
-                              _weight = _minWeight + (index * _weightStep);
-                            });
-                            HapticFeedback.selectionClick();
-                          },
-                          // Fast scrub sidebar - fewer values, easier to hit
-                          showFastScrub: true,
-                          fastScrubValues: [0, 20, 40, 60, 80, 100, 150, 200],
-                          onFastScrubSelect: (value) {
-                            final index = ((value - _minWeight) / _weightStep)
-                                .round()
-                                .clamp(0, _weightItemCount - 1);
-                            _weightController.jumpToItem(index);
-                            setState(() => _weight = value.toDouble());
-                          },
-                          isFastScrubActive: _isWeightFastScrubActive,
-                          onFastScrubStart: () =>
-                              setState(() => _isWeightFastScrubActive = true),
-                          onFastScrubEnd: () =>
-                              setState(() => _isWeightFastScrubActive = false),
-                          currentValue: _weight,
-                        ),
                   ),
 
                 // Spacing (only if both weight and reps/duration are shown)
                 if (widget.countingMode.requiresWeight &&
-                    (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
+                    (widget.countingMode.requiresReps ||
+                        widget.countingMode.requiresTime))
                   const SizedBox(width: 16),
 
                 // Reps picker (exact mode only)
                 if (widget.countingMode.requiresReps)
                   Expanded(
                     child: _isManualInput
-                      ? _buildManualInput(
-                          label: context.l10n.reps,
-                          controller: _repsTextController,
-                          focusNode: _repsFocusNode,
-                          onChanged: _onRepsTextChanged,
-                          keyboardType: TextInputType.number,
-                          suffix: '',
-                        )
-                      : _buildWheelPicker(
-                              label: context.l10n.reps,
-                              controller: _repsController,
-                              itemCount: _repsMax - _repsMin + 1,
-                              itemBuilder: (index) {
-                                final reps = _repsMin + index;
-                                final isSelected = reps == _reps;
-                                return _buildPickerItem(
-                                  text: '$reps',
-                                  isSelected: isSelected,
-                                );
-                              },
-                              onSelectedItemChanged: (index) {
-                                setState(() => _reps = _repsMin + index);
-                                HapticFeedback.selectionClick();
-                              },
-                              // Fast scrub for common rep ranges
-                              showFastScrub: true,
-                              fastScrubValues: [1, 5, 8, 10, 12, 15, 20, 30],
-                              onFastScrubSelect: (value) {
-                                final index = (value - _repsMin).clamp(
-                                  0,
-                                  _selectedMaxReps - _repsMin,
-                                );
-                                _repsController.jumpToItem(index);
-                                setState(() => _reps = value);
-                              },
-                              isFastScrubActive: _isRepsFastScrubActive,
-                              onFastScrubStart: () =>
-                                  setState(() => _isRepsFastScrubActive = true),
-                              onFastScrubEnd: () =>
-                                  setState(() => _isRepsFastScrubActive = false),
-                              currentValue: _reps.toDouble(),
-                              fastScrubOnRight: true,
-                            ),
-                ),
+                        ? _buildManualInput(
+                            label: context.l10n.reps,
+                            controller: _repsTextController,
+                            focusNode: _repsFocusNode,
+                            onChanged: _onRepsTextChanged,
+                            keyboardType: TextInputType.number,
+                            suffix: '',
+                          )
+                        : _buildWheelPicker(
+                            label: context.l10n.reps,
+                            controller: _repsController,
+                            itemCount: _repsMax - _repsMin + 1,
+                            itemBuilder: (index) {
+                              final reps = _repsMin + index;
+                              final isSelected = reps == _reps;
+                              return _buildPickerItem(
+                                text: '$reps',
+                                isSelected: isSelected,
+                              );
+                            },
+                            onSelectedItemChanged: (index) {
+                              setState(() => _reps = _repsMin + index);
+                              HapticFeedback.selectionClick();
+                            },
+                            // Fast scrub for common rep ranges
+                            showFastScrub: true,
+                            fastScrubValues: [1, 5, 8, 10, 12, 15, 20, 30],
+                            onFastScrubSelect: (value) {
+                              final index = (value - _repsMin).clamp(
+                                0,
+                                _selectedMaxReps - _repsMin,
+                              );
+                              _repsController.jumpToItem(index);
+                              setState(() => _reps = value);
+                            },
+                            isFastScrubActive: _isRepsFastScrubActive,
+                            onFastScrubStart: () =>
+                                setState(() => _isRepsFastScrubActive = true),
+                            onFastScrubEnd: () =>
+                                setState(() => _isRepsFastScrubActive = false),
+                            currentValue: _reps.toDouble(),
+                            fastScrubOnRight: true,
+                          ),
+                  ),
 
-              // Duration picker (for time-based exercises)
-              if (widget.countingMode.requiresTime)
-                Expanded(
-                  child: _isManualInput
-                      ? _buildManualInput(
-                          label: 'Durata',
-                          controller: _secondsTextController,
-                          focusNode: _secondsFocusNode,
-                          onChanged: _onSecondsTextChanged,
-                          keyboardType: TextInputType.number,
-                          suffix: '',
-                        )
-                      : _buildWheelPicker(
-                          label: 'Durata',
-                          controller: _secondsController,
-                          itemCount: (_maxSeconds - _minSeconds) ~/ _secondsStep + 1,
-                          itemBuilder: (index) {
-                            final seconds = _minSeconds + (index * _secondsStep);
-                            final isSelected = seconds == _seconds;
-                            return _buildPickerItem(
-                              text: _formatDuration(seconds),
-                              isSelected: isSelected,
-                            );
-                          },
-                          onSelectedItemChanged: (index) {
-                            setState(() => _seconds = _minSeconds + (index * _secondsStep));
-                            HapticFeedback.selectionClick();
-                          },
-                          // Fast scrub for common durations
-                          showFastScrub: true,
-                          fastScrubValues: [15, 30, 45, 60, 90, 120, 180, 300],
-                          onFastScrubSelect: (value) {
-                            final index = ((value - _minSeconds) ~/ _secondsStep).clamp(
-                              0,
-                              (_maxSeconds - _minSeconds) ~/ _secondsStep,
-                            );
-                            _secondsController.jumpToItem(index);
-                            setState(() => _seconds = value);
-                          },
-                          isFastScrubActive: false,
-                          onFastScrubStart: () {},
-                          onFastScrubEnd: () {},
-                          currentValue: _seconds.toDouble(),
-                          fastScrubOnRight: true,
-                        ),
-                ),
-            ],
-          ),
+                // Duration picker (for time-based exercises)
+                if (widget.countingMode.requiresTime)
+                  Expanded(
+                    child: _isManualInput
+                        ? _buildManualInput(
+                            label: 'Durata',
+                            controller: _secondsTextController,
+                            focusNode: _secondsFocusNode,
+                            onChanged: _onSecondsTextChanged,
+                            keyboardType: TextInputType.number,
+                            suffix: '',
+                          )
+                        : _buildWheelPicker(
+                            label: 'Durata',
+                            controller: _secondsController,
+                            itemCount:
+                                (_maxSeconds - _minSeconds) ~/ _secondsStep + 1,
+                            itemBuilder: (index) {
+                              final seconds =
+                                  _minSeconds + (index * _secondsStep);
+                              final isSelected = seconds == _seconds;
+                              return _buildPickerItem(
+                                text: _formatDuration(seconds),
+                                isSelected: isSelected,
+                              );
+                            },
+                            onSelectedItemChanged: (index) {
+                              setState(
+                                () => _seconds =
+                                    _minSeconds + (index * _secondsStep),
+                              );
+                              HapticFeedback.selectionClick();
+                            },
+                            // Fast scrub for common durations
+                            showFastScrub: true,
+                            fastScrubValues: [
+                              15,
+                              30,
+                              45,
+                              60,
+                              90,
+                              120,
+                              180,
+                              300,
+                            ],
+                            onFastScrubSelect: (value) {
+                              final index =
+                                  ((value - _minSeconds) ~/ _secondsStep).clamp(
+                                    0,
+                                    (_maxSeconds - _minSeconds) ~/ _secondsStep,
+                                  );
+                              _secondsController.jumpToItem(index);
+                              setState(() => _seconds = value);
+                            },
+                            isFastScrubActive: false,
+                            onFastScrubStart: () {},
+                            onFastScrubEnd: () {},
+                            currentValue: _seconds.toDouble(),
+                            fastScrubOnRight: true,
+                          ),
+                  ),
+              ],
+            ),
         ],
       ),
     );
@@ -1388,54 +1443,55 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       gestures: <Type, GestureRecognizerFactory>{
         _EagerVerticalDragRecognizer:
             GestureRecognizerFactoryWithHandlers<_EagerVerticalDragRecognizer>(
-          () => _EagerVerticalDragRecognizer(),
-          (instance) {
-            instance
-              ..onStart = (_) {
-                _lastFastScrubValue = null;
-                onStart?.call();
-                HapticFeedback.lightImpact();
-              }
-              ..onUpdate = (details) {
-                final localY = details.localPosition.dy.clamp(0.0, 150.0);
-                final itemHeight = 150.0 / values.length;
-                final index = (localY / itemHeight)
-                    .floor()
-                    .clamp(0, values.length - 1);
-                final selectedValue = values[index];
-                if (selectedValue != _lastFastScrubValue) {
-                  _lastFastScrubValue = selectedValue;
-                  onSelect?.call(selectedValue);
-                  HapticFeedback.selectionClick();
-                }
-              }
-              ..onEnd = (_) {
-                _lastFastScrubValue = null;
-                onEnd?.call();
-              }
-              ..onCancel = () {
-                _lastFastScrubValue = null;
-                onEnd?.call();
-              };
-          },
-        ),
+              () => _EagerVerticalDragRecognizer(),
+              (instance) {
+                instance
+                  ..onStart = (_) {
+                    _lastFastScrubValue = null;
+                    onStart?.call();
+                    HapticFeedback.lightImpact();
+                  }
+                  ..onUpdate = (details) {
+                    final localY = details.localPosition.dy.clamp(0.0, 150.0);
+                    final itemHeight = 150.0 / values.length;
+                    final index = (localY / itemHeight).floor().clamp(
+                      0,
+                      values.length - 1,
+                    );
+                    final selectedValue = values[index];
+                    if (selectedValue != _lastFastScrubValue) {
+                      _lastFastScrubValue = selectedValue;
+                      onSelect?.call(selectedValue);
+                      HapticFeedback.selectionClick();
+                    }
+                  }
+                  ..onEnd = (_) {
+                    _lastFastScrubValue = null;
+                    onEnd?.call();
+                  }
+                  ..onCancel = () {
+                    _lastFastScrubValue = null;
+                    onEnd?.call();
+                  };
+              },
+            ),
         TapGestureRecognizer:
             GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-          () => TapGestureRecognizer(),
-          (instance) {
-            instance
-              ..onTapDown = (_) {
-                onStart?.call();
-                HapticFeedback.lightImpact();
-              }
-              ..onTapUp = (_) {
-                onEnd?.call();
-              }
-              ..onTapCancel = () {
-                onEnd?.call();
-              };
-          },
-        ),
+              () => TapGestureRecognizer(),
+              (instance) {
+                instance
+                  ..onTapDown = (_) {
+                    onStart?.call();
+                    HapticFeedback.lightImpact();
+                  }
+                  ..onTapUp = (_) {
+                    onEnd?.call();
+                  }
+                  ..onTapCancel = () {
+                    onEnd?.call();
+                  };
+              },
+            ),
       },
       child: SizedBox(
         width: isActive ? activeVisualWidth : hitAreaWidth,
@@ -1471,7 +1527,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                           alignment: Alignment.center,
                           decoration: isNearCurrent
                               ? BoxDecoration(
-                                  color: context.colors.primary.withValues(alpha: 0.25),
+                                  color: context.colors.primary.withValues(
+                                    alpha: 0.25,
+                                  ),
                                 )
                               : null,
                           child: Text(
@@ -1479,7 +1537,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                             textAlign: TextAlign.center,
                             style: context.textTheme.labelSmall?.copyWith(
                               fontSize: 10,
-                              fontWeight: isNearCurrent ? FontWeight.bold : FontWeight.w500,
+                              fontWeight: isNearCurrent
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
                               color: isNearCurrent
                                   ? context.colors.primary
                                   : context.colors.onSurfaceVariant,
@@ -1553,11 +1613,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                       selected: isSelected,
                       selectedColor: color.withValues(alpha: 0.25),
                       labelStyle: TextStyle(
-                        color: isSelected ? color : context.colors.onSurfaceVariant,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: isSelected
+                            ? color
+                            : context.colors.onSurfaceVariant,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                       ),
                       side: BorderSide(
-                        color: isSelected ? color : context.colors.outlineVariant,
+                        color: isSelected
+                            ? color
+                            : context.colors.outlineVariant,
                       ),
                       showCheckmark: false,
                       visualDensity: VisualDensity.compact,
@@ -1585,9 +1651,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
-          // First set: "Applica a tutti"
+          // First useful (non-warmup) set: "Applica a tutti"
           // Other sets: "Copia precedente"
-          if (_isFirstSet && widget.onApplyToAll != null)
+          if (_isFirstUsefulSet && widget.onApplyToAll != null)
             Expanded(
               child: Semantics(
                 label: context.l10n.applyToAll,
@@ -1602,7 +1668,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                 ),
               ),
             )
-          else if (!_isFirstSet && widget.previousSet != null)
+          else if (!_isFirstUsefulSet && widget.previousSet != null)
             Expanded(
               child: Semantics(
                 label: context.l10n.copyPrevious,
@@ -1675,7 +1741,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   .clamp(0, _weightItemCount - 1);
               _weightController.jumpToItem(weightIndex);
               if (suggestedReps != null) {
-                final repsIndex = (suggestedReps - _repsMin).clamp(0, _repsMax - _repsMin);
+                final repsIndex = (suggestedReps - _repsMin).clamp(
+                  0,
+                  _repsMax - _repsMin,
+                );
                 _repsController.jumpToItem(repsIndex);
               }
             },
@@ -1733,9 +1802,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                       setState(() => _weight = entry.weight);
                       _weightTextController.text = _formatWeight(entry.weight);
                       // Update wheel position
-                      final weightIndex = ((entry.weight - _minWeight) / _weightStep)
-                          .round()
-                          .clamp(0, _weightItemCount - 1);
+                      final weightIndex =
+                          ((entry.weight - _minWeight) / _weightStep)
+                              .round()
+                              .clamp(0, _weightItemCount - 1);
                       _weightController.animateToItem(
                         weightIndex,
                         duration: const Duration(milliseconds: 300),
@@ -1813,7 +1883,8 @@ extension MinimalSetEditSheetExtension on BuildContext {
     String? suggestedSource,
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
   }) {
-    return ModalService.showSheet<void>(this,
+    return ModalService.showSheet<void>(
+      this,
       isScrollControlled: true,
       builder: (context) => MinimalSetEditSheet(
         exerciseSet: exerciseSet,

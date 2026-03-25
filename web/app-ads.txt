@@ -1,0 +1,3 @@
+# FitLog Pro app-ads.txt
+# Keep this file at the domain root used as the developer website in the app stores.
+google.com, pub-5716120224398761, DIRECT, f08c47fec0942fa0
