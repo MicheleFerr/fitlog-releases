@@ -1,0 +1,42 @@
+name: Aggiorna playlist IPTV Italia (117 canali)
+
+on:
+  schedule:
+    - cron: '17 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-iptv-italia-117
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    name: Aggiorna M3U su ramo dedicato
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Scarica il ramo della playlist
+        uses: actions/checkout@v4
+        with:
+          ref: iptv-italia-personale
+          persist-credentials: true
+
+      - name: Aggiorna dai flussi della playlist originale
+        run: python3 scripts/update_italia_117.py
+
+      - name: Pubblica soltanto se ci sono modifiche
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- italia-117.m3u
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica ai link: la playlist resta invariata."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Aggiorna automaticamente link IPTV Italia (117 canali)"
+          git push origin HEAD:iptv-italia-personale
